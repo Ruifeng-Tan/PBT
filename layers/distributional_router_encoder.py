@@ -1,67 +1,17 @@
 import torch
 import torch.nn as nn
-class PatternRouter_two(nn.Module):
-    def __init__(self, input_size1, input_size2, d_ff, num_experts):
-        super(PatternRouter_two, self).__init__()
-        self.input2_linear = nn.Sequential(nn.Linear(input_size2, d_ff), nn.ReLU(), nn.Linear(d_ff, input_size1))
-        self.pattern_fit = nn.Sequential(nn.Linear(input_size1, num_experts, bias=True))
+from layers.fusion import GatingFusion
+class FusionPatternRouter(nn.Module):
+    def __init__(self, input_size1, inputsize2, d_ff, num_experts):
+        super(FusionPatternRouter, self).__init__()
+        self.gated_fusion = GatingFusion(input_size1, inputsize2, d_ff)
+        self.distribution_fit = nn.Linear(d_ff, num_experts, bias=True)
 
-    def forward(self, input1, input2):
-        '''
-        input1: [B, size1]
-        input2: [B, size2]
-        '''
-        input2 = self.input2_linear(input2)
-        x = input1 + input2
-        out = self.pattern_fit(x)
-        return out
-
-class PatternRouter_three(nn.Module):
-    def __init__(self, input_size1, input_size2, input_size3, d_ff, num_experts):
-        super(PatternRouter_three, self).__init__()
-        self.pattern_fit = nn.Linear(input_size1+input_size2+input_size3, num_experts, bias=True)
-        #self.pattern_fit = nn.Sequential(nn.Linear(input_size1+input_size2+input_size3, num_experts))
-
-    def forward(self, input1, input2, input3):
-        '''
-        input1: [B, size1]
-        input2: [B, size2]
-        input3: [B, size3]
-        '''
-        x = torch.cat([input1, input2, input3], dim=-1)
-        out = self.pattern_fit(x)
-        return out
-
-class PatternRouter_Imp_three(nn.Module):
-    def __init__(self, DKP_size, cycle_number_size, fine_info_size, d_ff, num_experts):
-        super(PatternRouter_Imp_three, self).__init__()
-        self.DKP_linear = nn.Linear(DKP_size, d_ff)
-        self.cycle_number_linear = nn.Linear(cycle_number_size, d_ff)
-        self.fine_info_linear = nn.Linear(fine_info_size, d_ff)
-        self.distribution_fit = nn.Sequential(nn.Linear(d_ff*3, num_experts, bias=True))
-
-    def forward(self, DKP, cycle_number, fine_info):
-        DKP = self.DKP_linear(DKP)
-        cycle_number = self.cycle_number_linear(cycle_number)
-        fine_info = self.fine_info_linear(fine_info)
-        x = torch.cat([DKP, cycle_number, fine_info], dim=1) # [B, d_ff*2]
+    def forward(self, x1, x2):
+        x = self.gated_fusion(x1, x2)
         out = self.distribution_fit(x)
         return out
-    
-class PatternRouter_Imp(nn.Module):
-    def __init__(self, input_size, fine_info_size, d_ff, num_experts):
-        super(PatternRouter_Imp, self).__init__()
-        self.x_linear = nn.Linear(input_size, d_ff)
-        self.fine_info_linear = nn.Linear(fine_info_size, d_ff)
-        self.distribution_fit = nn.Sequential(nn.Linear(d_ff*2, num_experts, bias=True))
 
-    def forward(self, x, fine_info):
-        x = self.x_linear(x)
-        fine_info = self.fine_info_linear(fine_info)
-        x = torch.cat([fine_info, x], dim=1) # [B, d_ff*2]
-        out = self.distribution_fit(x)
-        return out
-    
 class PatternRouter(nn.Module):
     def __init__(self, input_size, num_experts):
         super(PatternRouter, self).__init__()
@@ -71,6 +21,20 @@ class PatternRouter(nn.Module):
         out = self.distribution_fit(x)
         return out
 
+class PatternRouterMLP(nn.Module):
+    def __init__(self, input_size, num_experts):
+        super(PatternRouterMLP, self).__init__()
+        self.distribution_fit = nn.Sequential(nn.Linear(input_size, input_size*2, bias=True),
+                                              nn.ReLU(), nn.Linear(input_size*2, num_experts))
+
+    def forward(self, x):
+        '''
+        x: [B, L, D] or [B, D]
+        '''
+        if len(x.size()) == 3:
+            x = torch.mean(x, dim=1) # avg-pool
+        out = self.distribution_fit(x)
+        return out
 
 class MergedPatternRouter(nn.Module):
     def __init__(self, n_vars, early_cycle_threshold, charge_discharge_length, d_ff, d_llm, num_experts):
