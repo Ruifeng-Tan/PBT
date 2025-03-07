@@ -1,0 +1,60 @@
+Traceback (most recent call last):
+  File "/home/trf/envs/llmpy311/bin/accelerate", line 5, in <module>
+    from accelerate.commands.accelerate_cli import main
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/__init__.py", line 16, in <module>
+    from .accelerator import Accelerator
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/accelerator.py", line 35, in <module>
+    from .checkpointing import load_accelerator_state, load_custom_state, save_accelerator_state, save_custom_state
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/checkpointing.py", line 24, in <module>
+    from .utils import (
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/utils/__init__.py", line 178, in <module>
+    from .fsdp_utils import load_fsdp_model, load_fsdp_optimizer, save_fsdp_model, save_fsdp_optimizer
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/utils/fsdp_utils.py", line 26, in <module>
+    import torch.distributed.checkpoint as dist_cp
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/checkpoint/__init__.py", line 10, in <module>
+    from .optimizer import load_sharded_optimizer_state_dict
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/checkpoint/optimizer.py", line 40, in <module>
+    from torch.distributed.fsdp._shard_utils import _create_chunk_sharded_tensor
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/fsdp/__init__.py", line 2, in <module>
+    from .fully_sharded_data_parallel import (
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py", line 26, in <module>
+    import torch.distributed.fsdp._traversal_utils as traversal_utils
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/fsdp/_traversal_utils.py", line 12, in <module>
+    from torch.distributed._composable.contract import _get_registry
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/_composable/__init__.py", line 3, in <module>
+    from .fully_shard import fully_shard
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/_composable/fully_shard.py", line 12, in <module>
+    from torch.distributed.fsdp._init_utils import (
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/fsdp/_init_utils.py", line 59, in <module>
+    from torch.distributed.tensor.parallel.fsdp import DTensorExtensions
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/tensor/parallel/__init__.py", line 2, in <module>
+    from torch.distributed.tensor.parallel.api import parallelize_module
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/tensor/parallel/api.py", line 15, in <module>
+    from torch.distributed.tensor.parallel._utils import _validate_tp_mesh_dim
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/tensor/parallel/_utils.py", line 9, in <module>
+    from torch._dynamo.external_utils import is_compiling as is_torchdynamo_compiling
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/_dynamo/__init__.py", line 2, in <module>
+    from . import convert_frame, eval_frame, resume_execution
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/_dynamo/convert_frame.py", line 48, in <module>
+    from . import config, exc, trace_rules
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/_dynamo/trace_rules.py", line 52, in <module>
+    from .variables import (
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/_dynamo/variables/__init__.py", line 38, in <module>
+    from .higher_order_ops import (
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/_dynamo/variables/higher_order_ops.py", line 14, in <module>
+    import torch.onnx.operators
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/onnx/__init__.py", line 11, in <module>
+    from . import (  # usort:skip. Keep the order instead of sorting lexicographically
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/onnx/symbolic_caffe2.py", line 5, in <module>
+    from torch.onnx import symbolic_helper, symbolic_opset9 as opset9
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/onnx/symbolic_helper.py", line 28, in <module>
+    from torch.onnx import _constants, _type_utils, errors, utils
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/onnx/utils.py", line 46, in <module>
+    from torch.onnx._internal import (
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1069, in get_code
+  File "<frozen importlib._bootstrap_external>", line 729, in _compile_bytecode
+KeyboardInterrupt
