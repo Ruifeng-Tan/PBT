@@ -524,7 +524,7 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
             end_input_ids = end_input_ids.int()
             end_attn_mask = end_attn_mask.int()
             # encoder - decoder
-            outputs, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, input_ids=input_ids, attention_mask=attention_mask, end_input_ids=end_input_ids, end_attn_mask=end_attn_mask, DKP_embeddings=DKP_embeddings)
+            outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, input_ids=input_ids, attention_mask=attention_mask, end_input_ids=end_input_ids, end_attn_mask=end_attn_mask, DKP_embeddings=DKP_embeddings)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value

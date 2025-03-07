@@ -40,6 +40,7 @@ def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True
     return:
         cl_loss: scalar. The contrastive learning loss
     '''
+    total_cluster_centers = torch.stack(total_cluster_centers, dim=0)
     norm_total_cluster_centers = F.normalize(total_cluster_centers, p=2, dim=-1) # [selected_experts, d_model]
     selected_experts = len(total_expert_outs)
     cl_loss = 0
@@ -48,10 +49,12 @@ def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True
         if is_intra:
             expert_outs = expert_outs.reshape(-1, expert_outs.shape[-1]) # [expert_batch_size*L, d_model]
         norm_expert_outs = F.normalize(expert_outs, p=2, dim=-1) # [expert_batch_size*L, d_model] if is_intra else [expert_batch_size, d_model]
-        sim = torch.matmul(expert_outs, total_cluster_centers.transpose(1, 2)) / (norm_expert_outs * norm_total_cluster_centers) # [expert_batch_size*L, selected_experts]
+        sim = torch.mm(norm_expert_outs, norm_total_cluster_centers.transpose(0, 1))  # [expert_batch_size*L, selected_experts]
         sim = torch.exp(sim / tau)
-        sim = sim[:, expert_index] / (torch.sum(sim, dim=-1) + 1e-9) # [expert_batch_size*L]
-        cl_loss += -torch.mean(torch.log(sim)) # scalar
+        # print(sim.shape, len(total_expert_outs))
+        positive_logits = sim[:, expert_index] # [expert_batch_size*L] the logits of positive samples
+        negative_logitis = torch.sum(sim, dim=1) - positive_logits # [expert_batch_size*L] the logitis of negative samples
+        cl_loss += -torch.mean(torch.log(positive_logits/negative_logitis)) # scalar
         
     cl_loss /= selected_experts
     return cl_loss    
@@ -165,12 +168,15 @@ class FlattenIntraCycleMoELayer(nn.Module):
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
+        total_expert_outs = []
         total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
-            cluster_center = torch.mean(out.reshape(-1, out.shape[-1]), dim=0) # [d_model]
+            cluster_center = torch.mean(out.reshape(-1, out.shape[-1]), dim=0) # [d_model]  
             total_outs.append(out)
-            total_cluster_centers.append(cluster_center)
+            if len(MOE_indicies[i])>=1:
+                total_expert_outs.append(out)
+                total_cluster_centers.append(cluster_center)
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = self.general_expert(cycle_curve_data) + total_outs
@@ -184,7 +190,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
             # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_outs, total_cluster_centers, self.tau, is_intra=True)
+            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=True)
 
         return final_out, aug_loss, cl_loss
     
@@ -242,12 +248,15 @@ class IntraCycleMoELayer(nn.Module):
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
+        total_expert_outs = []
         total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
             cluster_center = torch.mean(out.reshape(-1, out.shape[-1]), dim=0) # [d_model]
             total_outs.append(out)
-            total_cluster_centers.append(cluster_center)
+            if len(MOE_indicies[i])>=1:
+                total_expert_outs.append(out)
+                total_cluster_centers.append(cluster_center)
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = self.general_expert(cycle_curve_data) + total_outs
@@ -261,7 +270,7 @@ class IntraCycleMoELayer(nn.Module):
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
             # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_outs, total_cluster_centers, self.tau, is_intra=True)
+            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=True)
 
         return final_out, aug_loss, cl_loss
 
@@ -320,11 +329,14 @@ class FlattenInterCycleMoELayer(nn.Module):
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
+        total_expert_outs = []
         total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_model]
             total_outs.append(out)
-            total_cluster_centers.append(out)
+            if len(MOE_indicies[i])>=1:
+                total_expert_outs.append(out)
+                total_cluster_centers.append(torch.mean(out, dim=0))
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, d_model]
         final_out = self.general_expert(cycle_curve_data) + total_outs
@@ -338,7 +350,7 @@ class FlattenInterCycleMoELayer(nn.Module):
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
             # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_outs, total_cluster_centers, self.tau, is_intra=False)
+            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=False)
 
         return final_out, aug_loss, cl_loss
     
@@ -396,11 +408,14 @@ class InterCycleMoELayer(nn.Module):
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
+        total_expert_outs = []
         total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
             total_outs.append(out)
-            total_cluster_centers.append(out)
+            if len(MOE_indicies[i])>=1:
+                total_expert_outs.append(out)
+                total_cluster_centers.append(torch.mean(out, dim=0))
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = self.general_expert(cycle_curve_data) + total_outs
@@ -414,7 +429,7 @@ class InterCycleMoELayer(nn.Module):
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
             # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_outs, total_cluster_centers, self.tau, is_intra=False)
+            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=False)
 
         return final_out, aug_loss, cl_loss
     

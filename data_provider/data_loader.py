@@ -117,9 +117,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.aug_helper = BatchAugmentation_battery_revised()
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
-            self.train_files = split_recorder.Stanford_train_files[:4]
-            self.val_files = split_recorder.Stanford_val_files[:4] + split_recorder.HUST_val_files[:1]
-            self.test_files =  split_recorder.Stanford_test_files[:4] + split_recorder.HUST_test_files[:1]
+            self.train_files = split_recorder.Stanford_train_files[:3]
+            self.val_files = split_recorder.Tongji_val_files[:2] + split_recorder.HUST_val_files[:2]
+            self.test_files =  split_recorder.Tongji_test_files[:2] + split_recorder.HUST_test_files[:2]
         elif self.dataset == 'Tongji':
             self.train_files = split_recorder.Tongji_train_files
             self.val_files = split_recorder.Tongji_val_files
@@ -140,10 +140,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.MICH_train_files
             self.val_files = split_recorder.MICH_val_files
             self.test_files = split_recorder.MICH_test_files
-        elif self.dataset == 'XJTU':
-            self.train_files = split_recorder.XJTU_train_files
-            self.val_files = split_recorder.XJTU_val_files
-            self.test_files = split_recorder.XJTU_test_files
         elif self.dataset == 'MICH_EXP':
             self.train_files = split_recorder.MICH_EXP_train_files
             self.val_files = split_recorder.MICH_EXP_val_files
@@ -176,6 +172,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_files
             self.test_files = split_recorder.ISU_ILCC_test_files
+        elif self.dataset == 'XJTU':
+            self.train_files = split_recorder.XJTU_train_files
+            self.val_files = split_recorder.XJTU_val_files
+            self.test_files = split_recorder.XJTU_test_files
         elif self.dataset == 'MIX_small':
             self.train_files = split_recorder.MIX_small_train_files
             self.val_files = split_recorder.MIX_small_val_files 
@@ -196,6 +196,78 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.ZNcoin_train_files
             self.val_files = split_recorder.ZNcoin_val_files 
             self.test_files = split_recorder.ZNcoin_test_files  
+        elif self.dataset == 'NA-coin':
+            self.train_files = split_recorder.NAcoin_train_files
+            self.val_files = split_recorder.NAcoin_val_files 
+            self.test_files = split_recorder.NAcoin_test_files  
+        elif self.dataset == 'CALB':
+            self.train_files = split_recorder.CALB_train_files
+            self.val_files = split_recorder.CALB_val_files 
+            self.test_files = split_recorder.CALB_test_files
+        elif self.dataset == 'ZN-coin42':
+            self.train_files = split_recorder.ZN_42_train_files
+            self.val_files = split_recorder.ZN_42_val_files
+            self.test_files = split_recorder.ZN_42_test_files
+        elif self.dataset == 'ZN-coin2024':
+            self.train_files = split_recorder.ZN_2024_train_files
+            self.val_files = split_recorder.ZN_2024_val_files
+            self.test_files = split_recorder.ZN_2024_test_files
+        elif self.dataset == 'CALB42':
+            self.train_files = split_recorder.CALB_422_train_files
+            self.val_files = split_recorder.CALB_422_val_files
+            self.test_files = split_recorder.CALB_422_test_files
+        elif self.dataset == 'CALB2024':
+            self.train_files = split_recorder.CALB_2024_train_files
+            self.val_files = split_recorder.CALB_2024_val_files
+            self.test_files = split_recorder.CALB_2024_test_files
+        elif self.dataset == 'NAion':
+            self.train_files = split_recorder.NAion_2021_train_files
+            self.val_files = split_recorder.NAion_2021_val_files
+            self.test_files = split_recorder.NAion_2021_test_files
+        elif self.dataset == 'NAion42':
+            self.train_files = split_recorder.NAion_42_train_files
+            self.val_files = split_recorder.NAion_42_val_files
+            self.test_files = split_recorder.NAion_42_test_files
+        elif self.dataset == 'NAion2024':
+            self.train_files = split_recorder.NAion_2024_train_files
+            self.val_files = split_recorder.NAion_2024_val_files
+            self.test_files = split_recorder.NAion_2024_test_files
+        elif self.dataset == 'MIX_CALB':
+            self.train_files = split_recorder.MIX_CALB_train_files
+            self.val_files = split_recorder.MIX_CALB_val_files
+            self.test_files = split_recorder.MIX_CALB_test_files
+        elif self.dataset == 'MIX_CALB42':
+            self.train_files = split_recorder.MIX_CALB42_train_files
+            self.val_files = split_recorder.MIX_CALB42_val_files
+            self.test_files = split_recorder.MIX_CALB42_test_files
+        elif self.dataset == 'MIX_CALB2024':
+            self.train_files = split_recorder.MIX_CALB2024_train_files
+            self.val_files = split_recorder.MIX_CALB2024_val_files
+            self.test_files = split_recorder.MIX_CALB2024_test_files
+        elif self.dataset == 'MIX_ZN':
+            self.train_files = split_recorder.MIX_ZN_train_files
+            self.val_files = split_recorder.MIX_ZN_val_files
+            self.test_files = split_recorder.MIX_ZN_test_files
+        elif self.dataset == 'MIX_ZN42':
+            self.train_files = split_recorder.MIX_ZN42_train_files
+            self.val_files = split_recorder.MIX_ZN42_val_files
+            self.test_files = split_recorder.MIX_ZN42_test_files
+        elif self.dataset == 'MIX_ZN2024':
+            self.train_files = split_recorder.MIX_ZN2024_train_files
+            self.val_files = split_recorder.MIX_ZN2024_val_files
+            self.test_files = split_recorder.MIX_ZN2024_test_files
+        elif self.dataset == 'MIX_NA':
+            self.train_files = split_recorder.MIX_NA_train_files
+            self.val_files = split_recorder.MIX_NA_val_files
+            self.test_files = split_recorder.MIX_NA_test_files
+        elif self.dataset == 'MIX_NA42':
+            self.train_files = split_recorder.MIX_NA42_train_files
+            self.val_files = split_recorder.MIX_NA42_val_files
+            self.test_files = split_recorder.MIX_NA42_test_files
+        elif self.dataset == 'MIX_NA2024':
+            self.train_files = split_recorder.MIX_NA2024_train_files
+            self.val_files = split_recorder.MIX_NA2024_val_files
+            self.test_files = split_recorder.MIX_NA2024_test_files 
         
         if flag == 'train':
             self.files = [i for i in self.train_files]
