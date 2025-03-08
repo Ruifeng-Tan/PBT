@@ -1,5 +1,5 @@
 '''
-和v20相同，只不过能使用d_num_experts来控制Inter-cycle modelling的时候的expert count
+基于BatteryMoE_DG版本，把input变成了原始input和DKP的fusion，在gating function只用了fused input。
 '''
 import torch
 import torch.nn as nn
