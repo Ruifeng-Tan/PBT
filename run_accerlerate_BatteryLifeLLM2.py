@@ -11,7 +11,7 @@ from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alig
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Gating, \
-            BatteryMoE_DG, BatteryLifeLLMv20_Stack, BatteryMoE, BatteryMoE_FusedDKP, BatteryLifeLLMv20_Stack_AllMoE
+            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE, BatteryMoE_FusedDKP, BatteryLifeLLMv20_Stack_AllMoE
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -228,11 +228,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_FusedDKP.Model(model_config)
-    elif args.model == 'BatteryLifeLLMv20_Stack':
+    elif args.model == 'BatteryMoE_DG_MLPGate':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryLifeLLMv20_Stack.Model(model_config)
+        model = BatteryMoE_DG_MLPGate.Model(model_config)
     elif args.model == 'BatteryMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)

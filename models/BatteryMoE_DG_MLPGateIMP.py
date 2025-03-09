@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_DG，只不过是DKP的embeddings在一开始就和input embeddings进行了融合
+和v20相同，只不过能使用d_num_experts来控制Inter-cycle modelling的时候的expert count
 '''
 import torch
 import torch.nn as nn
@@ -17,7 +17,7 @@ from layers.SelfAttention_Family import FullAttention, AttentionLayer
 from layers.StandardNorm import Normalize
 from layers.Embed import TokenEmbedding, DataEmbedding
 from layers.fusion import GatedFusion
-from layers.distributional_router_encoder import DistributionRouter, PatternRouter
+from layers.distributional_router_encoder import DistributionRouter, PatternRouterMLP
 from layers.MOE_dispatcher import MOEDispatcher
 from utils.tools import sample_top_p
 from utils.augmentation import Cutout_jitter_aug, BatchAugmentation_battery
@@ -58,42 +58,6 @@ def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True
         
     cl_loss /= selected_experts
     return cl_loss    
-
-class DKPFuser(nn.Module):
-    def __init__(self, configs):
-        super(DKPFuser, self).__init__()
-        self.d_llm = configs.d_llm
-        self.d_model = configs.d_model
-        self.drop_rate = configs.dropout
-        self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
-        self.early_cycle_threshold = configs.early_cycle_threshold
-        self.input_proj = nn.Sequential(nn.Flatten(start_dim=2), 
-                                    nn.Linear(self.charge_discharge_length*3, self.d_model))
-        self.input_proj2 = nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.d_model*self.early_cycle_threshold, self.d_model),
-                                         nn.ReLU(), nn.Dropout(self.drop_rate), nn.Linear(self.d_model, self.d_model))
-        self.DKP_proj = nn.Sequential(nn.Linear(self.d_llm, self.d_llm*2), nn.ReLU(),
-                                      nn.Linear(self.d_llm*2, self.d_model))
- 
-        self.gate = nn.Sequential(nn.Linear(self.d_model*2, self.d_model), 
-                                  nn.ReLU(), nn.Dropout(self.drop_rate),
-                                  nn.Linear(self.d_model, self.d_model))
-    
-    def forward(self, original_input, DKP, curve_attn_mask):
-        '''
-        params:
-            original_input: [B, L, 3, fixed_len]
-            DKP: [B, d_llm]
-            curve_attn_mask: [B, L]
-        '''
-        input_embed = self.input_proj(original_input) # [B, L, d_model]
-        input_embed = self.input_proj2(input_embed) # [B, d_model]
-        DKP = self.DKP_proj(DKP) # [B, d_model]
-        
-
-        gate_input = torch.cat([input_embed, DKP], dim=-1)
-        gate = self.gate(gate_input)
-        DKP_fused = DKP + torch.sigmoid(gate) * input_embed # [B, d_model]
-        return DKP_fused
 
 
 class MLPBlock(nn.Module):
@@ -166,8 +130,8 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.general_expert = nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model))
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -246,8 +210,8 @@ class IntraCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([MLPBlock(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.general_expert = MLPBlock(self.d_model, self.d_ff, self.drop_rate, self.activation)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -327,8 +291,8 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
         self.general_expert = nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model))
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -406,8 +370,8 @@ class InterCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([MLPBlock(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.general_expert = MLPBlock(self.d_model, self.d_ff, self.drop_rate, self.activation)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -527,8 +491,6 @@ class Model(BatteryLifeLLM):
         self.tokenizer.padding_side = 'right' # set the padding side
         self.e_layers = configs.e_layers
         self.d_layers = configs.d_layers
-
-        self.dkp_fuser = DKPFuser(configs)
         self.flattenIntraCycleLayer = FlattenIntraCycleMoELayer(configs)
         self.intraCycleLayers = nn.ModuleList([IntraCycleMoELayer(configs) for _ in range(configs.e_layers)])
         self.flattenInterCycleLayer = FlattenInterCycleMoELayer(configs)
@@ -566,7 +528,6 @@ class Model(BatteryLifeLLM):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        DKP_embeddings = self.dkp_fuser(cycle_curve_data, DKP_embeddings, curve_attn_mask) # [B, d_llm]
 
         total_aug_loss = 0
         total_cl_loss = 0

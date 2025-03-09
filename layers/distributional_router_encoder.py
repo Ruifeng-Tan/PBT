@@ -24,15 +24,13 @@ class PatternRouter(nn.Module):
 class PatternRouterMLP(nn.Module):
     def __init__(self, input_size, num_experts):
         super(PatternRouterMLP, self).__init__()
-        self.distribution_fit = nn.Sequential(nn.Linear(input_size, input_size*2, bias=True),
-                                              nn.ReLU(), nn.Linear(input_size*2, num_experts))
+        self.distribution_fit = nn.Sequential(nn.Linear(input_size, input_size//2, bias=True),
+                                              nn.LeakyReLU(), nn.Linear(input_size//2, num_experts))
 
     def forward(self, x):
         '''
-        x: [B, L, D] or [B, D]
+        x: [B, D]
         '''
-        if len(x.size()) == 3:
-            x = torch.mean(x, dim=1) # avg-pool
         out = self.distribution_fit(x)
         return out
 
