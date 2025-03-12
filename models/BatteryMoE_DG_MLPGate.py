@@ -1,5 +1,5 @@
 '''
-和v20相同，只不过能使用d_num_experts来控制Inter-cycle modelling的时候的expert count
+和BatteryMoE_DG相同，只不过patternrouter中用MLP作为Gate
 '''
 import torch
 import torch.nn as nn

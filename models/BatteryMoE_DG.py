@@ -1,5 +1,5 @@
 '''
-和v20相同，只不过能使用d_num_experts来控制Inter-cycle modelling的时候的expert count
+在BatteryMoE的基础上增加了对比学习loss的return
 '''
 import torch
 import torch.nn as nn

@@ -1,5 +1,5 @@
 '''
-和v20相同，只不过能使用d_num_experts来控制Inter-cycle modelling的时候的expert count
+基于BatteryMoE_DG_MLPGate，把CyclePatch改成了Multi-scalce CyclePatch
 '''
 import torch
 import torch.nn as nn
@@ -115,6 +115,46 @@ class BatteryLifeLLM(PreTrainedModel):
         """
         return self.language_model._supports_sdpa
 
+class MultiScaleFusion(nn.Module):
+    def __init__(self, configs):
+        super(MultiScaleFusion, self).__init__()
+        self.d_model = configs.d_model
+        self.d_ff = configs.d_ff
+        self.down_sampling_layers = torch.nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.Flatten(start_dim=2),
+                    torch.nn.Linear(
+                        (configs.charge_discharge_length // (configs.down_sampling_window ** i))*3,
+                        self.d_ff,
+                    ),
+                    nn.ReLU(),
+                    torch.nn.Linear(
+                        self.d_ff,
+                        self.d_model,
+                    )
+                )
+                for i in range(configs.number_of_scales)
+            ]
+        )
+       
+    def forward(self, cycle_curve_data_sampling_list, MOE_indicies=None, DKP_embeddings=None):
+        '''
+        params:
+            cycle_curve_data_sampling_list: a list of tensors [B, L, 3, scaled_length]
+            MOE_indicies: a list of indices that indicate the samples that are distributed to this expert
+            DKP_embeddings: [B, d_llm], the embedding of domain-knolwedge-informed prompt
+        return:
+            fused_out: [B, L, d_model] , the fused output
+        '''
+        fused_out = 0
+        for i, down_sampling_layer in enumerate(self.down_sampling_layers):
+            if MOE_indicies is not None:
+                fused_out = fused_out + down_sampling_layer(cycle_curve_data_sampling_list[i][MOE_indicies])
+            else:
+                fused_out = fused_out + down_sampling_layer(cycle_curve_data_sampling_list[i])
+        return fused_out
+
 class FlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenIntraCycleMoELayer, self).__init__()
@@ -127,8 +167,12 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.num_experts = configs.num_experts
         self.top_k = configs.topK
         self.tau = configs.tau
-        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
-        self.general_expert = nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model))
+
+        self.down_pool = torch.nn.AvgPool1d(kernel_size=configs.down_sampling_window)
+        self.number_of_scales = configs.number_of_scales
+
+        self.experts = nn.ModuleList([MultiScaleFusion(configs) for _ in range(self.num_experts)])
+        self.general_expert = MultiScaleFusion(configs)
         self.noisy_gating = configs.noisy_gating
         self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
         self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
@@ -142,7 +186,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
             DKP_embeddings: [B, d_llm]
         '''
-        B = cycle_curve_data.shape[0]
+        B, L, num_vars, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]  
         clean_logits = self.gate(DKP_embeddings)
         if self.noisy_gating and self.training:
             raw_noise_stddev = self.noise(DKP_embeddings)
@@ -167,19 +211,31 @@ class FlattenIntraCycleMoELayer(nn.Module):
 
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
+
+        # Multi-scalce down-sampling
+        cycle_curve_data_sampling_list = [cycle_curve_data]
+        cycle_curve_data_original = cycle_curve_data.reshape(-1, num_vars, fixed_len)
+        for i in range(self.number_of_scales):
+            sampled_cycle_curve_data = self.down_pool(cycle_curve_data_original)
+            cycle_curve_data_sampling_list.append(sampled_cycle_curve_data.reshape(B, L, num_vars, -1))
+            cycle_curve_data_original = sampled_cycle_curve_data
+
+
         total_outs = []
         total_expert_outs = []
         total_cluster_centers = []
         for i, expert in enumerate(self.experts):
-            out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
-            cluster_center = torch.mean(out.reshape(-1, out.shape[-1]), dim=0) # [d_model]  
-            total_outs.append(out)
             if len(MOE_indicies[i])>=1:
+                out = expert(cycle_curve_data_sampling_list, MOE_indicies[i]) # [expert_batch_size, L, d_model]
+                cluster_center = torch.mean(out.reshape(-1, out.shape[-1]), dim=0) # [d_model]  
+                total_outs.append(out)
                 total_expert_outs.append(out)
                 total_cluster_centers.append(cluster_center)
+            else:
+                pass
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
-        final_out = self.general_expert(cycle_curve_data) + total_outs
+        final_out = self.general_expert(cycle_curve_data_sampling_list) + total_outs
 
         aug_loss = 0
         cl_loss = 0

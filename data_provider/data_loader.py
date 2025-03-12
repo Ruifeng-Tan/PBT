@@ -152,10 +152,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.RWTH_train_files
             self.val_files = split_recorder.RWTH_val_files
             self.test_files = split_recorder.RWTH_test_files
-        elif self.dataset == 'MIX':
-            self.train_files = split_recorder.MIX_train_files
-            self.val_files = split_recorder.MIX_val_files 
-            self.test_files = split_recorder.MIX_test_files
+        elif self.dataset == 'MIX2021':
+            self.train_files = split_recorder.MIX_2021_train_files
+            self.val_files = split_recorder.MIX_2021_val_files 
+            self.test_files = split_recorder.MIX_2021_test_files
         elif self.dataset == 'HNEI':
             self.train_files = split_recorder.HNEI_train_files
             self.val_files = split_recorder.HNEI_val_files
@@ -184,14 +184,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.MIX_large_train_files
             self.val_files = split_recorder.MIX_large_val_files 
             self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_c':
-            self.train_files = split_recorder.MIX_train_files_complete
-            self.val_files = split_recorder.MIX_val_files_complete 
-            self.test_files = split_recorder.MIX_test_files_complete  
-        elif self.dataset == 'MIX_c_woISU':
-            self.train_files = split_recorder.MIX_train_files_complete_woISU
-            self.val_files = split_recorder.MIX_val_files_complete_woISU 
-            self.test_files = split_recorder.MIX_test_files_complete_woISU  
         elif self.dataset == 'ZN-coin':
             self.train_files = split_recorder.ZNcoin_train_files
             self.val_files = split_recorder.ZNcoin_val_files 
