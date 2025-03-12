@@ -482,7 +482,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         41.0:  # SNL_18650_NMC_15C_0-100_0.5-1C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -494,7 +494,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         42.0:  # SNL_18650_NMC_15C_0-100_0.5-1C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -506,7 +506,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         43.0:  # SNL_18650_NMC_15C_0-100_0.5-2C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -518,7 +518,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         44.0:  # SNL_18650_NMC_15C_0-100_0.5-2C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -530,7 +530,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         45.0:  # SNL_18650_NMC_25C_0-100_0.5-0.5C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -542,7 +542,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         46.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -554,7 +554,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         47.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -566,7 +566,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         48.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_c
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -578,7 +578,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         49.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_d
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -590,7 +590,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         50.0:  # SNL_18650_NMC_25C_0-100_0.5-2C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -602,7 +602,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         51.0:  # SNL_18650_NMC_25C_0-100_0.5-2C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -614,7 +614,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         52.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -626,7 +626,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         53.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -638,7 +638,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         54.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_c
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -650,7 +650,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         55.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_d
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -662,7 +662,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         56.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -674,7 +674,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         57.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -686,7 +686,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         58.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_c
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -698,7 +698,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         59.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_d
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -710,7 +710,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         60.0:  # SNL_18650_NMC_35C_0-100_0.5-2C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -722,7 +722,7 @@ class SNL_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         61.0:  # SNL_18650_NMC_35C_0-100_0.5-2C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
+            f"Its positive electrode is LiNi(0.84Co0.1Mn0.06)O2 (NCM840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "

@@ -62,7 +62,7 @@ class Tongji_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         6.0: # Tongji2_CY25-05_1
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM831107). "
+            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn0.07)O2 (NCM831107). "
             f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is LG CHEM. "
@@ -74,7 +74,7 @@ class Tongji_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         7.0: # Tongji2_CY35-05_1
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM831107). "
+            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn0.07)O2 (NCM831107). "
             f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is LG CHEM. "
@@ -86,7 +86,7 @@ class Tongji_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         8.0: # Tongji2_CY45-05_1
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM831107). "
+            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn0.07)O2 (NCM831107). "
             f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is LG CHEM. "

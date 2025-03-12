@@ -2,7 +2,7 @@ class RWTH_protocol_prompt():
     Protocols_prompts = {
         1.0:  # All RWTH batteries' working conditions are the same
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is lithium nickel manganese cobalt oxide (NMC). "
+            f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is carbon. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Sanyo/Panasonic. "
