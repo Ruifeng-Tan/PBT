@@ -1,9 +1,9 @@
 class HNEI_protocol_prompt():
     Protocols_prompts = {
         1.0:  # HNEI_18650_NMC_LCO_25C_0-100_0.5-1.5C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is a mixture of LiCoO2 and LiNi4Co4Mn2O2. "
-            f"Its negative electrode is graphitic intercalation compound. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a mixture of LiCoO2 and LiNi0.4Co0.4Mn0.2O2 (NCM442). "
+            f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chemical Limited. "
             f"The nominal capacity is 2.8 Ah. "
@@ -18,9 +18,9 @@ class HNEI_protocol_prompt():
             f"then was discharged at a constant current of 1.5 C until reaching 3 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:  # HNEI_18650_NMC_LCO_25C_0-100_0.5-1.5C_b---HNEI_18650_NMC_LCO_25C_0-100_0.5-1.5C_t
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is a mixture of LiCoO2 and LiNi4Co4Mn2O2. "
-            f"Its negative electrode is graphitic intercalation compound. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a mixture of LiCoO2 and LiNi0.4Co0.4Mn0.2O2 (NCM442). "
+            f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chemical Limited. "
             f"The nominal capacity is 2.8 Ah. "

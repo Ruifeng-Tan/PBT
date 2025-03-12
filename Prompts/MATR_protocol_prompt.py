@@ -1,8 +1,8 @@
 class MATR_Batch9_protocol_prompt():
     Protocols_prompts = {
         1.0:# Batch9_CH1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -17,8 +17,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:# Batch9_CH2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -33,8 +33,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:# Batch9_CH3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -49,8 +49,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         4.0:# Batch9_CH6
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -65,8 +65,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         5.0:# Batch9_CH7
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -82,8 +82,8 @@ class MATR_Batch9_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
 
         6.0:# Batch9_CH8
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -98,8 +98,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         7.0:# Batch9_CH9
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -114,8 +114,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         8.0:# Batch9_CH10
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -130,8 +130,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         9.0:# Batch9_CH11
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -146,8 +146,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         10.0:# Batch9_CH12
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -162,8 +162,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         11.0:# Batch9_CH13
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -178,8 +178,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         12.0:# Batch9_CH14
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -194,8 +194,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         13.0:# Batch9_CH15
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -210,8 +210,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         14.0:# Batch9_CH16
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -226,8 +226,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         15.0:# Batch9_CH17
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -242,8 +242,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         16.0:# Batch9_CH18
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -258,8 +258,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         17.0:# Batch9_CH19
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -274,8 +274,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         18.0:# Batch9_CH20
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -290,8 +290,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         19.0:# Batch9_CH21
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -306,8 +306,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         20.0:# Batch9_CH22
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -322,8 +322,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         21.0:# Batch9_CH23
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -338,8 +338,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         22.0:# Batch9_CH24
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -354,8 +354,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         23.0:# Batch9_CH25
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -370,8 +370,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         24.0:# Batch9_CH26
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -386,8 +386,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         25.0:# Batch9_CH27
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -402,8 +402,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         26.0:# Batch9_CH28
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -418,8 +418,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         27.0:# Batch9_CH29
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -434,8 +434,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         28.0:# Batch9_CH30
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -450,8 +450,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         29.0:# Batch9_CH31
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -466,8 +466,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         30.0:# Batch9_CH32
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -482,8 +482,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         31.0:# Batch9_CH33
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -498,8 +498,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         32.0:# Batch9_CH34
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -514,8 +514,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         33.0:# Batch9_CH35
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -530,8 +530,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         34.0:# Batch9_CH36
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -546,8 +546,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         35.0:# Batch9_CH37
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -562,8 +562,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         36.0:# Batch9_CH38
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -578,8 +578,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         37.0:# Batch9_CH39
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -594,8 +594,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         38.0:# Batch9_CH40
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -610,8 +610,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         39.0:# Batch9_CH41
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -626,8 +626,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         40.0:# Batch9_CH42
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -642,8 +642,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         41.0:# Batch9_CH43
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -658,8 +658,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         42.0:# Batch9_CH44
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -674,8 +674,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         43.0:# Batch9_CH45
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -690,8 +690,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         44.0:  # Batch9_CH47
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -706,8 +706,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         45.0:  # Batch9_CH48
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -722,8 +722,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         46.0:  # b1c0
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -734,8 +734,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         47.0:  # b1c1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -746,8 +746,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         48.0:  # b1c2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -758,8 +758,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         49.0:  # b1c3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -770,8 +770,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         50.0:  # b1c4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -782,8 +782,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         51.0:  # b1c5
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -794,8 +794,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         52.0:  # b1c6
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -806,8 +806,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         53.0:  # b1c7
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -818,8 +818,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         54.0:  # b1c9
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -832,8 +832,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         55.0:  # b1c11
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -846,8 +846,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         56.0:  # b1c14
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -860,8 +860,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         57.0:  # b1c15
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -874,8 +874,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         58.0:  # b1c16
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -888,8 +888,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         59.0:  # b1c17
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -902,8 +902,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2.0 V.  "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         60.0:  # b1c18
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -916,8 +916,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         61.0:  # b1c19
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -930,8 +930,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         62.0:  # b1c20
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -942,8 +942,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         63.0:  # b1c21
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -954,8 +954,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         64.0:  # b1c23
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -968,8 +968,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         65.0:  # b1c24
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -982,8 +982,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         66.0:  # b1c25
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -996,8 +996,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         67.0:  # b1c26
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1010,8 +1010,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         68.0:  # b1c27
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1024,8 +1024,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         69.0:  # b1c28
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1038,8 +1038,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         70.0:  # b1c29
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1052,8 +1052,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         71.0:  # b1c30
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1066,8 +1066,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         72.0:  # b1c31
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1080,8 +1080,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         73.0:  # b1c32
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1094,8 +1094,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         74.0:  # b1c33
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1108,8 +1108,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         75.0:  # b1c34
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1122,8 +1122,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         76.0:  # b1c35
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1136,8 +1136,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         77.0:  # b1c36
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1150,8 +1150,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         78.0:  # b1c37
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1164,8 +1164,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         79.0:  # b1c38
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1178,8 +1178,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         80.0:  # b1c39
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1192,8 +1192,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         81.0:  # b1c40
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1206,8 +1206,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         82.0:  # b1c41
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1220,8 +1220,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         83.0:  # b1c42
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1234,8 +1234,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         84.0:  # b1c43
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1248,8 +1248,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         85.0:  # b1c44
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1262,8 +1262,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         86.0:  # b1c45
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1276,8 +1276,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         87.0:  # b2c0
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1290,8 +1290,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         88.0:  # b2c1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1304,8 +1304,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         89.0:  # b2c2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1318,8 +1318,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         90.0:  # b2c3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1332,8 +1332,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         91.0:  # b2c4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1346,8 +1346,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         92.0:  # b2c5
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1360,8 +1360,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         93.0:  # b2c6
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1374,8 +1374,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         94.0:  # b2c10
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1388,8 +1388,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         95.0:  # b2c11
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1402,8 +1402,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         96.0:  # b2c12
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1416,8 +1416,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         97.0:  # b2c13
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1430,8 +1430,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         98.0:  # b2c14
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1444,8 +1444,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         99.0:  # b2c17
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1458,8 +1458,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         100.0:  # b2c18
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1472,8 +1472,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         101.0:  # b2c19
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1486,8 +1486,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         102.0:  # b2c20
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1500,8 +1500,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         103.0:  # b2c21
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1514,8 +1514,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         104.0:  # b2c22
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1528,8 +1528,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         105.0:  # b2c23
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1542,8 +1542,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         106.0:  # b2c24
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1554,8 +1554,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         107.0:  # b2c25
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1566,8 +1566,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         108.0:  # b2c26
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1578,8 +1578,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         109.0:  # b2c27
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1592,8 +1592,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         110.0:  # b2c28
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1606,8 +1606,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         111.0:  # b2c29
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1620,8 +1620,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         112.0:  # b2c30
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1634,8 +1634,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         113.0:  # b2c31
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1648,8 +1648,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         114.0:  # b2c32
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1662,8 +1662,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         115.0:  # b2c33
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1676,8 +1676,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         116.0:  # b2c34
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1690,8 +1690,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         117.0:  # b2c35
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1704,8 +1704,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         118.0:  # b2c36
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1718,8 +1718,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         119.0:  # b2c37
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1732,8 +1732,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         120.0:  # b2c38
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1746,8 +1746,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         121.0:  # b2c39
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1760,8 +1760,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         122.0:  # b2c40
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1774,8 +1774,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         123.0:  # b2c41
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1788,8 +1788,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         124.0:  # b2c42
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1802,8 +1802,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         125.0:  # b2c43
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1816,8 +1816,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         126.0:  # b2c44
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1830,8 +1830,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         127.0:  # b2c45
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1844,8 +1844,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         128.0:  # b2c46
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1858,8 +1858,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         129.0:  # b2c47
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1872,8 +1872,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         130.0:  # b3c0
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1886,8 +1886,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         131.0:  # b3c1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1900,8 +1900,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         132.0:  # b3c3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1914,8 +1914,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         133.0:  # b3c4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1928,8 +1928,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         134.0:  # b3c5
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1942,8 +1942,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         135.0:  # b3c6
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1956,8 +1956,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         136.0:  # b3c7
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1968,8 +1968,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         137.0:  # b3c8
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1982,8 +1982,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         138.0:  # b3c9
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -1996,8 +1996,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         139.0:  # b3c10
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2010,8 +2010,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         140.0:  # b3c11
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2024,8 +2024,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         141.0:  # b3c12
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2038,8 +2038,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         142.0:  # b3c13
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2052,8 +2052,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         143.0:  # b3c14
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2066,8 +2066,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         144.0:  # b3c15
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2080,8 +2080,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         145.0:  # b3c16
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2092,8 +2092,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         146.0:  # b3c17
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2106,8 +2106,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         147.0:  # b3c18
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2120,8 +2120,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         148.0:  # b3c19
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2134,8 +2134,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         149.0:  # b3c20
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2148,8 +2148,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         150.0:  # b3c21
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2162,8 +2162,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         151.0:  # b3c22
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2176,8 +2176,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         152.0:  # b3c24
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2190,8 +2190,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         153.0:  # b3c25
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2204,8 +2204,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         154.0:  # b3c26
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2218,8 +2218,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         155.0:  # b3c27
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2232,8 +2232,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         156.0:  # b3c28
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2246,8 +2246,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         157.0:  # b3c29
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2260,8 +2260,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         158.0:  # b3c30
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2274,8 +2274,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         159.0:  # b3c31
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2288,8 +2288,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         160.0:  # b3c33
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2302,8 +2302,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         161.0:  # b3c34
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2316,8 +2316,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         162.0:  # b3c35
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2330,8 +2330,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         163.0:  # b3c36
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2344,8 +2344,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         164.0:  # b3c38
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2358,8 +2358,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         165.0:  # b3c39
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2372,8 +2372,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         166.0:  # b3c40
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2386,8 +2386,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         167.0:  # b3c41
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2400,8 +2400,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         168.0:  # b3c44
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "
@@ -2414,8 +2414,8 @@ class MATR_Batch9_protocol_prompt():
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         169.0:  # b3c45
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is a lithium iron phosphate (LiFePO4). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 system. "

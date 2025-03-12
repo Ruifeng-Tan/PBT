@@ -1,12 +1,12 @@
 class HUST_protocol_prompt():
     Protocols_prompts = {
         1.0:  # 1-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -16,12 +16,12 @@ class HUST_protocol_prompt():
             f"In the second stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:  # 1-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -33,12 +33,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:  # 1-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -50,12 +50,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         4.0:  # 1-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -67,12 +67,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         5.0:  # 1-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -84,12 +84,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         6.0:  # 1-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -100,12 +100,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         7.0:  # 1-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -116,12 +116,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         8.0:  # 1-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -133,12 +133,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         9.0:  # 2-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -150,12 +150,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         10.0:  # 2-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -166,12 +166,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         11.0:  # 2-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -183,12 +183,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         12.0:  # 2-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -199,12 +199,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         13.0:  # 2-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -216,12 +216,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         14.0:  # 2-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -233,12 +233,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         15.0:  # 2-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -249,12 +249,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         16.0:  # 3-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -266,12 +266,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         17.0:  # 3-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -283,12 +283,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         18.0:  # 3-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -299,12 +299,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         19.0:  # 3-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -316,12 +316,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         20.0:  # 3-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -331,12 +331,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         21.0:  # 3-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -347,12 +347,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         22.0:  # 3-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -363,12 +363,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         23.0:  # 3-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -379,12 +379,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         24.0:  # 4-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -394,12 +394,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         25.0:  # 4-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -409,12 +409,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         26.0:  # 4-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -426,12 +426,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         27.0:  # 4-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -443,12 +443,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         28.0:  # 4-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -460,12 +460,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         29.0:  # 4-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -477,12 +477,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         30.0:  # 4-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -493,12 +493,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         31.0:  # 4-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -509,12 +509,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         32.0:  #5-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -526,12 +526,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         33.0:  # 5-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -543,12 +543,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         34.0:  # 5-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -560,12 +560,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         35.0:  # 5-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -576,12 +576,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         36.0:  # 5-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -593,12 +593,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         37.0:  # 5-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -609,12 +609,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         38.0:  # 5-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -626,12 +626,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         39.0:  # 6-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -641,12 +641,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         40.0:  # 6-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -657,12 +657,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         41.0:  # 6-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -673,12 +673,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         42.0:  # 6-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -688,12 +688,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         43.0:  # 6-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -704,12 +704,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         44.0:  # 6-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -720,12 +720,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         45.0:  # 6-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -737,12 +737,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         46.0:  # 7-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -754,12 +754,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         47.0:  # 7-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -770,12 +770,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         48.0:  # 7-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -785,12 +785,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         49.0:  # 7-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -802,12 +802,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         50.0:  # 7-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -819,12 +819,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         51.0:  # 7-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -836,12 +836,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         52.0:  # 7-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -853,12 +853,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         53.0:  # 7-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -869,12 +869,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         54.0:  # 8-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -885,12 +885,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         55.0:  # 8-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -902,12 +902,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         56.0:  # 8-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -919,12 +919,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         57.0:  # 8-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -936,12 +936,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         58.0:  # 8-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -951,12 +951,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         59.0:  # 8-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -967,12 +967,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         60.0:  # 8-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -982,12 +982,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         61.0:  # 8-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -998,12 +998,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         62.0:  # 9-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1014,12 +1014,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         63.0:  # 9-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1030,12 +1030,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         64.0:  # 9-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1047,12 +1047,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         65.0:  # 9-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1064,12 +1064,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         66.0:  # 9-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1080,12 +1080,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         67.0:  # 9-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1097,12 +1097,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         68.0:  # 9-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1113,12 +1113,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         69.0:  # 9-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1130,12 +1130,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         70.0:  # 10-1
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1147,12 +1147,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         71.0:  # 10-2
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1164,12 +1164,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         72.0:  # 10-3
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1180,12 +1180,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         73.0:  # 10-4
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1196,12 +1196,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         74.0:  # 10-5
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1213,12 +1213,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         75.0:  # 10-6
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1229,12 +1229,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         76.0:  # 10-7
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "
@@ -1245,12 +1245,12 @@ class HUST_protocol_prompt():
             f"In the final stage, the battery was discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         77.0:  # 10-8
-            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specification: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is lithium-iron-phosphate (LFP)."
             f"Its negative electrode is graphite"
             f"The electrolyte formula is unknown."
             f"The battery manufacturer is A123 systems. "
-            f"The nominal capacity of this cell is 1.1Ah. "
+            f"The nominal capacity of this battery is 1.1Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 30 degree Celsius. "
             f"The battery was charged at a constant current of 5 C to 80% state-of-charge (SOC), and then was charged a constant current of 1 C until reaching 3.6 C, "

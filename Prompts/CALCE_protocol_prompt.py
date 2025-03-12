@@ -1,7 +1,7 @@
 class CALCE_protocol_prompt():
     Protocols_prompts = {
         1.0:  # CALCE_CS2_33, CALCE_CS2_34
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of Prismatic cell. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
             f"Its positive electrode is a LiCoO2. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -13,7 +13,7 @@ class CALCE_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.7 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:  # CALCE_CS2_35---38
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of Prismatic cell. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
             f"Its positive electrode is a LiCoO2. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -25,7 +25,7 @@ class CALCE_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.7 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:  # CALCE_CX2_16, CX2_33, CX2_35
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of Prismatic cell. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
             f"Its positive electrode is a LiCoO2. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -37,7 +37,7 @@ class CALCE_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.7 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         4.0:  # CALCE_CX2_34, CX2_36, CX2_37, CX2_38
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of Prismatic cell. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
             f"Its positive electrode is a LiCoO2. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "

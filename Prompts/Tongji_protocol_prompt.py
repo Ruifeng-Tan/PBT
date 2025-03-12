@@ -1,9 +1,9 @@
 class Tongji_protocol_prompt():
     Protocols_prompts = {
         1.0:  # Tongji1_CY25-025_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.86Ni0.86Co0.11Al0.03 O2 (NCA). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.86(Ni0.86Co0.11Al0.03)O2 (NCA861103). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
@@ -13,9 +13,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:  # Tongji1_CY25-05_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.86Ni0.86Co0.11Al0.03 O2 (NCA). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.86(Ni0.86Co0.11Al0.03)O2 (NCA861103). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
@@ -25,9 +25,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:  # Tongji1_CY25-1_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.86Ni0.86Co0.11Al0.03 O2 (NCA). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.86Ni0.86Co0.11Al0.03O2(NCA861103). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
@@ -37,9 +37,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         4.0:  # Tongji1_CY35-05_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.86Ni0.86Co0.11Al0.03 O2 (NCA). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.86(Ni0.86Co0.11Al0.03)O2 (NCA861103). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
@@ -49,9 +49,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         5.0:  # Tongji1_CY45-05_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.86Ni0.86Co0.11Al0.03 O2 (NCA). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.86(Ni0.86Co0.11Al0.03)O2 (NCA861103). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
@@ -61,9 +61,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         6.0: # Tongji2_CY25-05_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM831107). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is LG CHEM. "
             f"The nominal capacity is 3.5 Ah. "
@@ -73,9 +73,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         7.0: # Tongji2_CY35-05_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM831107). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is LG CHEM. "
             f"The nominal capacity is 3.5 Ah. "
@@ -85,9 +85,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         8.0: # Tongji2_CY45-05_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM). "
-            f"Its negative electrode is Graphite+2 wt.% Si. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li0.84(Ni0.83Co0.11Mn 0.07)O2 (NCM831107). "
+            f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is LG CHEM. "
             f"The nominal capacity is 3.5 Ah. "
@@ -97,9 +97,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         9.0: # Tongji3_CY25-05_1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is 42 wt.% Li(NiCoMn)O2 blended with 58 wt.% Li(NiCoAl)O2 (NCM+NCA). "
-            f"Its negative electrode is Graphite. "
+            f"Its negative electrode is graphite. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.5 Ah. "
@@ -109,9 +109,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         10.0: # Tongji3_CY25-05_2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is 42 wt.% Li(NiCoMn)O2 blended with 58 wt.% Li(NiCoAl)O2 (NCM+NCA). "
-            f"Its negative electrode is Graphite. "
+            f"Its negative electrode is graphite. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.5 Ah. "
@@ -121,9 +121,9 @@ class Tongji_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         11.0: # Tongji3_CY25-05_4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is 42 wt.% Li(NiCoMn)O2 blended with 58 wt.% Li(NiCoAl)O2 (NCM+NCA). "
-            f"Its negative electrode is Graphite. "
+            f"Its negative electrode is graphite. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.5 Ah. "

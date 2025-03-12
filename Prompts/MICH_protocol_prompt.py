@@ -1,10 +1,11 @@
+# including the prompts for MICH dataset and MICH_EXP dataset
 class MICH_protocol_prompt():
     Protocols_prompts = {
         1.0:  # baseline formation 45 degree centigrade
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:C65:PVDF(94:3:3). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
             f"Its negative electrode is graphite. "
-            f"The electrolyte formula consists of 1.0MLiPF6 Salt, EC:EMC(3:7) Solvent and 2wt%VC,4g/Ah Additive. "
+            f"The electrolyte formula consists of 1.0 M LiPF6 salt in solvents of EC and EMC with a ratio of 3:7 together with 2 wt% additive of vinylene carbonate. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.36 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -16,10 +17,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:  # baseline formation 25 degree centigrade
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:C65:PVDF(94:3:3). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
             f"Its negative electrode is graphite. "
-            f"The electrolyte formula consists of 1.0MLiPF6 Salt, EC:EMC(3:7) Solvent and 2wt%VC,4g/Ah Additive. "
+            f"The electrolyte formula consists of 1.0 M LiPF6 salt in solvents of EC and EMC with a ratio of 3:7 together with 2 wt% additive of vinylene carbonate. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.36 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -31,10 +32,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:  # fast formation 45 degree centigrade
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:C65:PVDF(94:3:3). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
             f"Its negative electrode is graphite. "
-            f"The electrolyte formula consists of 1.0MLiPF6 Salt, EC:EMC(3:7) Solvent and 2wt%VC,4g/Ah Additive. "
+            f"The electrolyte formula consists of 1.0 M LiPF6 salt in solvents of EC and EMC with a ratio of 3:7 together with 2 wt% additive of vinylene carbonate. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.36 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -47,10 +48,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         4.0:  # fast formation 25 degree centigrade
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:C65:PVDF(94:3:3). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
             f"Its negative electrode is graphite. "
-            f"The electrolyte formula consists of 1.0MLiPF6 Salt, EC:EMC(3:7) Solvent and 2wt%VC,4g/Ah Additive. "
+            f"The electrolyte formula consists of 1.0 M LiPF6 salt in solvents of EC and EMC with a ratio of 3:7 together with 2 wt% additive of vinylene carbonate. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.36 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -63,10 +64,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         5.0:  # MICH_01R_pouch_NMC_25C_0-100_0.2-0.2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -76,10 +77,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         6.0:  # MICH_02C_pouch_NMC_-5C_0-100_0.2-0.2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -89,10 +90,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         7.0:  # MICH_03H_pouch_NMC_45C_0-100_0.2-0.2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -102,10 +103,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         8.0:  # MICH_04R_pouch_NMC_25C_0-100_1.5-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -115,10 +116,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         9.0:  # MICH_05C_pouch_NMC_-5C_0-100_1.5-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -128,10 +129,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         10.0:  # MICH_06H_pouch_NMC_45C_0-100_1.5-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -141,10 +142,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         11.0:  # MICH_07R_pouch_NMC_25C_0-100_2-2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -154,10 +155,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         12.0:  # MICH_08C_pouch_NMC_-5C_0-100_2-2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -167,10 +168,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         13.0:  # MICH_09H_pouch_NMC_45C_0-100_2-2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -180,10 +181,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         14.0:  # MICH_10R_pouch_NMC_25C_0-100_0.2-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -193,10 +194,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         15.0:  # MICH_11C_pouch_NMC_-5C_0-100_0.2-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -206,10 +207,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         16.0:  # MICH_12H_pouch_NMC_45C_0-100_0.2-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -219,10 +220,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         17.0:  # MICH_13R_pouch_NMC_25C_50-100_0.2-0.2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -232,10 +233,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         18.0:  # MICH_14C_pouch_NMC_-5C_50-100_0.2-0.2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -245,10 +246,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         19.0:  # MICH_15H_pouch_NMC_45C_50-100_0.2-0.2C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -258,10 +259,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         20.0:  # MICH_16R_pouch_NMC_25C_50-100_0.2-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -271,10 +272,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         21.0:  # MICH_17C_pouch_NMC_-5C_50-100_0.2-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
@@ -284,10 +285,10 @@ class MICH_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         22.0:  # MICH_18H_pouch_NMC_45C_50-100_0.2-1.5C
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch cell. "
-            f"Its positive electrode is NCM111:CB:PVDF (94:3:3). "
-            f"Its negative electrode is Graphite:PVDF (95:5). "
-            f"The electrolyte formula consists of 1MLiPF6 Salt and 2%EC:EMC(3:7) Solven. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
+            f"Its positive electrode is NMC111. "
+            f"Its negative electrode is graphite. "
+            f"The electrolyte formula consists of 1M LiPF6 salt in solvents of ethylene carbonate (EC) and ethyl methyl carbonate (EMC) with a ratio of 3:7. "
             f"The battery manufacturer is LISHEN. "
             f"The nominal capacity is 5.0 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "

@@ -1,5 +1,5 @@
 Protocols_prompts = {
-1.0:  # 1
+1.0:  # protocol prompt template
     f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
     f"Its positive electrode is a mixture of LiCoO2 and LiNi0.5Co0.2Mn0.3O2. "
     f"Its negative electrode is graphite. "

@@ -4,15 +4,18 @@
 # @FileName: Mapping_helper.py
 
 from Prompts import (HUST_protocol_prompt, MATR_protocol_prompt, SNL_protocol_prompt, RWTH_protocol_prompt,
-                              HNEI_protocol_prompt, CALCE_protocol_prompt, UL_PUR_protocol_prompt, OX_protocol_prompt,
-                              MICH_protocol_prompt, BIT2_protocol_prompt, Tongji_protocol_prompt, Stanford_protocol_prompt,
-                              ISU_ILCC_protocol_prompt, XJTU_protocol_prompt, ZNcoin_protocol_prompt)
+                              HNEI_protocol_prompt, CALCE_protocol_prompt, UL_PUR_protocol_prompt,
+                              MICH_protocol_prompt, Tongji_protocol_prompt, Stanford_protocol_prompt,
+                              ISU_ILCC_protocol_prompt, XJTU_protocol_prompt, ZNcoin_protocol_prompt,
+                              CALB_protocol_prompt, NA_protocol_prompt)
 
 
 class Mapping_helper():
     def __init__(self, prompt_type, cell_name):
         self.prompt_type = prompt_type
         self.cell_name = cell_name
+
+        self.do_mapping()
 
     def HUST_protocol_mapping(self):
         hust_map = {
@@ -1025,10 +1028,130 @@ class Mapping_helper():
             'ZN-coin_449-1_20240104212736_06_3': 126.0,
             'ZN-coin_449-2_20240104212745_06_4': 127.0,
             'ZN-coin_449-3_20240104212753_06_5': 128.0,
+            'ZN-coin_450-1_20240116203402_01_2_Batch-3': 129.0,
+            'ZN-coin_450-2_20240116203410_01_4_Batch-3': 130.0,
+            'ZN-coin_450-3_20240116203417_03_3_Batch-3': 131.0,
+            'ZN-coin_451-1_20240116203425_03_4_Batch-3': 132.0,
+            'ZN-coin_451-2_20240116203431_04_3_Batch-3': 133.0,
+            'ZN-coin_451-3_20240116203436_04_5_Batch-3': 134.0,
+            'ZN-coin_452-1_20240116203442_04_6_Batch-3': 135.0,
+            'ZN-coin_452-2_20240116203450_08_5_Batch-3': 136.0,
+            'ZN-coin_452-3_20240116204046_08_4_Batch-3': 137.0,
+            'ZN-coin_453-1_20240116203617_08_6_Batch-3': 138.0,
+            'ZN-coin_453-2_20240116203622_08_7_Batch-3': 139.0,
+            'ZN-coin_453-3_20240116203627_08_8_Batch-3': 140.0,
         }
         prompt_index = zncoin_map[self.cell_name]
         zncoin_protocol_prompts = ZNcoin_protocol_prompt.ZNcoin_protocol_prompt.Protocols_prompts[prompt_index]
         return zncoin_protocol_prompts
+
+    def CALB_protocol_mapping(self):
+        calb_map = {
+            'CALB_25_T25-1': 1.0,
+            'CALB_25_T25-2': 2.0,
+            'CALB_35_B173': 3.0,
+            'CALB_35_B174': 4.0,
+            'CALB_35_B175': 5.0,
+            'CALB_35_B222': 6.0,
+            'CALB_35_B223': 7.0,
+            'CALB_35_B224': 8.0,
+            'CALB_35_B227': 9.0,
+            'CALB_35_B228': 10.0,
+            'CALB_35_B229': 11.0,
+            'CALB_35_B230': 12.0,
+            'CALB_35_B247': 13.0,
+            'CALB_35_B248': 14.0,
+            'CALB_35_B249': 15.0,
+            'CALB_35_B250': 16.0,
+            'CALB_45_B253': 17.0,
+            'CALB_45_B254': 18.0,
+            'CALB_45_B255': 19.0,
+            'CALB_45_B256': 20.0,
+            'CALB_0_B182': 21.0,
+            'CALB_0_B183': 22.0,
+            'CALB_0_B184': 23.0,
+            'CALB_0_B185': 24.0,
+            'CALB_0_B187': 25.0,
+            'CALB_0_B188': 26.0,
+            'CALB_0_B189': 27.0,
+            'CALB_0_B190': 28.0,
+        }
+
+        prompt_index = calb_map[self.cell_name]
+        calb_protocol_prompts = CALB_protocol_prompt.CALB_protocol_prompt.Protocols_prompts[prompt_index]
+        return calb_protocol_prompts
+
+    def NA_protocol_mapping(self):
+        na_map = {
+            'NA-ion_2850-30_20250117105706_DefaultGroup_45_2': 1.0,
+            'NA-ion_4000-30_20250115110206_DefaultGroup_45_1': 2.0,
+            'NA-ion_4500-30_20250114232539_DefaultGroup_45_8': 3.0,
+            'NA-ion_5000-25_20250115110326_DefaultGroup_38_1': 4.0,
+            'NA-ion_5000-25_20250115110326_DefaultGroup_38_2': 5.0,
+            'NA-ion_270040-1-1-64': 6.0,
+            'NA-ion_270040-1-2-63': 7.0,
+            'NA-ion_270040-1-3-62': 8.0,
+            'NA-ion_270040-1-4-61': 9.0,
+            'NA-ion_270040-1-5-60': 10.0,
+            'NA-ion_270040-1-6-59': 11.0,
+            'NA-ion_270040-1-7-58': 12.0,
+            'NA-ion_270040-1-8-57': 13.0,
+            'NA-ion_270040-2-1-12': 14.0,
+            'NA-ion_270040-2-2-12': 14.0,
+            'NA-ion_270040-2-3-12': 14.0,
+            'NA-ion_270040-2-4-12': 14.0,
+            'NA-ion_270040-2-5-12': 14.0,
+            'NA-ion_270040-2-6-12': 14.0,
+            'NA-ion_270040-2-7-12': 14.0,
+            'NA-ion_270040-2-8-12': 14.0,
+            'NA-ion_270040-3-1-56': 15.0,
+            'NA-ion_270040-3-2-55': 16.0,
+            'NA-ion_270040-3-3-54': 17.0,
+            'NA-ion_270040-3-4-53': 18.0,
+            'NA-ion_270040-3-5-52': 19.0,
+            'NA-ion_270040-3-6-51': 20.0,
+            'NA-ion_270040-3-7-50': 21.0,
+            'NA-ion_270040-3-8-49': 22.0,
+            'NA-ion_270040-4-1-48': 23.0,
+            'NA-ion_270040-4-2-47': 24.0,
+            'NA-ion_270040-4-3-46': 25.0,
+            'NA-ion_270040-4-4-45': 26.0,
+            'NA-ion_270040-4-5-44': 27.0,
+            'NA-ion_270040-4-6-43': 28.0,
+            'NA-ion_270040-4-7-42': 29.0,
+            'NA-ion_270040-4-8-41': 30.0,
+            'NA-ion_270040-5-1-39': 31.0,
+            'NA-ion_270040-5-2-38': 32.0,
+            'NA-ion_270040-5-3-37': 33.0,
+            'NA-ion_270040-5-4-36': 34.0,
+            'NA-ion_270040-5-5-35': 35.0,
+            'NA-ion_270040-5-6-34': 36.0,
+            'NA-ion_270040-5-7-33': 37.0,
+            'NA-ion_270040-5-8-32': 38.0,
+            'NA-ion_270040-6-1-31': 39.0,
+            'NA-ion_270040-6-2-30': 40.0,
+            'NA-ion_270040-6-3-29': 41.0,
+            'NA-ion_270040-6-4-28': 42.0,
+            'NA-ion_270040-6-5-27': 43.0,
+            'NA-ion_270040-6-6-26': 44.0,
+            'NA-ion_270040-6-7-25': 45.0,
+            'NA-ion_270040-6-8-24': 46.0,
+            'NA-ion_270040-7-1-23': 47.0,
+            'NA-ion_270040-7-2-22': 48.0,
+            'NA-ion_270040-7-3-21': 49.0,
+            'NA-ion_270040-8-1-20': 50.0,
+            'NA-ion_270040-8-2-19': 51.0,
+            'NA-ion_270040-8-3-18': 52.0,
+            'NA-ion_270040-8-4-17': 53.0,
+            'NA-ion_270040-8-5-16': 54.0,
+            'NA-ion_270040-8-6-15': 55.0,
+            'NA-ion_270040-8-7-14': 56.0,
+            'NA-ion_270040-8-8-13': 57.0,
+        }
+
+        prompt_index = na_map[self.cell_name]
+        na_protocol_prompts = NA_protocol_prompt.NA_protocol_prompt.Protocols_prompts[prompt_index]
+        return na_protocol_prompts
 
     def do_mapping(self):
         if self.cell_name.startswith('HUST'):
@@ -1091,13 +1214,21 @@ class Mapping_helper():
             if self.prompt_type == 'PROTOCOL':
                 protocol_prompt = self.ZNcoin_protocol_mapping()
                 return protocol_prompt
+        elif self.cell_name.startswith('CALB'):
+            if self.prompt_type == 'PROTOCOL':
+                protocol_prompt = self.CALB_protocol_mapping()
+                return protocol_prompt
+        elif self.cell_name.startswith('NA-ion'):
+            if self.prompt_type == 'PROTOCOL':
+                protocol_prompt = self.NA_protocol_mapping()
+                return protocol_prompt
         else:
             raise Exception('Not implemented!')
 
 
 
 if __name__ == '__main__':
-    prompt_helper = Mapping_helper(prompt_type='PROTOCOL', cell_name='NA-coin_O3_Lifun_ECPCDMC_3PS_2_2.5_cycling_aging_3')
+    prompt_helper = Mapping_helper(prompt_type='PROTOCOL', cell_name='NA-ion_270040-8-8-13')
     print(prompt_helper.do_mapping())
 
 

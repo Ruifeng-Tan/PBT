@@ -1,8 +1,8 @@
 class SNL_protocol_prompt():
     Protocols_prompts = {
-        1.0:  # SNL_18650_LFP_15C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        1.0:  # SNL_18650_LiFePO4_15C_0-100_0.5-2C_b
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -12,9 +12,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        2.0:  # SNL_18650_LFP_25C_0-100_0.5-0.5C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        2.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-0.5C_a
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -24,9 +24,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        3.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        3.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_a
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -36,9 +36,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        4.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        4.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_b
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -48,9 +48,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        5.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        5.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_c
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -60,9 +60,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        6.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        6.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_d
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -72,9 +72,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        7.0:  # SNL_18650_LFP_25C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        7.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-2C_a
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -84,9 +84,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        8.0:  # SNL_18650_LFP_25C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        8.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-2C_b
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -96,9 +96,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        9.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        9.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_a
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -108,9 +108,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        10.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        10.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_b
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -120,9 +120,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        11.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        11.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_c
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -132,9 +132,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        12.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        12.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_d
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -144,9 +144,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        13.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        13.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_a
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -156,9 +156,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        14.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        14.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_b
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -168,9 +168,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        15.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        15.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_c
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -180,9 +180,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        16.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        16.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_d
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -192,9 +192,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        17.0:  # SNL_18650_LFP_35C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        17.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-2C_a
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -204,9 +204,9 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        18.0:  # SNL_18650_LFP_35C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is lithium-iron-phosphate (LFP). "
+        18.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-2C_b
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is A123 System. "
@@ -217,272 +217,272 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         19.0:  # SNL_18650_NCA_15C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 15 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         20.0:  # SNL_18650_NCA_15C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 15 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         21.0:  # SNL_18650_NCA_15C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 15 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         22.0:  # SNL_18650_NCA_15C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 15 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         23.0:  # SNL_18650_NCA_25C_0-100_0.5-0.5C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         24.0:  # SNL_18650_NCA_25C_0-100_0.5-0.5C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         25.0:  # SNL_18650_NCA_25C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         26.0:  # SNL_18650_NCA_25C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         27.0:  # SNL_18650_NCA_25C_0-100_0.5-1C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         28.0:  # SNL_18650_NCA_25C_0-100_0.5-1C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         29.0:  # SNL_18650_NCA_25C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         30.0:  # SNL_18650_NCA_25C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         31.0:  # SNL_18650_NCA_25C_20-80_0.5-0.5C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         32.0:  # SNL_18650_NCA_25C_20-80_0.5-0.5C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         33.0:  # SNL_18650_NCA_25C_20-80_0.5-0.5C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         34.0:  # SNL_18650_NCA_25C_20-80_0.5-0.5C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         35.0:  # SNL_18650_NCA_35C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 35 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         36.0:  # SNL_18650_NCA_35C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 35 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         37.0:  # SNL_18650_NCA_35C_0-100_0.5-1C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 35 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         38.0:  # SNL_18650_NCA_35C_0-100_0.5-1C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 35 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         39.0:  # SNL_18650_NCA_35C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 35 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         40.0:  # SNL_18650_NCA_35C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.81Co0.14Al0.05. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.81Co0.14Al0.05)O2 (NCA811405). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LG Chem. "
-            f"The nominal capacity is 3 Ah. "
+            f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 35 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.015625 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         41.0:  # SNL_18650_NMC_15C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -493,8 +493,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         42.0:  # SNL_18650_NMC_15C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -505,8 +505,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         43.0:  # SNL_18650_NMC_15C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -517,8 +517,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         44.0:  # SNL_18650_NMC_15C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -529,8 +529,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         45.0:  # SNL_18650_NMC_25C_0-100_0.5-0.5C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -541,8 +541,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         46.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -553,8 +553,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         47.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -565,8 +565,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         48.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -577,8 +577,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         49.0:  # SNL_18650_NMC_25C_0-100_0.5-1C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -589,8 +589,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         50.0:  # SNL_18650_NMC_25C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -601,8 +601,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         51.0:  # SNL_18650_NMC_25C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -613,8 +613,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         52.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -625,8 +625,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         53.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -637,8 +637,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         54.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -649,8 +649,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         55.0:  # SNL_18650_NMC_25C_0-100_0.5-3C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -661,8 +661,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         56.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -673,8 +673,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         57.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -685,8 +685,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         58.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_c
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -697,8 +697,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         59.0:  # SNL_18650_NMC_35C_0-100_0.5-1C_d
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -709,8 +709,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         60.0:  # SNL_18650_NMC_35C_0-100_0.5-2C_a
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "
@@ -721,8 +721,8 @@ class SNL_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         61.0:  # SNL_18650_NMC_35C_0-100_0.5-2C_b
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is Ni0.84Mn0.06Co0.1. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi(0.84Mn0.06Co0.1)O2 (NMC840610). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is Panasonic. "

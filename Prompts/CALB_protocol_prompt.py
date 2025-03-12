@@ -1,8 +1,8 @@
 class CALB_protocol_prompt():
     Protocols_prompts = {
         1.0: # CALB_25_T25-1.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -21,8 +21,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0: # CALB_25_T25-2.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -41,8 +41,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:  # CALB_35_B173.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -61,8 +61,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         4.0:  # CALB_35_B174.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -81,8 +81,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         5.0:  # CALB_35_B175.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -101,8 +101,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         6.0:  # CALB_35_B222.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -121,8 +121,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         7.0:  # CALB_35_B223.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -141,8 +141,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         8.0:  # CALB_35_B224.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -161,8 +161,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         9.0:  # CALB_35_B227.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -181,8 +181,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         10.0:  # CALB_35_B228.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -201,8 +201,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         11.0:  # CALB_35_B229.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -221,8 +221,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         12.0:  # CALB_35_B230.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -241,8 +241,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         13.0:  # CALB_35_B247.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -261,8 +261,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         14.0:  # CALB_35_B248.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -281,8 +281,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         15.0:  # CALB_35_B249.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -301,8 +301,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         16.0:  # CALB_35_B250.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -321,8 +321,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         17.0:  # CALB_45_B253.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -341,8 +341,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         18.0:  # CALB_45_B254.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -361,8 +361,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         19.0:  # CALB_45_B255.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -381,8 +381,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         20.0:  # CALB_45_B256.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -401,8 +401,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.75 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         21.0:  # CALB_0_B182.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -414,8 +414,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         22.0:  # CALB_0_B183.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -427,8 +427,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         23.0:  # CALB_0_B184.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -440,8 +440,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         24.0:  # CALB_0_B185.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -453,8 +453,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         25.0:  # CALB_0_B187.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -466,8 +466,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         26.0:  # CALB_0_B188.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -479,8 +479,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         27.0:  # CALB_0_B189.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "
@@ -492,8 +492,8 @@ class CALB_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 2.2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         28.0:  # CALB_0_B190.pkl
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic cell. "
-            f"Its positive electrode is NCM. "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of prismatic battery. "
+            f"Its positive electrode is NMC. "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is CALB Co., Ltd. "

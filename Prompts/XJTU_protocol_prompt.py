@@ -1,8 +1,8 @@
 class XJTU_protocol_prompt():
     Protocols_prompts = {
         1.0:
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is LiNi0.5Co0.2Mn0.3O2 (NCM). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LISHEN. "
@@ -15,8 +15,8 @@ class XJTU_protocol_prompt():
             f"and then rest for 5 minutes. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is LiNi0.5Co0.2Mn0.3O2 (NCM). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is LISHEN. "

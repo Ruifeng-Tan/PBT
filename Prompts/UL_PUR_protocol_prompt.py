@@ -1,8 +1,8 @@
 class UL_PUR_protocol_prompt():
     Protocols_prompts = {
         1.0:
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-            f"Its positive electrode is LiNi0.8Co0.15Al0.05O2 (NCA). "
+            f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            f"Its positive electrode is LiNi0.8Co0.15Al0.05O2(NCA801505). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is unknown. "
