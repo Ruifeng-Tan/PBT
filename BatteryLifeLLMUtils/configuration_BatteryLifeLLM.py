@@ -5,7 +5,6 @@ from math import sqrt
 from transformers import LlamaConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from transformers import GPT2Config, GPT2Tokenizer, GPT2Model, AutoTokenizer
 from transformers import PreTrainedModel
-from layers.Embed import PatchEmbeddingTimeLLM
 from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer, ConvLayer
 from layers.SelfAttention_Family import FullAttention, AttentionLayer
 from layers.StandardNorm import Normalize

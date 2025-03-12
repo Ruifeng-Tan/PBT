@@ -267,33 +267,6 @@ class PatchEmbedding(nn.Module):
         # Input encoding
         x = self.value_embedding(x) + self.position_embedding(x)
         return self.dropout(x), n_vars
-    
-class PatchEmbeddingTimeLLM(nn.Module):
-    def __init__(self, d_model, patch_len, stride, dropout):
-        super(PatchEmbeddingTimeLLM, self).__init__()
-        # Patching
-        self.patch_len = patch_len
-        self.stride = stride
-        self.padding_patch_layer = ReplicationPad1d((0, stride))
-
-        # Backbone, Input encoding: projection of feature vectors onto a d-dim vector space
-        self.value_embedding = TokenEmbedding(patch_len, d_model)
-
-        # Positional embedding
-        # self.position_embedding = PositionalEmbedding(d_model)
-
-        # Residual dropout
-        self.dropout = nn.Dropout(dropout)
-
-    def forward(self, x):
-        # do patching
-        n_vars = x.shape[1]
-        x = self.padding_patch_layer(x)
-        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride)
-        x = torch.reshape(x, (x.shape[0] * x.shape[1], x.shape[2], x.shape[3]))
-        # Input encoding
-        x = self.value_embedding(x)
-        return self.dropout(x), n_vars
 
 
 class DataEmbedding_wo_time(nn.Module):
@@ -307,3 +280,34 @@ class DataEmbedding_wo_time(nn.Module):
     def forward(self, x):
         x = self.value_embedding(x) + self.position_embedding(x)
         return self.dropout(x)
+
+class ChannelMixingPatchEmbedding(nn.Module):
+    def __init__(self, d_model, patch_len, stride, padding, dropout, num_vars=3):
+        super(ChannelMixingPatchEmbedding, self).__init__()
+        # Patching
+        self.patch_len = patch_len
+        self.stride = stride
+        self.num_vars = num_vars
+        # self.padding_patch_layer = nn.ReplicationPad1d((0, padding))
+
+        # Backbone, Input encoding: projection of feature vectors onto a d-dim vector space
+        self.value_embedding = nn.Linear(patch_len*num_vars, d_model, bias=False)
+
+        # Residual dropout
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x):
+        '''
+        param:
+            x: [N, num_vars, fixed_len]
+        return:
+            x: [N, n_patches, d_model]
+        '''
+        # do patching
+        n_vars = x.shape[1]
+        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride) # [N, num_vars, n_patches, patch_len]
+        x = x.permute(0, 2, 1, 3) # [N, n_patches, num_vars, patch_len]
+        x = x.reshape(x.shape[0], x.shape[1], self.num_vars*self.patch_len)
+        # Input encoding
+        x = self.value_embedding(x) 
+        return self.dropout(x), n_vars

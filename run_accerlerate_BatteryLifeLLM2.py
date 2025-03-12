@@ -10,8 +10,8 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_DG_MLPGateIMP, \
-            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE, BatteryMoE_FusedDKP, BatteryLifeLLMv20_Stack_AllMoE
+from models import BatteryMoE_DG_MLPGateCNN, \
+            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE, BatteryMoE_FusedDKP
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -84,8 +84,8 @@ parser.add_argument('--label_len', type=int, default=48, help='start token lengt
 parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
 
 # model define
-parser.add_argument('--down_sampling_window', type=int, default=2, help='The kernel size and stride of the down-pool')
-parser.add_argument('--number_of_scales', type=int, default=4, help='The number of scales in the multi-scalce Cyclepatch')
+# parser.add_argument('--down_sampling_window', type=int, default=2, help='The kernel size and stride of the down-pool')
+# parser.add_argument('--number_of_scales', type=int, default=4, help='The number of scales in the multi-scalce Cyclepatch')
 parser.add_argument('--last_layer', type=int, default=0, help='The layer index for fusion')
 parser.add_argument('--d_llm', type=int, default=4096, help='the features of llm')
 parser.add_argument('--enc_in', type=int, default=1, help='encoder input size')
@@ -219,11 +219,11 @@ for ii in range(args.itr):
         args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, pretrained, args.lstm_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
     data_provider_func = data_provider_LLMv2
-    if args.model == 'BatteryMoE_DG_MLPGateIMP':
+    if args.model == 'BatteryMoE_DG_MLPGateCNN':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_DG_MLPGateIMP.Model(model_config)
+        model = BatteryMoE_DG_MLPGateCNN.Model(model_config)
     elif args.model == 'BatteryMoE_FusedDKP':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
