@@ -11,7 +11,7 @@ from transformers import GPT2Config, GPT2Tokenizer, GPT2Model, AutoTokenizer, Au
 from transformers import PreTrainedModel, BitsAndBytesConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryLifeConfig
 from BatteryLifeLLMUtils.output_BatteryLifeLLM import BatteryLifeCausalLMOutputWithPast
-from layers.Embed import PatchEmbeddingTimeLLM, PositionalEmbedding
+from layers.Embed import PositionalEmbedding
 from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer, ConvLayer, RMSEncoderLayer, MyEncoderLayer
 from layers.SelfAttention_Family import FullAttention, AttentionLayer
 from layers.StandardNorm import Normalize
