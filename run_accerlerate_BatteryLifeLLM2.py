@@ -11,7 +11,7 @@ from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alig
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_DG_MLPGateIMP, \
-            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE, BatteryMoE_FusedDKP
+            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE, BatteryMoE_DG_MLPGate_Seek
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -133,10 +133,10 @@ parser.add_argument('--percent', type=int, default=100)
 parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
 
-# Router
-parser.add_argument('--noDKP_num_experts', type=int, default=10, help="The number of the expert models used to process the battery data when the input itself is used for gating")
-parser.add_argument('--num_experts', type=int, default=5, help="The number of the expert models used to process the battery data in encoder")
-parser.add_argument('--d_num_experts', type=int, default=5, help="The number of the expert models used to process the battery data in decoder")
+# MoE definition
+parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
+parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
+parser.add_argument('--d_num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in decoder")
 parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
@@ -224,11 +224,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_DG_MLPGateIMP.Model(model_config)
-    elif args.model == 'BatteryMoE_FusedDKP':
+    elif args.model == 'BatteryMoE_DG_MLPGate_Seek':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_FusedDKP.Model(model_config)
+        model = BatteryMoE_DG_MLPGate_Seek.Model(model_config)
     elif args.model == 'BatteryMoE_DG_MLPGate':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
