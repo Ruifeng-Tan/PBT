@@ -3,7 +3,7 @@ class Stanford_protocol_prompt():
         1.0:  # 100
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -19,7 +19,7 @@ class Stanford_protocol_prompt():
         2.0:  # 101
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -35,7 +35,7 @@ class Stanford_protocol_prompt():
         3.0:  # 102
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -51,7 +51,7 @@ class Stanford_protocol_prompt():
         4.0:  # 191
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -67,7 +67,7 @@ class Stanford_protocol_prompt():
         5.0:  # 192
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -83,7 +83,7 @@ class Stanford_protocol_prompt():
         6.0:  # 193
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -99,7 +99,7 @@ class Stanford_protocol_prompt():
         7.0:  # 194
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -115,7 +115,7 @@ class Stanford_protocol_prompt():
         8.0:  # 195
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -131,7 +131,7 @@ class Stanford_protocol_prompt():
         9.0:  # 196
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -147,7 +147,7 @@ class Stanford_protocol_prompt():
         11.0:  # 198
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -163,7 +163,7 @@ class Stanford_protocol_prompt():
         12.0:  # 199
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -179,7 +179,7 @@ class Stanford_protocol_prompt():
         13.0:  # 200
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -195,7 +195,7 @@ class Stanford_protocol_prompt():
         14.0:  # 201
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -211,7 +211,7 @@ class Stanford_protocol_prompt():
         15.0:  # 202
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -227,7 +227,7 @@ class Stanford_protocol_prompt():
         16.0:  # 203
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -243,7 +243,7 @@ class Stanford_protocol_prompt():
         17.0:  # 204
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -259,7 +259,7 @@ class Stanford_protocol_prompt():
         18.0:  # 205
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -275,7 +275,7 @@ class Stanford_protocol_prompt():
         19.0:  # 206
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -291,7 +291,7 @@ class Stanford_protocol_prompt():
         20.0:  # 207
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -307,7 +307,7 @@ class Stanford_protocol_prompt():
         21.0:  # 208
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -323,7 +323,7 @@ class Stanford_protocol_prompt():
         22.0:  # 209
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -339,7 +339,7 @@ class Stanford_protocol_prompt():
         23.0:  # 210
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -355,7 +355,7 @@ class Stanford_protocol_prompt():
         24.0:  # 211
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -371,7 +371,7 @@ class Stanford_protocol_prompt():
         25.0:  # 212
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -387,7 +387,7 @@ class Stanford_protocol_prompt():
         26.0:  # 213
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -403,7 +403,7 @@ class Stanford_protocol_prompt():
         27.0:  # 214
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -419,7 +419,7 @@ class Stanford_protocol_prompt():
         28.0:  # 215
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -435,7 +435,7 @@ class Stanford_protocol_prompt():
         29.0:  # 216
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -451,7 +451,7 @@ class Stanford_protocol_prompt():
         30.0:  # 217
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -467,7 +467,7 @@ class Stanford_protocol_prompt():
         31.0:  # 219
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -483,7 +483,7 @@ class Stanford_protocol_prompt():
         32.0:  # 220
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -499,7 +499,7 @@ class Stanford_protocol_prompt():
         33.0:  # 221
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -515,7 +515,7 @@ class Stanford_protocol_prompt():
         34.0:  # 222
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -531,7 +531,7 @@ class Stanford_protocol_prompt():
         35.0:  # 223
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -547,7 +547,7 @@ class Stanford_protocol_prompt():
         36.0:  # 224
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -563,7 +563,7 @@ class Stanford_protocol_prompt():
         37.0:  # 225
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -579,7 +579,7 @@ class Stanford_protocol_prompt():
         38.0:  # 226
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -595,7 +595,7 @@ class Stanford_protocol_prompt():
         39.0:  # 227
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -611,7 +611,7 @@ class Stanford_protocol_prompt():
         40.0:  # 228
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -627,7 +627,7 @@ class Stanford_protocol_prompt():
         41.0:  # 229
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
@@ -643,7 +643,7 @@ class Stanford_protocol_prompt():
         42.0:  # 230
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM532). "
-            f"Its negative electrode is AG. "
+            f"Its negative electrode is artificial graphite. "
             f"The electrolyte formula consists of EC, EMC, DMC, and VC. The composition is 1 M LiPF6 in EC/EMC/DMC (1 : 1 : 1 by volume) solvent with 2% VC (by weight) additive. "
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "

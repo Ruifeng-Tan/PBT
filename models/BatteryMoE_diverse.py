@@ -184,7 +184,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
 
         final_out = total_outs
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data)
+            final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
         cl_loss = 0
@@ -267,7 +267,7 @@ class IntraCycleMoELayer(nn.Module):
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = total_outs
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data)
+            final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
         cl_loss = 0
@@ -350,7 +350,7 @@ class FlattenInterCycleMoELayer(nn.Module):
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, d_model]
         final_out = total_outs
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data)
+            final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
         cl_loss = 0
@@ -432,7 +432,7 @@ class InterCycleMoELayer(nn.Module):
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = total_outs
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data)
+            final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
         cl_loss = 0
