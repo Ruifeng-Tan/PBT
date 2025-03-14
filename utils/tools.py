@@ -560,7 +560,10 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
 
         # MAPE
         seen_mape = mean_absolute_percentage_error(seen_references, seen_preds)
-        unseen_mape = mean_absolute_percentage_error(unseen_references, unseen_preds)
+        if len(unseen_preds) > 0:
+            unseen_mape = mean_absolute_percentage_error(unseen_references, unseen_preds)
+        else:
+            unseen_mape = -10000
 
         # alpha-acc1 
         relative_error = abs(seen_preds - seen_references) / seen_references
@@ -577,9 +580,12 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
         hit_num = sum(relative_error<=args.alpha2)
         seen_alpha_acc2 = hit_num / len(seen_references) * 100
 
-        relative_error = abs(unseen_preds - unseen_references) / unseen_references
-        hit_num = sum(relative_error<=args.alpha2)
-        unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha2)
+            unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc2 = -10000
 
         model.train()
         return  rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape, seen_mape, unseen_alpha_acc1, seen_alpha_acc1, unseen_alpha_acc2, seen_alpha_acc2
