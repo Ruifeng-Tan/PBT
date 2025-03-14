@@ -1,7 +1,7 @@
 class ZNcoin_protocol_prompt():
     Protocols_prompts = {
         1.0:# coin_202_20231213213655_03_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2016 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -13,7 +13,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         2.0:# coin_202_20231213213655_03_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2016 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -25,7 +25,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:# coin_202_20231213213655_03_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2016 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -37,7 +37,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         4.0:# 204-1_20231205230212_07_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2016 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -49,7 +49,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         5.0:# 204-2_20231205230217_07_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2016 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -61,7 +61,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         6.0:# 204-3_20231205230221_07_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2016 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -73,7 +73,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         7.0:# 205-1_20231205230230_07_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2016 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -85,7 +85,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         8.0:# 430-3_20231212185323_03_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -97,7 +97,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         9.0:# 205-2_20231205230234_07_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -109,7 +109,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         10.0:# 205-3_20231205230239_07_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -121,7 +121,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         11.0:  # 209-1_20231205230248_07_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -133,7 +133,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         12.0:  # 209-2_20231205230252_07_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -145,7 +145,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         13.0:  # 402-1_20231209225636_01_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -157,7 +157,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         14.0:  # 402-2_20231209225727_01_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -169,7 +169,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         15.0:  #402-3_20231209225844_01_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -181,7 +181,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         16.0:  # 403-1_20231209225922_01_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -193,7 +193,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         17.0:  # 404-3_20231209231250_08_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -205,7 +205,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         18.0:  # 405-1_20231209231331_08_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -217,7 +217,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         19.0:  # 405-2_20231209231413_08_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -229,7 +229,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         20.0:  # 405-3_20231209231450_08_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -241,7 +241,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         21.0:  # 406-1_20231209231531_08_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -253,7 +253,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         22.0:  # 406-2_20231209231604_08_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -265,7 +265,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         23.0:  # 406-3_20231209231637_08_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -277,7 +277,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         24.0:  # 407-1_20231209231725_08_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -289,7 +289,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         25.0:  # 407-3_20231209231841_02_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -301,7 +301,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         26.0:  # 408-1_20231209231918_02_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -313,7 +313,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         27.0:  # 408-2_20231209231947_02_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -325,7 +325,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         28.0:  # 408-3_20231209232028_05_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -337,7 +337,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         29.0:  # 409-1_20231209232338_05_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -349,7 +349,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         30.0:  # 409-2_20231209232422_05_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -361,7 +361,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         31.0:  # 409-3_20231209232500_05_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -373,7 +373,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         32.0:  # 410-1_20231209232559_09_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -385,7 +385,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         33.0:  # 410-2_20231209232626_09_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -397,7 +397,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         34.0:  # 410-3_20231209232707_09_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -409,7 +409,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         35.0:  # 411-1_20231209232756_09_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -421,7 +421,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         36.0:  # 411-2_20231209232834_09_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -433,7 +433,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         37.0:  # 412-1_20231209232958_09_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -445,7 +445,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         38.0:  # 412-2_20231209233028_09_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -457,7 +457,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         39.0:  # 412-3_20231209233120_06_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -469,7 +469,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         40.0:  # 413-1_20231209233202_06_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -481,7 +481,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         41.0:  # 414-2_20231209233354_06_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -493,7 +493,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         42.0:  # 414-3_20231209233430_06_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -505,7 +505,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         43.0:  # 415-1_20231209233508_06_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -517,7 +517,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         44.0:  # 415-2_20231209233606_10_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -529,7 +529,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         45.0:  # 415-3_20231209233637_10_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -541,7 +541,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         46.0:  # 416-2_20231209233822_10_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -553,7 +553,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         47.0:  # 416-3_20231209233856_10_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -565,7 +565,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         48.0:  # 417-3_20231209234058_10_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -577,7 +577,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         49.0:  # 418-1_20231209234141_11_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -589,7 +589,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         50.0:  # 418-2_20231209234209_11_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -601,7 +601,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         51.0:  # 418-3_20231209234252_11_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -613,7 +613,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         52.0:  # 419-1_20231209234331_11_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -625,7 +625,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         53.0:  # 419-2_20231209234357_11_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -637,7 +637,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         54.0:  # 419-3_20231209234510_11_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -649,7 +649,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         55.0:  # 420-1_20231205230010_01_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
              f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -661,7 +661,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         56.0:  # 420-2_20231205230013_01_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -673,7 +673,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         57.0:  # 420-3_20231205230017_01_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -685,7 +685,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         58.0:  # 421-1_20231205230023_01_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -697,7 +697,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         59.0:  # 421-3_20231205230030_01_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -709,7 +709,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         60.0:  # 422-1_20231205230039_01_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -721,7 +721,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         61.0:  # 422-2_20231205230043_01_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -733,7 +733,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         62.0:  # 422-3_20231205230049_02_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -745,7 +745,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         63.0:  # 423-1_20231205230055_02_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -757,7 +757,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         64.0:  # 423-2_20231205230059_02_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -769,7 +769,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         65.0:  # 423-3_20231205230102_02_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -781,7 +781,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         66.0:  # 424-1_20231205230107_02_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -793,7 +793,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         67.0:  # 424-3_20231205230114_02_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -805,7 +805,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         68.0:  # 425-1_20231205230120_02_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -817,7 +817,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         69.0:  # 425-2_20231205230124_03_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -829,7 +829,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         70.0:  # 426-1_20231205230136_03_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -841,7 +841,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         71.0:  # 426-2_20231205230139_03_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -853,7 +853,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         72.0:  # 426-3_20231205230143_03_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -865,7 +865,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         73.0:  # 427-1_20231205230153_03_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -877,7 +877,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         74.0:  # 428-1_20231212185048_01_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -889,7 +889,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         75.0:  # 428-2_20231212185058_01_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -901,7 +901,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         76.0:  # 429-1_20231212185129_01_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -913,7 +913,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         77.0:  # 429-2_20231212185157_01_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -925,7 +925,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         78.0:  # 430-1_20231212185250_02_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -937,7 +937,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         79.0:  # 430-2_20231212185305_02_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -949,7 +949,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         80.0:  # ZN-coin_432-1_20231227204455_01_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -961,7 +961,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         81.0:  # ZN-coin_432-2_20231227204437_01_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -973,7 +973,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         82.0:  # ZN-coin_432-3_20231227204518_01_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -985,7 +985,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         83.0:  # ZN-coin_433-1_20231227204534_01_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -997,7 +997,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         84.0:  # ZN-coin_433-2_20231227204539_01_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1009,7 +1009,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         85.0:  # ZN-coin_433-3_20231227204544_01_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1021,7 +1021,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         86.0:  # ZN-coin_434-1_20231227204606_01_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1033,7 +1033,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         87.0:  # ZN-coin_434-2_20231227204612_01_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1045,7 +1045,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         88.0:  # ZN-coin_434-3_20231227204618_03_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1057,7 +1057,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         89.0:  # ZN-coin_435-1_20231227204625_03_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1069,7 +1069,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         90.0:  # ZN-coin_435-2_20231227204630_03_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1081,7 +1081,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         91.0:  # ZN-coin_435-3_20231227204635_03_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1093,7 +1093,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         92.0:  # ZN-coin_436-1_20231227204646_03_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1105,7 +1105,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         93.0:  # ZN-coin_436-2_20231227204653_03_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1117,7 +1117,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         94.0:  # ZN-coin_436-3_20231227204657_03_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1129,7 +1129,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         95.0:  # ZN-coin_437-1_20231227204706_03_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1141,7 +1141,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         96.0:  # ZN-coin_437-2_20231227204712_04_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1153,7 +1153,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         97.0:  # ZN-coin_437-3_20231227204717_04_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1165,7 +1165,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         98.0:  # ZN-coin_438-1_20231227204743_04_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1177,7 +1177,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         99.0:  # ZN-coin_438-2_20231227204748_04_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1189,7 +1189,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         100.0:  # ZN-coin_438-3_20231227204754_04_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1201,7 +1201,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         101.0:  # ZN-coin_439-1_20231227204804_04_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1213,7 +1213,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         102.0:  # ZN-coin_439-2_20231227204810_04_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"The electrolyte formula is unknown. "
             f"The battery manufacturer is ME. "
@@ -1224,7 +1224,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         103.0:  # ZN-coin_439-3_20231227204817_04_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1236,7 +1236,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         104.0:  # ZN-coin_440-1_20231227204827_08_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1248,7 +1248,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         105.0:  # ZN-coin_440-2_20231227204832_08_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1260,7 +1260,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         106.0:  # ZN-coin_440-3_20231227204837_08_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1272,7 +1272,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         107.0:  # ZN-coin_441-1_20231227204855_08_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1284,7 +1284,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         108.0:  # ZN-coin_441-2_20231227204859_08_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1296,7 +1296,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         109.0:  # ZN-coin_441-3_20231227204904_08_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2032 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1308,7 +1308,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         110.0:  # ZN-coin_442-1_20240104212418_09_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1320,7 +1320,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         111.0:  # ZN-coin_442-2_20240104212424_09_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1332,7 +1332,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         112.0:  # ZN-coin_442-3_20240104212433_09_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1344,7 +1344,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         113.0:  # ZN-coin_443-2_20240104212500_09_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1356,7 +1356,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         114.0:  # ZN-coin_443-3_20240104212506_09_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1368,7 +1368,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         115.0:  # ZN-coin_445-1_20240104212517_09_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1380,7 +1380,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         116.0:  # ZN-coin_445-2_20240104212521_09_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1392,7 +1392,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         117.0:  # ZN-coin_445-3_20240104212530_07_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1404,7 +1404,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         118.0:  # ZN-coin_446-1_20240104212538_07_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1416,7 +1416,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         119.0:  # ZN-coin_446-3_20240104212550_07_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1428,7 +1428,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         120.0:  # ZN-coin_447-1_20240104212621_07_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1440,7 +1440,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         121.0:  # ZN-coin_447-2_20240104212627_07_6
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1452,7 +1452,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         122.0:  # ZN-coin_447-3_20240104212631_07_7
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1464,7 +1464,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         123.0:  # ZN-coin_448-1_20240104212639_07_8
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1476,7 +1476,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         124.0:  # ZN-coin_448-2_20240104212646_06_1
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1488,7 +1488,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         125.0:  # ZN-coin_448-3_20240104212651_06_2
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1500,7 +1500,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         126.0:  # ZN-coin_449-1_20240104212736_06_3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1512,7 +1512,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         127.0:  # ZN-coin_449-2_20240104212745_06_4
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1524,7 +1524,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         128.0:  # ZN-coin_449-3_20240104212753_06_5
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1536,7 +1536,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         129.0:  # ZN-coin_450-1_20240116203402_01_2_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1548,7 +1548,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         130.0:  # ZN-coin_450-2_20240116203410_01_4_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1560,7 +1560,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         131.0:  # ZN-coin_450-3_20240116203417_03_3_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1572,7 +1572,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         132.0:  # ZN-coin_451-1_20240116203425_03_4_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1584,7 +1584,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         133.0:  # ZN-coin_451-2_20240116203431_04_3_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1596,7 +1596,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         134.0:  # ZN-coin_451-3_20240116203436_04_5_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1608,7 +1608,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         135.0:  # ZN-coin_452-1_20240116203442_04_6_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1620,7 +1620,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         136.0:  # ZN-coin_452-2_20240116203450_08_5_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1632,7 +1632,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         137.0:  # ZN-coin_452-3_20240116204046_08_4_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1644,7 +1644,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         138.0:  # ZN-coin_453-1_20240116203617_08_6_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1656,7 +1656,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         139.0:  # ZN-coin_453-2_20240116203622_08_7_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
@@ -1668,7 +1668,7 @@ class ZNcoin_protocol_prompt():
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         140.0:  # ZN-coin_453-3_20240116203627_08_8_Batch-3
-            f"Battery specifications: The data comes from a Zinc-ion battery in a format of coin battery. "
+            f"Battery specifications: The data comes from a Zinc-ion battery in a format of CR2025 coin battery. "
             f"Its positive electrode is MnO2. "
             f"Its negative electrode is Zinc metal. "
             f"The electrolyte formula is unknown. "
