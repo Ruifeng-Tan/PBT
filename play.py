@@ -1,7 +1,7 @@
 from transformers import LlamaConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig, AutoModel, AutoTokenizer
 import torch
 from utils.tools import train_model_course, get_parameter_number
-LLM_path = '/data/LLMs/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659'
+LLM_path = '/data/LLMs/models--meta-llama--Llama-3.2-3B-Instruct/snapshots/0cb88a4f764b7a12671c53f0838cd831a0843b95'
 llama_config = AutoConfig.from_pretrained(LLM_path)
 if 'Qwen' not in LLM_path:
     tokenizer = AutoTokenizer.from_pretrained(LLM_path)
