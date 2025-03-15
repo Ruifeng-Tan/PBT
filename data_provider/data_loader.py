@@ -774,7 +774,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             end_cut_off = - (max_length-1) # we have already add the begin_of_text in the prompt
             res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
         else:
-            max_length = 411
+            max_length = 401
             end_cut_off = - (max_length-1) 
             res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
         input_ids, attention_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]

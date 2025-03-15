@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_DG_MLPGate_Seek，使用了prompt tuning
+基于BatteryMoE_PT, 但是将domain knowledge prompt的人工部分压缩，避免长序列
 '''
 import torch
 import torch.nn as nn
@@ -59,21 +59,39 @@ def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True
     cl_loss /= selected_experts
     return cl_loss    
 
-class PTuningEncoder(nn.Module):
+class DKPExtracker(nn.Module):
     def __init__(self, configs):
-        super(PTuningEncoder, self).__init__()
+        super(DKPExtracker, self).__init__()
         self.pt_token_num = configs.pt_token_num
-        self.embedding = torch.nn.Embedding(configs.pt_token_num, configs.d_llm)
-        self.mlp_head = nn.Sequential(nn.Linear(configs.d_llm, configs.d_ff), 
-                                      nn.ReLU(), nn.Dropout(0.15),
-                                      nn.Linear(configs.d_ff, configs.d_llm))
+        self.pe = PositionalEmbedding(configs.d_llm)
+        self.encoder = Encoder(
+            [
+                EncoderLayer(
+                    AttentionLayer(
+                        FullAttention(True, configs.factor, attention_dropout=configs.dropout,
+                                      output_attention=False), configs.d_llm, configs.n_heads),
+                    configs.d_llm,
+                    configs.d_ff,
+                    dropout=configs.dropout,
+                    activation=configs.activation
+                ) for l in range(2)
+            ]
+        )
     
-    def forward(self, input_ids):
-        batch_size = input_ids.shape[0]
-        seq_indices = torch.LongTensor(list(range(self.pt_token_num))).to(input_ids.device)
-        input_embeds = self.embedding(seq_indices).unsqueeze(0)
-        output_embeds = self.mlp_head(input_embeds).expand(batch_size, -1, -1)
-        return output_embeds
+    def forward(self, input_embeds, attention_mask):
+        '''
+        params:
+            input_embeds: [B, L, d_llm]
+            attention_mask: [B, L]
+        '''
+        input_embeds = input_embeds + self.pe(input_embeds)
+        attention_mask = attention_mask.unsqueeze(1) # [B, 1, L]
+        attention_mask = torch.repeat_interleave(attention_mask, attention_mask.shape[-1], dim=1) # [B, L, L]
+        attention_mask = attention_mask.unsqueeze(1) # [B, 1, L, L]
+        attention_mask = attention_mask==0 # set True to mask
+        output, attns = self.encoder(input_embeds, attn_mask=attention_mask)
+        output = output[:,-self.pt_token_num:] # extracted DKP information
+        return output
 
 class MLPBlock(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
@@ -533,7 +551,7 @@ class Model(BatteryLifeLLM):
         )
 
         self.pt_token_num = configs.pt_token_num
-        self.PT_encoder = PTuningEncoder(configs)
+        self.DKP_extracter = DKPExtracker(configs)
 
         self.num_experts = configs.num_experts
         self.early_cycle_threshold = configs.early_cycle_threshold
@@ -580,19 +598,9 @@ class Model(BatteryLifeLLM):
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
        
         DKP_embeddings = self.llm.get_input_embeddings()(input_ids)  # (batch, prompt_token, dim)
-        PTuning_tokens = self.PT_encoder(input_ids)
-        DKP_embeddings = torch.cat([DKP_embeddings[:, :-1], PTuning_tokens, DKP_embeddings[:, -1:]], dim=1) # [B, L, d_llm]
-        prompt_L = DKP_embeddings.shape[1]
-        range_tensor = torch.arange(prompt_L).expand(len(DKP_embeddings), prompt_L).to(DKP_embeddings.device)
-
-        lengths = torch.sum(attention_mask==0, dim=1) # the number of padding tokens
-        attention_mask = range_tensor >= lengths.unsqueeze(1)
-        attention_mask = attention_mask.int() # set 0 for padding tokens and 1 for other tokens
+        DKP_embeddings = self.DKP_extracter(DKP_embeddings, attention_mask)
         
-        DKP_embeddings = self.llm(inputs_embeds=DKP_embeddings, attention_mask=attention_mask).last_hidden_state
-        # effective_token_num = self.pt_token_num + torch.sum(attention_mask, dim=1)
-        # batch_indices = torch.arange(B)
-        # DKP_embeddings = DKP_embeddings[batch_indices, effective_token_num-1]
+        DKP_embeddings = self.llm(inputs_embeds=DKP_embeddings).last_hidden_state
         DKP_embeddings = DKP_embeddings[:, -1] # [B, d_llm]
 
         total_aug_loss = 0
