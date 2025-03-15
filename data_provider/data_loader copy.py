@@ -1,3 +1,6 @@
+'''
+保存至2025 3月15，这个版本含有Label_prompt，用于之前的对齐方法使用，但失败
+'''
 import os
 import random
 import re
@@ -617,18 +620,19 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             if 'Instruct' in self.args.LLM_path:
                 # Llama-instruct
                 messages = [
-                    {"role": "system", "content": "You are an expert in predicting battery cycle life."},
+                    {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": tmp_prompt}
                 ]
 
                 tmp_prompt = self.tokenizer.apply_chat_template(
                     messages,
                     tokenize=False,
-                    add_generation_prompt=True
+                    add_generation_prompt=False
                 )
             else:
                 tmp_prompt = '<|begin_of_text|>' + tmp_prompt
-
+            # tmp_prompt = tmp_prompt + '[cls_token]'
+            # tmp_prompt = basic_prompt
             labels.append(eol)
             charge_discharge_curves.append(early_charge_discharge_curves_data)
             total_cj_aug_charge_discharge_curves.append(early_cj_aug_charge_discharge_curves)
@@ -774,16 +778,17 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             end_cut_off = - (max_length-1) # we have already add the begin_of_text in the prompt
             res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
         else:
-            max_length = 411
+            max_length = 430
             end_cut_off = - (max_length-1) 
             res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
         input_ids, attention_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]
         # generate label prompt
-        # max_length = 70
-        # end_cut_off = - (max_length-1) 
-        # label_prompt = self.total_label_prompts[index]
-        # res = self.tokenizer(label_prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
-        # label_input_ids, label_attention_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]
+        max_length = 70
+        end_cut_off = - (max_length-1) 
+        label_prompt = self.total_label_prompts[index]
+        res = self.tokenizer(label_prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
+        label_input_ids, label_attention_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]
+
 
         sample = {
                 'cycle_curve_data': torch.Tensor(self.total_charge_discharge_curves[index]),
@@ -796,6 +801,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 'cj_cycle_curve_data': self.total_cj_aug_charge_discharge_curves[index],
                 'end_input_ids': end_input_ids,
                 'end_attn_mask': end_attn_mask,
+                'label_input_ids': label_input_ids,
+                'label_attention_mask': label_attention_mask,
                 'label_prompt_embedding': torch.from_numpy(self.total_label_prompt_embedding_list[index]),
                 'DKP_embedding': torch.from_numpy(self.total_DKP_embeddings[index]),
                 'cluster_label': self.total_cluster_labels[index],

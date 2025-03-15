@@ -11,7 +11,7 @@ from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alig
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_DG_MLPGateIMP, \
-            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE_diverse, BatteryMoE_DG_MLPGate_Seek
+            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE_PT, BatteryMoE_DG_MLPGate_Seek
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -29,8 +29,8 @@ def list_of_ints(arg):
 # os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # os.environ['CURL_CA_BUNDLE'] = ''
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
-# os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
-# os.environ["TORCH_USE_CUDA_DSA"] = "true"
+os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
+os.environ["TORCH_USE_CUDA_DSA"] = "true"
 from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM, load_content
 
 parser = argparse.ArgumentParser(description='BatteryLifeLLM')
@@ -84,8 +84,7 @@ parser.add_argument('--label_len', type=int, default=48, help='start token lengt
 parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
 
 # model define
-# parser.add_argument('--down_sampling_window', type=int, default=2, help='The kernel size and stride of the down-pool')
-# parser.add_argument('--number_of_scales', type=int, default=4, help='The number of scales in the multi-scalce Cyclepatch')
+parser.add_argument('--pt_token_num', type=int, default=10, help='The token number for prompt tuning')
 parser.add_argument('--last_layer', type=int, default=0, help='The layer index for fusion')
 parser.add_argument('--d_llm', type=int, default=4096, help='the features of llm')
 parser.add_argument('--enc_in', type=int, default=1, help='encoder input size')
@@ -96,7 +95,6 @@ parser.add_argument('--n_heads', type=int, default=4, help='num of heads')
 parser.add_argument('--lstm_layers', type=int, default=1, help='num of LSTM layers')
 parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
 parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
-parser.add_argument('--noDKP_layers', type=int, default=1, help='num of MoE layers that do not use DKP')
 parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
 parser.add_argument('--moving_avg', type=int, default=25, help='window size of moving average')
 parser.add_argument('--factor', type=int, default=1, help='attn factor')
@@ -234,11 +232,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_DG_MLPGate.Model(model_config)
-    elif args.model == 'BatteryMoE_diverse':
+    elif args.model == 'BatteryMoE_PT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_diverse.Model(model_config)
+        model = BatteryMoE_PT.Model(model_config)
     elif args.model == 'BatteryMoE_DG':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
