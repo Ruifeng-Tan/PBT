@@ -1,7 +1,7 @@
 Protocols_prompts = {
 1.0:  # 1
     f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical cell. "
-    f"Its positive electrode is a mixture of LiCoO2 and LiNi0.5Co0.2Mn0.3O2. "
+    f"Its positive electrode is a mixture of LiCoO2 and LiNi0.5Co0.2Mn0.3O2 (NCM523). "
     f"Its negative electrode is graphite. "
     f"The electrolyte formula is unknown. "
     f"The battery manufacturer is LISHEN. "
