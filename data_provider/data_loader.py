@@ -263,13 +263,13 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         
         if flag == 'train':
             self.files = [i for i in self.train_files]
-            self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_3b.pkl', 'rb'))
+            self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed.pkl', 'rb'))
         elif flag == 'val':
             self.files = [i for i in self.val_files]
-            self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_3b.pkl', 'rb'))
+            self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed.pkl', 'rb'))
         elif flag == 'test':
             self.files = [i for i in self.test_files]
-            self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_3b.pkl', 'rb'))
+            self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed.pkl', 'rb'))
             self.unseen_seen_record = json.load(open(f'{self.root_path}/cal_for_test.json'))
             
         self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_cj_aug_charge_discharge_curves, self.total_label_prompts, self.total_label_prompt_embedding_list, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs = self.read_data()
