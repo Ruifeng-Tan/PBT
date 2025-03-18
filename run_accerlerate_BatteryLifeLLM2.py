@@ -10,8 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_PTv2, BatteryMoE_Gating_Temporal, \
-            BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE_Gating, BatteryMoE_Seek_Connect
+from models import BatteryMoE_Gating_Dynamic, BatteryMoE_PTv2, BatteryMoE_DG, BatteryMoE_DG_MLPGate, BatteryMoE_Gating, BatteryMoE_Seek_Connect
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -242,11 +241,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_DG.Model(model_config)
-    elif args.model == 'BatteryMoE_Gating_Temporal':
+    elif args.model == 'BatteryMoE_Gating_Dynamic':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Gating_Temporal.Model(model_config)
+        model = BatteryMoE_Gating_Dynamic.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
@@ -433,12 +432,13 @@ for ii in range(args.itr):
                 if args.use_aug:
                     # mask some data points in the cycling data
                     p = 0.15 # masked ratio
-                    mask = (torch.rand(cycle_curve_data.shape) > p).float()
+                    mask = (torch.rand(cycle_curve_data.shape) > p).float().to(cycle_curve_data.device)
                     aug_cycle_curve_data = cycle_curve_data * mask
 
                     # concat
                     cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
                     DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
+                    curve_attn_mask = torch.cat([curve_attn_mask, curve_attn_mask], dim=0)
                     labels = torch.cat([labels, labels], dim=0)
                     weights = torch.cat([weights, weights], dim=0)
 

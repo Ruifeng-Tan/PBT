@@ -1,5 +1,5 @@
 '''
-和BatteryMoE_Gating相同，只不过增加了temporal encoding
+和BatteryMoE_Seek_Connect相同，只不过在gating的时候dynamically select activated number of experts
 '''
 import torch
 import torch.nn as nn
@@ -28,6 +28,41 @@ from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
 transformers.logging.set_verbosity_error()
+
+def top_p_mask(logits, p=0.9):
+    """
+    Creates a mask tensor with the same shape as logits where selected indices are set to 1 and unselected indices are set to 0.
+
+    Parameters:
+    - logits: A tensor of shape [B, N] where B is batch size and N is the number of logits.
+    - p: The cumulative probability threshold.
+
+    Returns:
+    - mask: A tensor of shape [B, N] with 1s for selected indices and 0s for unselected indices.
+    """
+    # Calculate probabilities using softmax
+    probabilities = torch.softmax(logits, dim=-1)
+
+    # Sort probabilities and corresponding indices in descending order
+    sorted_probs, sorted_indices = torch.sort(probabilities, dim=-1, descending=True)
+
+    # Calculate cumulative probabilities
+    cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
+
+    # Create a mask to select indices where cumulative probability is less than p
+    mask = cumulative_probs < p
+
+    # Ensure we always select at least one element
+    # Find the first index where cumulative probability is greater than p and set it to True
+    mask[:, 0] = True
+
+    # Initialize a mask tensor with zeros
+    output_mask = torch.zeros_like(logits, dtype=torch.int)
+
+    # Use the mask to set the selected indices in the output mask tensor to 1
+    output_mask.scatter_(1, sorted_indices, mask.int())
+
+    return output_mask
 
 def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True):
     '''
@@ -139,7 +174,6 @@ class FlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
-        self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
@@ -151,15 +185,12 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
-        self.cycle_temporal_encoding = nn.Embedding(self.early_cycle_threshold, self.d_model)
-        
+
         self.noisy_gating = configs.noisy_gating
         self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
         self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
-
-
 
     
     def forward(self, cycle_curve_data, DKP_embeddings):
@@ -179,11 +210,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        _, indices = torch.topk(logits, self.top_k, dim=1)
-        # Create a mask where only the top-K values will be kept
-        mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        mask.scatter_(1, indices, 1) # 0 indicates mask
+        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -209,7 +236,6 @@ class FlattenIntraCycleMoELayer(nn.Module):
         final_out = total_outs
         for i in range(self.num_general_experts):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
-        final_out = self.cycle_temporal_encoding(torch.arange(self.early_cycle_threshold).to(cycle_curve_data.device).unsqueeze(0)).expand(B, -1, -1) + final_out
 
         aug_loss = 0
         cl_loss = 0
@@ -265,11 +291,7 @@ class IntraCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        _, indices = torch.topk(logits, self.top_k, dim=1)
-        # Create a mask where only the top-K values will be kept
-        mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        mask.scatter_(1, indices, 1) # 0 indicates mask
+        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -350,11 +372,7 @@ class FlattenInterCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        _, indices = torch.topk(logits, self.top_k, dim=1)
-        # Create a mask where only the top-K values will be kept
-        mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        mask.scatter_(1, indices, 1) # 0 indicates mask
+        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -433,11 +451,7 @@ class InterCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        _, indices = torch.topk(logits, self.top_k, dim=1)
-        # Create a mask where only the top-K values will be kept
-        mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        mask.scatter_(1, indices, 1) # 0 indicates mask
+        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
