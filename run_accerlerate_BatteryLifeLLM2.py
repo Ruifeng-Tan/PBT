@@ -113,7 +113,6 @@ parser.add_argument('--weighted_loss', action='store_true', default=False, help=
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
 parser.add_argument('--itr', type=int, default=1, help='experiments times')
 parser.add_argument('--train_epochs', type=int, default=10, help='train epochs')
-parser.add_argument('--noDG_epochs', type=int, default=-1, help='the train epochs before DG is used')
 parser.add_argument('--least_epochs', type=int, default=5, help='The model is trained at least some epoches before the early stopping is used')
 parser.add_argument('--batch_size', type=int, default=32, help='batch size of train input data')
 parser.add_argument('--patience', type=int, default=10, help='early stopping patience')
@@ -126,7 +125,7 @@ parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learnin
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
 parser.add_argument('--use_amp', action='store_true', help='use automatic mixed precision training', default=False)
 parser.add_argument('--llm_layers', type=int, default=6)
-parser.add_argument('--percent', type=int, default=100)
+parser.add_argument('--top_p', type=float, default=0.5, help='The threshold used to control the number of activated experts')
 parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
 

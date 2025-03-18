@@ -181,6 +181,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.d_model = configs.d_model
         self.num_experts = configs.num_experts
         self.top_k = configs.topK
+        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -210,7 +211,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
+        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -262,6 +263,7 @@ class IntraCycleMoELayer(nn.Module):
         self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
+        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -291,7 +293,7 @@ class IntraCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
+        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -344,6 +346,7 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.num_experts = configs.d_num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
+        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -372,7 +375,7 @@ class FlattenInterCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
+        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -422,6 +425,7 @@ class InterCycleMoELayer(nn.Module):
         self.num_experts = configs.d_num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
+        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -451,7 +455,7 @@ class InterCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_k/self.num_experts) # [B, num_experts]
+        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
