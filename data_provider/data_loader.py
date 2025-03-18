@@ -43,7 +43,7 @@ datasetName2ids = {
 }
 def my_collate_fn_withId(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
-    cj_aug_cycle_curve_data = torch.vstack([i['cj_cycle_curve_data'].unsqueeze(0) for i in samples])
+    # cj_aug_cycle_curve_data = torch.vstack([i['cj_cycle_curve_data'].unsqueeze(0) for i in samples])
     # fm_aug_cycle_curve_data = torch.vstack([i['fm_aug_cycle_curve_data'].unsqueeze(0) for i in samples])
     # m = torch.ones((fm_aug_cycle_curve_data.shape[0],1,1,1), dtype=fm_aug_cycle_curve_data.dtype, device=fm_aug_cycle_curve_data.device)
     # m = m.uniform_(0, 1) < 0.5 # set True to use cut_aug
@@ -64,11 +64,11 @@ def my_collate_fn_withId(samples):
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
-    return cj_aug_cycle_curve_data, cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, dataset_ids, seen_unseen_ids, DKP_embeddings
+    return cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, dataset_ids, seen_unseen_ids, DKP_embeddings
 
 def my_collate_fn(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
-    cj_aug_cycle_curve_data = torch.vstack([i['cj_cycle_curve_data'].unsqueeze(0) for i in samples])
+    # cj_aug_cycle_curve_data = torch.vstack([i['cj_cycle_curve_data'].unsqueeze(0) for i in samples])
 
     file_names = [i['file_name'] for i in samples]
     curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
@@ -85,7 +85,7 @@ def my_collate_fn(samples):
     cluster_labels = torch.Tensor([i['cluster_label'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
 
-    return cj_aug_cycle_curve_data, cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, file_names, DKP_embeddings, cluster_labels, seen_unseen_ids
+    return cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, file_names, DKP_embeddings, cluster_labels, seen_unseen_ids
 
 # BatterLifeLLM dataloader
 class Dataset_BatteryLifeLLM_original(Dataset):

@@ -416,7 +416,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cj_aug_cycle_curve_data, cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, _, DKP_embeddings, cluster_labels, _) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, _, DKP_embeddings, cluster_labels, _) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -424,34 +424,37 @@ for ii in range(args.itr):
                 lambd = np.random.beta(1, 6) # dominant ratio of X2
                 iter_count += 1
                 
-                cycle_curve_data = cycle_curve_data.float()
+                cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
+                if args.use_aug:
+                    # mask some data points in the cycling data
+                    p = 0.15 # masked ratio
+                    mask = (torch.rand(cycle_curve_data.shape) > p).float()
+                    aug_cycle_curve_data = cycle_curve_data * mask
+
+                    # concat
+                    cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
+                    DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
+                    labels = torch.cat([labels, labels], dim=0)
+                    weights = torch.cat([weights, weights], dim=0)
+
                 curve_attn_mask = curve_attn_mask.float() # [B, L]
                 DKP_embeddings = DKP_embeddings.float()
-                cluster_labels = cluster_labels.long()
+                # cluster_labels = cluster_labels.long()
                 labels = labels.float()
-                # if 'v11' in args.model:
-                #     if i % 2 == 0:
-                #         # use adpater samples
-                #         # adapter is frozen in this iteration
-                #         labels = torch.cat([labels, labels], dim=0)
-
-                input_ids = input_ids.int()
-                attention_mask = attention_mask.int()
                 weights = weights.float()
-                end_input_ids = end_input_ids.int()
-                end_attn_mask = end_attn_mask.int()
-                
 
+                # input_ids = input_ids.int()
+                # attention_mask = attention_mask.int()
+        
+                # end_input_ids = end_input_ids.int()
+                # end_attn_mask = end_attn_mask.int()
+                
 
                 # encoder - decoder
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, cl_loss = model(cycle_curve_data, curve_attn_mask, 
-                input_ids=input_ids, attention_mask=attention_mask, end_input_ids=end_input_ids, end_attn_mask=end_attn_mask,
-                DKP_embeddings=DKP_embeddings, cluster_labels=cluster_labels)
-                # if 'v11' in args.model:
-                #     if epoch <= args.noDG_epochs:
-                #         outputs = outputs[outputs.shape[0]//2:]
-                #     else:
-                #         labels = torch.cat([labels, labels], dim=0)
+                input_ids=None, attention_mask=None, end_input_ids=None, end_attn_mask=None,
+                DKP_embeddings=DKP_embeddings, cluster_labels=None)
+
                 cut_off = labels.shape[0]
                 if args.loss == 'MSE':
                     loss = criterion(outputs[:cut_off], labels)
