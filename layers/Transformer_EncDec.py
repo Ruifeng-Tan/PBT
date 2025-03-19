@@ -108,7 +108,7 @@ class MoEEncoderLayer(nn.Module):
             tau=tau, delta=delta
         )
         x = x + self.dropout(new_x)
-        y = x = self.norm1(x)
+        x = self.norm1(x)
 
         x = x.reshape(B*L, -1)
         logits = self.gate(x)
