@@ -336,7 +336,7 @@ class Model(BatteryLifeLLM):
             [
                 MoEEncoderLayer(
                     AttentionLayer(
-                        FullAttention(False, configs.factor, attention_dropout=configs.dropout,
+                        FullAttention(True, configs.factor, attention_dropout=configs.dropout,
                                       output_attention=False), configs.d_model, configs.n_heads),
                     configs.d_model,
                     configs.d_ff,
