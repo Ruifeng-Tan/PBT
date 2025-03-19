@@ -381,7 +381,6 @@ class Model(BatteryLifeLLM):
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
-        DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
 
         total_aug_loss = 0
         total_aug_count = 0
