@@ -10,7 +10,8 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_baseline, BatteryMoE_PTv2, BatteryMoE_v1_casual, BatteryMoE_v1, BatteryMoE_Gating, BatteryMoE_Gating_Pooling
+from models import BatteryMoE_Gating_Imp, BatteryMoE_baseline, BatteryMoE_Gating_Imp, \
+    BatteryMoE_baseline_Gating, BatteryMoE_v1_casual, BatteryMoE_v1, BatteryMoE_Gating
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -91,7 +92,7 @@ parser.add_argument('--dec_in', type=int, default=1, help='decoder input size')
 parser.add_argument('--c_out', type=int, default=1, help='output size')
 parser.add_argument('--d_model', type=int, default=16, help='dimension of model')
 parser.add_argument('--n_heads', type=int, default=4, help='num of heads')
-parser.add_argument('--pooling_layers', type=int, default=1, help='num of LSTM layers')
+parser.add_argument('--noDKP_layers', type=int, default=1, help='the number of no DKP layers in the inter-cycle encoder')
 parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
 parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
 parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
@@ -203,7 +204,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_Lora{}_lradj{}_dataset{}_cl{}_DG{}_loss{}_wd{}_wl{}_pretrained{}_PL{}_dr{}_IW{}_NumE{}_K{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_Lora{}_lradj{}_dataset{}_cl{}_DG{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -212,19 +213,19 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, pretrained, args.pooling_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
+        args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
     data_provider_func = data_provider_LLMv2
-    if args.model == 'BatteryMoE_PTv2':
+    if args.model == 'BatteryMoE_baseline_Gating':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_PTv2.Model(model_config)
-    elif args.model == 'BatteryMoE_Gating_Pooling':
+        model = BatteryMoE_baseline_Gating.Model(model_config)
+    elif args.model == 'BatteryMoE_Gating_Imp':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Gating_Pooling.Model(model_config)
+        model = BatteryMoE_Gating_Imp.Model(model_config)
     elif args.model == 'BatteryMoE_v1':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -245,6 +246,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_baseline.Model(model_config)
+    elif args.model == 'BatteryMoE_Gating_Imp':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_Gating_Imp.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
