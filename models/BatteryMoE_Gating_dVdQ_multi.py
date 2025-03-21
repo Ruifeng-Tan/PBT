@@ -27,6 +27,7 @@ import torch.nn.functional as F
 from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
+import math
 transformers.logging.set_verbosity_error()
 
 def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True):
@@ -82,22 +83,92 @@ class MLPBlockSwishGLU(nn.Module):
         out = self.out_linear(out)
         return out
 
-class CyclePatch_dVdQ(nn.Module):
-    def __init__(self, in_dim, dVdQ_len, hidden_dim):
-        super(CyclePatch_dVdQ, self).__init__()
-        self.flatten_linear = nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(in_dim, hidden_dim))
-        self.charge_dVdQ_linear = nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(dVdQ_len*2, hidden_dim))
-        self.discharge_dVdQ_linear = nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(dVdQ_len*2, hidden_dim))
+class depthwise_separable_conv(nn.Module):
+    def __init__(self, nin, nout, kernel_size = 2, padding = 0, bias=False, dilation=5):
+        super(depthwise_separable_conv, self).__init__()
+        self.depthwise = nn.Conv1d(nin, nin, kernel_size=kernel_size, padding=padding, groups=nin, bias=bias, dilation=dilation)
+        self.pointwise = nn.Conv1d(nin, nout, kernel_size=1, bias=bias)
 
-        self.output_linear = nn.Linear(hidden_dim*3, hidden_dim)
-    
-    def forward(self, x, charge_dVdQ, discharge_dVdQ):
-        x = self.flatten_linear(x)
-        charge_dVdQ = self.charge_dVdQ_linear(charge_dVdQ)
-        discharge_dVdQ = self.discharge_dVdQ_linear(discharge_dVdQ)
-        x = torch.cat([x, charge_dVdQ, discharge_dVdQ], dim=-1) # [B, L, d_ff*3]
-        out = self.output_linear(x)
+    def forward(self, x):
+        '''
+        x: [*, C, L]
+        '''
+        out = self.depthwise(x)
+        out = self.pointwise(out)
         return out
+    
+class CyclePatch_dVdQ(nn.Module):
+    def __init__(self, in_dim, d_model):
+        super(CyclePatch_dVdQ, self).__init__()
+        self.flatten_linear = nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(in_dim, d_model))
+        self.d_model = d_model
+        # depthwise separable conv
+        self.pool_kernel_size =20
+        self.pool_stride= 10
+        self.maxpool1d = nn.MaxPool1d(kernel_size=self.pool_kernel_size, stride=self.pool_stride)
+
+        self.dilation1 = 5
+        self.kernel_size1 = 2
+        self.charge_conv = depthwise_separable_conv(3, 1, self.kernel_size1, 0, False, self.dilation1)
+        self.discharge_conv = depthwise_separable_conv(3, 1, self.kernel_size1, 0, False, self.dilation1)
+        output_L = self.get_convoluted_length_normal(in_dim//6, self.kernel_size1, 0, self.dilation1, 1)
+        self.output_L1 = self.get_convoluted_length_normal(output_L, self.pool_kernel_size, 0, 1, self.pool_stride)
+
+        self.dilation2 = 5
+        self.kernel_size2 = 4
+        self.charge_conv2 = depthwise_separable_conv(3, 1, self.kernel_size2, 0, False, self.dilation2)
+        self.discharge_conv2 = depthwise_separable_conv(3, 1, self.kernel_size2, 0, False, self.dilation2)
+        output_L = self.get_convoluted_length_normal(in_dim//6, self.kernel_size2, 0, self.dilation2, 1)
+        self.output_L2 = self.get_convoluted_length_normal(output_L, self.pool_kernel_size, 0, 1, self.pool_stride)
+        
+        self.dilation3 = 10
+        self.kernel_size3 = 2
+        self.charge_conv3 = depthwise_separable_conv(3, 1, self.kernel_size3, 0, False, self.dilation3)
+        self.discharge_conv3 = depthwise_separable_conv(3, 1, self.kernel_size3, 0, False, self.dilation3)
+        output_L = self.get_convoluted_length_normal(in_dim//6, self.kernel_size3, 0, self.dilation3, 1)
+        self.output_L3 = self.get_convoluted_length_normal(output_L, self.pool_kernel_size, 0, 1, self.pool_stride)
+        
+        self.dilation4 = 10
+        self.kernel_size4 = 4
+        self.charge_conv4 = depthwise_separable_conv(3, 1, self.kernel_size4, 0, False, self.dilation4)
+        self.discharge_conv4 = depthwise_separable_conv(3, 1, self.kernel_size4, 0, False, self.dilation4)
+        output_L = self.get_convoluted_length_normal(in_dim//6, self.kernel_size4, 0, self.dilation4, 1)
+        self.output_L4 = self.get_convoluted_length_normal(output_L, self.pool_kernel_size, 0, 1, self.pool_stride)
+
+        self.output_linear = nn.Linear((self.output_L1+self.output_L2+self.output_L3+self.output_L4)*2, 
+                                       d_model)
+    
+    def forward(self, x):
+        '''
+        params:
+            x: [B, L, 3, fixed_len] the cycling data
+        '''
+        B, L, fixed_len = x.shape[0], x.shape[1], x.shape[-1]
+        charge_x, discharge_x = x[:, :, :, :fixed_len//2], x[:, :, :, fixed_len//2:] # [B, L, 3, fixed_len//2]
+        charge_x, discharge_x = charge_x.reshape(-1, 3, fixed_len//2), discharge_x.reshape(-1, 3, fixed_len//2)
+        charge_x1 = self.maxpool1d(self.charge_conv(charge_x)).squeeze(1) # [B*L, length]
+        discharge_x1 = self.maxpool1d(self.discharge_conv(discharge_x)).squeeze(1) # [B*L, length]
+
+        charge_x2 = self.maxpool1d(self.charge_conv2(charge_x)).squeeze(1) # [B*L, length]
+        discharge_x2= self.maxpool1d(self.discharge_conv2(discharge_x)).squeeze(1) # [B*L, length]
+
+        charge_x3 = self.maxpool1d(self.charge_conv3(charge_x)).squeeze(1) # [B*L, length]
+        discharge_x3= self.maxpool1d(self.discharge_conv3(discharge_x)).squeeze(1) # [B*L, length]
+
+        charge_x4 = self.maxpool1d(self.charge_conv4(charge_x)).squeeze(1) # [B*L, length]
+        discharge_x4= self.maxpool1d(self.discharge_conv4(discharge_x)).squeeze(1) # [B*L, length]
+        
+        new_x = torch.cat([charge_x1, discharge_x1, charge_x2, discharge_x2, charge_x3, discharge_x3, charge_x4, discharge_x4], dim=-1)
+        out = self.output_linear(new_x)
+        out = out.reshape(B, L, self.d_model)
+        return out
+    
+    # def get_convoluted_length_depthwise(self, original_L, kernel_size, dilation, stride, padding=0):
+    #     L_out1 = math.floor((original_L + 2*padding - dilation*(kernel_size-1)-1)/stride +1)
+    #     return L_out1
+    
+    def get_convoluted_length_normal(self, original_L, kernel_size, padding, dilation, stride):
+        return math.floor((original_L+2*padding-dilation*(kernel_size-1)-1)/stride+1)
 
 class BatteryLifeLLM(PreTrainedModel):
     config_class = BatteryLifeConfig
@@ -147,9 +218,9 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.top_k = configs.topK
         self.tau = configs.tau
         self.dV_dQ_length = self.charge_discharge_length//2-20
-        self.experts = nn.ModuleList([CyclePatch_dVdQ(self.charge_discharge_length*3, self.dV_dQ_length, self.d_model) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([CyclePatch_dVdQ(self.charge_discharge_length*3, self.d_model) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([CyclePatch_dVdQ(self.charge_discharge_length*3, self.dV_dQ_length, self.d_model) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([CyclePatch_dVdQ(self.charge_discharge_length*3, self.d_model) for _ in range(self.num_general_experts)])
 
         self.noisy_gating = configs.noisy_gating
         self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
@@ -158,12 +229,10 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, charge_dVdQ, discharge_dVdQ, DKP_embeddings):
+    def forward(self, cycle_curve_data, DKP_embeddings):
         '''
         params:
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
-            charge_dVdQ: [B, L, dV_dQ_len]
-            discharge_dVdQ: [B, L, dV_dQ_len]
             DKP_embeddings: [B, d_llm]
         '''
         B = cycle_curve_data.shape[0]
@@ -195,7 +264,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
         total_outs = []
         total_expert_outs = []
         for i, expert in enumerate(self.experts):
-            out = expert(cycle_curve_data[MOE_indicies[i]], charge_dVdQ[MOE_indicies[i]], discharge_dVdQ[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
+            out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
             total_outs.append(out)
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
@@ -204,7 +273,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
 
         final_out = total_outs
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data, charge_dVdQ, discharge_dVdQ) + final_out
+            final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
         if self.training:
@@ -546,15 +615,12 @@ class Model(BatteryLifeLLM):
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
 
-        charge_cycle_curve_data = cycle_curve_data[:,:,:,:fixed_len//2]
-        discharge_cycle_curve_data = cycle_curve_data[:,:,:,fixed_len//2:]
-        charge_dV_dQ = self.obtain_dVdQ(charge_cycle_curve_data) # [B, L, 1, dV_dQ_length]
-        discharge_dV_dQ = self.obtain_dVdQ(discharge_cycle_curve_data)
+        
 
         total_aug_loss = 0
         total_cl_loss = 0
         total_aug_count = 0
-        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, charge_dV_dQ, discharge_dV_dQ, DKP_embeddings) # [B, L, d_model]
+        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings) # [B, L, d_model]
         total_aug_loss += aug_loss
         total_aug_count += 1
 
@@ -592,19 +658,3 @@ class Model(BatteryLifeLLM):
         mask = mask.unsqueeze(0).expand(B, -1, -1)
         return mask
     
-    def obtain_dVdQ(self, cycle_curve_data):
-        '''
-        params:
-            cycle_curve_data: the charge curve data or discharge curve data
-        return:
-            dV_dQ: [B, L, 2, dV_dQ_len]. The first var is dV, the second is dQ
-        '''
-
-        dV = cycle_curve_data[:, :, 0, 20:] - cycle_curve_data[:, :, 0, :-20] # [B, L, dV_dQ_len]
-        dQ = cycle_curve_data[:, :, 2, 20:] - cycle_curve_data[:, :, 2, :-20]
-
-        dV = dV.unsqueeze(2)
-        dQ = dQ.unsqueeze(2)
-        dV_dQ = torch.cat([dV, dQ], dim=2)
-
-        return dV_dQ
