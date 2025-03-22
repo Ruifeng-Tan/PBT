@@ -1,5 +1,5 @@
 '''
-和BatteryMoE_Seek_Connect相同，只不过在gating的时候dynamically select activated number of experts
+和BatteryMoE_Seek_Connect相同，只不过在Intra-encoder和pathcing中用了SwishGLU
 '''
 import torch
 import torch.nn as nn
@@ -12,12 +12,12 @@ from transformers import PreTrainedModel, BitsAndBytesConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryLifeConfig
 from BatteryLifeLLMUtils.output_BatteryLifeLLM import BatteryLifeCausalLMOutputWithPast
 from layers.Embed import PositionalEmbedding
-from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer, ConvLayer, RMSEncoderLayer, MyEncoderLayer
+from layers.Transformer_EncDec import BatteryMoEEncoder, BatteryMoEEncoderLayer, Encoder, EncoderLayer, ConvLayer, RMSEncoderLayer
 from layers.SelfAttention_Family import FullAttention, AttentionLayer
 from layers.StandardNorm import Normalize
 from layers.Embed import TokenEmbedding, DataEmbedding
 from layers.fusion import GatedFusion
-from layers.distributional_router_encoder import DistributionRouter, PatternRouterMLP
+from layers.distributional_router_encoder import DistributionRouter, PatternRouterMLP_IMP
 from layers.MOE_dispatcher import MOEDispatcher
 from utils.tools import sample_top_p
 from utils.augmentation import Cutout_jitter_aug, BatchAugmentation_battery
@@ -28,41 +28,6 @@ from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
 transformers.logging.set_verbosity_error()
-
-def top_p_mask(logits, p=0.9):
-    """
-    Creates a mask tensor with the same shape as logits where selected indices are set to 1 and unselected indices are set to 0.
-
-    Parameters:
-    - logits: A tensor of shape [B, N] where B is batch size and N is the number of logits.
-    - p: The cumulative probability threshold.
-
-    Returns:
-    - mask: A tensor of shape [B, N] with 1s for selected indices and 0s for unselected indices.
-    """
-    # Calculate probabilities using softmax
-    probabilities = torch.softmax(logits, dim=-1)
-
-    # Sort probabilities and corresponding indices in descending order
-    sorted_probs, sorted_indices = torch.sort(probabilities, dim=-1, descending=True)
-
-    # Calculate cumulative probabilities
-    cumulative_probs = torch.cumsum(sorted_probs, dim=-1)
-
-    # Create a mask to select indices where cumulative probability is less than p
-    mask = cumulative_probs < p
-
-    # Ensure we always select at least one element
-    # Find the first index where cumulative probability is greater than p and set it to True
-    mask[:, 0] = True
-
-    # Initialize a mask tensor with zeros
-    output_mask = torch.zeros_like(logits, dtype=torch.int)
-
-    # Use the mask to set the selected indices in the output mask tensor to 1
-    output_mask.scatter_(1, sorted_indices, mask.int())
-
-    return output_mask
 
 def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True):
     '''
@@ -173,6 +138,7 @@ class BatteryLifeLLM(PreTrainedModel):
 class FlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenIntraCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -181,15 +147,14 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.d_model = configs.d_model
         self.num_experts = configs.num_experts
         self.top_k = configs.topK
-        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
 
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
-        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -211,7 +176,11 @@ class FlattenIntraCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
+        _, indices = torch.topk(logits, self.top_k, dim=1)
+        # Create a mask where only the top-K values will be kept
+        mask = torch.zeros_like(logits, dtype=torch.bool)
+        # Scatter the mask at the indices of the top-K values
+        mask.scatter_(1, indices, 1) # 0 indicates mask
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -223,14 +192,11 @@ class FlattenIntraCycleMoELayer(nn.Module):
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
         total_expert_outs = []
-        total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
-            cluster_center = torch.mean(out.reshape(-1, out.shape[-1]), dim=0) # [d_model]  
             total_outs.append(out)
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
-                total_cluster_centers.append(cluster_center)
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
 
@@ -239,21 +205,18 @@ class FlattenIntraCycleMoELayer(nn.Module):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
-        cl_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-            # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=True)
-
-        return final_out, aug_loss, cl_loss
+        return final_out, aug_loss
     
 class IntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(IntraCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -263,15 +226,14 @@ class IntraCycleMoELayer(nn.Module):
         self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
-        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
-        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -293,7 +255,11 @@ class IntraCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
+        _, indices = torch.topk(logits, self.top_k, dim=1)
+        # Create a mask where only the top-K values will be kept
+        mask = torch.zeros_like(logits, dtype=torch.bool)
+        # Scatter the mask at the indices of the top-K values
+        mask.scatter_(1, indices, 1) # 0 indicates mask
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -305,14 +271,11 @@ class IntraCycleMoELayer(nn.Module):
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
         total_expert_outs = []
-        total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
-            cluster_center = torch.mean(out.reshape(-1, out.shape[-1]), dim=0) # [d_model]
             total_outs.append(out)
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
-                total_cluster_centers.append(cluster_center)
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = total_outs
@@ -321,21 +284,19 @@ class IntraCycleMoELayer(nn.Module):
         final_out = self.ln(final_out + cycle_curve_data) # add & norm
 
         aug_loss = 0
-        cl_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-            # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=True)
 
-        return final_out, aug_loss, cl_loss
+        return final_out, aug_loss
 
 class FlattenInterCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenInterCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
@@ -346,14 +307,13 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.num_experts = configs.d_num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
-        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)])
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
-        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -375,7 +335,11 @@ class FlattenInterCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
+        _, indices = torch.topk(logits, self.top_k, dim=1)
+        # Create a mask where only the top-K values will be kept
+        mask = torch.zeros_like(logits, dtype=torch.bool)
+        # Scatter the mask at the indices of the top-K values
+        mask.scatter_(1, indices, 1) # 0 indicates mask
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -387,13 +351,12 @@ class FlattenInterCycleMoELayer(nn.Module):
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
         total_expert_outs = []
-        total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_model]
             total_outs.append(out)
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
-                total_cluster_centers.append(torch.mean(out, dim=0))
+
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, d_model]
         final_out = total_outs
@@ -401,17 +364,14 @@ class FlattenInterCycleMoELayer(nn.Module):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
-        cl_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-            # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=False)
 
-        return final_out, aug_loss, cl_loss
+        return final_out, aug_loss
     
 class InterCycleMoELayer(nn.Module):
     def __init__(self, configs):
@@ -425,15 +385,14 @@ class InterCycleMoELayer(nn.Module):
         self.num_experts = configs.d_num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
-        self.top_p = configs.top_p
         self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
-        self.noise = PatternRouterMLP(self.d_llm, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -455,7 +414,11 @@ class InterCycleMoELayer(nn.Module):
         else:
             logits = clean_logits # [B, num_experts]
 
-        mask = top_p_mask(logits, p=self.top_p) # [B, num_experts]
+        _, indices = torch.topk(logits, self.top_k, dim=1)
+        # Create a mask where only the top-K values will be kept
+        mask = torch.zeros_like(logits, dtype=torch.bool)
+        # Scatter the mask at the indices of the top-K values
+        mask.scatter_(1, indices, 1) # 0 indicates mask
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -467,13 +430,11 @@ class InterCycleMoELayer(nn.Module):
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
         total_expert_outs = []
-        total_cluster_centers = []
         for i, expert in enumerate(self.experts):
             out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
             total_outs.append(out)
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
-                total_cluster_centers.append(torch.mean(out, dim=0))
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = total_outs
@@ -482,17 +443,13 @@ class InterCycleMoELayer(nn.Module):
         final_out = self.ln(final_out + cycle_curve_data) # add & norm
 
         aug_loss = 0
-        cl_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-            # Compute the contrastive learning loss
-            cl_loss = compute_CL_loss(total_expert_outs, total_cluster_centers, self.tau, is_intra=False)
-
-        return final_out, aug_loss, cl_loss
+        return final_out, aug_loss
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -504,8 +461,6 @@ class OutputHead(nn.Module):
         self.early_cycle_threshold = ec_config.early_cycle_threshold
         self.drop_rate = ec_config.dropout
         self.n_heads = ec_config.n_heads
-
-
         self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
         
     
@@ -593,26 +548,22 @@ class Model(BatteryLifeLLM):
         total_aug_loss = 0
         total_cl_loss = 0
         total_aug_count = 0
-        out, aug_loss, cl_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings) # [B, L, d_model]
+        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings) # [B, L, d_model]
         total_aug_loss += aug_loss
-        total_cl_loss += cl_loss
         total_aug_count += 1
 
         for i, expert in enumerate(self.intraCycleLayers):
-            out, aug_loss, cl_loss = expert(out, DKP_embeddings)
+            out, aug_loss = expert(out, DKP_embeddings)
             total_aug_loss += aug_loss
-            total_cl_loss += cl_loss
             total_aug_count += 1
         
-        out, aug_loss, cl_loss = self.flattenInterCycleLayer(out, DKP_embeddings)
+        out, aug_loss = self.flattenInterCycleLayer(out, DKP_embeddings)
         total_aug_loss += aug_loss
-        total_cl_loss += cl_loss
         total_aug_count += 1
 
         for i, expert in enumerate(self.interCycleLayers):
-            out, aug_loss, cl_loss = expert(out, DKP_embeddings)
+            out, aug_loss = expert(out, DKP_embeddings)
             total_aug_loss += aug_loss
-            total_cl_loss += cl_loss
             total_aug_count += 1
 
         preds, llm_out, feature_llm_out = self.regression_head(out, attention_mask)
@@ -620,10 +571,7 @@ class Model(BatteryLifeLLM):
         preds = preds.float()
         llm_out = llm_out.float()
 
-
-        label_preds, label_llm_out, label_feature_llm_out = None, None, None
-
-        return preds, None, llm_out, feature_llm_out, label_preds, label_feature_llm_out, total_aug_loss / total_aug_count, total_cl_loss / total_aug_count
+        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss / total_aug_count, total_cl_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''

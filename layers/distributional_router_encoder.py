@@ -21,6 +21,19 @@ class PatternRouter(nn.Module):
         out = self.distribution_fit(x)
         return out
 
+class PatternRouterMLP_IMP(nn.Module):
+    def __init__(self, input_size, d_model, num_experts):
+        super(PatternRouterMLP_IMP, self).__init__()
+        self.distribution_fit = nn.Sequential(nn.Linear(input_size, d_model//2),
+                                              nn.LeakyReLU(), nn.Linear(d_model//2, num_experts))
+
+    def forward(self, x):
+        '''
+        x: [B, D]
+        '''
+        out = self.distribution_fit(x)
+        return out
+    
 class PatternRouterMLP(nn.Module):
     def __init__(self, input_size, num_experts):
         super(PatternRouterMLP, self).__init__()
