@@ -138,6 +138,7 @@ class BatteryLifeLLM(PreTrainedModel):
 class FlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenIntraCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -215,6 +216,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
 class IntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(IntraCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -294,6 +296,7 @@ class IntraCycleMoELayer(nn.Module):
 class FlattenInterCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenInterCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
@@ -568,10 +571,7 @@ class Model(BatteryLifeLLM):
         preds = preds.float()
         llm_out = llm_out.float()
 
-
-        label_preds, label_llm_out, label_feature_llm_out = None, None, None
-
-        return preds, None, llm_out, feature_llm_out, label_preds, label_feature_llm_out, total_aug_loss / total_aug_count, total_cl_loss / total_aug_count
+        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss / total_aug_count, total_cl_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''

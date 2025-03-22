@@ -29,35 +29,29 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
 transformers.logging.set_verbosity_error()
 
-def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True):
+def compute_orthogonality_loss(general_x, expert_x, curve_attn_mask):
     '''
-    This is used to compute the contrastive learning loss in the intra-cycle/inter-cycle modeling
-    params:
-        total_expert_outs: a list of tensors [expert_batch_size, L, d_model] if is_intra else [expert_batch_size, d_model]
-        total_cluster_centers: [selected_experts, d_model]
-        tau: the temperature in contrastive learning
-        is_intra: bool. True for intra-cycle modeling, False for inter-cycle modeling
-    return:
-        cl_loss: scalar. The contrastive learning loss
+    genera_x: [B, *, D]
+    expert_x: [B, *, D]
+    curve_attn_mask: [B, L]
     '''
-    total_cluster_centers = torch.stack(total_cluster_centers, dim=0)
-    norm_total_cluster_centers = F.normalize(total_cluster_centers, p=2, dim=-1) # [selected_experts, d_model]
-    selected_experts = len(total_expert_outs)
-    cl_loss = 0
 
-    for expert_index, expert_outs in enumerate(total_expert_outs):
-        if is_intra:
-            expert_outs = expert_outs.reshape(-1, expert_outs.shape[-1]) # [expert_batch_size*L, d_model]
-        norm_expert_outs = F.normalize(expert_outs, p=2, dim=-1) # [expert_batch_size*L, d_model] if is_intra else [expert_batch_size, d_model]
-        sim = torch.mm(norm_expert_outs, norm_total_cluster_centers.transpose(0, 1))  # [expert_batch_size*L, selected_experts]
-        sim = torch.exp(sim / tau)
-        # print(sim.shape, len(total_expert_outs))
-        positive_logits = sim[:, expert_index] # [expert_batch_size*L] the logits of positive samples
-        negative_logitis = torch.sum(sim, dim=1) - positive_logits # [expert_batch_size*L] the logitis of negative samples
-        cl_loss += -torch.mean(torch.log(positive_logits/negative_logitis)) # scalar
-        
-    cl_loss /= selected_experts
-    return cl_loss    
+    if len(general_x.size()) == 3:
+        B, L = curve_attn_mask.shape[0], curve_attn_mask.shape[1]
+        general_x = general_x.reshape(B*L, -1)
+        expert_x = expert_x.reshape(B*L, -1)
+        orthogonality = torch.diagonal(torch.matmul(general_x, expert_x.transpose(0, 1))) # [B*L]
+        orthogonality = orthogonality*orthogonality
+        curve_attn_mask = curve_attn_mask.reshape(B*L)
+        orthogonality_loss = torch.sum(orthogonality*curve_attn_mask) / torch.sum(curve_attn_mask)
+    elif len(general_x.size()) == 2:
+        orthogonality = torch.diagonal(torch.matmul(general_x, expert_x.transpose(0, 1))) # [B]
+        orthogonality = orthogonality * orthogonality
+        orthogonality_loss = torch.mean(orthogonality)
+
+    return orthogonality_loss
+
+  
 
 class MLPBlockSwishGLU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
@@ -82,22 +76,23 @@ class MLPBlockSwishGLU(nn.Module):
         out = self.out_linear(out)
         return out
 
-class BatteryMoECyclePatch(nn.Module):
-    def __init__(self, configs):
-        super(BatteryMoECyclePatch, self).__init__()
-        self.flatten_linear = nn.Sequential(nn.Flatten(start_dim=2), 
-                                            nn.Linear(configs.charge_discharge_length*3, configs.d_model))
-        self.temporal_encoding = nn.Embedding(configs.early_cycle_threshold, configs.d_model)
-        self.te_mlp = nn.Sequential(nn.Linear(configs.d_model, configs.d_ff), nn.ReLU(),
-                                    nn.Linear(configs.d_ff, configs.d_model))
+class MLPBlock(nn.Module):
+    def __init__(self, in_dim, hidden_dim, drop_rate, activation):
+        super(MLPBlock, self).__init__()
+        self.in_linear = nn.Linear(in_dim, hidden_dim)
+        self.dropout = nn.Dropout(drop_rate)
+        self.act = nn.ReLU() if activation=='relu' else nn.GELU(approximate='tanh')
+        self.out_linear = nn.Linear(hidden_dim, in_dim)
     
-    def forward(self, x, usable_cycle_numbers):
+    def forward(self, x):
         '''
         x: [B, *, in_dim]
-        usable_cycle_numbers: [B]
         '''
-        out = self.flatten_linear(x) + self.te_mlp(self.temporal_encoding(usable_cycle_numbers)).unsqueeze(1)
-        return out
+        out = self.in_linear(x)
+        out = self.act(out)
+        out = self.dropout(out)
+        out = self.out_linear(out)
+        return self.dropout(out)
     
 class BatteryLifeLLM(PreTrainedModel):
     config_class = BatteryLifeConfig
@@ -137,6 +132,7 @@ class BatteryLifeLLM(PreTrainedModel):
 class FlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenIntraCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -146,9 +142,9 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.num_experts = configs.num_experts
         self.top_k = configs.topK
         self.tau = configs.tau
-        self.experts = nn.ModuleList([BatteryMoECyclePatch(configs) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([BatteryMoECyclePatch(configs) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
 
         self.noisy_gating = configs.noisy_gating
         self.gate  = PatternRouterMLP(self.d_llm, self.num_experts)
@@ -162,11 +158,8 @@ class FlattenIntraCycleMoELayer(nn.Module):
         params:
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
             DKP_embeddings: [B, d_llm]
-            curve_attn_mask: [B, L]
         '''
         B = cycle_curve_data.shape[0]
-        usable_cycle_numbers = torch.sum(curve_attn_mask, dim=1).int() - 1
-        
         clean_logits = self.gate(DKP_embeddings)
         if self.noisy_gating and self.training:
             raw_noise_stddev = self.noise(DKP_embeddings)
@@ -194,29 +187,37 @@ class FlattenIntraCycleMoELayer(nn.Module):
         total_outs = []
         total_expert_outs = []
         for i, expert in enumerate(self.experts):
-            out = expert(cycle_curve_data[MOE_indicies[i]], usable_cycle_numbers[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
+            out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
             total_outs.append(out)
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
 
-        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+        expert_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
 
-        final_out = total_outs
+        final_out = expert_outs
+        general_out = 0
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data, usable_cycle_numbers) + final_out
+            general_out = self.general_experts[i](cycle_curve_data) + general_out
+        final_out = general_out + final_out
 
         aug_loss = 0
+        ortho_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-        return final_out, aug_loss
+            # orthogonal loss
+            if self.use_cl:
+                ortho_loss = compute_orthogonality_loss(general_out, expert_outs, curve_attn_mask)
+
+        return final_out, aug_loss, ortho_loss
     
 class IntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(IntraCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -238,7 +239,7 @@ class IntraCycleMoELayer(nn.Module):
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, DKP_embeddings):
+    def forward(self, cycle_curve_data, DKP_embeddings, curve_attn_mask):
         '''
         params:
             cycle_curve_data: [B, L, d_model]
@@ -277,12 +278,15 @@ class IntraCycleMoELayer(nn.Module):
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
 
-        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
-        final_out = total_outs
-        for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data) + final_out
-        final_out = self.ln(final_out + cycle_curve_data) # add & norm
+        expert_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
 
+        final_out = expert_outs
+        general_out = 0
+        ortho_loss = 0
+        for i in range(self.num_general_experts):
+            general_out = self.general_experts[i](cycle_curve_data) + general_out
+        final_out = general_out + final_out
+        
         aug_loss = 0
         if self.training:
             # Compute the auxiliary loss
@@ -290,12 +294,17 @@ class IntraCycleMoELayer(nn.Module):
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
+            # orthogonal loss
+            if self.use_cl:
+                ortho_loss = compute_orthogonality_loss(general_out, expert_outs, curve_attn_mask)
 
-        return final_out, aug_loss
+        final_out = self.ln(final_out + cycle_curve_data) # add & norm
+        return final_out, aug_loss, ortho_loss
 
 class FlattenInterCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(FlattenInterCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
@@ -357,24 +366,32 @@ class FlattenInterCycleMoELayer(nn.Module):
                 total_expert_outs.append(out)
 
 
-        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, d_model]
-        final_out = total_outs
+        expert_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+
+        final_out = expert_outs
+        general_out = 0
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data) + final_out
+            general_out = self.general_experts[i](cycle_curve_data) + general_out
+        final_out = general_out + final_out
 
         aug_loss = 0
+        ortho_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
+            # orthogonal loss
+            if self.use_cl:
+                ortho_loss = compute_orthogonality_loss(general_out, expert_outs, None)
 
-        return final_out, aug_loss
+        return final_out, aug_loss, ortho_loss
     
 class InterCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(InterCycleMoELayer, self).__init__()
+        self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -435,11 +452,15 @@ class InterCycleMoELayer(nn.Module):
             if len(MOE_indicies[i])>=1:
                 total_expert_outs.append(out)
 
-        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
-        final_out = total_outs
+        expert_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+
+        final_out = expert_outs
+        general_out = 0
+        ortho_loss = 0
         for i in range(self.num_general_experts):
-            final_out = self.general_experts[i](cycle_curve_data) + final_out
-        final_out = self.ln(final_out + cycle_curve_data) # add & norm
+            general_out = self.general_experts[i](cycle_curve_data) + general_out
+        final_out = general_out + final_out
+        
 
         aug_loss = 0
         if self.training:
@@ -448,7 +469,12 @@ class InterCycleMoELayer(nn.Module):
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-        return final_out, aug_loss
+            # orthogonal loss
+            if self.use_cl:
+                ortho_loss = compute_orthogonality_loss(general_out, expert_outs, None)
+
+        final_out = self.ln(final_out + cycle_curve_data) # add & norm
+        return final_out, aug_loss, ortho_loss
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -547,22 +573,26 @@ class Model(BatteryLifeLLM):
         total_aug_loss = 0
         total_cl_loss = 0
         total_aug_count = 0
-        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings, curve_attn_mask) # [B, L, d_model]
+        out, aug_loss, ortho_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings, curve_attn_mask) # [B, L, d_model]
         total_aug_loss += aug_loss
+        total_cl_loss += ortho_loss
         total_aug_count += 1
 
         for i, expert in enumerate(self.intraCycleLayers):
-            out, aug_loss = expert(out, DKP_embeddings)
+            out, aug_loss, ortho_loss = expert(out, DKP_embeddings, curve_attn_mask)
             total_aug_loss += aug_loss
+            total_cl_loss += ortho_loss
             total_aug_count += 1
         
-        out, aug_loss = self.flattenInterCycleLayer(out, DKP_embeddings)
+        out, aug_loss, ortho_loss = self.flattenInterCycleLayer(out, DKP_embeddings)
         total_aug_loss += aug_loss
+        total_cl_loss += ortho_loss
         total_aug_count += 1
 
         for i, expert in enumerate(self.interCycleLayers):
-            out, aug_loss = expert(out, DKP_embeddings)
+            out, aug_loss, ortho_loss = expert(out, DKP_embeddings)
             total_aug_loss += aug_loss
+            total_cl_loss += ortho_loss
             total_aug_count += 1
 
         preds, llm_out, feature_llm_out = self.regression_head(out, attention_mask)
@@ -570,10 +600,7 @@ class Model(BatteryLifeLLM):
         preds = preds.float()
         llm_out = llm_out.float()
 
-
-        label_preds, label_llm_out, label_feature_llm_out = None, None, None
-
-        return preds, None, llm_out, feature_llm_out, label_preds, label_feature_llm_out, total_aug_loss / total_aug_count, total_cl_loss / total_aug_count
+        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss / total_aug_count, total_cl_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''
