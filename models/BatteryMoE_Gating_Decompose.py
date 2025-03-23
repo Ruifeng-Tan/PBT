@@ -153,8 +153,8 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
 
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -232,8 +232,8 @@ class IntraCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -312,8 +312,8 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)])
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -391,8 +391,8 @@ class InterCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_llm//32, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
