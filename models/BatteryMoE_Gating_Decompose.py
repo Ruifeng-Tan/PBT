@@ -1,5 +1,5 @@
 '''
-和BatteryMoE_Seek_Connect相同，只不过在Intra-encoder和pathcing中用了SwishGLU
+基于BatteryMoE_Gating，只不过用一个router一次性生成所有的logits
 '''
 import torch
 import torch.nn as nn
@@ -17,7 +17,7 @@ from layers.SelfAttention_Family import FullAttention, AttentionLayer
 from layers.StandardNorm import Normalize
 from layers.Embed import TokenEmbedding, DataEmbedding
 from layers.fusion import GatedFusion
-from layers.distributional_router_encoder import DistributionRouter, PatternRouterMLP_IMP
+from layers.distributional_router_encoder import DistributionRouter, PatternRouterMLP
 from layers.MOE_dispatcher import MOEDispatcher
 from utils.tools import sample_top_p
 from utils.augmentation import Cutout_jitter_aug, BatchAugmentation_battery
@@ -153,28 +153,17 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
 
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, DKP_embeddings):
+    def forward(self, cycle_curve_data, logits):
         '''
         params:
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
-            DKP_embeddings: [B, d_llm]
+            DKP_embeddings: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
-        clean_logits = self.gate(DKP_embeddings)
-        if self.noisy_gating and self.training:
-            raw_noise_stddev = self.noise(DKP_embeddings)
-            noise_stddev = ((self.softplus(raw_noise_stddev) + 1e-2))
-            noise = torch.randn_like(clean_logits)
-            noisy_logits = clean_logits + (noise * noise_stddev)
-            logits = noisy_logits
-        else:
-            logits = clean_logits # [B, num_experts]
 
         _, indices = torch.topk(logits, self.top_k, dim=1)
         # Create a mask where only the top-K values will be kept
@@ -232,28 +221,18 @@ class IntraCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, DKP_embeddings):
+    def forward(self, cycle_curve_data, logits):
         '''
         params:
             cycle_curve_data: [B, L, d_model]
-            DKP_embeddings: [B, d_llm]
+            logits: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
-        clean_logits = self.gate(DKP_embeddings)
-        if self.noisy_gating and self.training:
-            raw_noise_stddev = self.noise(DKP_embeddings)
-            noise_stddev = ((self.softplus(raw_noise_stddev) + 1e-2))
-            noise = torch.randn_like(clean_logits)
-            noisy_logits = clean_logits + (noise * noise_stddev)
-            logits = noisy_logits
-        else:
-            logits = clean_logits # [B, num_experts]
+
 
         _, indices = torch.topk(logits, self.top_k, dim=1)
         # Create a mask where only the top-K values will be kept
@@ -312,28 +291,17 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)])
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, DKP_embeddings):
+    def forward(self, cycle_curve_data, logits):
         '''
         params:
             cycle_curve_data: [B, L, d_model]
-            DKP_embeddings: [B, d_llm]
+            logits: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
-        clean_logits = self.gate(DKP_embeddings)
-        if self.noisy_gating and self.training:
-            raw_noise_stddev = self.noise(DKP_embeddings)
-            noise_stddev = ((self.softplus(raw_noise_stddev) + 1e-2))
-            noise = torch.randn_like(clean_logits)
-            noisy_logits = clean_logits + (noise * noise_stddev)
-            logits = noisy_logits
-        else:
-            logits = clean_logits # [B, num_experts]
 
         _, indices = torch.topk(logits, self.top_k, dim=1)
         # Create a mask where only the top-K values will be kept
@@ -391,28 +359,17 @@ class InterCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
-        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, DKP_embeddings):
+    def forward(self, cycle_curve_data, logits):
         '''
         params:
             cycle_curve_data: [B, d_model]
-            DKP_embeddings: [B, d_llm]
+            logits: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
-        clean_logits = self.gate(DKP_embeddings)
-        if self.noisy_gating and self.training:
-            raw_noise_stddev = self.noise(DKP_embeddings)
-            noise_stddev = ((self.softplus(raw_noise_stddev) + 1e-2))
-            noise = torch.randn_like(clean_logits)
-            noisy_logits = clean_logits + (noise * noise_stddev)
-            logits = noisy_logits
-        else:
-            logits = clean_logits # [B, num_experts]
 
         _, indices = torch.topk(logits, self.top_k, dim=1)
         # Create a mask where only the top-K values will be kept
@@ -507,6 +464,8 @@ class Model(BatteryLifeLLM):
         self.tokenizer.padding_side = 'right' # set the padding side
         self.e_layers = configs.e_layers
         self.d_layers = configs.d_layers
+        self.moe_layers = 2+configs.e_layers+configs.d_layers
+        self.gate = PatternRouterMLP(self.d_llm, self.num_experts*self.moe_layers)
         self.flattenIntraCycleLayer = FlattenIntraCycleMoELayer(configs)
         self.intraCycleLayers = nn.ModuleList([IntraCycleMoELayer(configs) for _ in range(configs.e_layers)])
         self.flattenInterCycleLayer = FlattenInterCycleMoELayer(configs)
@@ -544,25 +503,32 @@ class Model(BatteryLifeLLM):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
+        logits = self.gate(DKP_embeddings)
+        logits = logits.reshape(B, self.moe_layers, -1)
+        logits_index = 0
 
         total_aug_loss = 0
         total_cl_loss = 0
         total_aug_count = 0
-        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings) # [B, L, d_model]
+        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, logits[:,logits_index]) # [B, L, d_model]
+        logits_index += 1
         total_aug_loss += aug_loss
         total_aug_count += 1
 
         for i, expert in enumerate(self.intraCycleLayers):
-            out, aug_loss = expert(out, DKP_embeddings)
+            out, aug_loss = expert(out, logits[:,logits_index])
+            logits_index += 1
             total_aug_loss += aug_loss
             total_aug_count += 1
         
-        out, aug_loss = self.flattenInterCycleLayer(out, DKP_embeddings)
+        out, aug_loss = self.flattenInterCycleLayer(out, logits[:,logits_index])
+        logits_index += 1
         total_aug_loss += aug_loss
         total_aug_count += 1
 
         for i, expert in enumerate(self.interCycleLayers):
-            out, aug_loss = expert(out, DKP_embeddings)
+            out, aug_loss = expert(out, logits[:,logits_index])
+            logits_index += 1
             total_aug_loss += aug_loss
             total_aug_count += 1
 
