@@ -17,7 +17,7 @@ from layers.SelfAttention_Family import FullAttention, AttentionLayer
 from layers.StandardNorm import Normalize
 from layers.Embed import TokenEmbedding, DataEmbedding
 from layers.fusion import GatedFusion
-from layers.distributional_router_encoder import DistributionRouter, PatternRouter
+from layers.distributional_router_encoder import DistributionRouter, PatternRouterMLP_IMP
 from layers.MOE_dispatcher import MOEDispatcher
 from utils.tools import sample_top_p
 from utils.augmentation import Cutout_jitter_aug, BatchAugmentation_battery
@@ -153,8 +153,8 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
 
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -232,8 +232,8 @@ class IntraCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -312,8 +312,8 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)])
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -391,8 +391,8 @@ class InterCycleMoELayer(nn.Module):
         self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
-        self.gate  = PatternRouter(self.d_model, self.num_experts)
-        self.noise = PatternRouter(self.d_model, self.num_experts)
+        self.gate  = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
+        self.noise = PatternRouterMLP_IMP(self.d_llm, self.d_model, self.num_experts)
         self.softplus = nn.Softplus()
         self.eps = 1e-9
 
@@ -507,9 +507,6 @@ class Model(BatteryLifeLLM):
         self.tokenizer.padding_side = 'right' # set the padding side
         self.e_layers = configs.e_layers
         self.d_layers = configs.d_layers
-        self.DKP_extracter = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.LeakyReLU(), 
-                                           nn.Linear(self.d_ff, self.d_ff), nn.LeakyReLU(),
-                                           nn.Linear(self.d_ff, self.d_model))
         self.flattenIntraCycleLayer = FlattenIntraCycleMoELayer(configs)
         self.intraCycleLayers = nn.ModuleList([IntraCycleMoELayer(configs) for _ in range(configs.e_layers)])
         self.flattenInterCycleLayer = FlattenInterCycleMoELayer(configs)
@@ -547,7 +544,6 @@ class Model(BatteryLifeLLM):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        DKP_embeddings = self.DKP_extracter(DKP_embeddings)
 
         total_aug_loss = 0
         total_cl_loss = 0
