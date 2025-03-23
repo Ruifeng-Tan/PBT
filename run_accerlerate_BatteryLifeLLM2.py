@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Gating_ImpGate, BatteryMoE_Gating_Decompose, BatteryMoE_baseline, BatteryMoE_baseline_Gating, BatteryMoE_Gating_Linear, BatteryMoE_Gating_dVdQ_multi, BatteryMoE_Gating
+from models import BatteryMoE_Gating_ImpGate, BatteryMoE_Gating_Decompose, BatteryMoE_baseline, BatteryMoE_baseline_Gating, BatteryMoE_Gating_Compressed, BatteryMoE_Gating_dVdQ_multi, BatteryMoE_Gating
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -235,11 +235,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_Gating.Model(model_config)
-    elif args.model == 'BatteryMoE_Gating_Linear':
+    elif args.model == 'BatteryMoE_Gating_Compressed':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Gating_Linear.Model(model_config)
+        model = BatteryMoE_Gating_Compressed.Model(model_config)
     elif args.model == 'BatteryMoE_baseline':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
