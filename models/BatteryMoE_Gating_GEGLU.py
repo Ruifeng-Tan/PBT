@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_Gating，只不过用一个router一次性生成所有的logits
+基于BatteryMoE_Gating，只不过修复了activation function，写成了正确的SwishGLU
 '''
 import torch
 import torch.nn as nn
@@ -59,24 +59,24 @@ def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True
     cl_loss /= selected_experts
     return cl_loss    
 
-class MLPBlockSwishGLU(nn.Module):
+class MLPBlockGEGLU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
-        super(MLPBlockSwishGLU, self).__init__()
-        self.in_linear = nn.Linear(in_dim, hidden_dim)
+        super(MLPBlockGEGLU, self).__init__()
         self.dropout = nn.Dropout(drop_rate)
-        self.act_linear1 = nn.Linear(hidden_dim, hidden_dim, bias=False)
-        self.act = nn.Sigmoid()
-        self.act_linear2 = nn.Linear(hidden_dim, hidden_dim, bias=False)
+        self.act_linear1 = nn.Linear(in_dim, hidden_dim, bias=False)
+        self.act = nn.GELU()
+        self.act_linear2 = nn.Linear(in_dim, hidden_dim, bias=False)
         self.out_linear = nn.Linear(hidden_dim, in_dim)
     
     def forward(self, x):
         '''
         x: [B, *, in_dim]
         '''
-        out = self.in_linear(x)
+        out = x
 
         # SwishGLU
-        out = out * self.act(self.act_linear1(out)) * self.act_linear2(out)
+        GELU_x = self.act_linear1(out)
+        out = self.act(GELU_x) * self.act_linear2(out)
 
         out = self.dropout(out)
         out = self.out_linear(out)
@@ -216,9 +216,9 @@ class IntraCycleMoELayer(nn.Module):
         self.activation = configs.activation
         self.top_k = configs.topK
         self.tau = configs.tau
-        self.experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGEGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([MLPBlockGEGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
         self.softplus = nn.Softplus()
@@ -354,9 +354,9 @@ class InterCycleMoELayer(nn.Module):
         self.activation = configs.activation
         self.top_k = configs.topK
         self.tau = configs.tau
-        self.experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGEGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([MLPBlockGEGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
         self.softplus = nn.Softplus()

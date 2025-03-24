@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_Gating，只不过用一个router一次性生成所有的logits
+基于BatteryMoE_Gating，只不过修复了activation function，写成了正确的SwishGLU
 '''
 import torch
 import torch.nn as nn
