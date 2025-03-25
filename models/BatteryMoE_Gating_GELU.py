@@ -94,41 +94,6 @@ class MLPBlock(nn.Module):
         out = self.dropout(out)
         out = self.out_linear(out)
         return self.dropout(out)
-    
-class BatteryLifeLLM(PreTrainedModel):
-    config_class = BatteryLifeConfig
-    base_model_prefix = "model"
-
-    def _init_weights(self, module):
-        # important: this ported version of LlavaNext isn't meant for training from scratch - only
-        # inference and fine-tuning - so the proper init weights code has been removed - the original codebase
-        # https://github.com/haotian-liu/LLaVA/tree/main/llava_next should serve for that purpose
-        # std = (
-        #     self.config.initializer_range
-        #     if hasattr(self.config, "initializer_range")
-        #     else self.config.text_config.initializer_range
-        # )
-
-        # if hasattr(module, "class_embedding"):
-        #     module.class_embedding.data.normal_(mean=0.0, std=std)
-
-        # if isinstance(module, (nn.Linear, nn.Conv2d)):
-        #     module.weight.data.normal_(mean=0.0, std=std)
-        #     if module.bias is not None:
-        #         module.bias.data.zero_()
-        # elif isinstance(module, nn.Embedding):
-        #     module.weight.data.normal_(mean=0.0, std=std)
-        #     if module.padding_idx is not None:
-        #         module.weight.data[module.padding_idx].zero_()
-        pass
-
-    @property
-    def _supports_sdpa(self):
-        """
-        Retrieve language_model's attribute to check whether the model supports
-        SDPA or not.
-        """
-        return self.language_model._supports_sdpa
 
 class FlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
@@ -426,13 +391,13 @@ class OutputHead(nn.Module):
         
         return out, llm_out, llm_out
 
-class Model(BatteryLifeLLM):
+class Model(nn.Module):
     '''
     The load balancing loss is from the paper "Switch Transformers: Scaling to Trillion Parameter Models
     with Simple and Efficient Sparsity".
     '''
     def __init__(self, battery_life_config):
-        super(Model, self).__init__(battery_life_config)
+        super(Model, self).__init__()
         configs = battery_life_config.ec_config.get_configs()
         self.configs = configs
         self.task_name = configs.task_name
@@ -467,23 +432,9 @@ class Model(BatteryLifeLLM):
         self.interCycleLayers = nn.ModuleList([InterCycleMoELayer(configs) for _ in range(configs.d_layers)])
         self.regression_head = OutputHead(battery_life_config.ec_config)
         
-    def forward(self, cycle_curve_data, curve_attn_mask, input_ids: torch.LongTensor = None,
-                end_input_ids: torch.LongTensor = None,
-                end_attn_mask: torch.LongTensor = None,
-                inputs_embeds: Optional[torch.FloatTensor] = None,
-                label_input_ids: torch.LongTensor = None,
-                label_attention_mask: torch.LongTensor = None,
-                label_prompt_embedding: Optional[torch.FloatTensor] = None,
-                labels: Optional[torch.LongTensor] = None,
-                use_cache: Optional[bool] = None,
-                output_attentions: Optional[bool] = None,
-                output_hidden_states: Optional[bool] = None,
-                return_dict: Optional[bool] = None,
+    def forward(self, cycle_curve_data, curve_attn_mask, 
                 attention_mask: Optional[torch.Tensor] = None,
-                position_ids: Optional[torch.LongTensor] = None,
-                past_key_values: Optional[List[torch.FloatTensor]] = None,
-                DKP_embeddings: Optional[torch.FloatTensor] = None,
-                cluster_labels: Optional[torch.LongTensor] = None
+                DKP_embeddings: Optional[torch.FloatTensor] = None
                 ):
         '''
         params:

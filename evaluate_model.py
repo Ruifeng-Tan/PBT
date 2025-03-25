@@ -263,7 +263,7 @@ for ii in range(args.itr):
     total_seen_unseen_ids = []
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, life_class, scaled_life_class, weights, dataset_ids, seen_unseen_ids) in tqdm(enumerate(test_loader)):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings) in tqdm(enumerate(test_loader)):
             cycle_curve_data = cycle_curve_data.float().to(accelerator.device)# [B, S, N]
             curve_attn_mask = curve_attn_mask.float().to(accelerator.device)
             labels = labels.float().to(accelerator.device)

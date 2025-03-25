@@ -10,8 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryLifeLLMv15_DivideConquer, BatteryLifeLLMv16_Stack, \
-            BatteryLifeLLMv17_Stack, BatteryLifeLLMv20_Stack, BatteryMoE, BatteryLifeLLMv20_Stack_Trial, BatteryLifeLLMv20_Stack_AllMoE
+from models import BatteryMoE_Gating_GELU, BatteryMoE_Gating_ReLU, BatteryMoE_Gating_SwiGLU, BatteryMoE_baseline, BatteryMoE_Gating_GEGLU, BatteryMoE_Gating_Linear, BatteryMoE_Gating
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -29,8 +28,8 @@ def list_of_ints(arg):
 # os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # os.environ['CURL_CA_BUNDLE'] = ''
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
-# os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
-# os.environ["TORCH_USE_CUDA_DSA"] = "true"
+os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
+os.environ["TORCH_USE_CUDA_DSA"] = "true"
 from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM, load_content
 
 parser = argparse.ArgumentParser(description='BatteryLifeLLM')
@@ -84,7 +83,7 @@ parser.add_argument('--label_len', type=int, default=48, help='start token lengt
 parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
 
 # model define
-parser.add_argument('--dominant_frequency', type=int, default=100, help='Used in low pass filter')
+parser.add_argument('--pt_token_num', type=int, default=10, help='The token number for prompt tuning')
 parser.add_argument('--last_layer', type=int, default=0, help='The layer index for fusion')
 parser.add_argument('--d_llm', type=int, default=4096, help='the features of llm')
 parser.add_argument('--enc_in', type=int, default=1, help='encoder input size')
@@ -92,10 +91,9 @@ parser.add_argument('--dec_in', type=int, default=1, help='decoder input size')
 parser.add_argument('--c_out', type=int, default=1, help='output size')
 parser.add_argument('--d_model', type=int, default=16, help='dimension of model')
 parser.add_argument('--n_heads', type=int, default=4, help='num of heads')
-parser.add_argument('--lstm_layers', type=int, default=1, help='num of LSTM layers')
+parser.add_argument('--noDKP_layers', type=int, default=1, help='the number of no DKP layers in the inter-cycle encoder')
 parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
 parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
-parser.add_argument('--noDKP_layers', type=int, default=1, help='num of MoE layers that do not use DKP')
 parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
 parser.add_argument('--moving_avg', type=int, default=25, help='window size of moving average')
 parser.add_argument('--factor', type=int, default=1, help='attn factor')
@@ -115,7 +113,6 @@ parser.add_argument('--weighted_loss', action='store_true', default=False, help=
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
 parser.add_argument('--itr', type=int, default=1, help='experiments times')
 parser.add_argument('--train_epochs', type=int, default=10, help='train epochs')
-parser.add_argument('--noDG_epochs', type=int, default=-1, help='the train epochs before DG is used')
 parser.add_argument('--least_epochs', type=int, default=5, help='The model is trained at least some epoches before the early stopping is used')
 parser.add_argument('--batch_size', type=int, default=32, help='batch size of train input data')
 parser.add_argument('--patience', type=int, default=10, help='early stopping patience')
@@ -128,14 +125,14 @@ parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learnin
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
 parser.add_argument('--use_amp', action='store_true', help='use automatic mixed precision training', default=False)
 parser.add_argument('--llm_layers', type=int, default=6)
-parser.add_argument('--percent', type=int, default=100)
+parser.add_argument('--top_p', type=float, default=0.5, help='The threshold used to control the number of activated experts')
 parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
 
-# Router
-parser.add_argument('--noDKP_num_experts', type=int, default=10, help="The number of the expert models used to process the battery data when the input itself is used for gating")
-parser.add_argument('--num_experts', type=int, default=5, help="The number of the expert models used to process the battery data in encoder")
-parser.add_argument('--d_num_experts', type=int, default=5, help="The number of the expert models used to process the battery data in decoder")
+# MoE definition
+parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
+parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
+parser.add_argument('--d_num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in decoder")
 parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
@@ -146,8 +143,8 @@ parser.add_argument('--initial_alpha', type=float, default=1.2, help='The initia
 # Contrastive learning
 parser.add_argument('--tau', type=float, default=1)
 parser.add_argument('--beta', type=float, default=1, help='Instance-level alignment weight')
-parser.add_argument('--gamma', type=float, default=1, help='Alignment weight')
-parser.add_argument('--use_align', action='store_true', default=False, help='Set True to use contrastive learning')
+parser.add_argument('--gamma', type=float, default=1, help='CL weight')
+parser.add_argument('--use_cl', action='store_true', default=False, help='Set True to use contrastive learning')
 
 # Deal with long-tail issue
 parser.add_argument('--use_hyper', action='store_true', default=False, help='Set True to use HyperNN')
@@ -205,8 +202,8 @@ for ii in range(args.itr):
     #     args.e_layers,
     #     args.d_layers,
     #     args.d_ff,
-    #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_align, args.use_DG, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_Lora{}_lradj{}_dataset{}_align{}_DG{}_loss{}_wd{}_wl{}_pretrained{}_rnnL{}_dr{}_IW{}_NumE{}_K{}'.format(
+    #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_Lora{}_lradj{}_dataset{}_cl{}_DG{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -215,29 +212,44 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_align, args.use_DG, args.loss, args.wd, args.weighted_loss, pretrained, args.lstm_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
+        args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
     data_provider_func = data_provider_LLMv2
-    if args.model == 'BatteryLifeLLMv16_Stack':
+    if args.model == 'BatteryMoE_Gating_GEGLU':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryLifeLLMv16_Stack.Model(model_config)
-    elif args.model == 'BatteryLifeLLMv20_Stack_Trial':
+        model = BatteryMoE_Gating_GEGLU.Model(model_config)
+    elif args.model == 'BatteryMoE_Gating_GELU':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryLifeLLMv20_Stack_Trial.Model(model_config)
-    elif args.model == 'BatteryLifeLLMv20_Stack':
+        model = BatteryMoE_Gating_GELU.Model(model_config)
+    elif args.model == 'BatteryMoE_Gating_SwiGLU':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryLifeLLMv20_Stack.Model(model_config)
-    elif args.model == 'BatteryMoE':
+        model = BatteryMoE_Gating_SwiGLU.Model(model_config)
+    elif args.model == 'BatteryMoE_Gating':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE.Model(model_config)
+        model = BatteryMoE_Gating.Model(model_config)
+    elif args.model == 'BatteryMoE_Gating_Linear':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_Gating_Linear.Model(model_config)
+    elif args.model == 'BatteryMoE_baseline':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_baseline.Model(model_config)
+    elif args.model == 'BatteryMoE_Gating_ReLU':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_Gating_ReLU.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
@@ -336,9 +348,13 @@ for ii in range(args.itr):
         para_res = get_parameter_number(model)
         accelerator.print(para_res)
     
-    for n, m in model.named_modules():
-        # print the module name
-        accelerator.print(n, m)
+    # for n, m in model.named_modules():
+    #     # print the module name
+    #     accelerator.print(n, m)
+    # Print layer names and parameter counts
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print(f"Layer: {name} | Number of parameters: {param.numel()}")
 
     time_now = time.time()
 
@@ -412,7 +428,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cj_aug_cycle_curve_data, cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, _, DKP_embeddings, cluster_labels, _) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -420,34 +436,37 @@ for ii in range(args.itr):
                 lambd = np.random.beta(1, 6) # dominant ratio of X2
                 iter_count += 1
                 
-                cycle_curve_data = cycle_curve_data.float()
+                cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
+                if args.use_aug:
+                    # mask some data points in the cycling data
+                    p = 0.15 # masked ratio
+                    mask = (torch.rand(cycle_curve_data.shape) > p).float().to(cycle_curve_data.device)
+                    aug_cycle_curve_data = cycle_curve_data * mask
+
+                    # concat
+                    cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
+                    DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
+                    curve_attn_mask = torch.cat([curve_attn_mask, curve_attn_mask], dim=0)
+                    labels = torch.cat([labels, labels], dim=0)
+                    weights = torch.cat([weights, weights], dim=0)
+
                 curve_attn_mask = curve_attn_mask.float() # [B, L]
                 DKP_embeddings = DKP_embeddings.float()
-                cluster_labels = cluster_labels.long()
+                # cluster_labels = cluster_labels.long()
                 labels = labels.float()
-                # if 'v11' in args.model:
-                #     if i % 2 == 0:
-                #         # use adpater samples
-                #         # adapter is frozen in this iteration
-                #         labels = torch.cat([labels, labels], dim=0)
-
-                input_ids = input_ids.int()
-                attention_mask = attention_mask.int()
                 weights = weights.float()
-                end_input_ids = end_input_ids.int()
-                end_attn_mask = end_attn_mask.int()
+
+                # input_ids = input_ids.int()
+                # attention_mask = attention_mask.int()
+        
+                # end_input_ids = end_input_ids.int()
+                # end_attn_mask = end_attn_mask.int()
                 
 
-
                 # encoder - decoder
-                outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss = model(cycle_curve_data, curve_attn_mask, 
-                input_ids=input_ids, attention_mask=attention_mask, end_input_ids=end_input_ids, end_attn_mask=end_attn_mask,
-                DKP_embeddings=DKP_embeddings, cluster_labels=cluster_labels)
-                # if 'v11' in args.model:
-                #     if epoch <= args.noDG_epochs:
-                #         outputs = outputs[outputs.shape[0]//2:]
-                #     else:
-                #         labels = torch.cat([labels, labels], dim=0)
+                outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, cl_loss = model(cycle_curve_data, curve_attn_mask, 
+                DKP_embeddings=DKP_embeddings)
+
                 cut_off = labels.shape[0]
                 if args.loss == 'MSE':
                     loss = criterion(outputs[:cut_off], labels)
@@ -473,33 +492,12 @@ for ii in range(args.itr):
                         print_DG_loss = importance_loss.detach().float()
                         final_loss = final_loss + importance_loss
 
-                # if args.use_DG and epoch > args.noDG_epochs:
-                #     # update the adapter
-                #     dg_loss = prompt_adapter_loss(prompt_scores, cluster_labels)
-                #     print_DG_loss = dg_loss.detach().float()
-                #     final_loss = loss + args.importance_weight * dg_loss
-                    
-                if args.use_align:
-                    learned_prompts_for_alignment = F.normalize(learned_prompts_for_alignment, dim=1, p=2)
-                    DKP_embeddings = F.normalize(DKP_embeddings, dim=1, p=2)
-                    # use cosine-similarity distance as the similarity metric
-                    similarity_matrix = torch.matmul(learned_prompts_for_alignment, DKP_embeddings.transpose(0,1)) # [B, B]
-                    pos_similarity = torch.diag(similarity_matrix) # [B]
-                    tmp_pos_similarity = torch.diag(pos_similarity) # [B, B]
-                    neg_similarity_matrix = similarity_matrix - tmp_pos_similarity # [B, B]
-                    neg_similarity_matrix = torch.exp(neg_similarity_matrix) / args.tau  # [B, B]
-                    pos_similarity = torch.exp(pos_similarity) / args.tau # [B]
+                if args.use_cl:
+                    # contrastive learning
+                    cl_loss = args.gamma * cl_loss
+                    print_cl_loss = cl_loss.detach().float()
+                    final_loss = final_loss + cl_loss
 
-                    B = pos_similarity.shape[0]
-                    neg_similarity_term = torch.sum(neg_similarity_matrix, dim=1) / (B-1) # [B]
-                    scores = pos_similarity / neg_similarity_term # [B]
-                    alignment_loss = - torch.log(scores) # [B]
-                    alignment_loss = torch.mean(alignment_loss)
-                    print_alignment_loss = alignment_loss.detach().float()
-
-                    final_loss = loss + args.gamma * alignment_loss
-
-                    
                 print_label_loss = loss.item()
                 print_loss = final_loss.item()
                 

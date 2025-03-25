@@ -53,18 +53,18 @@ def my_collate_fn_withId(samples):
 
     
     curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
-    input_ids = torch.vstack([i['input_ids'] for i in samples])
-    attention_mask = torch.vstack([i['attention_mask'] for i in samples])
+    # input_ids = torch.vstack([i['input_ids'] for i in samples])
+    # attention_mask = torch.vstack([i['attention_mask'] for i in samples])
     labels = torch.Tensor([i['labels'] for i in samples])
 
     weights = torch.Tensor([i['weight'] for i in samples])
-    end_input_ids = torch.vstack([i['end_input_ids'] for i in samples])
-    end_attn_mask = torch.vstack([i['end_attn_mask'] for i in samples])
+    # end_input_ids = torch.vstack([i['end_input_ids'] for i in samples])
+    # end_attn_mask = torch.vstack([i['end_attn_mask'] for i in samples])
     
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
-    return cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, dataset_ids, seen_unseen_ids, DKP_embeddings
+    return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings
 
 def my_collate_fn(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
@@ -72,20 +72,18 @@ def my_collate_fn(samples):
 
     file_names = [i['file_name'] for i in samples]
     curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
-    input_ids = torch.vstack([i['input_ids'] for i in samples])
-    attention_mask = torch.vstack([i['attention_mask'] for i in samples])
 
     labels = torch.Tensor([i['labels'] for i in samples])
     weights = torch.Tensor([i['weight'] for i in samples])
-    end_input_ids = torch.vstack([i['end_input_ids'] for i in samples])
-    end_attn_mask = torch.vstack([i['end_attn_mask'] for i in samples])
+    # end_input_ids = torch.vstack([i['end_input_ids'] for i in samples])
+    # end_attn_mask = torch.vstack([i['end_attn_mask'] for i in samples])
 
 
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
-    cluster_labels = torch.Tensor([i['cluster_label'] for i in samples])
+    # cluster_labels = torch.Tensor([i['cluster_label'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
 
-    return cycle_curve_data, curve_attn_mask, input_ids, attention_mask, labels, weights, end_input_ids, end_attn_mask, file_names, DKP_embeddings, cluster_labels, seen_unseen_ids
+    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids
 
 # BatterLifeLLM dataloader
 class Dataset_BatteryLifeLLM_original(Dataset):
@@ -272,7 +270,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed.pkl', 'rb'))
             self.unseen_seen_record = json.load(open(f'{self.root_path}/cal_for_test.json'))
             
-        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_cj_aug_charge_discharge_curves, self.total_label_prompts, self.total_label_prompt_embedding_list, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs = self.read_data()
+        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_cj_aug_charge_discharge_curves, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs = self.read_data()
         
         self.weights = self.get_loss_weight()
         if np.any(np.isnan(self.total_charge_discharge_curves)):
@@ -347,8 +345,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         '''
     
         total_prompts = []
-        total_label_prompts = []
-        total_label_prompt_embedding_list = []
         total_charge_discharge_curves = []
         total_curve_attn_masks = []
         total_labels = [] # RUL
@@ -386,8 +382,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             
             total_prompts += prompts
-            total_label_prompt_embedding_list += label_prompt_embeddings
-            total_label_prompts += label_prompts
+
             total_charge_discharge_curves += charge_discharge_curves
             total_cj_aug_charge_discharge_curves += cj_aug_charge_discharge_curves
             total_curve_attn_masks += attn_masks
@@ -410,7 +405,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
-        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_cj_aug_charge_discharge_curves, total_label_prompts, total_label_prompt_embedding_list, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs
+        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_cj_aug_charge_discharge_curves, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs
 
     
     def read_cell_data_according_to_prefix(self, file_name):
@@ -754,30 +749,30 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         return interp_voltages, interp_currents, interp_capacity_in_battery
 
     def __getitem__(self, index):
-        if 'Instruct' in self.args.LLM_path:
-            # Llama
-            end_of_the_prompt = '<|start_header_id|>assistant<|end_header_id|>\n\n'
-            #end_of_the_prompt = 'Predict battery cycle life'
-            max_length = 5
-            end_cut_off = - (max_length-1) # tokenizer will add begin_of_text, we don't need it in the end of prompt
-            res = self.tokenizer(end_of_the_prompt, return_tensors="pt", truncation=True, padding=True, max_length=max_length)
-        else:
-            end_of_the_prompt = '<|end_of_text|>'
-            max_length = 2
-            end_cut_off = - (max_length-1)
-            res = self.tokenizer(end_of_the_prompt, return_tensors="pt", truncation=True, padding=True, max_length=max_length)
-        end_input_ids, end_attn_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]
+        # if 'Instruct' in self.args.LLM_path:
+        #     # Llama
+        #     end_of_the_prompt = '<|start_header_id|>assistant<|end_header_id|>\n\n'
+        #     #end_of_the_prompt = 'Predict battery cycle life'
+        #     max_length = 5
+        #     end_cut_off = - (max_length-1) # tokenizer will add begin_of_text, we don't need it in the end of prompt
+        #     res = self.tokenizer(end_of_the_prompt, return_tensors="pt", truncation=True, padding=True, max_length=max_length)
+        # else:
+        #     end_of_the_prompt = '<|end_of_text|>'
+        #     max_length = 2
+        #     end_cut_off = - (max_length-1)
+        #     res = self.tokenizer(end_of_the_prompt, return_tensors="pt", truncation=True, padding=True, max_length=max_length)
+        # end_input_ids, end_attn_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]
 
-        prompt = self.total_prompts[index]
-        if self.args.wo_DKPrompt:
-            max_length = 120
-            end_cut_off = - (max_length-1) # we have already add the begin_of_text in the prompt
-            res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
-        else:
-            max_length = 401
-            end_cut_off = - (max_length-1) 
-            res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
-        input_ids, attention_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]
+        # prompt = self.total_prompts[index]
+        # if self.args.wo_DKPrompt:
+        #     max_length = 120
+        #     end_cut_off = - (max_length-1) # we have already add the begin_of_text in the prompt
+        #     res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
+        # else:
+        #     max_length = 401
+        #     end_cut_off = - (max_length-1) 
+        #     res = self.tokenizer(prompt, return_tensors="pt", truncation=True, padding='max_length', max_length=max_length)
+        # input_ids, attention_mask = res['input_ids'][0][end_cut_off:], res['attention_mask'][0][end_cut_off:]
         # generate label prompt
         # max_length = 70
         # end_cut_off = - (max_length-1) 
@@ -788,15 +783,12 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         sample = {
                 'cycle_curve_data': torch.Tensor(self.total_charge_discharge_curves[index]),
                 'curve_attn_mask': torch.Tensor(self.total_curve_attn_masks[index]),
-                'input_ids': input_ids,
-                'attention_mask': attention_mask,
                 'labels': self.total_labels[index],
                 'weight': self.weights[index],
                 'dataset_id': self.total_dataset_ids[index],
                 'cj_cycle_curve_data': self.total_cj_aug_charge_discharge_curves[index],
-                'end_input_ids': end_input_ids,
-                'end_attn_mask': end_attn_mask,
-                'label_prompt_embedding': torch.from_numpy(self.total_label_prompt_embedding_list[index]),
+                # 'end_input_ids': end_input_ids,
+                # 'end_attn_mask': end_attn_mask,
                 'DKP_embedding': torch.from_numpy(self.total_DKP_embeddings[index]),
                 'cluster_label': self.total_cluster_labels[index],
                 'file_name': self.total_file_names[index],
