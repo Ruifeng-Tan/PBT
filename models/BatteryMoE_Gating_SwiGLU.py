@@ -66,7 +66,7 @@ class MLPBlockSwishGLU(nn.Module):
         self.act_linear1 = nn.Linear(in_dim, hidden_dim, bias=False)
         self.act = nn.Sigmoid()
         self.act_linear2 = nn.Linear(in_dim, hidden_dim, bias=False)
-        self.out_linear = nn.Linear(hidden_dim, in_dim)
+        self.out_linear = nn.Linear(hidden_dim, in_dim, bias=False)
     
     def forward(self, x):
         '''

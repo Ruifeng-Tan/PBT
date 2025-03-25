@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_Gating，只不过修复了activation function，写成了正确的SwishGLU
+基于BatteryMoE_Gating_SwiGLU，只不过MLP中用了GELU作为激活函数
 '''
 import torch
 import torch.nn as nn
