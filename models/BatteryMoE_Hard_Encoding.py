@@ -94,7 +94,7 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
         '''
         B = cycle_curve_data.shape[0]
 
-        select_logits = torch.where(cathode_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        select_logits = torch.where(cathode_masks==1, torch.ones_like(logits)*float('inf'), logits)
         _, indices = torch.topk(select_logits, self.top_k, dim=1)
         # Create a mask where only the top-K values will be kept
         mask = torch.zeros_like(select_logits, dtype=torch.bool)
@@ -124,13 +124,17 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         aug_loss = 0
+        guide_loss = 0 # guide the model to give larger weight to the correct cathode expert
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
             aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-        return final_out, aug_loss
+            # Guidance loss
+            guide_loss = torch.sum(- torch.log(raw_logits) * cathode_masks) / torch.sum(cathode_masks)
+
+        return final_out, aug_loss, guide_loss
     
 class IntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
@@ -429,7 +433,7 @@ class Model(nn.Module):
         total_aug_loss = 0
         total_cl_loss = 0
         total_aug_count = 0
-        out, _ = self.flattenIntraCycleLayer(cycle_curve_data, cathode_logits, cathode_masks) # [B, L, d_model]
+        out, _, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, cathode_logits, cathode_masks) # [B, L, d_model]
         # logits_index += 1
         # total_aug_loss += aug_loss
         # total_aug_count += 1
@@ -456,7 +460,7 @@ class Model(nn.Module):
         preds = preds.float()
         llm_out = llm_out.float()
 
-        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss / total_aug_count, total_cl_loss / total_aug_count
+        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss / total_aug_count, guide_loss
 
     def create_causal_mask(self, B, seq_len):
         '''

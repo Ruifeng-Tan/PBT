@@ -143,7 +143,7 @@ parser.add_argument('--initial_alpha', type=float, default=1.2, help='The initia
 
 # Contrastive learning
 parser.add_argument('--use_cl', action='store_true', default=False, help='Set True to use contrastive learning')
-
+parser.add_argument('--gamma', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
 # Domain generalization
 parser.add_argument('--use_DG', action='store_true', default=False, help='Set True to use domain generalization')
 
@@ -386,7 +386,7 @@ for ii in range(args.itr):
                 
 
                 # encoder - decoder
-                outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, cl_loss = model(cycle_curve_data, curve_attn_mask, 
+                outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks)
 
                 cut_off = labels.shape[0]
@@ -416,9 +416,9 @@ for ii in range(args.itr):
 
                 if args.use_cl:
                     # contrastive learning
-                    cl_loss = args.gamma * cl_loss
-                    print_cl_loss = cl_loss.detach().float()
-                    final_loss = final_loss + cl_loss
+                    guide_loss = args.gamma * guide_loss
+                    print_cl_loss = guide_loss.detach().float()
+                    final_loss = final_loss + guide_loss
 
                 print_label_loss = loss.item()
                 print_loss = final_loss.item()
