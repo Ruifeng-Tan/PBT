@@ -75,7 +75,7 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = 4 # 4 types of cathodes in the training data
+        self.num_experts = configs.cathode_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -391,8 +391,9 @@ class Model(nn.Module):
         self.tokenizer.padding_side = 'right' # set the padding side
         self.e_layers = configs.e_layers
         self.d_layers = configs.d_layers
-        self.moe_layers = 2+configs.e_layers+configs.d_layers
-        self.gate = PatternRouterMLP(self.d_llm, self.num_experts*self.moe_layers)
+        self.moe_layers = 1+configs.e_layers+configs.d_layers
+        self.cathode_experts = configs.cathode_experts
+        self.gate = PatternRouterMLP(self.d_llm, self.num_experts*self.moe_layers + configs.cathode_experts)
         self.flattenIntraCycleLayer = CathodeFlattenIntraCycleMoELayer(configs)
         self.intraCycleLayers = nn.ModuleList([IntraCycleMoELayer(configs) for _ in range(configs.e_layers)])
         self.flattenInterCycleLayer = FlattenInterCycleMoELayer(configs)
@@ -420,16 +421,18 @@ class Model(nn.Module):
         cathode_masks = cathode_masks.to(torch.float16)
 
         logits = self.gate(DKP_embeddings)
+        cathode_logits = logits[:,:self.cathode_experts]
+        logits = logits[:,self.cathode_experts:]
         logits = logits.reshape(B, self.moe_layers, -1)
         logits_index = 0
 
         total_aug_loss = 0
         total_cl_loss = 0
         total_aug_count = 0
-        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, logits[:,logits_index], cathode_masks) # [B, L, d_model]
-        logits_index += 1
-        total_aug_loss += aug_loss
-        total_aug_count += 1
+        out, _ = self.flattenIntraCycleLayer(cycle_curve_data, cathode_logits, cathode_masks) # [B, L, d_model]
+        # logits_index += 1
+        # total_aug_loss += aug_loss
+        # total_aug_count += 1
 
         for i, expert in enumerate(self.intraCycleLayers):
             out, aug_loss = expert(out, logits[:,logits_index])
