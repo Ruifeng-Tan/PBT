@@ -58,8 +58,6 @@ def my_collate_fn_withId(samples):
     labels = torch.Tensor([i['labels'] for i in samples])
 
     weights = torch.Tensor([i['weight'] for i in samples])
-    # end_input_ids = torch.vstack([i['end_input_ids'] for i in samples])
-    # end_attn_mask = torch.vstack([i['end_attn_mask'] for i in samples])
     
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
@@ -115,9 +113,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.aug_helper = BatchAugmentation_battery_revised()
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
-            self.train_files = split_recorder.Stanford_train_files[:3]
+            self.train_files = split_recorder.Stanford_train_files[:3] + split_recorder.Tongji_train_files[:2]
             self.val_files = split_recorder.Tongji_val_files[:2] + split_recorder.HUST_val_files[:2]
-            self.test_files =  split_recorder.Tongji_test_files[:2] + split_recorder.HUST_test_files[:2]
+            self.test_files =  split_recorder.Tongji_test_files[:2] 
         elif self.dataset == 'Tongji':
             self.train_files = split_recorder.Tongji_train_files
             self.val_files = split_recorder.Tongji_val_files
@@ -255,6 +253,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.val_files = split_recorder.MIX_NA2024_val_files
             self.test_files = split_recorder.MIX_NA2024_test_files 
         
+           
         if flag == 'train':
             self.files = [i for i in self.train_files]
             self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed.pkl', 'rb'))
@@ -262,11 +261,26 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.files = [i for i in self.val_files]
             self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed.pkl', 'rb'))
         elif flag == 'test':
-            self.files = [i for i in self.test_files]
             self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed.pkl', 'rb'))
-            self.unseen_seen_record = json.load(open(f'{self.root_path}/cal_for_test.json'))
-            
-        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_cj_aug_charge_discharge_curves, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs = self.read_data()
+            self.files = [i for i in self.test_files]
+            if self.dataset == 'ZN-coin42':
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
+            elif self.dataset == 'ZN-coin2024':
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
+            elif self.dataset == 'CALB42':
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB422.json'))
+            elif self.dataset == 'CALB2024':
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
+            elif self.dataset == 'NAion':
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
+            elif self.dataset == 'NAion42':
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
+            elif self.dataset == 'NAion2024':
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
+            else:
+                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
+
+        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs = self.read_data()
         
         self.weights = self.get_loss_weight()
         if np.any(np.isnan(self.total_charge_discharge_curves)):
@@ -347,7 +361,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         unique_labels = []
         total_dataset_ids = []
         total_center_vector_indices = []
-        total_cj_aug_charge_discharge_curves = []
         total_file_names = []
         total_seen_unseen_IDs = []
 
@@ -363,8 +376,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             # center_vector_index = self.get_center_vector_index(file_name)
 
-            prompts, charge_discharge_curves, attn_masks, labels, eol, cj_aug_charge_discharge_curves, label_prompts, label_prompt_embeddings = self.read_samples_from_one_cell(
+            prompts, charge_discharge_curves, attn_masks, labels, eol = self.read_samples_from_one_cell(
                 file_name)
+
             if prompts is None:
                 # This battery has not reached end of life
                 continue
@@ -380,7 +394,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             total_prompts += prompts
 
             total_charge_discharge_curves += charge_discharge_curves
-            total_cj_aug_charge_discharge_curves += cj_aug_charge_discharge_curves
             total_curve_attn_masks += attn_masks
             total_labels += labels 
             total_dataset_ids += [dataset_id for _ in range(len(labels))]
@@ -401,10 +414,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
-        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_cj_aug_charge_discharge_curves, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs
+        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs
 
     
-    def read_cell_data_according_to_prefix(self, file_name):
+    def  read_cell_data_according_to_prefix(self, file_name):
         '''
         Read the battery data and eol according to the file_name
         The dataset is indicated by the prefix of the file_name
@@ -451,25 +464,21 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
         
         if prefix == 'MICH':
-            with open(f'{self.root_path}/total_MICH_labels.json') as f:
+            with open(f'{self.root_path}/Life labels/total_MICH_labels.json') as f:
                 life_labels = json.load(f)
         elif prefix.startswith('Tongji'):
-            with open(f'{self.root_path}/Tongji_labels.json') as f:
+            file_name = file_name.replace('--', '-#')
+            with open(f'{self.root_path}/Life labels/Tongji_labels.json') as f:
                 life_labels = json.load(f)
         else:
-            with open(f'{self.root_path}/{prefix}_labels.json') as f:
+            with open(f'{self.root_path}/Life labels/{prefix}_labels.json') as f:
                 life_labels = json.load(f)
         if file_name in life_labels:
             eol = life_labels[file_name]
         else:
             eol = None
 
-        if file_name in self.label_prompts_vectors:
-            label_prompt_embedding = self.label_prompts_vectors[file_name]
-        else:
-            # no label_prompt_embeddings for the val and testing cells
-            label_prompt_embedding = np.random.rand(self.args.d_llm)
-        return data, eol, label_prompt_embedding
+        return data, eol
     
     def read_cell_df(self, file_name):
         '''
@@ -478,30 +487,13 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         :param file_name: which file needs to be read
         :return: df, charge_discharge_curves, basic_prompt, eol
         '''
-        data, eol, label_prompt_embedding = self.read_cell_data_according_to_prefix(file_name)
+        data, eol = self.read_cell_data_according_to_prefix(file_name)
         if eol is None:
             # This battery has not reached the end of life
-            return None, None, None, None, None, None, None, None, None
+            return None, None, None, None, None, None
         cell_name = file_name.split('.pkl')[0]
         basic_prompt = self.generate_basic_prompt(cell_name)
-        
-
-        label_prompt = f'The battery cycle life is {eol}.'
-        if 'Instruct' in self.args.LLM_path:
-            # Llama-instruct
-            messages = [
-                {"role": "system", "content": "You are an expert in predicting battery cycle life."},
-                {"role": "user", "content": label_prompt}
-            ]
-            label_prompt = self.tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=True
-            )
-        else:
-            # Llama-base
-            label_prompt = '<|begin_of_text|>' + label_prompt + '<|end_of_text|>'
-
+    
 
         if file_name.startswith('RWTH'):
             nominal_capacity = 1.85
@@ -531,9 +523,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         df = pd.concat(total_cycle_dfs)
         # obtain the charge and discahrge curves
         charge_discharge_curves = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
-        cj_aug_charge_discharge_curves, fm_aug_charge_discharge_curves  = self.aug_helper.batch_aug(charge_discharge_curves)
+        # cj_aug_charge_discharge_curves, fm_aug_charge_discharge_curves  = self.aug_helper.batch_aug(charge_discharge_curves)
 
-        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity, cj_aug_charge_discharge_curves, label_prompt, label_prompt_embedding
+        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity
       
     def generate_basic_prompt(self, cell_name):
         '''
@@ -560,21 +552,17 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         :return: history_sohs, future_sohs, masks, cycles, prompts, charge_data, discharge_data and RPT_masks in each sample
         '''
 
-        df, charge_discharge_curves_data, basic_prompt, eol, SOC_interval, nominal_capacity, cj_aug_charge_discharge_curves, label_prompt, label_prompt_embeddings = self.read_cell_df(file_name)
+        df, charge_discharge_curves_data, basic_prompt, eol, SOC_interval, nominal_capacity = self.read_cell_df(file_name)
         if df is None or eol<=self.early_cycle_threshold:
-            return None, None, None, None, None, None, None, None
+            return None, None, None, None, None
 
         # the charge and discharge data
         prompts = []
-        label_prompts = []
-        label_prompt_embedding_list = []
         charge_discharge_curves = []  # [N, seq_len, fix_charge_resample_len]
-        total_cj_aug_charge_discharge_curves = []
         attn_masks = []
         labels = []
         # get the early-life data
         early_charge_discharge_curves_data = charge_discharge_curves_data[:self.early_cycle_threshold]
-        early_cj_aug_charge_discharge_curves = cj_aug_charge_discharge_curves[:self.early_cycle_threshold]
         if np.any(np.isnan(early_charge_discharge_curves_data)):
             raise Exception(f'Failure in {file_name} | Early data contains NaN! Cycle life is {eol}!')
         for i in range(self.seq_len, self.early_cycle_threshold+1):
@@ -595,10 +583,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             
             # tmp_cycle_data[i:] = np.zeros_like(tmp_cycle_data[i:])
 
-            last_available_cycle_df = df.loc[df['cycle_number']==i]
-            last_soh = round(max(last_available_cycle_df['discharge_capacity_in_Ah'].values) / nominal_capacity / SOC_interval, 3)
-            # used_time_in_h = max(last_available_cycle_df['time_in_s'].values) / 3600
-            cycle_number = i
             if self.args.wo_DKPrompt:
                 tmp_prompt = basic_prompt
             else:
@@ -622,13 +606,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             labels.append(eol)
             charge_discharge_curves.append(early_charge_discharge_curves_data)
-            total_cj_aug_charge_discharge_curves.append(early_cj_aug_charge_discharge_curves)
             prompts.append(tmp_prompt)
-            label_prompts.append(label_prompt)
-            label_prompt_embedding_list.append(label_prompt_embeddings)
             attn_masks.append(tmp_attn_mask)
 
-        return prompts, charge_discharge_curves, attn_masks, labels, eol, total_cj_aug_charge_discharge_curves, label_prompts, label_prompt_embedding_list
+        return prompts, charge_discharge_curves, attn_masks, labels, eol
 
     def get_charge_discharge_curves(self, file_name, df, early_cycle_threshold, nominal_capacity):
         '''
@@ -782,7 +763,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 'labels': self.total_labels[index],
                 'weight': self.weights[index],
                 'dataset_id': self.total_dataset_ids[index],
-                'cj_cycle_curve_data': self.total_cj_aug_charge_discharge_curves[index],
                 # 'end_input_ids': end_input_ids,
                 # 'end_attn_mask': end_attn_mask,
                 'DKP_embedding': torch.from_numpy(self.total_DKP_embeddings[index]),

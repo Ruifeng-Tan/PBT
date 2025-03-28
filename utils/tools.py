@@ -555,6 +555,7 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
         seen_preds = total_preds[total_seen_unseen_ids==1]
         unseen_preds = total_preds[total_seen_unseen_ids==0]
 
+        print(total_seen_unseen_ids)
         # MAPE
         seen_mape = mean_absolute_percentage_error(seen_references, seen_preds)
         if len(unseen_preds) > 0:
@@ -567,10 +568,12 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
         hit_num = sum(relative_error<=args.alpha1)
         seen_alpha_acc1 = hit_num / len(seen_references) * 100
 
-        
-        relative_error = abs(unseen_preds - unseen_references) / unseen_references
-        hit_num = sum(relative_error<=args.alpha1)
-        unseen_alpha_acc1 = hit_num / len(unseen_references) * 100
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha1)
+            unseen_alpha_acc1 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc1 = -10000
 
         # alpha-acc2
         relative_error = abs(seen_preds - seen_references) / seen_references

@@ -141,28 +141,10 @@ parser.add_argument('--initial_lambda', type=float, default=1e-4, help='The init
 parser.add_argument('--initial_alpha', type=float, default=1.2, help='The initial alpha for relu router regularization')
 
 # Contrastive learning
-parser.add_argument('--tau', type=float, default=1)
-parser.add_argument('--beta', type=float, default=1, help='Instance-level alignment weight')
-parser.add_argument('--gamma', type=float, default=1, help='CL weight')
 parser.add_argument('--use_cl', action='store_true', default=False, help='Set True to use contrastive learning')
-
-# Deal with long-tail issue
-parser.add_argument('--use_hyper', action='store_true', default=False, help='Set True to use HyperNN')
-parser.add_argument('--life_class_weight', type=float, default=0.5)
 
 # Domain generalization
 parser.add_argument('--use_DG', action='store_true', default=False, help='Set True to use domain generalization')
-
-# Augmentation
-parser.add_argument('--use_aug', action='store_true', default=False, help='Set True to generate augmented samples in a batch')
-
-# P-tuning
-parser.add_argument('--P_token_num', type=int, default=30, help='the number of learnable tokens for P-tuning')
-# LLM fine-tuning hyper-parameters
-parser.add_argument('--use_LoRA', action='store_true', default=False, help='Set True to use LoRA')
-parser.add_argument('--tune_layers', type=int, default=16, help='The number of last layers of LLM to tune')
-parser.add_argument('--LoRA_r', type=int, default=8, help='r for LoRA')
-parser.add_argument('--LoRA_dropOut', type=float, default=0.1, help='dropout rate for LoRA')
 
 # Pretrain
 parser.add_argument('--Pretrained_model_path', type=str, default='', help='The path to the saved pretrained model parameters')
@@ -203,7 +185,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_Lora{}_lradj{}_dataset{}_cl{}_DG{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_lradj{}_dataset{}_cl{}_DG{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -212,7 +194,7 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
+        args.llm_layers, args.lradj, args.dataset, args.use_cl, args.use_DG, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'BatteryMoE_Gating_GEGLU':
@@ -291,70 +273,16 @@ for ii in range(args.itr):
         config=args.__dict__,
         name=nowtime
         )
-    # args.content = load_content(args)
-
-    # load LoRA
-    # print the module name
 
 
 
-    if args.use_LoRA:
-        # LLM_lora_config = LoraConfig(
-        #     r=args.LoRA_r,
-        #     lora_alpha=args.LoRA_r,
-        #     lora_dropout=args.LoRA_dropOut,
-        #     target_modules=["language_model.layers.31.self_attn.q_proj", "language_model.layers.31.self_attn.v_proj"],
-        #     use_rslora=True, # sqrt(r)
-        #     modules_to_save=['head1', 'cpl']
-        # )
+    para_res = get_parameter_number(model)
+    accelerator.print(para_res)
 
-        set_off = args.llm_layers - args.tune_layers
-        tune_layers = [i+set_off for i in range(args.tune_layers)]
-        q_projs = [str(i) + '.self_attn.q_proj' for i in tune_layers]
-        v_projs = [str(i) + '.self_attn.v_proj' for i in tune_layers]
-        target_modules = q_projs + v_projs
-        if '_P' in args.model:
-            LLM_lora_config = LoraConfig(
-                r=args.LoRA_r,
-                lora_alpha=args.LoRA_r,
-                lora_dropout=args.LoRA_dropOut,
-                target_modules=target_modules,
-                use_rslora=True, # sqrt(r)
-                modules_to_save=['regression_head', 'regression_cpl', 'prompt_maker']
-            )
-        elif args.model == 'BatteryLifeLLMv10_Trial':
-            LLM_lora_config = LoraConfig(
-                r=args.LoRA_r,
-                lora_alpha=args.LoRA_r,
-                lora_dropout=args.LoRA_dropOut,
-                target_modules=target_modules,
-                use_rslora=True, # sqrt(r)
-                modules_to_save=['regression_head', 'regression_cpl', 'prompt_fusion']
-            )
-        else:
-            LLM_lora_config = LoraConfig(
-                r=args.LoRA_r,
-                lora_alpha=args.LoRA_r,
-                lora_dropout=args.LoRA_dropOut,
-                target_modules=target_modules,
-                use_rslora=True, # sqrt(r)
-                modules_to_save=['regression_head', 'regression_cpl']
-            )
-
-        model.add_adapter(LLM_lora_config)
-        model = get_peft_model(model, LLM_lora_config)
-        model.print_trainable_parameters()
-    else:
-        para_res = get_parameter_number(model)
-        accelerator.print(para_res)
-    
-    # for n, m in model.named_modules():
-    #     # print the module name
-    #     accelerator.print(n, m)
     # Print layer names and parameter counts
     for name, param in model.named_parameters():
         if param.requires_grad:
-            print(f"Layer: {name} | Number of parameters: {param.numel()}")
+            accelerator.print(f"Layer: {name} | Number of parameters: {param.numel()}")
 
     time_now = time.time()
 
@@ -386,7 +314,6 @@ for ii in range(args.itr):
     
 
     prompt_adapter_loss = nn.CrossEntropyLoss()
-    alignment_criterion = Alignment_loss(temperature=args.tau, instance_alingment_weight=args.beta)
     euclidean_dist = nn.PairwiseDistance(p=2)
 
     # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
@@ -437,18 +364,18 @@ for ii in range(args.itr):
                 iter_count += 1
                 
                 cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
-                if args.use_aug:
-                    # mask some data points in the cycling data
-                    p = 0.15 # masked ratio
-                    mask = (torch.rand(cycle_curve_data.shape) > p).float().to(cycle_curve_data.device)
-                    aug_cycle_curve_data = cycle_curve_data * mask
+                # if args.use_aug:
+                #     # mask some data points in the cycling data
+                #     p = 0.15 # masked ratio
+                #     mask = (torch.rand(cycle_curve_data.shape) > p).float().to(cycle_curve_data.device)
+                #     aug_cycle_curve_data = cycle_curve_data * mask
 
-                    # concat
-                    cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
-                    DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
-                    curve_attn_mask = torch.cat([curve_attn_mask, curve_attn_mask], dim=0)
-                    labels = torch.cat([labels, labels], dim=0)
-                    weights = torch.cat([weights, weights], dim=0)
+                #     # concat
+                #     cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
+                #     DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
+                #     curve_attn_mask = torch.cat([curve_attn_mask, curve_attn_mask], dim=0)
+                #     labels = torch.cat([labels, labels], dim=0)
+                #     weights = torch.cat([weights, weights], dim=0)
 
                 curve_attn_mask = curve_attn_mask.float() # [B, L]
                 DKP_embeddings = DKP_embeddings.float()

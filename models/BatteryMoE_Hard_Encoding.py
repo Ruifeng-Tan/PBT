@@ -27,7 +27,37 @@ import torch.nn.functional as F
 from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
-transformers.logging.set_verbosity_error()   
+transformers.logging.set_verbosity_error()
+
+def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True):
+    '''
+    This is used to compute the contrastive learning loss in the intra-cycle/inter-cycle modeling
+    params:
+        total_expert_outs: a list of tensors [expert_batch_size, L, d_model] if is_intra else [expert_batch_size, d_model]
+        total_cluster_centers: [selected_experts, d_model]
+        tau: the temperature in contrastive learning
+        is_intra: bool. True for intra-cycle modeling, False for inter-cycle modeling
+    return:
+        cl_loss: scalar. The contrastive learning loss
+    '''
+    total_cluster_centers = torch.stack(total_cluster_centers, dim=0)
+    norm_total_cluster_centers = F.normalize(total_cluster_centers, p=2, dim=-1) # [selected_experts, d_model]
+    selected_experts = len(total_expert_outs)
+    cl_loss = 0
+
+    for expert_index, expert_outs in enumerate(total_expert_outs):
+        if is_intra:
+            expert_outs = expert_outs.reshape(-1, expert_outs.shape[-1]) # [expert_batch_size*L, d_model]
+        norm_expert_outs = F.normalize(expert_outs, p=2, dim=-1) # [expert_batch_size*L, d_model] if is_intra else [expert_batch_size, d_model]
+        sim = torch.mm(norm_expert_outs, norm_total_cluster_centers.transpose(0, 1))  # [expert_batch_size*L, selected_experts]
+        sim = torch.exp(sim / tau)
+        # print(sim.shape, len(total_expert_outs))
+        positive_logits = sim[:, expert_index] # [expert_batch_size*L] the logits of positive samples
+        negative_logitis = torch.sum(sim, dim=1) - positive_logits # [expert_batch_size*L] the logitis of negative samples
+        cl_loss += -torch.mean(torch.log(positive_logits/negative_logitis)) # scalar
+        
+    cl_loss /= selected_experts
+    return cl_loss    
 
 class MLPBlockGELU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
@@ -65,9 +95,9 @@ class MLPBlock(nn.Module):
         out = self.out_linear(out)
         return self.dropout(out)
 
-class FlattenIntraCycleMoELayer(nn.Module):
+class CathodeFlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
-        super(FlattenIntraCycleMoELayer, self).__init__()
+        super(CathodeFlattenIntraCycleMoELayer, self).__init__()
         self.use_cl = configs.use_cl
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
@@ -75,8 +105,9 @@ class FlattenIntraCycleMoELayer(nn.Module):
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.num_experts
+        self.num_experts = 4 # 4 types of cathodes in the training data
         self.top_k = configs.topK
+        self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
@@ -144,6 +175,7 @@ class IntraCycleMoELayer(nn.Module):
         self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
+        self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
@@ -214,6 +246,7 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.num_experts = configs.d_num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
+        self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)])
@@ -280,6 +313,7 @@ class InterCycleMoELayer(nn.Module):
         self.num_experts = configs.d_num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
+        self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
@@ -392,7 +426,7 @@ class Model(nn.Module):
         self.d_layers = configs.d_layers
         self.moe_layers = 2+configs.e_layers+configs.d_layers
         self.gate = PatternRouterMLP(self.d_llm, self.num_experts*self.moe_layers)
-        self.flattenIntraCycleLayer = FlattenIntraCycleMoELayer(configs)
+        self.flattenIntraCycleLayer = CathodeFlattenIntraCycleMoELayer(configs)
         self.intraCycleLayers = nn.ModuleList([IntraCycleMoELayer(configs) for _ in range(configs.e_layers)])
         self.flattenInterCycleLayer = FlattenInterCycleMoELayer(configs)
         self.interCycleLayers = nn.ModuleList([InterCycleMoELayer(configs) for _ in range(configs.d_layers)])

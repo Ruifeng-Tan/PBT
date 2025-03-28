@@ -293,7 +293,7 @@ class Mapping_helper():
             'Tongji3_CY25-05_2': 10.0,
             'Tongji3_CY25-05_4': 11.0
         }
-        match_key = self.cell_name.split('-#')[0]
+        match_key = self.cell_name.split('--')[0]
         prompt_index = tongji_map[match_key]
         matr_protocol_prompts = Tongji_protocol_prompt.Tongji_protocol_prompt.Protocols_prompts[prompt_index]
         return matr_protocol_prompts
