@@ -76,7 +76,7 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
         self.num_experts = configs.cathode_experts # 4 types of cathodes in the training data
-        self.top_k = configs.topK
+        self.top_k = 2
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
