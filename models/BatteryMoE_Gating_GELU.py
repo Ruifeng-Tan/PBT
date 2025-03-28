@@ -211,7 +211,7 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.d_num_experts
+        self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
@@ -277,7 +277,7 @@ class InterCycleMoELayer(nn.Module):
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.d_num_experts
+        self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])

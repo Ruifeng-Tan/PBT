@@ -27,37 +27,7 @@ import torch.nn.functional as F
 from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
-transformers.logging.set_verbosity_error()
-
-def compute_CL_loss(total_expert_outs, total_cluster_centers, tau, is_intra=True):
-    '''
-    This is used to compute the contrastive learning loss in the intra-cycle/inter-cycle modeling
-    params:
-        total_expert_outs: a list of tensors [expert_batch_size, L, d_model] if is_intra else [expert_batch_size, d_model]
-        total_cluster_centers: [selected_experts, d_model]
-        tau: the temperature in contrastive learning
-        is_intra: bool. True for intra-cycle modeling, False for inter-cycle modeling
-    return:
-        cl_loss: scalar. The contrastive learning loss
-    '''
-    total_cluster_centers = torch.stack(total_cluster_centers, dim=0)
-    norm_total_cluster_centers = F.normalize(total_cluster_centers, p=2, dim=-1) # [selected_experts, d_model]
-    selected_experts = len(total_expert_outs)
-    cl_loss = 0
-
-    for expert_index, expert_outs in enumerate(total_expert_outs):
-        if is_intra:
-            expert_outs = expert_outs.reshape(-1, expert_outs.shape[-1]) # [expert_batch_size*L, d_model]
-        norm_expert_outs = F.normalize(expert_outs, p=2, dim=-1) # [expert_batch_size*L, d_model] if is_intra else [expert_batch_size, d_model]
-        sim = torch.mm(norm_expert_outs, norm_total_cluster_centers.transpose(0, 1))  # [expert_batch_size*L, selected_experts]
-        sim = torch.exp(sim / tau)
-        # print(sim.shape, len(total_expert_outs))
-        positive_logits = sim[:, expert_index] # [expert_batch_size*L] the logits of positive samples
-        negative_logitis = torch.sum(sim, dim=1) - positive_logits # [expert_batch_size*L] the logitis of negative samples
-        cl_loss += -torch.mean(torch.log(positive_logits/negative_logitis)) # scalar
-        
-    cl_loss /= selected_experts
-    return cl_loss    
+transformers.logging.set_verbosity_error() 
 
 class MLPBlockGELU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
@@ -107,7 +77,6 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
         self.d_model = configs.d_model
         self.num_experts = 4 # 4 types of cathodes in the training data
         self.top_k = configs.topK
-        self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
@@ -117,7 +86,7 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits):
+    def forward(self, cycle_curve_data, logits, cathode_masks):
         '''
         params:
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
@@ -125,9 +94,10 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
         '''
         B = cycle_curve_data.shape[0]
 
-        _, indices = torch.topk(logits, self.top_k, dim=1)
+        select_logits = torch.where(cathode_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        _, indices = torch.topk(select_logits, self.top_k, dim=1)
         # Create a mask where only the top-K values will be kept
-        mask = torch.zeros_like(logits, dtype=torch.bool)
+        mask = torch.zeros_like(select_logits, dtype=torch.bool)
         # Scatter the mask at the indices of the top-K values
         mask.scatter_(1, indices, 1) # 0 indicates mask
         logits = F.softmax(logits, dim=1) # [B, num_experts]
@@ -175,7 +145,6 @@ class IntraCycleMoELayer(nn.Module):
         self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
-        self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
@@ -243,10 +212,9 @@ class FlattenInterCycleMoELayer(nn.Module):
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.d_num_experts
+        self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
-        self.tau = configs.tau
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)])
@@ -310,10 +278,9 @@ class InterCycleMoELayer(nn.Module):
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.d_num_experts
+        self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
-        self.tau = configs.tau
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.general_experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
@@ -434,7 +401,8 @@ class Model(nn.Module):
         
     def forward(self, cycle_curve_data, curve_attn_mask, 
                 attention_mask: Optional[torch.Tensor] = None,
-                DKP_embeddings: Optional[torch.FloatTensor] = None
+                DKP_embeddings: Optional[torch.FloatTensor] = None,
+                cathode_masks: Optional[torch.Tensor] = None
                 ):
         '''
         params:
@@ -449,6 +417,8 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
+        cathode_masks = cathode_masks.to(torch.float16)
+
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(B, self.moe_layers, -1)
         logits_index = 0
@@ -456,7 +426,7 @@ class Model(nn.Module):
         total_aug_loss = 0
         total_cl_loss = 0
         total_aug_count = 0
-        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, logits[:,logits_index]) # [B, L, d_model]
+        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, logits[:,logits_index], cathode_masks) # [B, L, d_model]
         logits_index += 1
         total_aug_loss += aug_loss
         total_aug_count += 1

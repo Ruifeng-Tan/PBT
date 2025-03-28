@@ -10,7 +10,8 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Gating_GELU, BatteryMoE_Gating_ReLU, BatteryMoE_Gating_SwiGLU, BatteryMoE_Gating_GEGLU, BatteryMoE_Gating_Linear, BatteryMoE_Gating, baseline_CPTransformerMoE
+from models import BatteryMoE_Gating_GELU, BatteryMoE_Gating_ReLU, BatteryMoE_Gating_SwiGLU, BatteryMoE_Gating_GEGLU, \
+      BatteryMoE_Gating_Linear, BatteryMoE_Gating, baseline_CPTransformerMoE, BatteryMoE_Hard_Encoding
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -132,7 +133,7 @@ parser.add_argument('--mlp', type=int, default=0)
 # MoE definition
 parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
 parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
-parser.add_argument('--d_num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in decoder")
+parser.add_argument('--cathode_experts', type=int, default=4, help="The number of the expert models for proecessing different cathodes")
 parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
@@ -232,6 +233,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_Gating_ReLU.Model(model_config)
+    elif args.model == 'BatteryMoE_Hard_Encoding':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_Hard_Encoding.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
@@ -355,7 +361,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -364,21 +370,10 @@ for ii in range(args.itr):
                 iter_count += 1
                 
                 cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
-                # if args.use_aug:
-                #     # mask some data points in the cycling data
-                #     p = 0.15 # masked ratio
-                #     mask = (torch.rand(cycle_curve_data.shape) > p).float().to(cycle_curve_data.device)
-                #     aug_cycle_curve_data = cycle_curve_data * mask
-
-                #     # concat
-                #     cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
-                #     DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
-                #     curve_attn_mask = torch.cat([curve_attn_mask, curve_attn_mask], dim=0)
-                #     labels = torch.cat([labels, labels], dim=0)
-                #     weights = torch.cat([weights, weights], dim=0)
 
                 curve_attn_mask = curve_attn_mask.float() # [B, L]
                 DKP_embeddings = DKP_embeddings.float()
+                cathode_masks = cathode_masks.float()
                 # cluster_labels = cluster_labels.long()
                 labels = labels.float()
                 weights = weights.float()
@@ -392,7 +387,7 @@ for ii in range(args.itr):
 
                 # encoder - decoder
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, cl_loss = model(cycle_curve_data, curve_attn_mask, 
-                DKP_embeddings=DKP_embeddings)
+                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks)
 
                 cut_off = labels.shape[0]
                 if args.loss == 'MSE':

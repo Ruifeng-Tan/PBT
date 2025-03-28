@@ -515,13 +515,14 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
     total_seen_unseen_ids = []
     std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids) in enumerate(vali_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks) in enumerate(vali_loader):
             cycle_curve_data = cycle_curve_data.float()# [B, S, N]
             curve_attn_mask = curve_attn_mask.float()
             labels = labels.float()
+            cathode_masks = cathode_masks.float()
 
             # encoder - decoder
-            outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings)
+            outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value
@@ -555,7 +556,6 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
         seen_preds = total_preds[total_seen_unseen_ids==1]
         unseen_preds = total_preds[total_seen_unseen_ids==0]
 
-        print(total_seen_unseen_ids)
         # MAPE
         seen_mape = mean_absolute_percentage_error(seen_references, seen_preds)
         if len(unseen_preds) > 0:
