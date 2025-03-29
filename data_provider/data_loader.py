@@ -51,14 +51,14 @@ datasetName2ids = {
 }
 
 cathodes2mask = {
-    'LFP': [0], # the index is used to activate the expert
-    'NCA': [1],
-    'NCM': [2],
-    'LCO': [3],
-    'NCA_NCM': [1, 2],
-    'NCM_NCA': [1, 2],
-    'LCO_NCM': [2, 3],
-    'NCM_LCO': [2, 3],
+    'LFP': [0,1,2,3], # the index is used to activate the expert
+    'NCA': [4,5],
+    'NCM': [6,7,8,9,10,11],
+    'LCO': [12],
+    'NCA_NCM': [4,5,6,7,8,9,10,11],
+    'NCM_NCA': [4,5,6,7,8,9,10,11],
+    'LCO_NCM': [12,6,7,8,9,10,11],
+    'NCM_LCO': [12,6,7,8,9,10,11],
 }
 def my_collate_fn_withId(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])

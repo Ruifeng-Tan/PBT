@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Gating_GELU, BatteryMoE_Gating_ReLU, BatteryMoE_Gating_SwiGLU, BatteryMoE_Gating_GEGLU, \
+from models import BatteryMoE_Gating_GELU, BatteryMoE_HEv2, BatteryMoE_Gating_SwiGLU, BatteryMoE_Gating_GEGLU, \
       BatteryMoE_Gating_Linear, BatteryMoE_Gating, baseline_CPTransformerMoE, BatteryMoE_Hard_Encoding
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -228,11 +228,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'BatteryMoE_Gating_ReLU':
+    elif args.model == 'BatteryMoE_HEv2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Gating_ReLU.Model(model_config)
+        model = BatteryMoE_HEv2.Model(model_config)
     elif args.model == 'BatteryMoE_Hard_Encoding':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
