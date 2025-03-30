@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Gating_GELU, BatteryMoE_HEv2, BatteryMoE_Gating_SwiGLU, BatteryMoE_HE_allCathode, \
+from models import BatteryMoE_3factors, BatteryMoE_HEv2, BatteryMoE_Gating_SwiGLU, BatteryMoE_HE_allCathode, \
       BatteryMoE_Gating_Linear, BatteryMoE_HEv3, baseline_CPTransformerMoE, BatteryMoE_Hard_Encoding
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -133,7 +133,9 @@ parser.add_argument('--mlp', type=int, default=0)
 # MoE definition
 parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
 parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
-parser.add_argument('--cathode_experts', type=int, default=4, help="The number of the expert models for proecessing different cathodes")
+parser.add_argument('--cathode_experts', type=int, default=13, help="The number of the expert models for proecessing different cathodes")
+parser.add_argument('--temperature_experts', type=int, default=20, help="The number of the expert models for proecessing different temperatures")
+parser.add_argument('--format_experts', type=int, default=21, help="The number of the expert models for proecessing different formats")
 parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
@@ -203,11 +205,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_HE_allCathode.Model(model_config)
-    elif args.model == 'BatteryMoE_Gating_GELU':
+    elif args.model == 'BatteryMoE_3factors':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Gating_GELU.Model(model_config)
+        model = BatteryMoE_3factors.Model(model_config)
     elif args.model == 'BatteryMoE_Gating_SwiGLU':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -361,7 +363,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -374,6 +376,8 @@ for ii in range(args.itr):
                 curve_attn_mask = curve_attn_mask.float() # [B, L]
                 DKP_embeddings = DKP_embeddings.float()
                 cathode_masks = cathode_masks.float()
+                temperature_masks = temperature_masks.float()
+                format_masks = format_masks.float()
                 # cluster_labels = cluster_labels.long()
                 labels = labels.float()
                 weights = weights.float()
@@ -387,7 +391,7 @@ for ii in range(args.itr):
 
                 # encoder - decoder
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
-                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks)
+                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks)
 
                 cut_off = labels.shape[0]
                 if args.loss == 'MSE':

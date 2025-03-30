@@ -50,6 +50,39 @@ datasetName2ids = {
     'NA-ion2024':29,
 }
 
+# Temperature assignment
+# temperature2mask = {
+#     -5.0: [0],
+#     15.0: [1],
+#     20.0: [2],
+#     23.0: [3],
+#     25.0: [4,5,6,7],
+#     30.0: [8,9,10,11,12,13,14,15],
+#     35.0: [16],
+#     45.0: [17,18],
+#     55.0: [19]
+# }
+# We assign each temperature to the three neighboring temperatures
+temperature2mask = {
+    -5.0: [0,1,2],
+    15.0: [0,1,2],
+    20.0: [1,2,3],
+    23.0: [2,3,4,5,6,7],
+    25.0: [3,4,5,6,7,8,9,10,11,12,13,14,15],
+    30.0: [4,5,6,7,8,9,10,11,12,13,14,15,16],
+    35.0: [8,9,10,11,12,13,14,15,16,17,18],
+    45.0: [16,17,18,19],
+    55.0: [16,17,18,19]
+}
+
+# assign experts according to formats
+format2mask = {
+    'prismatic': [0],
+    'cylindrical': [1,2,3,4,5,6,7,8,9,10,11,12],
+    'polymer': [13,14,15,16,17,18],
+    'pouch': [19,20]
+} 
+
 cathodes2mask = {
     'LFP': [0,1,2,3], # the index is used to activate the expert
     'NCA': [4,5],
@@ -71,9 +104,10 @@ def my_collate_fn_withId(samples):
     # aug_cycle_curve_data = torch.where(m, cj_aug_cycle_curve_data, fm_aug_cycle_curve_data) # randomly use frequency mask and cutoff_jitter
 
     cathode_masks = torch.vstack([i['cathode_mask'] for i in samples])
+    temperature_masks = torch.vstack([i['temperature_mask'] for i in samples])
+    format_masks = torch.vstack([i['format_mask'] for i in samples])
     curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
-    # input_ids = torch.vstack([i['input_ids'] for i in samples])
-    # attention_mask = torch.vstack([i['attention_mask'] for i in samples])
+
     labels = torch.Tensor([i['labels'] for i in samples])
 
     weights = torch.Tensor([i['weight'] for i in samples])
@@ -81,7 +115,7 @@ def my_collate_fn_withId(samples):
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
-    return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks
+    return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks
 
 def my_collate_fn(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
@@ -94,12 +128,14 @@ def my_collate_fn(samples):
     weights = torch.Tensor([i['weight'] for i in samples])
 
     cathode_masks = torch.vstack([i['cathode_mask'] for i in samples])
+    temperature_masks = torch.vstack([i['temperature_mask'] for i in samples])
+    format_masks = torch.vstack([i['format_mask'] for i in samples])
 
 
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
 
-    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks
+    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks
 
 # BatterLifeLLM dataloader
 class Dataset_BatteryLifeLLM_original(Dataset):
@@ -124,6 +160,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.early_cycle_threshold = args.early_cycle_threshold
         self.cathode_json = json.load(open('./gate_data/cathodes.json'))
         self.cathode_experts = args.cathode_experts
+        self.temperature_json = json.load(open('./gate_data/temperatures.json'))
+        self.temperature_experts = args.temperature_experts
+        self.format_json = json.load(open('./gate_data/formats.json'))
+        self.format_experts = args.format_experts
 
 
         self.label_prompts_vectors = {}
@@ -298,7 +338,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             else:
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
 
-        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks = self.read_data()
+        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks = self.read_data()
         
         self.weights = self.get_loss_weight()
         if np.any(np.isnan(self.total_charge_discharge_curves)):
@@ -382,6 +422,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         total_file_names = []
         total_seen_unseen_IDs = []
         total_cathode_expert_masks = []
+        total_temperature_experts_masks = []
+        total_format_expert_masks = []
 
         total_DKP_embeddings = []
         total_cluster_labels = []
@@ -401,13 +443,43 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             if prompts is None:
                 # This battery has not reached end of life
                 continue
-            
-            cathodes = self.cathode_json[file_name]
-            cathodes = '_'.join(cathodes)
-            cathode_index = cathodes2mask[cathodes] 
-            cathode_mask = np.zeros(self.cathode_experts) # 1 indicates activated
-            cathode_mask[cathode_index] = 1
+
+            if file_name in self.cathode_json:
+                cathodes = self.cathode_json[file_name]
+                cathodes = '_'.join(cathodes)
+                cathode_index = cathodes2mask[cathodes] 
+                cathode_mask = np.zeros(self.cathode_experts) # 1 indicates activated
+                cathode_mask[cathode_index] = 1
+            else:
+                raise Exception(f'The {file_name} is not shown in the cathodes.json. We suggest the user to set the cathode in the cathodes.json and manually assign the expert'
+                'using the cathodes2mask based on domain knowledge. When it is not possible to know the cathode or to manually assign the cathode, you can consider commenting this Exception and then BatteryMoE will assign'
+                'the expert for you.')
+                cathode_mask = np.ones(self.cathode_experts)
             cathode_mask = list(cathode_mask)
+
+            if file_name in self.temperature_json:
+                temperatures = self.temperature_json[file_name]
+                temperature_index = temperature2mask[temperatures]
+                temperature_mask = np.zeros(self.temperature_experts)
+                temperature_mask[temperature_index] = 1
+            else:
+                raise Exception(f'The {file_name} is not shown in the temperatures.json. We suggest the user to set the temperature in the temperatures.json and manually assign the expert'
+                'using the temperature2mask based on domain knowledge. When it is not possible to know the temperature or to manually assign the temperature, you can consider commenting this Exception and then BatteryMoE will assign'
+                'the expert for you.')
+                temperature_mask = np.ones(self.temperature_experts)
+            temperature_mask = list(temperature_mask)
+
+            if file_name in self.format_json:
+                format = self.format_json[file_name][0]
+                format_index = format2mask[format]
+                format_mask = np.zeros(self.format_experts)
+                format_mask[format_index] = 1
+            else:
+                raise Exception(f'The {file_name} is not shown in the formats.json. We suggest the user to set the format in the formats.json and manually assign the expert'
+                'using the format2mask based on domain knowledge. When it is not possible to know the format or to manually assign the format, you can consider commenting this Exception and then BatteryMoE will assign'
+                'the expert for you.')
+                format_mask = np.ones(self.format_experts)
+            format_mask = list(format_mask)
 
             cell_name = file_name.split('.pkl')[0]
             if self.flag == 'train':
@@ -427,6 +499,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             total_cluster_labels += [cluster_label for _ in range(len(labels))]
             total_DKP_embeddings += [DKP_embedding for _ in range(len(labels))]
             total_cathode_expert_masks += [cathode_mask for _ in range(len(labels))]
+            total_format_expert_masks += [format_mask for _ in range(len(labels))]
+            total_temperature_experts_masks += [temperature_mask for _ in range(len(labels))]
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
             unique_labels.append(eol)
@@ -441,10 +515,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
-        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks
+        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks, total_temperature_experts_masks, total_format_expert_masks
 
     
-    def  read_cell_data_according_to_prefix(self, file_name):
+    def read_cell_data_according_to_prefix(self, file_name):
         '''
         Read the battery data and eol according to the file_name
         The dataset is indicated by the prefix of the file_name
@@ -791,6 +865,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 'weight': self.weights[index],
                 'dataset_id': self.total_dataset_ids[index],
                 'cathode_mask': torch.Tensor(self.total_cathode_expert_masks[index]),
+                'temperature_mask': torch.Tensor(self.total_temperature_experts_masks[index]),
+                'format_mask': torch.Tensor(self.total_format_expert_masks[index]),
                 'DKP_embedding': torch.from_numpy(self.total_DKP_embeddings[index]),
                 'cluster_label': self.total_cluster_labels[index],
                 'file_name': self.total_file_names[index],
