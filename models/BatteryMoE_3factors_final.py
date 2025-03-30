@@ -564,7 +564,8 @@ class Model(nn.Module):
 
         out, _, guide_loss = self.inter_FormatMoE(out, logits[:,logits_index, self.temperature_experts_split:], format_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
-        total_aug_count += 1
+        logits_index += 1
+        
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
             out, guide_loss, aug_count = inter_MoELayer(out, logits[:,logits_index], cathode_masks, temperature_masks, format_masks)
             logits_index += 1
