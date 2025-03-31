@@ -1,6 +1,5 @@
 '''
-基于BatteryMoE_Hard_Encoding，只不过CathodeMoE中每种材料分配的expert增加了，并在
-intra-cycle和Inter-cycle的flatten layer都用到了CathodeMoE, temperatureMoE, formatMoE
+基于BatteryMoE_3factors，增加了带权的general experts
 '''
 import torch
 import torch.nn as nn
@@ -69,7 +68,7 @@ class MLPBlock(nn.Module):
 class CathodeFlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(CathodeFlattenIntraCycleMoELayer, self).__init__()
-        self.use_cl = configs.use_cl
+        self.use_guide = configs.use_guide
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -144,7 +143,7 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
 class HEIntraCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
         super(HEIntraCycleMoELayer, self).__init__()
-        self.use_cl = configs.use_cl
+        self.use_guide = configs.use_guide
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
@@ -221,7 +220,7 @@ class HEIntraCycleMoELayer(nn.Module):
 class CathodeFlattenInterCycleMoELayer(nn.Module):
     def __init__(self, configs):
         super(CathodeFlattenInterCycleMoELayer, self).__init__()
-        self.use_cl = configs.use_cl
+        self.use_guide = configs.use_guide
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
@@ -431,7 +430,7 @@ class Model(nn.Module):
         self.cathode_experts = configs.cathode_experts
         self.temperature_experts = configs.temperature_experts
         self.format_experts = configs.format_experts
-        self.gate = PatternRouterMLP(self.d_llm, (self.cathode_experts + self.temperature_experts + self.format_experts)*2)
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, (self.cathode_experts + self.temperature_experts + self.format_experts)*2))
         self.flattenIntraCycleLayer = CathodeFlattenIntraCycleMoELayer(configs)
         self.intra_TemperatureMoE = HEIntraCycleMoELayer(configs, configs.temperature_experts)
         self.intra_FormatMoE = HEIntraCycleMoELayer(configs, configs.format_experts)
