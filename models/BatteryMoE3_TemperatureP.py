@@ -562,16 +562,16 @@ class Model(nn.Module):
         self.format_experts = configs.format_experts
         self.cathode_split = self.cathode_experts
         self.temperature_experts_split = self.cathode_experts+self.temperature_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, (self.cathode_experts + self.temperature_experts + self.format_experts)*(2+self.e_layers+self.d_layers)+self.moe_layers*self.num_experts))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, (self.cathode_experts + self.temperature_experts + self.format_experts)*2+self.temperature_experts+self.temperature_experts))
         self.flattenIntraCycleLayer = CathodeFlattenIntraCycleMoELayer(configs)
         self.intra_TemperatureMoE = HEIntraCycleMoELayer(configs, configs.temperature_experts)
+        self.intra_TemperatureMoE2 = HEIntraCycleMoELayer(configs, configs.temperature_experts)
         self.intra_FormatMoE = HEIntraCycleMoELayer(configs, configs.format_experts)
-        self.intraCycleLayers = nn.ModuleList([IntraCycleMoELayer(configs) for _ in range(configs.e_layers)])
 
         self.flattenInterCycleLayer = CathodeFlattenInterCycleMoELayer(configs)
         self.inter_TemperatureMoE = HEInterCycleMoELayer(configs, configs.temperature_experts)
+        self.inter_TemperatureMoE2 = HEInterCycleMoELayer(configs, configs.temperature_experts)
         self.inter_FormatMoE = HEInterCycleMoELayer(configs, configs.format_experts)
-        self.interCycleLayers = nn.ModuleList([InterCycleMoELayer(configs) for _ in range(configs.d_layers)])
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
     def forward(self, cycle_curve_data, curve_attn_mask, 
@@ -599,13 +599,11 @@ class Model(nn.Module):
         format_masks = format_masks.to(torch.float16)
 
         logits = self.gate(DKP_embeddings)
-        soft_logits = logits[:,:self.moe_layers*self.num_experts]
-        soft_logits = soft_logits.reshape(B, self.moe_layers, self.num_experts)
-        logits = logits[:,self.moe_layers*self.num_experts:]
+        additional_logits = logits[:,:self.temperature_experts*2]
+        logits = logits[:,self.temperature_experts*2:]
         logits = logits.reshape(B, -1, self.cathode_experts+self.temperature_experts+self.format_experts)
   
         logits_index = 0 # logits-index for hard encoding
-        soft_logits_index = 0 # logits-index for soft encoding
 
         total_aug_loss = 0
         total_guide_loss = 0
@@ -622,11 +620,9 @@ class Model(nn.Module):
         out, _, guide_loss = self.intra_FormatMoE(out, logits[:,logits_index,self.temperature_experts_split:], format_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
         logits_index += 1 # add the logit index
-        for i, intra_MoELayer in enumerate(self.intraCycleLayers):
-            out, aug_loss = intra_MoELayer(out, soft_logits[:,soft_logits_index])
-            total_aug_loss += aug_loss
-            total_aug_count += 1
-            soft_logits_index += 1
+
+        out, _, guide_loss = self.intra_TemperatureMoE2(out, additional_logits[:,:self.temperature_experts], temperature_masks) # [B, L, d_model]
+        total_guide_loss += guide_loss
 
         out, _, guide_loss = self.flattenInterCycleLayer(out, logits[:, logits_index, :self.cathode_split], cathode_masks)
         total_guide_loss += guide_loss
@@ -637,19 +633,16 @@ class Model(nn.Module):
         out, _, guide_loss = self.inter_FormatMoE(out, logits[:,logits_index, self.temperature_experts_split:], format_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
         logits_index += 1
-        
-        for i, inter_MoELayer in enumerate(self.interCycleLayers):
-            out, aug_loss = inter_MoELayer(out, soft_logits[:,soft_logits_index])
-            total_aug_loss += aug_loss
-            total_aug_count += 1
-            soft_logits_index += 1
+
+        out, _, guide_loss = self.inter_TemperatureMoE2(out, additional_logits[:,self.temperature_experts:], temperature_masks) # [B, L, d_model]
+        total_guide_loss += guide_loss
 
         preds, llm_out, feature_llm_out = self.regression_head(out, attention_mask)
 
         preds = preds.float()
         llm_out = llm_out.float()
-        total_aug_count = total_aug_count if total_aug_count!=0 else 1
-        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss / total_aug_count, total_guide_loss / 6
+
+        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss, total_guide_loss / 8
 
     def create_causal_mask(self, B, seq_len):
         '''

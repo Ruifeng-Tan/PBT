@@ -10,8 +10,8 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_3factors, BatteryMoE3_learnGeneral, BatteryMoE_3factors_final, BatteryMoE_3factors_imp, \
-      BatteryMoE_Gating_Linear, BatteryMoE_HEv3, baseline_CPTransformerMoE, BatteryMoE3_CathodeP
+from models import BatteryMoE_3factors, BatteryMoE3_learnGeneral, BatteryMoE_3factors_final, BatteryMoE3_TemperatureP, \
+      BatteryMoE_Gating_Linear, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_CathodeP
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -200,11 +200,11 @@ for ii in range(args.itr):
         args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
     data_provider_func = data_provider_LLMv2
-    if args.model == 'BatteryMoE_3factors_imp':
+    if args.model == 'BatteryMoE3_TemperatureP':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_3factors_imp.Model(model_config)
+        model = BatteryMoE3_TemperatureP.Model(model_config)
     elif args.model == 'BatteryMoE_3factors':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -215,11 +215,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_3factors_final.Model(model_config)
-    elif args.model == 'BatteryMoE_HEv3':
+    elif args.model == 'BatteryMoE_3factors_imp':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_HEv3.Model(model_config)
+        model = BatteryMoE_3factors_imp.Model(model_config)
     elif args.model == 'BatteryMoE_Gating_Linear':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
