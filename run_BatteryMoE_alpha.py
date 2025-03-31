@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_3factors, BatteryMoE_HEv2, BatteryMoE_3factors_final, BatteryMoE_3factors_gate, \
+from models import BatteryMoE_3factors, BatteryMoE_HEv2, BatteryMoE_3factors_final, BatteryMoE_3factors_imp, \
       BatteryMoE_Gating_Linear, BatteryMoE_HEv3, baseline_CPTransformerMoE, BatteryMoE_Hard_Encoding
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -144,7 +144,7 @@ parser.add_argument('--initial_lambda', type=float, default=1e-4, help='The init
 parser.add_argument('--initial_alpha', type=float, default=1.2, help='The initial alpha for relu router regularization')
 
 # Contrastive learning
-parser.add_argument('--use_cl', action='store_true', default=False, help='Set True to use contrastive learning')
+parser.add_argument('--use_guide', action='store_true', default=False, help='Set True to use guidance loss to guide the gate to capture the assigned gating.')
 parser.add_argument('--gamma', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
 # Domain generalization
 parser.add_argument('--use_LB', action='store_true', default=False, help='Set True to use Load Balancing loss')
@@ -187,8 +187,8 @@ for ii in range(args.itr):
     #     args.e_layers,
     #     args.d_layers,
     #     args.d_ff,
-    #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_cl, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_lradj{}_dataset{}_cl{}_LB{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
+    #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -197,14 +197,14 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.lradj, args.dataset, args.use_cl, args.use_LB, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
+        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
     data_provider_func = data_provider_LLMv2
-    if args.model == 'BatteryMoE_3factors_gate':
+    if args.model == 'BatteryMoE_3factors_imp':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_3factors_gate.Model(model_config)
+        model = BatteryMoE_3factors_imp.Model(model_config)
     elif args.model == 'BatteryMoE_3factors':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -418,7 +418,7 @@ for ii in range(args.itr):
                         print_DG_loss = importance_loss.detach().float()
                         final_loss = final_loss + importance_loss
 
-                if args.use_cl:
+                if args.use_guide:
                     # contrastive learning
                     guide_loss = args.gamma * guide_loss
                     print_cl_loss = guide_loss.detach().float()
