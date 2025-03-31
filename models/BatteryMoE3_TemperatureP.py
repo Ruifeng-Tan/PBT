@@ -616,13 +616,12 @@ class Model(nn.Module):
         out, _, guide_loss = self.intra_TemperatureMoE(out, logits[:,logits_index,self.cathode_split:self.temperature_experts_split], temperature_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
 
+        out, _, guide_loss = self.intra_TemperatureMoE2(out, additional_logits[:,:self.temperature_experts], temperature_masks) # [B, L, d_model]
+        total_guide_loss += guide_loss
 
         out, _, guide_loss = self.intra_FormatMoE(out, logits[:,logits_index,self.temperature_experts_split:], format_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
         logits_index += 1 # add the logit index
-
-        out, _, guide_loss = self.intra_TemperatureMoE2(out, additional_logits[:,:self.temperature_experts], temperature_masks) # [B, L, d_model]
-        total_guide_loss += guide_loss
 
         out, _, guide_loss = self.flattenInterCycleLayer(out, logits[:, logits_index, :self.cathode_split], cathode_masks)
         total_guide_loss += guide_loss
@@ -630,12 +629,14 @@ class Model(nn.Module):
         out, _, guide_loss = self.inter_TemperatureMoE(out, logits[:, logits_index, self.cathode_split:self.temperature_experts_split], temperature_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
 
+        out, _, guide_loss = self.inter_TemperatureMoE2(out, additional_logits[:,self.temperature_experts:], temperature_masks) # [B, L, d_model]
+        total_guide_loss += guide_loss
+
         out, _, guide_loss = self.inter_FormatMoE(out, logits[:,logits_index, self.temperature_experts_split:], format_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
         logits_index += 1
 
-        out, _, guide_loss = self.inter_TemperatureMoE2(out, additional_logits[:,self.temperature_experts:], temperature_masks) # [B, L, d_model]
-        total_guide_loss += guide_loss
+
 
         preds, llm_out, feature_llm_out = self.regression_head(out, attention_mask)
 
