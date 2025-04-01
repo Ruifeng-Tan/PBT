@@ -97,6 +97,11 @@ cathodes2mask = {
     'NCM_LCO': [4,5,6,7,8,9,10]
 }
 
+# Anode
+anode2mask = {
+    'graphite': [0,1,2,3,4,5,6,7,8,9],
+    'graphite/Si': [10]
+}
 
 def my_collate_fn_withId(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
