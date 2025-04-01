@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_3factors, BatteryMoE3_learnGeneral, BatteryMoE_3factors_final, BatteryMoE3_TemperatureP, \
+from models import BatteryMoE_3factors, BatteryMoE3_horizontal, BatteryMoE_3factors_final, BatteryMoE3_TemperatureP, \
       BatteryMoE_Gating_Linear, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_CathodeP
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -230,11 +230,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'BatteryMoE3_learnGeneral':
+    elif args.model == 'BatteryMoE3_horizontal':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE3_learnGeneral.Model(model_config)
+        model = BatteryMoE3_horizontal.Model(model_config)
     elif args.model == 'BatteryMoE3_CathodeP':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -363,7 +363,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, combined_masks) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -378,6 +378,7 @@ for ii in range(args.itr):
                 cathode_masks = cathode_masks.float()
                 temperature_masks = temperature_masks.float()
                 format_masks = format_masks.float()
+                combined_masks = combined_masks.float()
                 # cluster_labels = cluster_labels.long()
                 labels = labels.float()
                 weights = weights.float()
@@ -391,7 +392,7 @@ for ii in range(args.itr):
 
                 # encoder - decoder
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
-                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks)
+                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, combined_masks=combined_masks)
 
                 cut_off = labels.shape[0]
                 if args.loss == 'MSE':

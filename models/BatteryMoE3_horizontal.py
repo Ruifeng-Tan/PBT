@@ -1,6 +1,5 @@
 '''
-基于BatteryMoE_Hard_Encoding，只不过CathodeMoE中每种材料分配的expert增加了，并在
-intra-cycle和Inter-cycle的flatten layer都用到了CathodeMoE
+基于BatteryMoE_3factors，只不过允许在intra-cycle encoder以及inter-cycle encoder中堆叠CathodeMoE, TemperatureMoE, FormatMoE
 '''
 import torch
 import torch.nn as nn
@@ -66,17 +65,16 @@ class MLPBlock(nn.Module):
         out = self.out_linear(out)
         return self.dropout(out)
 
-class CathodeFlattenIntraCycleMoELayer(nn.Module):
-    def __init__(self, configs):
-        super(CathodeFlattenIntraCycleMoELayer, self).__init__()
-        self.use_cl = configs.use_cl
+class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
+    def __init__(self, configs, num_experts):
+        super(BatteryMoEFlattenIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.cathode_experts # 4 types of cathodes in the training data
+        self.num_experts = num_experts # 4 types of cathodes in the training data
         # self.top_k = 2
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -87,28 +85,28 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits, cathode_masks):
+    def forward(self, cycle_curve_data, logits, moe_masks):
         '''
         params:
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
             DKP_embeddings: [B, num_experts]
-            cathode_masks: [B, num_experts]
+            moe_masks: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
-
         # select_logits = torch.where(cathode_masks==1, torch.ones_like(logits)*float('inf'), logits)
         # _, indices = torch.topk(select_logits, self.top_k, dim=1)
         # Create a mask where only the top-K values will be kept
         # mask = torch.zeros_like(select_logits, dtype=torch.bool)
         # Scatter the mask at the indices of the top-K values
         # mask.scatter_(1, indices, 1) # 0 indicates mask
-        mask = torch.where(cathode_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
         logits = logits * mask
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
+        
 
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
@@ -140,18 +138,17 @@ class CathodeFlattenIntraCycleMoELayer(nn.Module):
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
         return final_out, aug_loss, guide_loss
-    
-class CathodeIntraCycleMoELayer(nn.Module):
-    def __init__(self, configs):
-        super(CathodeIntraCycleMoELayer, self).__init__()
-        self.use_cl = configs.use_cl
+
+class BatteryMoEIntraCycleMoELayer(nn.Module):
+    def __init__(self, configs, num_experts):
+        super(BatteryMoEIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.cathode_experts # 4 types of cathodes in the training data
+        self.num_experts = num_experts # 4 types of cathodes in the training data
         # self.top_k = 2
         self.activation = configs.activation
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
@@ -163,23 +160,17 @@ class CathodeIntraCycleMoELayer(nn.Module):
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits, cathode_masks):
+    def forward(self, cycle_curve_data, logits, moe_masks):
         '''
         params:
             cycle_curve_data: [B, L, d_model]
             logits: [B, num_experts]
-            cathode_masks: [B, num_experts]
+            moe_masks: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
 
 
-        # select_logits = torch.where(cathode_masks==1, torch.ones_like(logits)*float('inf'), logits)
-        # _, indices = torch.topk(select_logits, self.top_k, dim=1)
-        # Create a mask where only the top-K values will be kept
-        # mask = torch.zeros_like(select_logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        # mask.scatter_(1, indices, 1) # 0 indicates mask
-        mask = torch.where(cathode_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -218,10 +209,9 @@ class CathodeIntraCycleMoELayer(nn.Module):
 
         return final_out, aug_loss, guide_loss
 
-class CathodeFlattenInterCycleMoELayer(nn.Module):
-    def __init__(self, configs):
-        super(CathodeFlattenInterCycleMoELayer, self).__init__()
-        self.use_cl = configs.use_cl
+class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
+    def __init__(self, configs, num_experts):
+        super(BatteryMoEFlattenInterCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
@@ -229,7 +219,7 @@ class CathodeFlattenInterCycleMoELayer(nn.Module):
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.cathode_experts
+        self.num_experts = num_experts
         self.activation = configs.activation
         # self.top_k = configs.topK
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
@@ -240,12 +230,12 @@ class CathodeFlattenInterCycleMoELayer(nn.Module):
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits, cathode_masks):
+    def forward(self, cycle_curve_data, logits, moe_masks):
         '''
         params:
             cycle_curve_data: [B, L, d_model]
             logits: [B, num_experts]
-            cathode_masks: [B, num_experts]
+            moe_masks: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
 
@@ -255,7 +245,7 @@ class CathodeFlattenInterCycleMoELayer(nn.Module):
         # mask = torch.zeros_like(select_logits, dtype=torch.bool)
         # Scatter the mask at the indices of the top-K values
         # mask.scatter_(1, indices, 1) # 0 indicates mask
-        mask = torch.where(cathode_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -295,16 +285,16 @@ class CathodeFlattenInterCycleMoELayer(nn.Module):
 
         return final_out, aug_loss, guide_loss
     
-class CathodeInterCycleMoELayer(nn.Module):
-    def __init__(self, configs):
-        super(CathodeInterCycleMoELayer, self).__init__()
+class BatteryMoEInterCycleMoELayer(nn.Module):
+    def __init__(self, configs, num_experts):
+        super(BatteryMoEInterCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model
-        self.num_experts = configs.cathode_experts # 4 types of cathodes in the training data
+        self.num_experts = num_experts 
         # self.top_k = 2
         self.activation = configs.activation
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
@@ -316,12 +306,12 @@ class CathodeInterCycleMoELayer(nn.Module):
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits, cathode_masks):
+    def forward(self, cycle_curve_data, logits, moe_masks):
         '''
         params:
             cycle_curve_data: [B, d_model]
             logits: [B, num_experts]
-            cathode_masks: [B, num_experts]
+            moe_masks: [B, num_experts]
         '''
         B = cycle_curve_data.shape[0]
 
@@ -331,7 +321,7 @@ class CathodeInterCycleMoELayer(nn.Module):
         # mask = torch.zeros_like(select_logits, dtype=torch.bool)
         # Scatter the mask at the indices of the top-K values
         # mask.scatter_(1, indices, 1) # 0 indicates mask
-        mask = torch.where(cathode_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
@@ -429,17 +419,26 @@ class Model(nn.Module):
         self.d_layers = configs.d_layers
         self.moe_layers = configs.e_layers+configs.d_layers
         self.cathode_experts = configs.cathode_experts
-        self.gate = PatternRouterMLP(self.d_llm, self.cathode_experts*self.moe_layers + configs.cathode_experts*2)
-        self.flattenIntraCycleLayer = CathodeFlattenIntraCycleMoELayer(configs)
-        self.intraCycleLayers = nn.ModuleList([CathodeIntraCycleMoELayer(configs) for _ in range(configs.e_layers)])
-        self.flattenInterCycleLayer = CathodeFlattenInterCycleMoELayer(configs)
-        self.interCycleLayers = nn.ModuleList([CathodeInterCycleMoELayer(configs) for _ in range(configs.d_layers)])
+        self.temperature_experts = configs.temperature_experts
+        self.format_experts = configs.format_experts
+        self.cathode_split = self.cathode_experts
+        self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers)))
+        self.flattenIntraCycleLayer = BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)
+        self.intra_MoE_layers = nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts) for _ in range(self.e_layers)])
+
+        self.flattenInterCycleLayer = BatteryMoEFlattenInterCycleMoELayer(configs, self.num_experts)
+        self.inter_MoE_layers = nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts) for _ in range(self.d_layers)])
         self.regression_head = OutputHead(battery_life_config.ec_config)
-        
+
+
     def forward(self, cycle_curve_data, curve_attn_mask, 
                 attention_mask: Optional[torch.Tensor] = None,
                 DKP_embeddings: Optional[torch.FloatTensor] = None,
-                cathode_masks: Optional[torch.Tensor] = None
+                cathode_masks: Optional[torch.Tensor] = None,
+                temperature_masks: Optional[torch.Tensor] = None,
+                format_masks: Optional[torch.Tensor] = None,
+                combined_masks: Optional[torch.Tensor] = None
                 ):
         '''
         params:
@@ -455,49 +454,46 @@ class Model(nn.Module):
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
         cathode_masks = cathode_masks.to(torch.float16)
+        temperature_masks = temperature_masks.to(torch.float16)
+        format_masks = format_masks.to(torch.float16)
 
         logits = self.gate(DKP_embeddings)
-        # intra_cathode_logits = logits[:,:self.cathode_experts]
-        # inter_cathode_logits = logits[:,self.cathode_experts:self.cathode_experts*2]
-        # logits = logits[:,self.cathode_experts*2:]
-        logits = logits.reshape(B, self.moe_layers+2, -1)
+        logits = logits.reshape(B, -1, self.num_experts)
+  
         logits_index = 0
 
         total_aug_loss = 0
         total_guide_loss = 0
         total_aug_count = 0
-        out, _, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, logits[:,logits_index], cathode_masks) # [B, L, d_model]
-        total_guide_loss += guide_loss
-        logits_index += 1
-        # total_aug_loss += aug_loss
-        # total_aug_count += 1
 
-        for i, expert in enumerate(self.intraCycleLayers):
-            out, _, guide_loss  = expert(out, logits[:,logits_index], cathode_masks)
-            total_guide_loss += guide_loss
-            logits_index += 1
-            # total_aug_loss += aug_loss
-            total_aug_count += 1
-        
-        out, _, guide_loss = self.flattenInterCycleLayer(out, logits[:,logits_index], cathode_masks)
+        out, _, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, logits[:,logits_index], combined_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
+        total_aug_count += 1
         logits_index += 1
-        # total_aug_loss += aug_loss
-        # total_aug_count += 1
 
-        for i, expert in enumerate(self.interCycleLayers):
-            out, _, guide_loss = expert(out, logits[:,logits_index], cathode_masks)
+        for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
+            out, guide_loss, aug_count = intra_MoELayer(out, logits[:,logits_index], combined_masks)
             total_guide_loss += guide_loss
+            total_aug_count += aug_count
             logits_index += 1
-            # total_aug_loss += aug_loss
-            total_aug_count += 1
+
+        out, _, guide_loss = self.flattenInterCycleLayer(out, logits[:,logits_index], combined_masks)
+        total_guide_loss += guide_loss
+        total_aug_count += 1
+        logits_index += 1
+
+        for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
+            out, guide_loss, aug_count = inter_MoELayer(out, logits[:,logits_index], combined_masks)
+            total_guide_loss += guide_loss
+            total_aug_count += aug_count
+            logits_index += 1
 
         preds, llm_out, feature_llm_out = self.regression_head(out, attention_mask)
 
         preds = preds.float()
         llm_out = llm_out.float()
 
-        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss / total_aug_count, total_guide_loss / total_aug_count
+        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''
