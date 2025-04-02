@@ -519,7 +519,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 # anode_mask = np.zeros(self.anode_experts) # only use the general experts
             anode_mask = list(anode_mask)
 
-            combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask
+            combined_expert_mask = cathode_mask + temperature_mask + format_mask
 
             cell_name = file_name.split('.pkl')[0]
             if self.flag == 'train':

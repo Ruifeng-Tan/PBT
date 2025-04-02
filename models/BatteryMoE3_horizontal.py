@@ -438,6 +438,7 @@ class Model(nn.Module):
                 cathode_masks: Optional[torch.Tensor] = None,
                 temperature_masks: Optional[torch.Tensor] = None,
                 format_masks: Optional[torch.Tensor] = None,
+                anode_masks: Optional[torch.Tensor] = None,
                 combined_masks: Optional[torch.Tensor] = None
                 ):
         '''
@@ -453,9 +454,9 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        cathode_masks = cathode_masks.to(torch.float16)
-        temperature_masks = temperature_masks.to(torch.float16)
-        format_masks = format_masks.to(torch.float16)
+        # cathode_masks = cathode_masks.to(torch.float16)
+        # temperature_masks = temperature_masks.to(torch.float16)
+        # format_masks = format_masks.to(torch.float16)
 
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(B, -1, self.num_experts)
