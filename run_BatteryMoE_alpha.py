@@ -11,7 +11,7 @@ from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alig
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_3factors, BatteryMoE3_horizontal, BatteryMoE_3factors_final, BatteryMoE3_TemperatureP, \
-      BatteryMoE_Gating_Linear, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_CathodeP
+      BatteryMoE_Gating_Linear, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_horizontal4
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -136,6 +136,7 @@ parser.add_argument('--num_experts', type=int, default=6, help="The number of th
 parser.add_argument('--cathode_experts', type=int, default=13, help="The number of the expert models for proecessing different cathodes")
 parser.add_argument('--temperature_experts', type=int, default=20, help="The number of the expert models for proecessing different temperatures")
 parser.add_argument('--format_experts', type=int, default=21, help="The number of the expert models for proecessing different formats")
+parser.add_argument('--anode_experts', type=int, default=11, help="The number of the expert models for proecessing different anodes")
 parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
@@ -235,11 +236,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE3_horizontal.Model(model_config)
-    elif args.model == 'BatteryMoE3_CathodeP':
+    elif args.model == 'BatteryMoE3_horizontal4':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE3_CathodeP.Model(model_config)
+        model = BatteryMoE3_horizontal4.Model(model_config)
     else:
         raise Exception('Not Implemented')
 

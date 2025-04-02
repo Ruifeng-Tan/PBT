@@ -177,7 +177,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.temperature_experts = args.temperature_experts
         self.format_json = json.load(open('./gate_data/formats.json'))
         self.format_experts = args.format_experts
-
+        self.anode_json = json.load(open('./gate_data/anodes.json'))
+        self.anode_experts = args.anode_experts
 
         self.label_prompts_vectors = {}
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
@@ -500,7 +501,22 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 # format_mask = np.zeros(self.format_experts) # only use the general experts
             format_mask = list(format_mask)
 
-            combined_expert_mask = cathode_mask + temperature_mask + format_mask
+            if file_name in self.anode_json:
+                anode = self.anode_json[file_name][0]
+                if anode != 'graphite/Si':
+                    anode = 'graphite' # we assume other anodes are graphite
+                anode_index = anode2mask[anode]
+                anode_mask = np.zeros(self.anode_experts)
+                anode_mask[anode_index] = 1
+            else:
+                raise Exception(f'The {file_name} is not shown in the formats.json. We suggest the user to set the format in the formats.json and manually assign the expert'
+                'using the format2mask based on domain knowledge. When it is not possible to know the format or to manually assign the format, you can consider commenting this Exception and then BatteryMoE will assign'
+                'the expert for you.')
+                anode_mask = np.ones(self.anode_experts) # assign according to the learned parameters
+                # anode_mask = np.zeros(self.anode_experts) # only use the general experts
+            anode_mask = list(anode_mask)
+
+            combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask
 
             cell_name = file_name.split('.pkl')[0]
             if self.flag == 'train':
