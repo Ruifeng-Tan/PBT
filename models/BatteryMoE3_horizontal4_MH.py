@@ -65,20 +65,54 @@ class MLPBlock(nn.Module):
         out = self.out_linear(out)
         return self.dropout(out)
 
+class MultiViewLayer(nn.Module):
+    def __init__(self, in_dim, num_views, out_dim, view_experts):
+        super(MultiViewLayer, self).__init__()
+        self.num_views = num_views
+        self.view_experts = view_experts
+        self.view_split_linear = nn.Linear(in_dim, out_dim, bias=False)
+        self.view_merge_linear = nn.Linear(out_dim, out_dim, bias=False)
+
+
+    def forward(self, x, total_logits, total_masks):
+        '''
+        x: [N, *, in_dim]
+        total_logits: [num_view, num_experts for each view expert]
+        total_masks: [num_view, num_experts for each view expert]
+        '''
+        x = self.view_split_linear(x)
+        size = len(x.size())
+        split_dim = x.shape[-1] // self.num_views
+        total_outs = []
+        total_guide_loss = 0
+        for i, view_expert in enumerate(self.view_experts):
+            if size == 3:
+                out, guide_loss = view_expert(x[:,:,split_dim*i:split_dim*(i+1)], total_logits[i], total_masks[i])
+            elif size == 2:
+                out, guide_loss = view_expert(x[:,split_dim*i:split_dim*(i+1)], total_logits[i], total_masks[i])
+            else:
+                raise Exception('Not implemented')
+            total_outs.append(out)
+            total_guide_loss += guide_loss
+
+        total_outs = torch.cat(total_outs, dim=-1)
+        out = self.view_merge_linear(total_outs)
+        return out, total_guide_loss / self.num_views
+
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
-    def __init__(self, configs, num_experts):
+    def __init__(self, configs, num_experts, in_dim):
         super(BatteryMoEFlattenIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
-        self.d_model = configs.d_model
+        self.d_model = configs.d_model // configs.num_views
         self.num_experts = num_experts # 4 types of cathodes in the training data
         # self.top_k = 2
-        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_general_experts)])
 
         self.noisy_gating = configs.noisy_gating
         self.softplus = nn.Softplus()
@@ -124,36 +158,30 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         for i in range(self.num_general_experts):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
 
-        aug_loss = 0
         guide_loss = 0 # guide the model to give larger weight to the correct cathode expert
         if self.training:
-            # Compute the auxiliary loss
-            expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
-            expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
-            aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
-
             # Guidance loss
             masked_raw_logits = raw_logits * mask
             sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
-        return final_out, aug_loss, guide_loss
+        return final_out, guide_loss
 
 class BatteryMoEIntraCycleMoELayer(nn.Module):
-    def __init__(self, configs, num_experts):
+    def __init__(self, configs, num_experts, in_dim):
         super(BatteryMoEIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
-        self.d_model = configs.d_model
+        self.d_model = configs.d_model // configs.num_views
         self.num_experts = num_experts # 4 types of cathodes in the training data
         # self.top_k = 2
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
         self.softplus = nn.Softplus()
@@ -194,23 +222,17 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
         final_out = self.ln(final_out + cycle_curve_data) # add & norm
 
-        aug_loss = 0
         guide_loss = 0
         if self.training:
-            # Compute the auxiliary loss
-            expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
-            expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
-            aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
-
             # Guidance loss
             masked_raw_logits = raw_logits * mask
             sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
-        return final_out, aug_loss, guide_loss
+        return final_out, guide_loss
 
 class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
-    def __init__(self, configs, num_experts):
+    def __init__(self, configs, num_experts, in_dim):
         super(BatteryMoEFlattenInterCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.early_cycle_threshold = configs.early_cycle_threshold
@@ -218,13 +240,13 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
-        self.d_model = configs.d_model
+        self.d_model = configs.d_model // configs.num_views
         self.num_experts = num_experts
         self.activation = configs.activation
         # self.top_k = configs.topK
-        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_general_experts)])
         self.noisy_gating = configs.noisy_gating
         self.softplus = nn.Softplus()
         self.eps = 1e-9
@@ -269,37 +291,31 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
         for i in range(self.num_general_experts):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
 
-        aug_loss = 0
         guide_loss = 0 # guide the model to give larger weight to the correct cathode expert
         if self.training:
-            # Compute the auxiliary loss
-            expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
-            expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
-            aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
-
             # Guidance loss
             masked_raw_logits = raw_logits * mask
             sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
 
-        return final_out, aug_loss, guide_loss
+        return final_out, guide_loss
     
 class BatteryMoEInterCycleMoELayer(nn.Module):
-    def __init__(self, configs, num_experts):
+    def __init__(self, configs, num_experts, in_dim):
         super(BatteryMoEInterCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
-        self.d_model = configs.d_model
+        self.d_model = configs.d_model // configs.num_views
         self.num_experts = num_experts 
         # self.top_k = 2
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
         self.softplus = nn.Softplus()
@@ -348,18 +364,13 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         aug_loss = 0
         guide_loss = 0
         if self.training:
-            # Compute the auxiliary loss
-            expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
-            expert_sample_count = torch.count_nonzero(logits, dim=0) / B # [num_experts]
-            aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
-
             # Guidance loss
             masked_raw_logits = raw_logits * mask
             sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
 
-        return final_out, aug_loss, guide_loss
+        return final_out, guide_loss
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -411,6 +422,7 @@ class Model(nn.Module):
             pad_token='<|endoftext|>'
         )
         self.num_experts = configs.num_experts
+        self.charge_discharge_length = configs.charge_discharge_length
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.d_model = configs.d_model
         self.d_llm = configs.d_llm
@@ -421,14 +433,39 @@ class Model(nn.Module):
         self.cathode_experts = configs.cathode_experts
         self.temperature_experts = configs.temperature_experts
         self.format_experts = configs.format_experts
+        self.anode_experts = configs.anode_experts
+        self.num_views = configs.num_views
         self.cathode_split = self.cathode_experts
-        self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts
+        self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers)))
-        self.flattenIntraCycleLayer = BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)
-        self.intra_MoE_layers = nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts) for _ in range(self.e_layers)])
+        self.split_dim = self.d_model // self.num_views
+        self.flattenIntraCycleLayer = MultiViewLayer(self.charge_discharge_length*3, self.num_views, self.d_model,
+                                                     nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.cathode_experts, self.split_dim),
+                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.anode_experts, self.split_dim),
+                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.temperature_experts, self.split_dim),
+                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.format_experts, self.split_dim)
+                                                    ]))
+        
+        self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(self.d_model, self.num_views, self.d_model,
+                                                     nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.cathode_experts, self.split_dim),
+                                                                    BatteryMoEIntraCycleMoELayer(configs, self.anode_experts, self.split_dim),
+                                                                    BatteryMoEIntraCycleMoELayer(configs, self.temperature_experts, self.split_dim),
+                                                                    BatteryMoEIntraCycleMoELayer(configs, self.format_experts, self.split_dim)
+                                                    ])) for _ in range(self.e_layers)])
 
-        self.flattenInterCycleLayer = BatteryMoEFlattenInterCycleMoELayer(configs, self.num_experts)
-        self.inter_MoE_layers = nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts) for _ in range(self.d_layers)])
+        self.flattenInterCycleLayer = MultiViewLayer(self.early_cycle_threshold*self.d_model, self.num_views, self.d_model,
+                                                     nn.ModuleList([BatteryMoEFlattenInterCycleMoELayer(configs, self.cathode_experts, self.split_dim),
+                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.anode_experts, self.split_dim),
+                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.temperature_experts, self.split_dim),
+                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.format_experts, self.split_dim)
+                                                    ]))
+        
+        self.inter_MoE_layers = nn.ModuleList([MultiViewLayer(self.d_model, self.num_views, self.d_model,
+                                                     nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.cathode_experts, self.split_dim),
+                                                                    BatteryMoEInterCycleMoELayer(configs, self.anode_experts, self.split_dim),
+                                                                    BatteryMoEInterCycleMoELayer(configs, self.temperature_experts, self.split_dim),
+                                                                    BatteryMoEInterCycleMoELayer(configs, self.format_experts, self.split_dim)
+                                                    ])) for _ in range(self.e_layers)])
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
@@ -438,6 +475,7 @@ class Model(nn.Module):
                 cathode_masks: Optional[torch.Tensor] = None,
                 temperature_masks: Optional[torch.Tensor] = None,
                 format_masks: Optional[torch.Tensor] = None,
+                anode_masks: Optional[torch.Tensor] = None,
                 combined_masks: Optional[torch.Tensor] = None
                 ):
         '''
@@ -453,12 +491,14 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        cathode_masks = cathode_masks.to(torch.float16)
-        temperature_masks = temperature_masks.to(torch.float16)
-        format_masks = format_masks.to(torch.float16)
+        total_masks = [cathode_masks, anode_masks, temperature_masks, format_masks]
 
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(B, -1, self.num_experts)
+        cathode_logits = logits[:,:,:self.cathode_experts]
+        anode_logits = logits[:,:,self.cathode_experts:self.cathode_experts+self.anode_experts]
+        temperature_logits = logits[:,:,self.cathode_experts+self.anode_experts:self.cathode_experts+self.anode_experts+self.temperature_experts]
+        format_logits = logits[:,:,self.cathode_experts+self.anode_experts+self.temperature_experts:]
   
         logits_index = 0
 
@@ -466,24 +506,26 @@ class Model(nn.Module):
         total_guide_loss = 0
         total_aug_count = 0
 
-        out, _, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, logits[:,logits_index], combined_masks) # [B, L, d_model]
+        cycle_curve_data = cycle_curve_data.reshape(B, L, -1) # flatten
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, _, guide_loss = intra_MoELayer(out, logits[:,logits_index], combined_masks)
+            out, guide_loss = intra_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
 
-        out, _, guide_loss = self.flattenInterCycleLayer(out, logits[:,logits_index], combined_masks)
+        out = out.reshape(B, -1) # flatten
+        out, guide_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, _, guide_loss = inter_MoELayer(out, logits[:,logits_index], combined_masks)
+            out, guide_loss = inter_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1

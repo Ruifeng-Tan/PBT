@@ -439,6 +439,7 @@ class Model(nn.Module):
                 cathode_masks: Optional[torch.Tensor] = None,
                 temperature_masks: Optional[torch.Tensor] = None,
                 format_masks: Optional[torch.Tensor] = None,
+                anode_masks: Optional[torch.Tensor] = None,
                 combined_masks: Optional[torch.Tensor] = None
                 ):
         '''
@@ -454,9 +455,9 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        cathode_masks = cathode_masks.to(torch.float16)
-        temperature_masks = temperature_masks.to(torch.float16)
-        format_masks = format_masks.to(torch.float16)
+        # cathode_masks = cathode_masks.to(torch.float16)
+        # temperature_masks = temperature_masks.to(torch.float16)
+        # format_masks = format_masks.to(torch.float16)
 
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(B, -1, self.num_experts)
@@ -473,9 +474,9 @@ class Model(nn.Module):
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss, aug_count = intra_MoELayer(out, logits[:,logits_index], combined_masks)
+            out, _, guide_loss = intra_MoELayer(out, logits[:,logits_index], combined_masks)
             total_guide_loss += guide_loss
-            total_aug_count += aug_count
+            total_aug_count += 1
             logits_index += 1
 
         out, _, guide_loss = self.flattenInterCycleLayer(out, logits[:,logits_index], combined_masks)
@@ -484,9 +485,9 @@ class Model(nn.Module):
         logits_index += 1
 
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss, aug_count = inter_MoELayer(out, logits[:,logits_index], combined_masks)
+            out, _, guide_loss = inter_MoELayer(out, logits[:,logits_index], combined_masks)
             total_guide_loss += guide_loss
-            total_aug_count += aug_count
+            total_aug_count += 1
             logits_index += 1
 
         preds, llm_out, feature_llm_out = self.regression_head(out, attention_mask)

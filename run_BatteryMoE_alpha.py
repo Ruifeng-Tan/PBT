@@ -11,7 +11,7 @@ from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alig
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_3factors, BatteryMoE3_horizontal, BatteryMoE_3factors_final, BatteryMoE3_TemperatureP, \
-      BatteryMoE_Gating_Linear, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_horizontal4
+      BatteryMoE3_horizontal4_MH, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_horizontal4
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -131,6 +131,7 @@ parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
 
 # MoE definition
+parser.add_argument('--num_views', type=int, default=4, help="The number of the views")
 parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
 parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
 parser.add_argument('--cathode_experts', type=int, default=13, help="The number of the expert models for proecessing different cathodes")
@@ -221,11 +222,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_3factors_imp.Model(model_config)
-    elif args.model == 'BatteryMoE_Gating_Linear':
+    elif args.model == 'BatteryMoE3_horizontal4_MH':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Gating_Linear.Model(model_config)
+        model = BatteryMoE3_horizontal4_MH.Model(model_config)
     elif args.model == 'baseline_CPTransformerMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -364,7 +365,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, combined_masks) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -377,6 +378,7 @@ for ii in range(args.itr):
                 curve_attn_mask = curve_attn_mask.float() # [B, L]
                 DKP_embeddings = DKP_embeddings.float()
                 cathode_masks = cathode_masks.float()
+                anode_masks = anode_masks.float()
                 temperature_masks = temperature_masks.float()
                 format_masks = format_masks.float()
                 combined_masks = combined_masks.float()
@@ -393,7 +395,8 @@ for ii in range(args.itr):
 
                 # encoder - decoder
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
-                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, combined_masks=combined_masks)
+                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
+                anode_masks=anode_masks, combined_masks=combined_masks)
 
                 cut_off = labels.shape[0]
                 if args.loss == 'MSE':
