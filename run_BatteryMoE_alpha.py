@@ -190,7 +190,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -199,7 +199,7 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, pretrained, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
+        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'BatteryMoE3_TemperatureP':
@@ -385,12 +385,6 @@ for ii in range(args.itr):
                 # cluster_labels = cluster_labels.long()
                 labels = labels.float()
                 weights = weights.float()
-
-                # input_ids = input_ids.int()
-                # attention_mask = attention_mask.int()
-        
-                # end_input_ids = end_input_ids.int()
-                # end_attn_mask = end_attn_mask.int()
                 
 
                 # encoder - decoder

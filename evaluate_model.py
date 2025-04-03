@@ -10,11 +10,8 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryLifeLLMv10_TrialP2_noDKP_PTnoMask, BatteryLifeLLMv10_TrialP2_noDKP_SDCM, BatteryLifeLLMv10_TrialP2_noDKP_SDCM_Tr, BatteryLifeLLMv10_TrialP2_noDKP_SDCM_Trial, BatteryLifeLLMv12_SDCM, BatteryLifeLLMv13_SDCM, BatteryLifeLLMv13_SDCM_imp, BatteryLifeLLMv18_Stack, BatteryLifeLLMv6, BatteryLifeLLMv7_FlattenHead, BatteryLifeLLMv7_LinearHead, BatteryLifeLLMv7_LinearHead2, BatteryLifeLLMv7_pe, BatteryLifeLLMv8, TimeLLM, \
-    BatteryLifeLLMv5_distilling_version,BatteryLifeLLMv5_simpleLSTM,\
-        BatteryLifeLLMv6_redescribe, BatteryLifeLLMv7,BatteryLifeLLMv7_LinearHead_aug, BatteryLifeLLMv7_LinearHead2_tuneLLM, BatteryLifeLLMv7_GRUHead_tuneLLM, \
-            BatteryLifeLLMv7_MLPHead_tuneLLM, BatteryLifeLLMv7_TransHead, BatteryLifeLLMv7_LinearHead_S, \
-                BatteryLifeLLMv8_S_reprogramming, LSTM, GRU, Transformer
+from models import BatteryMoE_3factors, BatteryMoE_horizontal_MHv2, BatteryMoE_3factors_final, BatteryMoE3_TemperatureP, \
+      BatteryMoE3_horizontal4_MH, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_horizontal4
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
 from data_provider.data_factory import data_provider_LLMv2, data_provider_LLM_evaluate
@@ -24,7 +21,6 @@ import numpy as np
 import os
 import json
 import datetime
-from data_provider.data_factory import data_provider_baseline
 # os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # os.environ['CURL_CA_BUNDLE'] = ''
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
@@ -51,6 +47,10 @@ parser.add_argument('--model_id', type=str, required=False, default='test', help
 parser.add_argument('--model_comment', type=str, required=False, default='none', help='prefix when saving test results')
 parser.add_argument('--model', type=str, required=False, default='Autoformer',
                     help='model name, options: [Autoformer, DLinear]')
+parser.add_argument('--LLM_path', type=str, required=False, default='/home/trf/LLMs/llama2-hf-7b',
+                    help='The path to the saved LLM checkpoints')
+parser.add_argument('--center_path', type=str, required=False, default='./Centenr_vectors',
+                    help='The path to the preset cluster centers')
 parser.add_argument('--seed', type=int, default=2021, help='random seed')
 
 # data loader
@@ -69,7 +69,7 @@ parser.add_argument('--freq', type=str, default='h',
                          'options:[s:secondly, t:minutely, h:hourly, d:daily, b:business days, w:weekly, m:monthly], '
                          'you can also use more detailed freq like 15min or 3h')
 parser.add_argument('--checkpoints', type=str, default='./checkpoints/', help='location of model checkpoints')
-
+parser.add_argument('--num_process', type=int, default=4, help='the number of used GPUs')
 # forecasting task
 parser.add_argument('--early_cycle_threshold', type=int, default=100, help='what is early life')
 parser.add_argument('--seq_len', type=int, default=5, help='input sequence length')
@@ -77,13 +77,15 @@ parser.add_argument('--label_len', type=int, default=48, help='start token lengt
 parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='subset for M4')
 
 # model define
+parser.add_argument('--pt_token_num', type=int, default=10, help='The token number for prompt tuning')
+parser.add_argument('--last_layer', type=int, default=0, help='The layer index for fusion')
 parser.add_argument('--d_llm', type=int, default=4096, help='the features of llm')
 parser.add_argument('--enc_in', type=int, default=1, help='encoder input size')
 parser.add_argument('--dec_in', type=int, default=1, help='decoder input size')
 parser.add_argument('--c_out', type=int, default=1, help='output size')
 parser.add_argument('--d_model', type=int, default=16, help='dimension of model')
 parser.add_argument('--n_heads', type=int, default=4, help='num of heads')
-parser.add_argument('--lstm_layers', type=int, default=1, help='num of LSTM layers')
+parser.add_argument('--noDKP_layers', type=int, default=1, help='the number of no DKP layers in the inter-cycle encoder')
 parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
 parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
 parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
@@ -94,48 +96,65 @@ parser.add_argument('--embed', type=str, default='timeF',
                     help='time features encoding, options:[timeF, fixed, learned]')
 parser.add_argument('--activation', type=str, default='relu', help='activation')
 parser.add_argument('--output_attention', action='store_true', help='whether to output attention in encoder')
-parser.add_argument('--patch_len', type=int, default=16, help='patch length')
-parser.add_argument('--stride', type=int, default=8, help='stride')
+parser.add_argument('--patch_len', type=int, default=10, help='patch length')
+parser.add_argument('--stride', type=int, default=10, help='stride')
 parser.add_argument('--prompt_domain', type=int, default=0, help='')
 parser.add_argument('--output_num', type=int, default=1, help='The number of prediction targets')
+parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
 # optimization
+parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
 parser.add_argument('--itr', type=int, default=1, help='experiments times')
 parser.add_argument('--train_epochs', type=int, default=10, help='train epochs')
 parser.add_argument('--least_epochs', type=int, default=5, help='The model is trained at least some epoches before the early stopping is used')
 parser.add_argument('--batch_size', type=int, default=32, help='batch size of train input data')
-parser.add_argument('--eval_batch_size', type=int, default=16, help='batch size of model evaluation')
 parser.add_argument('--patience', type=int, default=10, help='early stopping patience')
 parser.add_argument('--learning_rate', type=float, default=0.0001, help='optimizer learning rate')
+parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--des', type=str, default='test', help='exp description')
 parser.add_argument('--loss', type=str, default='MSE', help='loss function')
 parser.add_argument('--lradj', type=str, default='constant', help='adjust learning rate')
+parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learning rate decay factor')
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
 parser.add_argument('--use_amp', action='store_true', help='use automatic mixed precision training', default=False)
 parser.add_argument('--llm_layers', type=int, default=6)
-parser.add_argument('--percent', type=int, default=100)
+parser.add_argument('--top_p', type=float, default=0.5, help='The threshold used to control the number of activated experts')
 parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
 
-# Contrastive learning
-parser.add_argument('--neg_threshold', type=float, default=0.25)
-parser.add_argument('--pos_threshold', type=float, default=0.15)
-parser.add_argument('--neg_num', type=int, default=2)
-parser.add_argument('--pos_num', type=int, default=1)
-parser.add_argument('--tau', type=int, default=1)
-parser.add_argument('--cl_loss_weight', type=float, default=1)
+# MoE definition
+parser.add_argument('--num_views', type=int, default=4, help="The number of the views")
+parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
+parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
+parser.add_argument('--cathode_experts', type=int, default=13, help="The number of the expert models for proecessing different cathodes")
+parser.add_argument('--temperature_experts', type=int, default=20, help="The number of the expert models for proecessing different temperatures")
+parser.add_argument('--format_experts', type=int, default=21, help="The number of the expert models for proecessing different formats")
+parser.add_argument('--anode_experts', type=int, default=11, help="The number of the expert models for proecessing different anodes")
+parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
+parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
+parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
+parser.add_argument('--use_ReMoE', action='store_true', default=False, help='Set True to use relu router')
+parser.add_argument('--initial_lambda', type=float, default=1e-4, help='The initial lambda for relu router regularization')
+parser.add_argument('--initial_alpha', type=float, default=1.2, help='The initial alpha for relu router regularization')
 
-# LLM fine-tuning hyper-parameters
-parser.add_argument('--use_LoRA', action='store_true', default=False, help='Set True to use LoRA')
-parser.add_argument('--LoRA_r', type=int, default=8, help='r for LoRA')
-parser.add_argument('--LoRA_dropOut', type=float, default=0.1, help='dropout rate for LoRA')
+# Contrastive learning
+parser.add_argument('--use_guide', action='store_true', default=False, help='Set True to use guidance loss to guide the gate to capture the assigned gating.')
+parser.add_argument('--gamma', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
+# Domain generalization
+parser.add_argument('--use_LB', action='store_true', default=False, help='Set True to use Load Balancing loss')
+
+# Pretrain
+parser.add_argument('--Pretrained_model_path', type=str, default='', help='The path to the saved pretrained model parameters')
+
+# Ablation Study
+parser.add_argument('--wo_DKPrompt', action='store_true', default=False, help='Set True to remove domain knowledge prompt')
 
 # BatteryFormer
 parser.add_argument('--charge_discharge_length', type=int, default=100, help='The resampled length for charge and discharge curves')
 
-# evaluate
-parser.add_argument('--alpha', type=float, default=0.15, help='the alpha for alpha-accuracy')
+# Evaluation alpha-accuracy
+parser.add_argument('--alpha1', type=float, default=0.15, help='the alpha for alpha-accuracy')
 parser.add_argument('--alpha2', type=float, default=0.1, help='the alpha for alpha-accuracy')
 parser.add_argument('--args_path', type=str, help='the path to the pretrained model parameters')
 parser.add_argument('--eval_dataset', type=str, help='the target dataset')
@@ -157,7 +176,7 @@ accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspe
 # load from the saved path
 args_path = args.args_path
 dataset = args.eval_dataset
-alpha = args.alpha
+alpha = args.alpha1
 alpha2 = args.alpha2
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
@@ -166,24 +185,7 @@ args_json['batch_size'] = batch_size
 args.__dict__ = args_json
 for ii in range(args.itr):
     # setting record of experiments
-    # setting = '{}_{}_{}_{}_ft{}_sl{}_ll{}_dm{}_nh{}_el{}_dl{}_df{}_fc{}_eb{}_llmLayers{}_{}_{}_Lora{}'.format(
-    #     args.task_name,
-    #     args.model_id,
-    #     args.model,
-    #     args.data,
-    #     args.features,
-    #     args.seq_len,
-    #     args.label_len,
-    #     args.d_model,
-    #     args.n_heads,
-    #     args.e_layers,
-    #     args.d_layers,
-    #     args.d_ff,
-    #     args.factor,
-    #     args.embed,
-    #     args.llm_layers,
-    #     args.des, args.use_LoRA, ii)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_Lora{}_lradj{}_dataset{}_align{}_DG{}_loss{}_wd{}_wl{}_hyper{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -192,40 +194,66 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.use_LoRA, args.lradj, trained_dataset, args.use_align, args.DG, args.loss, args.wd, args.weighted_loss, args.use_hyper)
+        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, False, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
 
     data_provider_func = data_provider_LLM_evaluate
-    if args.model == 'LSTM':
-        model = LSTM.Model(args)
-    elif args.model == 'GRU':
-        model = GRU.Model(args)
-    elif args.model == 'Transformer':
-        model = Transformer.Model(args)
+    if args.model == 'BatteryMoE3_TemperatureP':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE3_TemperatureP.Model(model_config)
+    elif args.model == 'BatteryMoE_3factors':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_3factors.Model(model_config)
+    elif args.model == 'BatteryMoE_3factors_final':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_3factors_final.Model(model_config)
+    elif args.model == 'BatteryMoE_3factors_imp':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_3factors_imp.Model(model_config)
+    elif args.model == 'BatteryMoE3_horizontal4_MH':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE3_horizontal4_MH.Model(model_config)
+    elif args.model == 'baseline_CPTransformerMoE':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = baseline_CPTransformerMoE.Model(model_config)
+    elif args.model == 'BatteryMoE_horizontal_MHv2':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_horizontal_MHv2.Model(model_config)
+    elif args.model == 'BatteryMoE3_horizontal4':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE3_horizontal4.Model(model_config)
     else:
-        raise Exception('Not implemented')
+        raise Exception('Not Implemented')
     
-    path = os.path.join(args.checkpoints,
-                        setting + '-' + args.model_comment)  # unique checkpoint saving path
+    path = args_path  # unique checkpoint saving path
     
-    tokenizer = AutoTokenizer.from_pretrained(
-            'deepset/sentence_bert',
-            # 'huggyllama/llama-7b',
-            trust_remote_code=True
-        ) # The ouput of the tokenizer won't be used. We just randomly assign a tokenizer here.
-    if tokenizer.eos_token:
-        tokenizer.pad_token = tokenizer.eos_token
-    else:
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
+    tokenizer = None
+    if model.tokenizer:
+        tokenizer = model.tokenizer
 
-    label_scaler = joblib.load(f'{path}/label_scaler')
+    label_scaler = joblib.load(f'{path}label_scaler')
     std, mean_value = np.sqrt(label_scaler.var_[-1]), label_scaler.mean_[-1]
-    life_class_scaler = joblib.load(f'{path}/life_class_scaler')
     accelerator.print("Loading training samples......")
     # accelerator.print("Loading vali samples......")
     # vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler)
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max, life_class_scaler=life_class_scaler)
+    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max)
 
 
     # load LoRA
@@ -243,7 +271,7 @@ for ii in range(args.itr):
     
     time_now = time.time()
 
-    early_stopping = EarlyStopping(accelerator=accelerator, patience=args.patience)
+
 
     criterion = nn.MSELoss()
     accumulation_steps = args.accumulation_steps
@@ -263,17 +291,28 @@ for ii in range(args.itr):
     total_seen_unseen_ids = []
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings) in tqdm(enumerate(test_loader)):
-            cycle_curve_data = cycle_curve_data.float().to(accelerator.device)# [B, S, N]
-            curve_attn_mask = curve_attn_mask.float().to(accelerator.device)
-            labels = labels.float().to(accelerator.device)
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks) in tqdm(enumerate(test_loader)):
+            cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
+
+            curve_attn_mask = curve_attn_mask.float() # [B, L]
+            DKP_embeddings = DKP_embeddings.float()
+            cathode_masks = cathode_masks.float()
+            anode_masks = anode_masks.float()
+            temperature_masks = temperature_masks.float()
+            format_masks = format_masks.float()
+            combined_masks = combined_masks.float()
+            # cluster_labels = cluster_labels.long()
+            labels = labels.float()
+            weights = weights.float()
 
             # encoder - decoder
-            outputs = model(cycle_curve_data, curve_attn_mask)
+            outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
+            DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
+            anode_masks=anode_masks, combined_masks=combined_masks)
             # self.accelerator.wait_for_everyone()
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
-            all_predictions, all_targets, dataset_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, dataset_ids))
+            all_predictions, all_targets, dataset_ids, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, dataset_ids, seen_unseen_ids))
             
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
@@ -307,37 +346,52 @@ for ii in range(args.itr):
 
         accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | MAPE: {mape} | {alpha}-accuracy: {alpha_acc}% | {alpha2}-accuracy: {alpha_acc2}%')
         # calculate the model performance on the samples from the seen and unseen aging conditions
-        seen_references = total_references[total_seen_unseen_ids==1]
-        unseen_references = total_references[total_seen_unseen_ids==0]
-        seen_preds = total_preds[total_seen_unseen_ids==1]
-        unseen_preds = total_preds[total_seen_unseen_ids==0]
+        print(total_seen_unseen_ids.shape, total_references.shape)
+        seen_references = total_references[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([0])
+        unseen_references = total_references[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([0])
+        seen_preds = total_preds[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([1])
+        unseen_preds = total_preds[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([1])
 
+        # MAPE
         seen_mape = mean_absolute_percentage_error(seen_references, seen_preds)
-        relative_error = abs(seen_preds - seen_references) / seen_references
-        hit_num = sum(relative_error<=alpha)
-        seen_alpha_acc = hit_num / len(seen_references) * 100
-
-        if len(unseen_references) == 0:
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc}%')
-        else:
+        if len(unseen_preds) > 0:
             unseen_mape = mean_absolute_percentage_error(unseen_references, unseen_preds)
-            relative_error = abs(unseen_preds - unseen_references) / unseen_references
-            hit_num = sum(relative_error<=alpha)
-            unseen_alpha_acc = hit_num / len(unseen_references) * 100
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Unseen MAPE: {unseen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc}% | Unseen {alpha}-accuracy: {unseen_alpha_acc}%')
+        else:
+            unseen_mape = -10000
 
+        # alpha-acc1 
         relative_error = abs(seen_preds - seen_references) / seen_references
-        hit_num = sum(relative_error<=alpha2)
+        hit_num = sum(relative_error<=args.alpha1)
+        seen_alpha_acc1 = hit_num / len(seen_references) * 100
+
+        
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha1)
+            unseen_alpha_acc1 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc1 = -10000
+
+        # alpha-acc2
+        relative_error = abs(seen_preds - seen_references) / seen_references
+        hit_num = sum(relative_error<=args.alpha2)
         seen_alpha_acc2 = hit_num / len(seen_references) * 100
 
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha2)
+            unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc2 = -10000
+
         if len(unseen_references)==0:
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc}%')
+            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc1}%')
             accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen {alpha2}-accuracy: {seen_alpha_acc2}%')
         else:
             relative_error = abs(unseen_preds - unseen_references) / unseen_references
             hit_num = sum(relative_error<=alpha2)
             unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Unseen MAPE: {unseen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc}% | Unseen {alpha}-accuracy: {unseen_alpha_acc}%')
+            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Unseen MAPE: {unseen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc1}% | Unseen {alpha}-accuracy: {unseen_alpha_acc1}%')
             accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen {alpha2}-accuracy: {seen_alpha_acc2}% | Unseen {alpha2}-accuracy: {unseen_alpha_acc2}%')
 
 
