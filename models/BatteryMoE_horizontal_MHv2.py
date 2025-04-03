@@ -111,8 +111,6 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         # self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_general_experts)])
-        self.noisy_gating = configs.noisy_gating
-        self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
@@ -180,8 +178,6 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         # self.ln = nn.LayerNorm(self.d_model)
-        self.noisy_gating = configs.noisy_gating
-        self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
@@ -244,8 +240,6 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.d_model*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(in_dim*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_general_experts)])
-        self.noisy_gating = configs.noisy_gating
-        self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
@@ -314,8 +308,6 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         # self.ln = nn.LayerNorm(self.d_model)
-        self.noisy_gating = configs.noisy_gating
-        self.softplus = nn.Softplus()
         self.eps = 1e-9
 
     
