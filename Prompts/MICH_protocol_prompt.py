@@ -230,7 +230,7 @@ class MICH_protocol_prompt():
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.2 C until reaching 4.2 V, "
             f"and then 4.2 V was sustained until the current dropped to 0.02 C. "
-            f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
+            f"The battery was then discharged at a constant current of 0.2 C until reaching 3.665 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         18.0:  # MICH_14C_pouch_NMC_-5C_50-100_0.2-0.2C
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
@@ -243,7 +243,7 @@ class MICH_protocol_prompt():
             f"The working ambient temperature of this battery is -5 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.2 C until reaching 4.2 V, "
             f"and then 4.2 V was sustained until the current dropped to 0.02 C. "
-            f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
+            f"The battery was then discharged at a constant current of 0.2 C until reaching 3.62 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         19.0:  # MICH_15H_pouch_NMC_45C_50-100_0.2-0.2C
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
@@ -256,7 +256,7 @@ class MICH_protocol_prompt():
             f"The working ambient temperature of this battery is 45 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.2 C until reaching 4.2 V, "
             f"and then 4.2 V was sustained until the current dropped to 0.02 C. "
-            f"The battery was then discharged at a constant current of 0.2 C until reaching 3.0 V. "
+            f"The battery was then discharged at a constant current of 0.2 C until reaching 3.671 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         20.0:  # MICH_16R_pouch_NMC_25C_50-100_0.2-1.5C
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
@@ -269,7 +269,7 @@ class MICH_protocol_prompt():
             f"The working ambient temperature of this battery is 25 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.2 C until reaching 4.2 V, "
             f"and then 4.2 V was sustained until the current dropped to 0.02 C. "
-            f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
+            f"The battery was then discharged at a constant current of 1.5 C until reaching 3.574 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         21.0:  # MICH_17C_pouch_NMC_-5C_50-100_0.2-1.5C
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
@@ -282,7 +282,7 @@ class MICH_protocol_prompt():
             f"The working ambient temperature of this battery is -5 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.2 C until reaching 4.2 V, "
             f"and then 4.2 V was sustained until the current dropped to 0.02 C. "
-            f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
+            f"The battery was then discharged at a constant current of 1.5 C until reaching 3.393 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
         22.0:  # MICH_18H_pouch_NMC_45C_50-100_0.2-1.5C
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
@@ -295,6 +295,6 @@ class MICH_protocol_prompt():
             f"The working ambient temperature of this battery is 45 degree Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.2 C until reaching 4.2 V, "
             f"and then 4.2 V was sustained until the current dropped to 0.02 C. "
-            f"The battery was then discharged at a constant current of 1.5 C until reaching 3.0 V. "
+            f"The battery was then discharged at a constant current of 1.5 C until reaching 3.607 V. "
             f"The cycling state-of-charge of this battery ranges from 50% to 100%.\n",
     }

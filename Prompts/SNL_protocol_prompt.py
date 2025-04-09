@@ -369,8 +369,8 @@ class SNL_protocol_prompt():
             f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
-            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
-            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
+            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.98 V. "
+            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.7 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         32.0:  # SNL_18650_NCA_25C_20-80_0.5-0.5C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
@@ -381,8 +381,8 @@ class SNL_protocol_prompt():
             f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
-            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
-            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
+            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.98 V. "
+            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.7 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         33.0:  # SNL_18650_NCA_25C_20-80_0.5-0.5C_c
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
@@ -393,8 +393,8 @@ class SNL_protocol_prompt():
             f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
-            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
-            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
+            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.98 V. "
+            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.7 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         34.0:  # SNL_18650_NCA_25C_20-80_0.5-0.5C_d
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
@@ -405,8 +405,8 @@ class SNL_protocol_prompt():
             f"The nominal capacity is 3.2 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degree Celsius. "
-            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
-            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.5 V. "
+            f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.98 V. "
+            f"The battery was then discharged at a constant current of 0.5 C until reaching 2.7 V. "
             f"The cycling state-of-charge of this battery ranges from 20% to 80%.\n",
         35.0:  # SNL_18650_NCA_35C_0-100_0.5-1C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
