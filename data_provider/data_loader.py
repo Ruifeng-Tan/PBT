@@ -51,6 +51,7 @@ datasetName2ids = {
 }
 
 # Temperature assignment
+# Only Li-ion
 # temperature2mask = {
 #     -5.0: [0],
 #     15.0: [1],
@@ -62,30 +63,79 @@ datasetName2ids = {
 #     45.0: [13],
 #     55.0: [14]
 # }
+
+# Li-ion, Na-ion, Zn-ion, CALB
+temperature2mask = {
+    -5.0: [0],
+    0.0: [1],
+    15.0: [2],
+    20.0: [3],
+    23.0: [4],
+    25.0: [5,6,7,8],
+    30.0: [9,10,11,12,13,14],
+    35.0: [15],
+    45.0: [16],
+    55.0: [17]
+}
+
 # We assign each temperature to the three neighboring temperatures
-# 20, 21, 22, 23 as general experts
+# Only Li-ion
+# temperature2mask = {
+#     -5.0: [0,1,2],
+#     15.0: [0,1,2],
+#     20.0: [1,2,3],
+#     23.0: [2,3,4,5],
+#     25.0: [3,4,5,6,7,8,9,10,11],
+#     30.0: [4,5,6,7,8,9,10,11,12],
+#     35.0: [6,7,8,9,10,11,12,13],
+#     45.0: [12,13,14],
+#     55.0: [12,13,14]
+# }
+# Li-ion, Na-ion, Zn-ion, CALB
 temperature2mask = {
     -5.0: [0,1,2],
-    15.0: [0,1,2],
-    20.0: [1,2,3],
-    23.0: [2,3,4,5],
-    25.0: [3,4,5,6,7,8,9,10,11],
-    30.0: [4,5,6,7,8,9,10,11,12],
-    35.0: [6,7,8,9,10,11,12,13],
-    45.0: [12,13,14],
-    55.0: [12,13,14]
+    0.0: [0,1,2],
+    15.0: [1,2,3],
+    20.0: [2,3,4],
+    23.0: [3,4,5,6,7,8],
+    25.0: [4,5,6,7,8,9,10,11,12,13,14],
+    30.0: [5,6,7,8,9,10,11,12,13,14,15],
+    35.0: [9,10,11,12,13,14,15,16],
+    45.0: [15,16,17],
+    55.0: [15,16,17]
 }
 
 # assign experts according to formats
-# 21, 22, 23, 24 as general experts
+# only Li-ion
+# format2mask = {
+#     'prismatic': [0],
+#     'cylindrical': [1,2,3,4,5,6],
+#     'polymer': [7,8,9],
+#     'pouch': [10]
+# } 
+
+# Li-ion, Na-ion, Zn-ion, CALB
 format2mask = {
     'prismatic': [0],
     'cylindrical': [1,2,3,4,5,6],
     'polymer': [7,8,9],
-    'pouch': [10]
+    'pouch': [10],
+    'coin': [11]
 } 
 
-# 13, 14, 15, 16 as general experts
+# only Li-ion
+# cathodes2mask = {
+#     'LFP': [0,1,2],
+#     'NCA': [3],
+#     'NCM': [4,5,6,7,8,9],
+#     'LCO': [10],
+#     'NCA_NCM': [3,4,5,6,7,8,9],
+#     'NCM_NCA': [3,4,5,6,7,8,9],
+#     'LCO_NCM': [4,5,6,7,8,9,10],
+#     'NCM_LCO': [4,5,6,7,8,9,10]
+# }
+
+# Li-ion, Na-ion, Zn-ion, CALB
 cathodes2mask = {
     'LFP': [0,1,2],
     'NCA': [3],
@@ -94,13 +144,24 @@ cathodes2mask = {
     'NCA_NCM': [3,4,5,6,7,8,9],
     'NCM_NCA': [3,4,5,6,7,8,9],
     'LCO_NCM': [4,5,6,7,8,9,10],
-    'NCM_LCO': [4,5,6,7,8,9,10]
+    'NCM_LCO': [4,5,6,7,8,9,10],
+    'MnO2': [11],
+    'Unknown': [12]
 }
 
 # Anode
+# Only Li-ion
+# anode2mask = {
+#     'graphite': [0,1,2,3,4,5,6,7,8,9],
+#     'graphite/Si': [10]
+# }
+
+# Li-ion, Na-ion, Zn-ion, CALB
 anode2mask = {
     'graphite': [0,1,2,3,4,5,6,7,8,9],
-    'graphite/Si': [10]
+    'graphite/Si': [10],
+    'zinc metal': [11],
+    'Unknown': [12]
 }
 
 def my_collate_fn_withId(samples):
@@ -253,11 +314,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         elif self.dataset == 'ZN-coin':
             self.train_files = split_recorder.ZNcoin_train_files
             self.val_files = split_recorder.ZNcoin_val_files 
-            self.test_files = split_recorder.ZNcoin_test_files  
-        elif self.dataset == 'NA-coin':
-            self.train_files = split_recorder.NAcoin_train_files
-            self.val_files = split_recorder.NAcoin_val_files 
-            self.test_files = split_recorder.NAcoin_test_files  
+            self.test_files = split_recorder.ZNcoin_test_files   
         elif self.dataset == 'CALB':
             self.train_files = split_recorder.CALB_train_files
             self.val_files = split_recorder.CALB_val_files 
@@ -326,16 +383,50 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.MIX_NA2024_train_files
             self.val_files = split_recorder.MIX_NA2024_val_files
             self.test_files = split_recorder.MIX_NA2024_test_files 
+        elif self.dataset == 'MIX_all':
+            self.train_files = split_recorder.MIX_all_2021_train_files
+            self.val_files = split_recorder.MIX_all_2021_val_files
+            self.test_files = split_recorder.MIX_all_2021_test_files 
+        elif self.dataset == 'MIX_all2024':
+            self.train_files = split_recorder.MIX_all_2024_train_files
+            self.val_files = split_recorder.MIX_all_2024_val_files
+            self.test_files = split_recorder.MIX_all_2024_test_files 
+        elif self.dataset == 'MIX_all42':
+            self.train_files = split_recorder.MIX_all_42_train_files
+            self.val_files = split_recorder.MIX_all_42_val_files
+            self.test_files = split_recorder.MIX_all_42_test_files 
         
            
         if flag == 'train':
             self.files = [i for i in self.train_files]
-            self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed.pkl', 'rb'))
+            if self.dataset == 'MIX_large':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed.pkl', 'rb'))
+            elif self.dataset == 'MIX_all':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all.pkl', 'rb'))
+            elif self.dataset == 'MIX_all2024':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all2024.pkl', 'rb'))
+            elif self.dataset == 'MIX_all42':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all42.pkl', 'rb'))
         elif flag == 'val':
             self.files = [i for i in self.val_files]
-            self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed.pkl', 'rb'))
+            if self.dataset == 'MIX_large':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed.pkl', 'rb'))
+            elif self.dataset == 'MIX_all':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all.pkl', 'rb'))
+            elif self.dataset == 'MIX_all2024':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all2024.pkl', 'rb'))
+            elif self.dataset == 'MIX_all42':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all42.pkl', 'rb'))
         elif flag == 'test':
-            self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed.pkl', 'rb'))
+            if self.dataset == 'MIX_large':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed.pkl', 'rb'))
+            elif self.dataset == 'MIX_all':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all.pkl', 'rb'))
+            elif self.dataset == 'MIX_all2024':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all2024.pkl', 'rb'))
+            elif self.dataset == 'MIX_all42':
+                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all42.pkl', 'rb'))
+
             self.files = [i for i in self.test_files]
             if self.dataset == 'ZN-coin42':
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
@@ -351,8 +442,24 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
             elif self.dataset == 'NAion2024':
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
-            else:
+            elif self.dataset == 'MIX_large':
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
+            elif self.dataset == 'MIX_all':
+                self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
+                self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
+                self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record
+            elif self.dataset == 'MIX_all2024':
+                self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
+                self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
+                self.zn_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
+                self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
+                self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
+            elif self.dataset == 'MIX_all42':
+                self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
+                self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
+                self.zn_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
+                self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB422.json'))
+                self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
 
         self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_combined_expert_masks = self.read_data()
         
@@ -506,7 +613,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             if file_name in self.anode_json:
                 anode = self.anode_json[file_name][0]
-                if anode != 'graphite/Si':
+                if anode == 'graphite' or anode == 'artificial graphite' or anode == 'carbon':
                     anode = 'graphite' # we assume other anodes are graphite
                 anode_index = anode2mask[anode]
                 anode_mask = np.zeros(self.anode_experts)
