@@ -3,7 +3,7 @@
 '''
 import torch
 import torch.nn as nn
-from torch.nn import MultiheadAttention, LayerNorm
+from torch.nn import MultiheadAttention, RMSNorm
 import transformers
 from math import sqrt
 from transformers import LlamaConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
@@ -177,7 +177,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
-        # self.ln = nn.LayerNorm(self.d_model)
+        # self.ln = nn.RMSNorm(self.d_model)
         self.eps = 1e-9
 
     
@@ -307,7 +307,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
-        # self.ln = nn.LayerNorm(self.d_model)
+        # self.ln = nn.RMSNorm(self.d_model)
         self.eps = 1e-9
 
     
@@ -410,7 +410,6 @@ class Model(nn.Module):
             local_files_only=True, 
             pad_token='<|endoftext|>'
         )
-        self.num_experts = configs.num_experts
         self.charge_discharge_length = configs.charge_discharge_length
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.d_model = configs.d_model

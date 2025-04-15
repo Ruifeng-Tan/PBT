@@ -410,7 +410,6 @@ class Model(nn.Module):
             local_files_only=True, 
             pad_token='<|endoftext|>'
         )
-        self.num_experts = configs.num_experts
         self.charge_discharge_length = configs.charge_discharge_length
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.d_model = configs.d_model
