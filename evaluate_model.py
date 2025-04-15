@@ -193,7 +193,7 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, False, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
+        args.llm_layers, args.lradj, trained_dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, False, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
 
 
     data_provider_func = data_provider_LLM_evaluate
