@@ -228,6 +228,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.eval_cycle_min = eval_cycle_min
         self.tokenizer = tokenizer
         self.args = args
+        self.seed = args.seed
         self.root_path = args.root_path
         self.seq_len = args.seq_len
         self.charge_discharge_len = args.charge_discharge_length  # The resampled length for charge and discharge curves
@@ -303,10 +304,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.XJTU_train_files
             self.val_files = split_recorder.XJTU_val_files
             self.test_files = split_recorder.XJTU_test_files
-        elif self.dataset == 'MIX_small':
-            self.train_files = split_recorder.MIX_small_train_files
-            self.val_files = split_recorder.MIX_small_val_files 
-            self.test_files = split_recorder.MIX_small_test_files
         elif self.dataset == 'MIX_large':
             self.train_files = split_recorder.MIX_large_train_files
             self.val_files = split_recorder.MIX_large_val_files 
@@ -396,65 +393,69 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.val_files = split_recorder.MIX_all_42_val_files
             self.test_files = split_recorder.MIX_all_42_test_files 
         
-           
+        # load the prompt embedding
+        train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all.pkl', 'rb'))
+        val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all.pkl', 'rb'))
+        test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all.pkl', 'rb'))
+        self.cellName_prompt = train_part | val_part | test_part
         if flag == 'train':
             self.files = [i for i in self.train_files]
-            if self.dataset == 'MIX_large':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed.pkl', 'rb'))
-            elif self.dataset == 'MIX_all':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all.pkl', 'rb'))
-            elif self.dataset == 'MIX_all2024':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all2024.pkl', 'rb'))
-            elif self.dataset == 'MIX_all42':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all42.pkl', 'rb'))
+            # if self.dataset == 'MIX_large':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all2024':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all2024.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all42':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/training_DKP_embed_all42.pkl', 'rb'))
         elif flag == 'val':
             self.files = [i for i in self.val_files]
-            if self.dataset == 'MIX_large':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed.pkl', 'rb'))
-            elif self.dataset == 'MIX_all':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all.pkl', 'rb'))
-            elif self.dataset == 'MIX_all2024':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all2024.pkl', 'rb'))
-            elif self.dataset == 'MIX_all42':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all42.pkl', 'rb'))
+            # if self.dataset == 'MIX_large':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all2024':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all2024.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all42':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all42.pkl', 'rb'))
         elif flag == 'test':
-            if self.dataset == 'MIX_large':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed.pkl', 'rb'))
-            elif self.dataset == 'MIX_all':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all.pkl', 'rb'))
-            elif self.dataset == 'MIX_all2024':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all2024.pkl', 'rb'))
-            elif self.dataset == 'MIX_all42':
-                self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all42.pkl', 'rb'))
+            # if self.dataset == 'MIX_large':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all2024':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all2024.pkl', 'rb'))
+            # elif self.dataset == 'MIX_all42':
+            #     self.cellName_prompt = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all42.pkl', 'rb'))
 
             self.files = [i for i in self.test_files]
-            if self.dataset == 'ZN-coin42':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
-            elif self.dataset == 'ZN-coin2024':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
-            elif self.dataset == 'CALB42':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB422.json'))
-            elif self.dataset == 'CALB2024':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
-            elif self.dataset == 'NAion':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
-            elif self.dataset == 'NAion42':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
-            elif self.dataset == 'NAion2024':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
-            elif self.dataset == 'MIX_large':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
-            elif self.dataset == 'MIX_all':
+            # if self.dataset == 'ZN-coin42':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
+            # elif self.dataset == 'ZN-coin2024':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
+            # elif self.dataset == 'CALB42':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB422.json'))
+            # elif self.dataset == 'CALB2024':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
+            # elif self.dataset == 'NAion':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
+            # elif self.dataset == 'NAion42':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
+            # elif self.dataset == 'NAion2024':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
+            # elif self.dataset == 'MIX_large':
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
+            if self.seed == 2021:
                 self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
                 self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record
-            elif self.dataset == 'MIX_all2024':
+            elif self.seed == 2024:
                 self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
                 self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
                 self.zn_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
                 self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
-            elif self.dataset == 'MIX_all42':
+            elif self.seed == 42:
                 self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
                 self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
                 self.zn_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
@@ -781,12 +782,20 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         '''
         Generate the basic prompt that describes battery specifications and working conditions
         '''
-        bg_prompt = (
-                    f"Task description: " 
-                    f"The cycle life is the number of cycles until the battery's discharge capacity reaches 80% of its nominal capacity. "
-                    f"The discharge capacity is calculated under the described operating condition. "
-                    f"Please directly output the cycle life of the battery based on the provided data. "
-                    )
+        if 'CALB' in cell_name:
+            bg_prompt = (
+                        f"Task description: " 
+                        f"The target is the number of cycles until the battery's discharge capacity reaches 90% of its nominal capacity. "
+                        f"The discharge capacity is calculated under the described operating condition. "
+                        f"Please directly output the target of the battery based on the provided data. "
+                        )
+        else:
+            bg_prompt = (
+                        f"Task description: " 
+                        f"The target is the number of cycles until the battery's discharge capacity reaches 80% of its nominal capacity. "
+                        f"The discharge capacity is calculated under the described operating condition. "
+                        f"Please directly output the target of the battery based on the provided data. "
+                        )
         helper = Mapping_helper(prompt_type='PROTOCOL', cell_name=cell_name)
         prompt = helper.do_mapping()
         if self.args.wo_DKPrompt:
