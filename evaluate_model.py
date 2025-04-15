@@ -10,8 +10,7 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_3factors, BatteryMoE_horizontal_MHv2, BatteryMoE_3factors_final, BatteryMoE3_TemperatureP, \
-      BatteryMoE3_horizontal4_MH, BatteryMoE_3factors_imp, baseline_CPTransformerMoE, BatteryMoE3_horizontal4
+from models import BatteryMoE_horizontal_MHv2, baseline_CPTransformerMoE, BatteryMoE_horizontal, BatteryMoE_horizontal_hierarchy, BatteryMoE_horizontal_Sparse
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
 from data_provider.data_factory import data_provider_LLMv2, data_provider_LLM_evaluate
@@ -198,48 +197,34 @@ for ii in range(args.itr):
 
 
     data_provider_func = data_provider_LLM_evaluate
-    if args.model == 'BatteryMoE3_TemperatureP':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE3_TemperatureP.Model(model_config)
-    elif args.model == 'BatteryMoE_3factors':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_3factors.Model(model_config)
-    elif args.model == 'BatteryMoE_3factors_final':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_3factors_final.Model(model_config)
-    elif args.model == 'BatteryMoE_3factors_imp':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_3factors_imp.Model(model_config)
-    elif args.model == 'BatteryMoE3_horizontal4_MH':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE3_horizontal4_MH.Model(model_config)
-    elif args.model == 'baseline_CPTransformerMoE':
+    if args.model == 'baseline_CPTransformerMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
+    elif args.model == 'BatteryMoE_horizontal':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_horizontal.Model(model_config)
     elif args.model == 'BatteryMoE_horizontal_MHv2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_horizontal_MHv2.Model(model_config)
-    elif args.model == 'BatteryMoE3_horizontal4':
+    elif args.model == 'BatteryMoE_horizontal_hierarchy':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE3_horizontal4.Model(model_config)
+        model = BatteryMoE_horizontal_hierarchy.Model(model_config)
+    elif args.model == 'BatteryMoE_horizontal_Sparse':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = BatteryMoE_horizontal_Sparse.Model(model_config)
     else:
         raise Exception('Not Implemented')
+
     
     path = args_path  # unique checkpoint saving path
     
