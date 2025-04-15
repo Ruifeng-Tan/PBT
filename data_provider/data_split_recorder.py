@@ -126,9 +126,9 @@ class split_recorder():
     MIX_all_2024_val_files = MIX_large_val_files + CALB_2024_val_files + NAion_2024_val_files + ZN_2024_val_files
     MIX_all_2024_test_files = MIX_large_test_files + CALB_2024_test_files + NAion_2024_test_files + ZN_2024_test_files
 
-    MIX_all_42_train_files = MIX_large_train_files + CALB_42_train_files + NAion_42_train_files + ZN_42_train_files
-    MIX_all_42_val_files = MIX_large_val_files + CALB_42_val_files + NAion_42_val_files + ZN_42_val_files
-    MIX_all_42_test_files = MIX_large_test_files + CALB_42_test_files + NAion_42_test_files + ZN_42_test_files
+    MIX_all_42_train_files = MIX_large_train_files + CALB_422_train_files + NAion_42_train_files + ZN_42_train_files
+    MIX_all_42_val_files = MIX_large_val_files + CALB_422_val_files + NAion_42_val_files + ZN_42_val_files
+    MIX_all_42_test_files = MIX_large_test_files + CALB_422_test_files + NAion_42_test_files + ZN_42_test_files
     
     MIX_train_files_complete_woISU = Stanford_train_files + Tongji_train_files + RWTH_train_files + HUST_train_files + MATR_train_files + SNL_train_files + MICH_train_files + MICH_EXP_train_files + UL_PUR_train_files + CALCE_train_files + HNEI_train_files 
     MIX_val_files_complete_woISU = Stanford_val_files + Tongji_val_files + RWTH_val_files + HUST_val_files + MATR_val_files + SNL_val_files + MICH_val_files + MICH_EXP_val_files + UL_PUR_val_files + CALCE_val_files + HNEI_val_files
