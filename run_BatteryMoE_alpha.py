@@ -129,6 +129,7 @@ parser.add_argument('--llm_layers', type=int, default=6)
 parser.add_argument('--top_p', type=float, default=0.5, help='The threshold used to control the number of activated experts')
 parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
+parser.add_argument('--warm_up_epoches', type=int, default=0, help='The epoch number for linear Warmup')
 
 # MoE definition
 parser.add_argument('--num_views', type=int, default=4, help="The number of the views")
@@ -142,8 +143,6 @@ parser.add_argument('--noisy_gating', action='store_true', default=False, help='
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
 parser.add_argument('--use_ReMoE', action='store_true', default=False, help='Set True to use relu router')
-parser.add_argument('--initial_lambda', type=float, default=1e-4, help='The initial lambda for relu router regularization')
-parser.add_argument('--initial_alpha', type=float, default=1.2, help='The initial alpha for relu router regularization')
 
 # Contrastive learning
 parser.add_argument('--use_guide', action='store_true', default=False, help='Set True to use guidance loss to guide the gate to capture the assigned gating.')
@@ -240,7 +239,7 @@ for ii in range(args.itr):
     path = os.path.join(args.checkpoints,
                         setting + '-' + args.model_comment)  # unique checkpoint saving path
     
-    if args.dataset == 'MIX_large':
+    if not 'MIX_all' in args.dataset:
         temperature2mask = gate_masker.MIX_large_temperature2mask
         format2mask = gate_masker.MIX_large_format2mask
         cathodes2mask = gate_masker.MIX_large_cathodes2mask
@@ -305,19 +304,20 @@ for ii in range(args.itr):
 
     accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
     if args.wd == 0:
-        model_optim = optim.Adam(trained_parameters, lr=args.learning_rate)
+        if args.warm_up_epoches > 0:
+            model_optim = optim.Adam(trained_parameters, lr=0, weight_decay=args.wd)
+        else:
+            model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
     else:
-        model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
-
+        if args.warm_up_epoches > 0:
+            model_optim = optim.AdamW(trained_parameters, lr=0, weight_decay=args.wd)
+        else:
+            model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
 
 
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(model_optim, factor=args.lradj_factor, patience=3*args.num_process, threshold=0.001, verbose=True)
+    criterion = nn.MSELoss(reduction='none') 
 
-
-    if args.loss != 'BMSE':
-        criterion = nn.MSELoss(reduction='none') 
-    else:
-        criterion = bmc_loss
     
 
     prompt_adapter_loss = nn.CrossEntropyLoss()
@@ -342,8 +342,7 @@ for ii in range(args.itr):
     best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
     best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
 
-    reg_alpha = args.initial_alpha
-    reg_lambda = args.initial_lambda
+
     for epoch in range(args.train_epochs):
         iter_count = 0
         total_loss = 0
@@ -366,6 +365,18 @@ for ii in range(args.itr):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
+                if epoch < args.warm_up_epoches:
+                    # adjust the learning rate
+                    warm_up_lr = args.learning_rate * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader))
+                    for param_group in model_optim.param_groups:
+                        param_group['lr'] = warm_up_lr
+
+                    if (i + 1) % 5 == 0:
+                        if accelerator is not None:
+                            accelerator.print(f'Warmup | Updating learning rate to {warm_up_lr}')
+                        else:
+                            print(f'Warmup | Updating learning rate to {warm_up_lr}')
+
                 model_optim.zero_grad()
                 lambd = np.random.beta(1, 6) # dominant ratio of X2
                 iter_count += 1
@@ -404,15 +415,9 @@ for ii in range(args.itr):
 
                 final_loss = loss
                 if args.num_experts > 1 and args.use_LB:
-                    if args.use_ReMoE:
-                        regularization_loss =  reg_lambda*aug_loss
-                        reg_lambda = reg_lambda * torch.pow(reg_alpha, alpha_exponent)
-                        print_DG_loss = regularization_loss.detach().float()
-                        final_loss = final_loss + regularization_loss
-                    else:
-                        importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
-                        print_DG_loss = importance_loss.detach().float()
-                        final_loss = final_loss + importance_loss
+                    importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
+                    print_DG_loss = importance_loss.detach().float()
+                    final_loss = final_loss + importance_loss
 
                 if args.use_guide:
                     # contrastive learning

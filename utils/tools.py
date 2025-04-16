@@ -194,25 +194,29 @@ def sample_top_p(probs, p):
     return next_token
 
 def adjust_learning_rate(accelerator, optimizer, scheduler, epoch, args, printout=True):
-    if args.lradj == 'type1':
-        # lr_adjust = {epoch: args.learning_rate * (0.5 ** ((epoch - 1) // 1))}
-        if epoch > args.least_epochs:
-            lr_adjust = {epoch: args.learning_rate * (0.5 ** ((epoch - args.least_epochs) // 1))}
-        else:
+    if epoch <= args.warm_up_epoches:
+        # The learning rate is controlled by warmup
+        return
+    else:
+        if args.lradj == 'type1':
+            # lr_adjust = {epoch: args.learning_rate * (0.5 ** ((epoch - 1) // 1))}
+            if epoch > args.least_epochs:
+                lr_adjust = {epoch: args.learning_rate * (0.5 ** ((epoch - args.least_epochs) // 1))}
+            else:
+                lr_adjust = {epoch: args.learning_rate}
+        elif args.lradj == 'type2':
+            lr_adjust = {
+                2: 5e-5, 4: 1e-5, 6: 5e-6, 8: 1e-6,
+                10: 5e-7, 15: 1e-7, 20: 5e-8
+            }
+        elif args.lradj == 'type3':
+            lr_adjust = {epoch: args.learning_rate if epoch < 3 else args.learning_rate * (0.9 ** ((epoch - 3) // 1))}
+        elif args.lradj == 'PEMS':
+            lr_adjust = {epoch: args.learning_rate * (0.95 ** (epoch // 1))}
+        elif args.lradj == 'TST':
+            lr_adjust = {epoch: scheduler.get_last_lr()[0]}
+        elif args.lradj == 'constant':
             lr_adjust = {epoch: args.learning_rate}
-    elif args.lradj == 'type2':
-        lr_adjust = {
-            2: 5e-5, 4: 1e-5, 6: 5e-6, 8: 1e-6,
-            10: 5e-7, 15: 1e-7, 20: 5e-8
-        }
-    elif args.lradj == 'type3':
-        lr_adjust = {epoch: args.learning_rate if epoch < 3 else args.learning_rate * (0.9 ** ((epoch - 3) // 1))}
-    elif args.lradj == 'PEMS':
-        lr_adjust = {epoch: args.learning_rate * (0.95 ** (epoch // 1))}
-    elif args.lradj == 'TST':
-        lr_adjust = {epoch: scheduler.get_last_lr()[0]}
-    elif args.lradj == 'constant':
-        lr_adjust = {epoch: args.learning_rate}
     
     if epoch in lr_adjust.keys():
         lr = lr_adjust[epoch]
