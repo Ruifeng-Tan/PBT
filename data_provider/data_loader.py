@@ -332,9 +332,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.val_files = split_recorder.ZN_2024_val_files
             self.test_files = split_recorder.ZN_2024_test_files
         elif self.dataset == 'CALB42':
-            self.train_files = split_recorder.CALB_422_train_files
-            self.val_files = split_recorder.CALB_422_val_files
-            self.test_files = split_recorder.CALB_422_test_files
+            self.train_files = split_recorder.CALB_42_train_files
+            self.val_files = split_recorder.CALB_42_val_files
+            self.test_files = split_recorder.CALB_42_test_files
         elif self.dataset == 'CALB2024':
             self.train_files = split_recorder.CALB_2024_train_files
             self.val_files = split_recorder.CALB_2024_val_files
@@ -441,7 +441,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             # elif self.dataset == 'ZN-coin2024':
             #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
             # elif self.dataset == 'CALB42':
-            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB422.json'))
+            #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
             # elif self.dataset == 'CALB2024':
             #     self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
             # elif self.dataset == 'NAion':
@@ -466,7 +466,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
                 self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
                 self.zn_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
-                self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB422.json'))
+                self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
 
         self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_combined_expert_masks = self.read_data()
