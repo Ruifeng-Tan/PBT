@@ -113,6 +113,7 @@ parser.add_argument('--class_num', type=int, default=8, help='The number of life
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
 parser.add_argument('--itr', type=int, default=1, help='experiments times')
+parser.add_argument('--T0', type=int, default=2, help='T0 for CosineAnnealingWarmRestarts')
 parser.add_argument('--train_epochs', type=int, default=10, help='train epochs')
 parser.add_argument('--least_epochs', type=int, default=5, help='The model is trained at least some epoches before the early stopping is used')
 parser.add_argument('--batch_size', type=int, default=32, help='batch size of train input data')
@@ -304,21 +305,13 @@ for ii in range(args.itr):
 
     accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
     if args.wd == 0:
-        if args.warm_up_epoches > 0:
-            model_optim = optim.Adam(trained_parameters, lr=0, weight_decay=args.wd)
-        else:
-            model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+        model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
     else:
-        if args.warm_up_epoches > 0:
-            model_optim = optim.AdamW(trained_parameters, lr=0, weight_decay=args.wd)
-        else:
-            model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+        model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
 
 
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(model_optim, factor=args.lradj_factor, patience=3*args.num_process, threshold=0.001, verbose=True)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     criterion = nn.MSELoss(reduction='none') 
-
-    
 
     prompt_adapter_loss = nn.CrossEntropyLoss()
     euclidean_dist = nn.PairwiseDistance(p=2)
@@ -465,8 +458,6 @@ for ii in range(args.itr):
         vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
         test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
         vali_loss = vali_mape
-        if args.lradj == 'Plateau' and accelerator.is_local_main_process:
-            scheduler.step(vali_loss)
         
         if vali_loss < best_vali_loss:
             best_vali_loss = vali_loss
@@ -513,10 +504,12 @@ for ii in range(args.itr):
             break
         
         if accelerator.is_local_main_process:
-            if args.lradj != 'Plateau':
+            if args.lradj != 'CosineAnnealingLR':
                 adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
             else:
-                accelerator.print('Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
+                if epoch >= args.warm_up_epoches:
+                    scheduler.step()
+                    accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
 
 accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
 accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
