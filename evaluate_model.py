@@ -10,8 +10,9 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_horizontal_MHv2, baseline_CPTransformerMoE, BatteryMoE_horizontal, BatteryMoE_horizontal_hierarchy, BatteryMoE_horizontal_Sparse
+from models import BatteryMoE_horizontal_MHv2, baseline_CPTransformerMoE, BatteryMoE_horizontal, BatteryMoE_horizontal_hierarchy, BatteryMoE_Sparse
 import wandb
+from data_provider.gate_masker import gate_masker
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
 from data_provider.data_factory import data_provider_LLMv2, data_provider_LLM_evaluate
 import time
@@ -217,11 +218,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_horizontal_hierarchy.Model(model_config)
-    elif args.model == 'BatteryMoE_horizontal_Sparse':
+    elif args.model == 'BatteryMoE_Sparse':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_horizontal_Sparse.Model(model_config)
+        model = BatteryMoE_Sparse.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
@@ -232,13 +233,27 @@ for ii in range(args.itr):
     if model.tokenizer:
         tokenizer = model.tokenizer
 
+    if not 'MIX_all' in trained_dataset:
+        temperature2mask = gate_masker.MIX_large_temperature2mask
+        format2mask = gate_masker.MIX_large_format2mask
+        cathodes2mask = gate_masker.MIX_large_cathodes2mask
+        anode2mask = gate_masker.MIX_large_anode2mask
+    else:
+        temperature2mask = gate_masker.MIX_all_temperature2mask
+        format2mask = gate_masker.MIX_all_format2mask
+        cathodes2mask = gate_masker.MIX_all_cathodes2mask
+        anode2mask = gate_masker.MIX_all_anodes2mask
+
+
     label_scaler = joblib.load(f'{path}label_scaler')
     std, mean_value = np.sqrt(label_scaler.var_[-1]), label_scaler.mean_[-1]
     accelerator.print("Loading training samples......")
     # accelerator.print("Loading vali samples......")
     # vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler)
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max)
+    test_data, test_loader = data_provider_func(args, 'test', tokenizer, 
+                                                label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, 
+                                                eval_cycle_max=eval_cycle_max, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
 
 
     # load LoRA
