@@ -231,8 +231,6 @@ for ii in range(args.itr):
         raise Exception('Not Implemented')
 
     
-
-    
     tokenizer = None
     if model.tokenizer:
         tokenizer = model.tokenizer
