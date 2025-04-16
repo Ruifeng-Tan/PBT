@@ -8,7 +8,7 @@ data_dict = {
 
 def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, sample_weighted=False):
+                 class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None):
     Data = data_dict[args.data]
 
     if flag == 'test' or flag == 'val':
@@ -30,7 +30,11 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
             total_charge_discharge_curves=total_charge_discharge_curves, 
             total_curve_attn_masks=total_curve_attn_masks, total_labels=total_labels, unique_labels=unique_labels,
             class_labels=class_labels,
-            life_class_scaler=life_class_scaler
+            life_class_scaler=life_class_scaler,
+            temperature2mask=temperature2mask,
+            format2mask=format2mask,
+            cathodes2mask=cathodes2mask,
+            anode2mask=anode2mask
         )
 
     data_loader = DataLoader(

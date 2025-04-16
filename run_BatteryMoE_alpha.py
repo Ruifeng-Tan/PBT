@@ -21,6 +21,7 @@ import numpy as np
 import datetime
 import copy
 import joblib
+from data_provider.gate_masker import gate_masker
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, root_mean_squared_error
 import json
 def list_of_ints(arg):
@@ -239,14 +240,26 @@ for ii in range(args.itr):
     path = os.path.join(args.checkpoints,
                         setting + '-' + args.model_comment)  # unique checkpoint saving path
     
-    train_data, train_loader = data_provider_func(args, 'train', tokenizer)
+    if args.dataset == 'MIX_large':
+        temperature2mask = gate_masker.MIX_large_temperature2mask
+        format2mask = gate_masker.MIX_large_format2mask
+        cathodes2mask = gate_masker.MIX_large_cathodes2mask
+        anode2mask = gate_masker.MIX_large_anode2mask
+    else:
+        temperature2mask = gate_masker.MIX_all_temperature2mask
+        format2mask = gate_masker.MIX_all_format2mask
+        cathodes2mask = gate_masker.MIX_all_cathodes2mask
+        anode2mask = gate_masker.MIX_all_anodes2mask
+
+    train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
+                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
     label_scaler = train_data.return_label_scaler()        
     
     accelerator.print("Loading training samples......")
     accelerator.print("Loading vali samples......")
-    vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler)
+    vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler)
+    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
     
     if accelerator.is_local_main_process and os.path.exists(path):
         del_files(path)  # delete checkpoint files

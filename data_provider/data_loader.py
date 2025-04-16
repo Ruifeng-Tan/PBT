@@ -21,6 +21,7 @@ from torch.nn.utils.rnn import pad_sequence
 from batteryml.data.battery_data import BatteryData
 from utils.augmentation import BatchAugmentation_battery_revised
 from data_provider.data_split_recorder import split_recorder
+from data_provider.gate_masker import gate_masker
 import accelerate
 warnings.filterwarnings('ignore')
 datasetName2ids = {
@@ -65,18 +66,18 @@ datasetName2ids = {
 # }
 
 # Li-ion, Na-ion, Zn-ion, CALB
-temperature2mask = {
-    -5.0: [0],
-    0.0: [1],
-    15.0: [2],
-    20.0: [3],
-    23.0: [4],
-    25.0: [5,6,7,8],
-    30.0: [9,10,11,12,13,14],
-    35.0: [15],
-    45.0: [16],
-    55.0: [17]
-}
+# temperature2mask = {
+#     -5.0: [0],
+#     0.0: [1],
+#     15.0: [2],
+#     20.0: [3],
+#     23.0: [4],
+#     25.0: [5,6,7,8],
+#     30.0: [9,10,11,12,13,14],
+#     35.0: [15],
+#     45.0: [16],
+#     55.0: [17]
+# }
 
 # We assign each temperature to the three neighboring temperatures
 # Only Li-ion
@@ -92,18 +93,18 @@ temperature2mask = {
 #     55.0: [12,13,14]
 # }
 # Li-ion, Na-ion, Zn-ion, CALB
-temperature2mask = {
-    -5.0: [0,1,2],
-    0.0: [0,1,2],
-    15.0: [1,2,3],
-    20.0: [2,3,4],
-    23.0: [3,4,5,6,7,8],
-    25.0: [4,5,6,7,8,9,10,11,12,13,14],
-    30.0: [5,6,7,8,9,10,11,12,13,14,15],
-    35.0: [9,10,11,12,13,14,15,16],
-    45.0: [15,16,17],
-    55.0: [15,16,17]
-}
+# temperature2mask = {
+#     -5.0: [0,1,2],
+#     0.0: [0,1,2],
+#     15.0: [1,2,3],
+#     20.0: [2,3,4],
+#     23.0: [3,4,5,6,7,8],
+#     25.0: [4,5,6,7,8,9,10,11,12,13,14],
+#     30.0: [5,6,7,8,9,10,11,12,13,14,15],
+#     35.0: [9,10,11,12,13,14,15,16],
+#     45.0: [15,16,17],
+#     55.0: [15,16,17]
+# }
 
 # assign experts according to formats
 # only Li-ion
@@ -115,13 +116,13 @@ temperature2mask = {
 # } 
 
 # Li-ion, Na-ion, Zn-ion, CALB
-format2mask = {
-    'prismatic': [0],
-    'cylindrical': [1,2,3,4,5,6],
-    'polymer': [7,8,9],
-    'pouch': [10],
-    'coin': [11]
-} 
+# format2mask = {
+#     'prismatic': [0],
+#     'cylindrical': [1,2,3,4,5,6],
+#     'polymer': [7,8,9],
+#     'pouch': [10],
+#     'coin': [11]
+# } 
 
 # only Li-ion
 # cathodes2mask = {
@@ -136,18 +137,18 @@ format2mask = {
 # }
 
 # Li-ion, Na-ion, Zn-ion, CALB
-cathodes2mask = {
-    'LFP': [0,1,2],
-    'NCA': [3],
-    'NCM': [4,5,6,7,8,9],
-    'LCO': [10],
-    'NCA_NCM': [3,4,5,6,7,8,9],
-    'NCM_NCA': [3,4,5,6,7,8,9],
-    'LCO_NCM': [4,5,6,7,8,9,10],
-    'NCM_LCO': [4,5,6,7,8,9,10],
-    'MnO2': [11],
-    'Unknown': [12]
-}
+# cathodes2mask = {
+#     'LFP': [0,1,2],
+#     'NCA': [3],
+#     'NCM': [4,5,6,7,8,9],
+#     'LCO': [10],
+#     'NCA_NCM': [3,4,5,6,7,8,9],
+#     'NCM_NCA': [3,4,5,6,7,8,9],
+#     'LCO_NCM': [4,5,6,7,8,9,10],
+#     'NCM_LCO': [4,5,6,7,8,9,10],
+#     'MnO2': [11],
+#     'Unknown': [12]
+# }
 
 # Anode
 # Only Li-ion
@@ -157,12 +158,12 @@ cathodes2mask = {
 # }
 
 # Li-ion, Na-ion, Zn-ion, CALB
-anode2mask = {
-    'graphite': [0,1,2,3,4,5,6,7,8,9],
-    'graphite/Si': [10],
-    'zinc metal': [11],
-    'Unknown': [12]
-}
+# anode2mask = {
+#     'graphite': [0,1,2,3,4,5,6,7,8,9],
+#     'graphite/Si': [10],
+#     'zinc metal': [11],
+#     'Unknown': [12]
+# }
 
 def my_collate_fn_withId(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
@@ -217,7 +218,7 @@ def my_collate_fn(samples):
 class Dataset_BatteryLifeLLM_original(Dataset):
     def __init__(self, args, flag='train', label_scaler=None, tokenizer=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None):
+                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None):
         '''
         init the Dataset_BatteryFormer class
         :param args:model parameters
@@ -243,6 +244,12 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.format_experts = args.format_experts
         self.anode_json = json.load(open('./gate_data/anodes.json'))
         self.anode_experts = args.anode_experts
+
+        self.temperature2mask = temperature2mask
+        self.format2mask = format2mask
+        self.cathodes2mask = cathodes2mask
+        self.anode2mask = anode2mask
+
 
         self.label_prompts_vectors = {}
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
@@ -573,7 +580,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             if file_name in self.cathode_json:
                 cathodes = self.cathode_json[file_name]
                 cathodes = '_'.join(cathodes)
-                cathode_index = cathodes2mask[cathodes] 
+                cathode_index = self.cathodes2mask[cathodes] 
                 cathode_mask = np.zeros(self.cathode_experts) # 1 indicates activated
                 cathode_mask[cathode_index] = 1
             else:
@@ -587,7 +594,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             if file_name in self.temperature_json:
                 temperatures = self.temperature_json[file_name]
-                temperature_index = temperature2mask[temperatures]
+                temperature_index = self.temperature2mask[temperatures]
                 temperature_mask = np.zeros(self.temperature_experts)
                 temperature_mask[temperature_index] = 1
             else:
@@ -601,7 +608,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             if file_name in self.format_json:
                 format = self.format_json[file_name][0]
-                format_index = format2mask[format]
+                format_index = self.format2mask[format]
                 format_mask = np.zeros(self.format_experts)
                 format_mask[format_index] = 1
             else:
@@ -616,7 +623,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 anode = self.anode_json[file_name][0]
                 if anode == 'graphite' or anode == 'artificial graphite' or anode == 'carbon':
                     anode = 'graphite' # we assume other anodes are graphite
-                anode_index = anode2mask[anode]
+                anode_index = self.anode2mask[anode]
                 anode_mask = np.zeros(self.anode_experts)
                 anode_mask[anode_index] = 1
             else:
