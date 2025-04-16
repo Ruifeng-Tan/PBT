@@ -10,7 +10,7 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_horizontal_MHv2, baseline_CPTransformerMoE, BatteryMoE_horizontal, BatteryMoE_horizontal_hierarchy, BatteryMoE_Sparse
+from models import BatteryMoE_horizontal_MHv2, baseline_CPTransformerMoE, BatteryMoE_horizontal, BatteryMoE_Sparse_noAnode, BatteryMoE_Sparse
 import wandb
 from data_provider.gate_masker import gate_masker
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
@@ -213,11 +213,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_horizontal_MHv2.Model(model_config)
-    elif args.model == 'BatteryMoE_horizontal_hierarchy':
+    elif args.model == 'BatteryMoE_Sparse_noAnode':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_horizontal_hierarchy.Model(model_config)
+        model = BatteryMoE_Sparse_noAnode.Model(model_config)
     elif args.model == 'BatteryMoE_Sparse':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)

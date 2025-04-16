@@ -486,8 +486,9 @@ class Model(nn.Module):
         self.num_views = configs.num_views
         self.cathode_split = self.cathode_experts
         self.flexible_num_experts = configs.num_experts
+        self.anode_experts = configs.anode_experts
         self.topK = configs.topK
-        self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.flexible_num_experts
+        self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.flexible_num_experts + self.anode_experts
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
@@ -564,15 +565,17 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        total_masks = [cathode_masks, None, temperature_masks, format_masks]
+        total_masks = [cathode_masks, None, temperature_masks, format_masks, anode_masks]
 
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(B, -1, self.num_experts)
         cathode_logits = logits[:,:,:self.cathode_experts]
-        anode_logits = logits[:,:,self.cathode_experts:self.cathode_experts+self.flexible_num_experts]
+        f_logits = logits[:,:,self.cathode_experts:self.cathode_experts+self.flexible_num_experts]
         temperature_logits = logits[:,:,self.cathode_experts+self.flexible_num_experts:self.cathode_experts+self.flexible_num_experts+self.temperature_experts]
-        format_logits = logits[:,:,self.cathode_experts+self.flexible_num_experts+self.temperature_experts:]
-  
+        format_logits = logits[:,:,self.cathode_experts+self.flexible_num_experts+self.temperature_experts:self.cathode_experts+self.flexible_num_experts+self.temperature_experts+self.format_experts]
+        anode_logits = logits[:,:,self.cathode_experts+self.flexible_num_experts+self.temperature_experts+self.format_experts:]
+
+        
         logits_index = 0
 
         total_aug_loss = 0
@@ -580,28 +583,28 @@ class Model(nn.Module):
         total_aug_count = 0
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
-        out, guide_loss, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks) # [B, L, d_model]
+        out, guide_loss, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, [cathode_logits[:,logits_index],f_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_loss += aug_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss, aug_loss = intra_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks) # [B, L, d_model]
+            out, guide_loss, aug_loss = intra_MoELayer(out, [cathode_logits[:,logits_index],f_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_loss += aug_loss
             total_aug_count += 1
             logits_index += 1
 
         # out = out.reshape(B, -1) # flatten
-        out, guide_loss, aug_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
+        out, guide_loss, aug_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],f_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks)
         total_guide_loss += guide_loss
         total_aug_loss += aug_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss, aug_loss = inter_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
+            out, guide_loss, aug_loss = inter_MoELayer(out, [cathode_logits[:,logits_index],f_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks)
             total_guide_loss += guide_loss
             total_aug_loss += aug_loss
             total_aug_count += 1
