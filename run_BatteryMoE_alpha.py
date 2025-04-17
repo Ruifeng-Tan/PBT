@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_horizontal_MHv2, baseline_CPTransformerMoE, BatteryMoE_Finegrained, BatteryMoE_Sparse_flexible, BatteryMoE_Sparse
+from models import BatteryMoE_horizontal_MHv2, baseline_CPTransformerMoE, BatteryMoE_Finegrained, BatteryMoE_Sparse_flexible, BatteryMoE_diff
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -105,7 +105,6 @@ parser.add_argument('--activation', type=str, default='relu', help='activation')
 parser.add_argument('--output_attention', action='store_true', help='whether to output attention in encoder')
 parser.add_argument('--patch_len', type=int, default=10, help='patch length')
 parser.add_argument('--stride', type=int, default=10, help='stride')
-parser.add_argument('--prompt_domain', type=int, default=0, help='')
 parser.add_argument('--output_num', type=int, default=1, help='The number of prediction targets')
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
@@ -222,11 +221,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_Sparse_flexible.Model(model_config)
-    elif args.model == 'BatteryMoE_Sparse':
+    elif args.model == 'BatteryMoE_diff':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Sparse.Model(model_config)
+        model = BatteryMoE_diff.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
