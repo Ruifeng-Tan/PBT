@@ -29,6 +29,25 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
 transformers.logging.set_verbosity_error() 
 
+class TransposeMLPBlock(nn.Module):
+    def __init__(self, seq_len, hidden_dim, drop_rate):
+        super(TransposeMLPBlock, self).__init__()
+        self.dropout = nn.Dropout(drop_rate)
+        self.temporal_linear = nn.Linear(seq_len, hidden_dim)
+        self.act = nn.GELU()
+        self.out_linear = nn.Linear(hidden_dim, 1)
+    
+    def forward(self, x):
+        '''
+        x: [B, seq_len, D]
+        '''
+        x = x.transpose(1, 2) # [B, D, seq_len]
+        out = self.temporal_linear(x)
+        out = self.act(out)
+        out = self.dropout(out)
+        out = self.out_linear(out).squeeze(-1) # [B, D]
+        return out
+
 class MLPBlockGELU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
         super(MLPBlockGELU, self).__init__()
@@ -281,7 +300,7 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
         self.num_experts = num_experts
         self.activation = configs.activation
         self.top_k = topK if topK is not None else configs.topK
-        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.d_model*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([TransposeMLPBlock(seq_len=self.early_cycle_threshold, hidden_dim=self.d_ff, drop_rate=self.drop_rate) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(in_dim*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_general_experts)])
         self.eps = 1e-9
@@ -528,7 +547,7 @@ class Model(nn.Module):
                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)
+                                                        TransposeMLPBlock(seq_len=self.early_cycle_threshold, hidden_dim=self.d_ff, drop_rate=self.drop_rate) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=False)
         
@@ -599,8 +618,6 @@ class Model(nn.Module):
             total_aug_count += 1
             logits_index += 1
 
-
-        out[:,1:] = out[:,1:] - out[:,:1] # obtain the difference compared against the initial cycle for every cycle after the initial cycle
         out, guide_loss, aug_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks)
         total_guide_loss += guide_loss
         total_aug_loss += aug_loss
@@ -632,3 +649,77 @@ class Model(nn.Module):
         mask = torch.tril(torch.ones(seq_len, seq_len))  # (L, L)
         mask = mask.unsqueeze(0).expand(B, -1, -1)
         return mask
+
+    def get_statistical_features(self, x, mask):
+        '''
+        Get max, min, mean
+        x: [N, L, d_model]
+        return:
+            out: [B, d_model*5]
+        '''
+        max_value = self.masked_max(x, mask, dim=1)
+        mean_value = self.masked_mean_std(x, mask, dim=1)
+        min_value = self.masked_min(x, mask, dim=1)
+        # return torch.cat([max_value, std_value, mean_value, min_value], dim=1)
+        return torch.cat([max_value, mean_value, min_value], dim=1)
+    
+    def masked_max(self, x, mask, dim=1):
+        # Mask should be of the same size as x and have boolean values
+        # True for elements to be included, False for elements to be masked
+        if mask.dtype != torch.bool:
+            mask = mask.bool()
+
+        # Replace masked elements with a very large negative number
+        neg_inf = torch.finfo(x.dtype).min
+        masked_x = x.masked_fill(~mask.unsqueeze(-1), neg_inf)
+
+        # Perform the max operation
+        max_values = F.max_pool1d(masked_x.transpose(1,2), kernel_size=masked_x.shape[1], stride=1).squeeze(-1)
+
+        # Handle the case where all elements are masked
+        all_masked = ~mask.any(dim=dim)
+        max_values[all_masked] = 0  # or use torch.nan, torch.inf, or another placeholder
+
+        return max_values
+
+    def masked_mean_std(self, x, mask, dim=1):
+        if mask.dtype != torch.bool:
+            mask = mask.bool()
+
+        masked_x = x.masked_fill(~mask.unsqueeze(-1), 0)
+        mean_values = torch.sum(masked_x, dim=dim) / (torch.sum(mask, dim=dim).unsqueeze(-1) + 1e-6)
+
+        return mean_values.to(torch.bfloat16)
+    # def masked_mean_std(self, x, mask, dim=1):
+    #     if mask.dtype != torch.bool:
+    #         mask = mask.bool()
+
+    #     masked_x = x.masked_fill(~mask.unsqueeze(-1), 0)
+    #     mean_values = torch.sum(masked_x, dim=dim) / (torch.sum(mask, dim=dim).unsqueeze(-1) + 1e-6)
+        
+    #     squared_diff = (masked_x - mean_values.unsqueeze(1))**2 # [B, L, d_model]
+    #     masked_squared_diff = squared_diff * mask.unsqueeze(-1)
+    #     sum_squared_diff = masked_squared_diff.sum(dim=dim) 
+    #     variance = sum_squared_diff / (torch.sum(mask, dim=dim).unsqueeze(-1) + 1e-6)
+    #     std_values = torch.sqrt(variance)
+
+    #     return mean_values.to(torch.bfloat16), std_values.to(torch.bfloat16)
+    
+    def masked_min(self, x, mask, dim=1):
+        # Mask should be of the same size as x and have boolean values
+        # True for elements to be included, False for elements to be masked
+        if mask.dtype != torch.bool:
+            mask = mask.bool()
+
+        # Replace masked elements with a very large negative number
+        pos_inf = torch.finfo(x.dtype).max
+        masked_x = x.masked_fill(~mask.unsqueeze(-1), pos_inf)
+
+        # Perform the max operation
+        min_values = torch.min(masked_x, dim=dim)[0]
+
+        # Handle the case where all elements are masked
+        all_masked = ~mask.any(dim=dim)
+        min_values[all_masked] = 0  # or use torch.nan, torch.inf, or another placeholder
+
+        return min_values
