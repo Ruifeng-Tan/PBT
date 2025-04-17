@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_Sparse，只不过是除了domain-knowledge-view experts以外，还允许同时加入vanilla experts
+基于BatteryMoE_Sparse_flexible, 只不过在CyclePatch之后还融入了DKP Embedding，作为额外的input
 '''
 import torch
 import torch.nn as nn
@@ -76,7 +76,7 @@ class MultiViewLayer(nn.Module):
         if self.use_connection:
             self.norm = norm_layer
 
-    def forward(self, x, total_logits, total_masks):
+    def forward(self, x, total_logits, total_masks, DKP_embeddings=None):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
@@ -99,6 +99,9 @@ class MultiViewLayer(nn.Module):
 
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
+
+        if DKP_embeddings is not None:
+            final_out = final_out + DKP_embeddings # add the specification and operating condition informaiton
 
         if self.use_connection:
             final_out = self.norm(final_out + x) # add & norm
