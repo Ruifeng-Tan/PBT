@@ -496,7 +496,8 @@ class Model(nn.Module):
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.cathode_experts, 2),
                                                                     BatteryMoEFlattenIntraCycleMoELayer(configs, self.flexible_num_experts, self.topK, use_aug_loss=True),
                                                                     BatteryMoEFlattenIntraCycleMoELayer(configs, self.temperature_experts, 3),
-                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.format_experts, 1)],
+                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.format_experts, 1),
+                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.anode_experts, 1)]
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
@@ -508,8 +509,9 @@ class Model(nn.Module):
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.cathode_experts, 2),
                                                                     BatteryMoEIntraCycleMoELayer(configs, self.flexible_num_experts, self.topK, use_aug_loss=True),
                                                                     BatteryMoEIntraCycleMoELayer(configs, self.temperature_experts, 3),
-                                                                    BatteryMoEIntraCycleMoELayer(configs, self.format_experts, 1)
-                                                    ]),
+                                                                    BatteryMoEIntraCycleMoELayer(configs, self.format_experts, 1),
+                                                                    BatteryMoEIntraCycleMoELayer(configs, self.anode_experts, 1)]
+                                                    ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
@@ -520,8 +522,9 @@ class Model(nn.Module):
                                                      nn.ModuleList([BatteryMoEFlattenInterCycleMoELayer(configs, self.cathode_experts, 2),
                                                                     BatteryMoEFlattenInterCycleMoELayer(configs, self.flexible_num_experts, self.topK, use_aug_loss=True),
                                                                     BatteryMoEFlattenInterCycleMoELayer(configs, self.temperature_experts, 3),
-                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.format_experts, 1)
-                                                    ]),
+                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.format_experts, 1),
+                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.anode_experts, 1)]
+                                                    ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)
@@ -532,8 +535,9 @@ class Model(nn.Module):
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.cathode_experts, 2),
                                                                     BatteryMoEInterCycleMoELayer(configs, self.flexible_num_experts, self.topK, use_aug_loss=True),
                                                                     BatteryMoEInterCycleMoELayer(configs, self.temperature_experts, 3),
-                                                                    BatteryMoEInterCycleMoELayer(configs, self.format_experts, 1)
-                                                    ]), norm_layer=nn.LayerNorm(self.d_model),
+                                                                    BatteryMoEInterCycleMoELayer(configs, self.format_experts, 1),
+                                                                    BatteryMoEInterCycleMoELayer(configs, self.anode_experts, 1)]
+                                                    ), norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
