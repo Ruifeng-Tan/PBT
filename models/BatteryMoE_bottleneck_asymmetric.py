@@ -121,8 +121,8 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = topK if topK is not None else configs.topK
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), 
-                                                    nn.Linear(self.charge_discharge_length*3, self.charge_discharge_length, bias=False), 
-                                                    nn.Linear(self.charge_discharge_length, self.d_model)) for _ in range(self.num_experts)])
+                                                    nn.Linear(self.charge_discharge_length*3, self.d_model//4, bias=False), 
+                                                    nn.Linear(self.d_model//4, self.d_model)) for _ in range(self.num_experts)])
         # self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_general_experts)])
         self.eps = 1e-9
