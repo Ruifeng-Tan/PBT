@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_Sparse，只不过是除了domain-knowledge-view experts以外，还允许同时加入vanilla experts
+2025/04/18，BatteryMoE最为灵活的版本，基于此架构进行修改后支持各种构建
 '''
 import torch
 import torch.nn as nn
@@ -141,12 +141,13 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         if moe_masks is not None:
             mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
             logits = logits * mask
-        _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
-        # Create a mask where only the top-K values will be kept
-        top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
-        logits = logits * top_K_mask
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
 
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -223,12 +224,13 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         if moe_masks is not None:
             mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
             logits = logits * mask
-        _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
-        # Create a mask where only the top-K values will be kept
-        top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
-        logits = logits * top_K_mask
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
 
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -304,12 +306,13 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
             mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
             logits = logits * mask
 
-        _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
-        # Create a mask where only the top-K values will be kept
-        top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
-        logits = logits * top_K_mask
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
 
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -382,12 +385,14 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         if moe_masks is not None:
             mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
             logits = logits * mask
-        _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
-        # Create a mask where only the top-K values will be kept
-        top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
-        # Scatter the mask at the indices of the top-K values
-        top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
-        logits = logits * top_K_mask
+        
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
 
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -495,10 +500,7 @@ class Model(nn.Module):
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers)))
 
         self.flattenIntraCycleLayer = MultiViewLayer(self.num_views, 
-                                                     nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.cathode_experts, self.topK),
-                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.temperature_experts, self.topK),
-                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.format_experts, self.topK),
-                                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.anode_experts, self.topK)]
+                                                     nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts, self.topK)]
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
@@ -507,10 +509,7 @@ class Model(nn.Module):
                                                     use_connection=False)
         
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(self.num_views, 
-                                                     nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.cathode_experts, self.topK),
-                                                                    BatteryMoEIntraCycleMoELayer(configs, self.temperature_experts, self.topK),
-                                                                    BatteryMoEIntraCycleMoELayer(configs, self.format_experts, self.topK),
-                                                                    BatteryMoEIntraCycleMoELayer(configs, self.anode_experts, self.topK)]
+                                                     nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts, self.topK)]
                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
@@ -519,10 +518,7 @@ class Model(nn.Module):
                                                     use_connection=True) for _ in range(self.e_layers)])
 
         self.flattenInterCycleLayer = MultiViewLayer(self.num_views, 
-                                                     nn.ModuleList([BatteryMoEFlattenInterCycleMoELayer(configs, self.cathode_experts, self.topK),
-                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.temperature_experts, self.topK),
-                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.format_experts, self.topK),
-                                                                    BatteryMoEFlattenInterCycleMoELayer(configs, self.anode_experts, self.topK)]
+                                                     nn.ModuleList([BatteryMoEFlattenInterCycleMoELayer(configs, self.num_experts, self.topK)]
                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
@@ -531,10 +527,7 @@ class Model(nn.Module):
                                                     use_connection=False)
         
         self.inter_MoE_layers = nn.ModuleList([MultiViewLayer(self.num_views, 
-                                                     nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.cathode_experts, self.topK),
-                                                                    BatteryMoEInterCycleMoELayer(configs, self.temperature_experts, self.topK),
-                                                                    BatteryMoEInterCycleMoELayer(configs, self.format_experts, self.topK),
-                                                                    BatteryMoEInterCycleMoELayer(configs, self.anode_experts, self.topK)]
+                                                     nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts, self.topK)]
                                                     ), norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
@@ -567,14 +560,15 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        total_masks = [cathode_masks, temperature_masks, format_masks, anode_masks]
+        # total_masks = [cathode_masks, temperature_masks, format_masks, anode_masks]
+        total_masks = [combined_masks]
 
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(B, -1, self.num_experts)
-        cathode_logits = logits[:,:,:self.cathode_experts]
-        temperature_logits = logits[:,:,self.cathode_experts:self.cathode_experts+self.temperature_experts]
-        format_logits = logits[:,:,self.cathode_experts+self.temperature_experts:self.cathode_experts+self.temperature_experts+self.format_experts]
-        anode_logits = logits[:,:,self.cathode_experts+self.temperature_experts+self.format_experts:]
+        # cathode_logits = logits[:,:,:self.cathode_experts]
+        # temperature_logits = logits[:,:,self.cathode_experts:self.cathode_experts+self.temperature_experts]
+        # format_logits = logits[:,:,self.cathode_experts+self.temperature_experts:self.cathode_experts+self.temperature_experts+self.format_experts]
+        # anode_logits = logits[:,:,self.cathode_experts+self.temperature_experts+self.format_experts:]
 
         
         logits_index = 0
@@ -584,28 +578,28 @@ class Model(nn.Module):
         total_aug_count = 0
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
-        out, guide_loss, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, [cathode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks) # [B, L, d_model]
+        out, guide_loss, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_loss += aug_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss, aug_loss = intra_MoELayer(out, [cathode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks) # [B, L, d_model]
+            out, guide_loss, aug_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_loss += aug_loss
             total_aug_count += 1
             logits_index += 1
 
         # out = out.reshape(B, -1) # flatten
-        out, guide_loss, aug_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks)
+        out, guide_loss, aug_loss = self.flattenInterCycleLayer(out, [logits[:,logits_index]], total_masks)
         total_guide_loss += guide_loss
         total_aug_loss += aug_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss, aug_loss = inter_MoELayer(out, [cathode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index],anode_logits[:,logits_index]], total_masks)
+            out, guide_loss, aug_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks)
             total_guide_loss += guide_loss
             total_aug_loss += aug_loss
             total_aug_count += 1
