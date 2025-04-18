@@ -524,7 +524,9 @@ class Model(nn.Module):
                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)
+                                                        nn.Sequential(nn.Linear(self.d_model, self.d_model // configs.bottleneck_factor), 
+                                                        nn.Flatten(start_dim=1), 
+                                                        nn.Linear(self.d_model * self.early_cycle_threshold // configs.bottleneck_factor, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=False)
         
