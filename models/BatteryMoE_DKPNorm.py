@@ -67,10 +67,10 @@ class MLPBlock(nn.Module):
 
 
 class DKINorm(nn.Module):
-    def __init__(self, d_model, d_llm):
+    def __init__(self, d_model, d_llm, drop_rate=0.1):
         super(DKINorm, self).__init__()
         self.mlp = nn.Sequential(nn.Linear(d_llm, 32), 
-                                    nn.ReLU(), 
+                                    nn.ReLU(), nn.Dropout(drop_rate),
                                     nn.Linear(32, 2*d_model))
         self.d_model = d_model
         self.eps = 1e-5
@@ -98,8 +98,7 @@ class MultiViewLayer(nn.Module):
         self.view_experts = view_experts
         self.general_experts = general_experts
         self.use_connection = use_connection
-        if self.use_connection:
-            self.norm = norm_layer
+        self.norm = norm_layer
 
     def forward(self, x, total_logits, total_masks, DKP_embeddings=None):
         '''
@@ -128,6 +127,8 @@ class MultiViewLayer(nn.Module):
 
         if self.use_connection:
             final_out = self.norm(final_out + x, DKP_embeddings) # add & norm
+        else:
+            final_out = self.norm(final_out, DKP_embeddings) # norm
         
         total_aug_loss = total_aug_loss / aug_count if total_aug_loss !=0 else 0 
         total_guide_loss = total_guide_loss / guide_count if guide_count != 0 else 0
@@ -527,7 +528,7 @@ class Model(nn.Module):
         self.flattenIntraCycleLayer = MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts, self.topK)]
                                                                     ),
-                                                    norm_layer=DKINorm(self.d_model, self.d_llm),
+                                                    norm_layer=DKINorm(self.d_model, self.d_llm, self.drop_rate),
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
@@ -536,7 +537,7 @@ class Model(nn.Module):
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts, self.topK)]
                                                     ),
-                                                    norm_layer=DKINorm(self.d_model, self.d_llm),
+                                                    norm_layer=DKINorm(self.d_model, self.d_llm, self.drop_rate),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
@@ -545,7 +546,7 @@ class Model(nn.Module):
         self.flattenInterCycleLayer = MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEFlattenInterCycleMoELayer(configs, self.num_experts, self.topK)]
                                                     ),
-                                                    norm_layer=DKINorm(self.d_model, self.d_llm),
+                                                    norm_layer=DKINorm(self.d_model, self.d_llm, self.drop_rate),
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
@@ -554,7 +555,7 @@ class Model(nn.Module):
         self.inter_MoE_layers = nn.ModuleList([MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts, self.topK)]
                                                     ), 
-                                                    norm_layer=DKINorm(self.d_model, self.d_llm),
+                                                    norm_layer=DKINorm(self.d_model, self.d_llm, self.drop_rate),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
@@ -604,7 +605,7 @@ class Model(nn.Module):
         total_aug_count = 0
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
-        out, guide_loss, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks) # [B, L, d_model]
+        out, guide_loss, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, DKP_embeddings) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_loss += aug_loss
         total_aug_count += 1
@@ -618,7 +619,7 @@ class Model(nn.Module):
             logits_index += 1
 
         # out = out.reshape(B, -1) # flatten
-        out, guide_loss, aug_loss = self.flattenInterCycleLayer(out, [logits[:,logits_index]], total_masks)
+        out, guide_loss, aug_loss = self.flattenInterCycleLayer(out, [logits[:,logits_index]], total_masks, DKP_embeddings)
         total_guide_loss += guide_loss
         total_aug_loss += aug_loss
         total_aug_count += 1
