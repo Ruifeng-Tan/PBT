@@ -285,7 +285,7 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
         self.top_k = topK if topK is not None else configs.topK
         self.experts = nn.ModuleList([nn.Linear(self.d_model, self.d_model // configs.bottleneck_factor), 
                                       nn.Sequential(nn.Flatten(start_dim=1), 
-                                      nn.Linear(self.d_model* self.early_cycle_threshold // configs.bottleneck_factor, self.d_model)) for _ in range(self.num_experts)])
+                                      nn.Linear(self.d_model * self.early_cycle_threshold // configs.bottleneck_factor, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(in_dim*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_general_experts)])
         self.eps = 1e-9
