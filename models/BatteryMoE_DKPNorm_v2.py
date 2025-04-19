@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_DKPNorm，只不过gate从linear换成了MLP
+基于BatteryMoE, 使用DKP去做Normlaization的rescale
 '''
 import torch
 import torch.nn as nn
@@ -70,7 +70,6 @@ class DKINorm(nn.Module):
     def __init__(self, d_model, d_llm, drop_rate=0.1):
         super(DKINorm, self).__init__()
         self.mlp = nn.Sequential(nn.Linear(d_llm, 32), 
-                                    nn.ReLU(), 
                                     nn.Linear(32, 2*d_model))
         self.d_model = d_model
         self.eps = 1e-5
@@ -523,8 +522,7 @@ class Model(nn.Module):
         self.anode_experts = configs.anode_experts
         self.topK = configs.topK
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, 32), nn.ReLU(), nn.Dropout(self.drop_rate), 
-                                  nn.Linear(32, self.num_experts*(2+self.moe_layers)))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers)))
 
         self.flattenIntraCycleLayer = MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts, self.topK)]
