@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE, 使用DKP去做Normlaization的rescale
+基于BatteryMoE_DKPNorm, 只不过修改了FlattenLinearLayer，让他的参数量更小
 '''
 import torch
 import torch.nn as nn

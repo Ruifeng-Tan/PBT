@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_DKPNorm, 只不过在DKINorm的时候让beta和gamma变成一个可以学习的标量而非向量
+基于BatteryMoE_DKPNorm, 只不过在FlattnInter的时候让experts的参数量小很多
 '''
 import torch
 import torch.nn as nn
@@ -71,7 +71,7 @@ class DKINorm(nn.Module):
         super(DKINorm, self).__init__()
         self.mlp = nn.Sequential(nn.Linear(d_llm, 32), 
                                     nn.ReLU(), 
-                                    nn.Linear(32, 2))
+                                    nn.Linear(32, 2*d_model))
         self.d_model = d_model
         self.eps = 1e-5
     
@@ -83,7 +83,7 @@ class DKINorm(nn.Module):
         normalized_x = (x - mean) / (std + self.eps)
 
         rescale_parameters = self.mlp(DKP_embeddings) # [B, 2]
-        gamma, beta = rescale_parameters[:, :1], rescale_parameters[:, 1:]
+        gamma, beta = rescale_parameters[:, :self.d_model], rescale_parameters[:, self.d_model:]
         if normalized_x.dim() == 3:
             gamma = gamma.unsqueeze(1)
             beta = beta.unsqueeze(1)
@@ -309,7 +309,9 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
         self.num_experts = num_experts
         self.activation = configs.activation
         self.top_k = topK if topK is not None else configs.topK
-        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.d_model*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([nn.Sequential(nn.Linear(self.d_model, self.d_model // configs.bottleneck_factor, bias=False), 
+                                      nn.Flatten(start_dim=1), 
+                                      nn.Linear(self.d_model * self.early_cycle_threshold // configs.bottleneck_factor, self.d_model)) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(in_dim*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_general_experts)])
         self.eps = 1e-9
