@@ -65,11 +65,17 @@ class MLPBlock(nn.Module):
         out = self.out_linear(out)
         return self.dropout(out)
 
+class FlattenInterConv(nn.Module):
+    def __init__(self, configs):
+        super(FlattenInterConv, self).__init__()
+        self.d_model = configs.d_model
+        self.conv = nn.Conv1d(configs.d_model, configs.d_model, kernel_size=2, stride=2, padding=0)
 
 class DKINorm(nn.Module):
     def __init__(self, d_model, d_llm, drop_rate=0.1):
         super(DKINorm, self).__init__()
         self.mlp = nn.Sequential(nn.Linear(d_llm, 32), 
+                                    nn.ReLU(), 
                                     nn.Linear(32, 2*d_model))
         self.d_model = d_model
         self.eps = 1e-5
