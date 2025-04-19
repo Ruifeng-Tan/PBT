@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_DKPNorm, 只不过在DKINorm的时候让beta和gamma变成一个可以学习的标量而非向量
+基于BatteryMoE_DKPNorm，只不过gate从linear换成了MLP
 '''
 import torch
 import torch.nn as nn
@@ -71,7 +71,7 @@ class DKINorm(nn.Module):
         super(DKINorm, self).__init__()
         self.mlp = nn.Sequential(nn.Linear(d_llm, 32), 
                                     nn.ReLU(), 
-                                    nn.Linear(32, 2))
+                                    nn.Linear(32, 2*d_model))
         self.d_model = d_model
         self.eps = 1e-5
     
@@ -83,7 +83,7 @@ class DKINorm(nn.Module):
         normalized_x = (x - mean) / (std + self.eps)
 
         rescale_parameters = self.mlp(DKP_embeddings) # [B, 2]
-        gamma, beta = rescale_parameters[:, :1], rescale_parameters[:, 1:]
+        gamma, beta = rescale_parameters[:, :self.d_model], rescale_parameters[:, self.d_model:]
         if normalized_x.dim() == 3:
             gamma = gamma.unsqueeze(1)
             beta = beta.unsqueeze(1)
@@ -523,7 +523,8 @@ class Model(nn.Module):
         self.anode_experts = configs.anode_experts
         self.topK = configs.topK
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers)))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, 32), nn.ReLU(), nn.Dropout(self.drop_rate), 
+                                  nn.Linear(32, self.num_experts*(2+self.moe_layers)))
 
         self.flattenIntraCycleLayer = MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts, self.topK)]
