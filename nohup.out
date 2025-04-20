@@ -1121,3 +1121,943 @@ wandb: 🚀 View run 2025-04-19 12:35:47 at: https://wandb.ai/hkustgz-batteryinf
 wandb: ⭐️ View project at: https://wandb.ai/hkustgz-batteryinformatics/BatteryMoE_FixPrompt
 wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
 wandb: Find logs at: ./wandb/run-20250419_123558-z8skh5hw/logs
+The following values were not passed to `accelerate launch` and had defaults used instead:
+		More than one GPU was found, enabling multi-GPU training.
+		If this was unintended please pass in `--num_processes=1`.
+	`--num_machines` was set to a value of `1`
+	`--dynamo_backend` was set to a value of `'no'`
+To avoid this warning pass in values for each of the problematic parameters or run `accelerate config`.
+[2025-04-20 11:47:38,153] [INFO] [real_accelerator.py:203:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-04-20 11:47:38,160] [INFO] [real_accelerator.py:203:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-04-20 11:47:39,143] [INFO] [comm.py:652:init_distributed] cdb=None
+[2025-04-20 11:47:39,152] [INFO] [comm.py:652:init_distributed] cdb=None
+[2025-04-20 11:47:39,152] [INFO] [comm.py:683:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+{'task_name': 'battery_life_prediction', 'is_training': 1, 'model_id': 'TunePara', 'model_comment': '50to1', 'model': 'BatteryMoE_DKPNorm_v2', 'LLM_path': '/data/LLMs/models--meta-llama--Llama-3.2-3B-Instruct/snapshots/0cb88a4f764b7a12671c53f0838cd831a0843b95', 'center_path': './Centenr_vectors', 'seed': 42, 'dataset': 'exp', 'data': 'Dataset_BatteryLifeLLM_original', 'root_path': '/data/trf/python_works/BatteryLife/dataset', 'data_path': 'ETTh1.csv', 'features': 'MS', 'target': 'OT', 'loader': 'modal', 'freq': 'h', 'checkpoints': '/data/LLMs/checkpoints', 'num_process': 2, 'early_cycle_threshold': 100, 'seq_len': 1, 'label_len': 50, 'seasonal_patterns': 'Monthly', 'd_llm': 4096, 'enc_in': 3, 'dec_in': 1, 'c_out': 1, 'd_model': 128, 'n_heads': 8, 'noDKP_layers': 1, 'bottleneck_factor': 16, 'e_layers': 1, 'd_layers': 1, 'd_ff': 256, 'moving_avg': 25, 'factor': 3, 'dropout': 0.05, 'embed': 'Cycle', 'activation': 'relu', 'output_attention': False, 'patch_len': 10, 'stride': 10, 'output_num': 1, 'class_num': 8, 'weighted_loss': False, 'num_workers': 16, 'itr': 1, 'T0': 2, 'train_epochs': 100, 'least_epochs': 15, 'batch_size': 58, 'patience': 5, 'learning_rate': 5e-05, 'wd': 0.0, 'des': 'Exp', 'loss': 'MSE', 'lradj': 'type1', 'lradj_factor': 0.5, 'pct_start': 0.2, 'use_amp': False, 'llm_layers': 32, 'top_p': 0.5, 'accumulation_steps': 1, 'mlp': 0, 'warm_up_epoches': 0, 'num_views': 4, 'num_general_experts': 4, 'num_experts': 20, 'cathode_experts': 11, 'temperature_experts': 15, 'format_experts': 11, 'anode_experts': 11, 'noisy_gating': False, 'topK': 3, 'importance_weight': 1.0, 'use_ReMoE': False, 'use_guide': False, 'gamma': 1.0, 'use_LB': False, 'Pretrained_model_path': '', 'wo_DKPrompt': False, 'charge_discharge_length': 300, 'alpha1': 0.15, 'alpha2': 0.1}
+  0%|          | 0/5 [00:00<?, ?it/s]  0%|          | 0/5 [00:00<?, ?it/s] 20%|██        | 1/5 [00:01<00:04,  1.02s/it] 20%|██        | 1/5 [00:01<00:04,  1.03s/it] 40%|████      | 2/5 [00:01<00:02,  1.14it/s] 40%|████      | 2/5 [00:01<00:02,  1.15it/s] 60%|██████    | 3/5 [00:02<00:01,  1.10it/s] 60%|██████    | 3/5 [00:02<00:01,  1.13it/s] 80%|████████  | 4/5 [00:03<00:00,  1.29it/s] 80%|████████  | 4/5 [00:03<00:00,  1.31it/s]100%|██████████| 5/5 [00:03<00:00,  1.38it/s]100%|██████████| 5/5 [00:03<00:00,  1.27it/s]
+100%|██████████| 5/5 [00:03<00:00,  1.39it/s]100%|██████████| 5/5 [00:03<00:00,  1.28it/s]
+Loading training samples......
+Loading vali samples......
+  0%|          | 0/4 [00:00<?, ?it/s]  0%|          | 0/4 [00:00<?, ?it/s] 50%|█████     | 2/4 [00:00<00:00,  4.81it/s] 50%|█████     | 2/4 [00:00<00:00,  4.86it/s] 75%|███████▌  | 3/4 [00:00<00:00,  2.96it/s] 75%|███████▌  | 3/4 [00:00<00:00,  2.96it/s]100%|██████████| 4/4 [00:01<00:00,  2.52it/s]100%|██████████| 4/4 [00:01<00:00,  2.79it/s]
+100%|██████████| 4/4 [00:01<00:00,  2.50it/s]100%|██████████| 4/4 [00:01<00:00,  2.78it/s]
+Loading test samples......
+  0%|          | 0/3 [00:00<?, ?it/s]  0%|          | 0/3 [00:00<?, ?it/s] 33%|███▎      | 1/3 [00:00<00:01,  1.45it/s] 33%|███▎      | 1/3 [00:00<00:01,  1.46it/s] 67%|██████▋   | 2/3 [00:01<00:00,  1.43it/s] 67%|██████▋   | 2/3 [00:01<00:00,  1.44it/s]100%|██████████| 3/3 [00:01<00:00,  1.66it/s]100%|██████████| 3/3 [00:01<00:00,  1.59it/s]
+100%|██████████| 3/3 [00:01<00:00,  1.66it/s]100%|██████████| 3/3 [00:01<00:00,  1.59it/s]
+success delete /data/LLMs/checkpoints/BatteryMoE_DKPNorm_v2_sl1_lr5e-05_dm128_nh8_el1_dl1_df256_llmLayers32_lradjtype1_datasetexp_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_noDKPL1_dr0.05_bf16_NumE20_K3_seed42-50to1
+[2025-04-20 11:47:47,906] [INFO] [config.py:733:__init__] Config mesh_device None world_size = 2
+wandb: Currently logged in as: trf824449964 (hkustgz-batteryinformatics). Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.17.9
+wandb: Run data is saved locally in /data/trf/python_works/BatteryMoE/wandb/run-20250420_114748-jw7bds44
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run 2025-04-20 11:47:38
+wandb: ⭐️ View project at https://wandb.ai/hkustgz-batteryinformatics/BatteryMoE_FixPrompt
+wandb: 🚀 View run at https://wandb.ai/hkustgz-batteryinformatics/BatteryMoE_FixPrompt/runs/jw7bds44
+{'Total': 15589249, 'Trainable': 15589249, 'Percent': 1.0}
+Layer: gate.0.weight | Number of parameters: 786432
+Layer: gate.0.bias | Number of parameters: 192
+Layer: flattenIntraCycleLayer.view_experts.0.experts.0.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.0.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.1.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.1.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.2.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.2.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.3.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.3.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.4.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.4.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.5.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.5.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.6.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.6.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.7.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.7.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.8.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.8.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.9.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.9.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.10.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.10.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.11.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.11.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.12.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.12.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.13.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.13.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.14.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.14.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.15.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.15.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.16.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.16.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.17.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.17.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.18.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.18.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.19.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.19.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.20.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.20.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.21.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.21.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.22.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.22.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.23.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.23.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.24.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.24.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.25.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.25.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.26.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.26.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.27.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.27.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.28.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.28.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.29.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.29.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.30.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.30.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.31.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.31.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.32.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.32.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.33.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.33.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.34.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.34.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.35.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.35.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.36.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.36.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.37.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.37.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.38.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.38.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.39.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.39.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.40.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.40.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.41.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.41.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.42.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.42.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.43.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.43.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.44.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.44.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.45.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.45.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.46.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.46.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.view_experts.0.experts.47.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.view_experts.0.experts.47.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.general_experts.0.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.general_experts.0.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.general_experts.1.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.general_experts.1.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.general_experts.2.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.general_experts.2.1.bias | Number of parameters: 128
+Layer: flattenIntraCycleLayer.general_experts.3.1.weight | Number of parameters: 115200
+Layer: flattenIntraCycleLayer.general_experts.3.1.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.0.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.0.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.0.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.1.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.1.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.1.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.2.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.2.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.2.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.3.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.3.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.3.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.4.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.4.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.4.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.5.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.5.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.5.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.6.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.6.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.6.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.7.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.7.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.7.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.8.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.8.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.8.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.9.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.9.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.9.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.10.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.10.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.10.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.11.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.11.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.11.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.12.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.12.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.12.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.13.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.13.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.13.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.14.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.14.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.14.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.15.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.15.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.15.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.16.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.16.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.16.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.17.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.17.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.17.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.18.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.18.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.18.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.19.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.19.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.19.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.20.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.20.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.20.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.21.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.21.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.21.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.22.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.22.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.22.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.23.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.23.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.23.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.24.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.24.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.24.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.25.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.25.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.25.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.26.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.26.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.26.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.27.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.27.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.27.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.28.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.28.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.28.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.29.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.29.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.29.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.30.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.30.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.30.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.31.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.31.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.31.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.32.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.32.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.32.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.33.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.33.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.33.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.34.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.34.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.34.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.35.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.35.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.35.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.36.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.36.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.36.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.37.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.37.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.37.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.38.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.38.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.38.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.39.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.39.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.39.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.40.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.40.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.40.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.41.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.41.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.41.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.42.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.42.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.42.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.43.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.43.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.43.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.44.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.44.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.44.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.45.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.45.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.45.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.46.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.46.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.46.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.view_experts.0.experts.47.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.47.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.view_experts.0.experts.47.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.general_experts.0.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.0.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.0.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.general_experts.1.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.1.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.1.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.general_experts.2.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.2.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.2.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.general_experts.3.in_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.3.out_linear.weight | Number of parameters: 32768
+Layer: intra_MoE_layers.0.general_experts.3.out_linear.bias | Number of parameters: 128
+Layer: intra_MoE_layers.0.norm.mlp.0.weight | Number of parameters: 131072
+Layer: intra_MoE_layers.0.norm.mlp.0.bias | Number of parameters: 32
+Layer: intra_MoE_layers.0.norm.mlp.2.weight | Number of parameters: 8192
+Layer: intra_MoE_layers.0.norm.mlp.2.bias | Number of parameters: 256
+Layer: flattenInterCycleLayer.view_experts.0.experts.0.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.0.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.0.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.1.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.1.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.1.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.2.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.2.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.2.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.3.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.3.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.3.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.4.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.4.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.4.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.5.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.5.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.5.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.6.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.6.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.6.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.7.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.7.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.7.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.8.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.8.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.8.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.9.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.9.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.9.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.10.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.10.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.10.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.11.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.11.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.11.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.12.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.12.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.12.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.13.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.13.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.13.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.14.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.14.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.14.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.15.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.15.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.15.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.16.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.16.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.16.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.17.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.17.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.17.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.18.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.18.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.18.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.19.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.19.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.19.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.20.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.20.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.20.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.21.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.21.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.21.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.22.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.22.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.22.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.23.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.23.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.23.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.24.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.24.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.24.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.25.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.25.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.25.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.26.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.26.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.26.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.27.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.27.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.27.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.28.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.28.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.28.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.29.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.29.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.29.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.30.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.30.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.30.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.31.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.31.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.31.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.32.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.32.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.32.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.33.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.33.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.33.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.34.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.34.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.34.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.35.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.35.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.35.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.36.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.36.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.36.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.37.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.37.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.37.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.38.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.38.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.38.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.39.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.39.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.39.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.40.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.40.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.40.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.41.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.41.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.41.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.42.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.42.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.42.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.43.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.43.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.43.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.44.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.44.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.44.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.45.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.45.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.45.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.46.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.46.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.46.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.47.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.47.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.view_experts.0.experts.47.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.0.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.0.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.0.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.1.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.1.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.1.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.2.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.2.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.2.W2.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.3.W.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.3.V.weight | Number of parameters: 10880
+Layer: flattenInterCycleLayer.general_experts.3.W2.weight | Number of parameters: 10880
+Layer: inter_MoE_layers.0.view_experts.0.experts.0.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.0.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.0.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.1.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.1.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.1.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.2.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.2.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.2.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.3.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.3.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.3.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.4.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.4.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.4.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.5.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.5.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.5.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.6.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.6.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.6.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.7.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.7.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.7.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.8.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.8.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.8.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.9.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.9.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.9.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.10.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.10.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.10.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.11.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.11.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.11.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.12.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.12.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.12.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.13.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.13.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.13.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.14.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.14.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.14.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.15.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.15.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.15.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.16.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.16.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.16.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.17.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.17.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.17.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.18.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.18.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.18.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.19.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.19.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.19.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.20.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.20.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.20.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.21.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.21.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.21.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.22.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.22.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.22.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.23.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.23.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.23.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.24.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.24.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.24.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.25.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.25.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.25.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.26.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.26.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.26.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.27.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.27.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.27.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.28.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.28.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.28.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.29.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.29.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.29.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.30.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.30.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.30.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.31.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.31.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.31.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.32.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.32.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.32.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.33.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.33.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.33.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.34.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.34.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.34.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.35.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.35.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.35.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.36.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.36.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.36.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.37.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.37.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.37.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.38.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.38.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.38.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.39.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.39.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.39.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.40.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.40.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.40.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.41.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.41.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.41.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.42.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.42.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.42.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.43.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.43.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.43.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.44.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.44.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.44.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.45.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.45.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.45.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.46.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.46.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.46.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.view_experts.0.experts.47.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.47.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.view_experts.0.experts.47.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.general_experts.0.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.0.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.0.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.general_experts.1.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.1.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.1.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.general_experts.2.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.2.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.2.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.general_experts.3.in_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.3.out_linear.weight | Number of parameters: 32768
+Layer: inter_MoE_layers.0.general_experts.3.out_linear.bias | Number of parameters: 128
+Layer: inter_MoE_layers.0.norm.mlp.0.weight | Number of parameters: 131072
+Layer: inter_MoE_layers.0.norm.mlp.0.bias | Number of parameters: 32
+Layer: inter_MoE_layers.0.norm.mlp.2.weight | Number of parameters: 8192
+Layer: inter_MoE_layers.0.norm.mlp.2.bias | Number of parameters: 256
+Layer: regression_head.projection.0.weight | Number of parameters: 128
+Layer: regression_head.projection.0.bias | Number of parameters: 1
+Trainable parameters are: ['gate.0.weight', 'gate.0.bias', 'flattenIntraCycleLayer.view_experts.0.experts.0.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.0.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.1.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.1.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.2.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.2.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.3.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.3.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.4.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.4.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.5.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.5.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.6.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.6.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.7.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.7.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.8.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.8.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.9.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.9.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.10.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.10.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.11.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.11.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.12.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.12.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.13.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.13.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.14.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.14.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.15.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.15.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.16.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.16.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.17.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.17.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.18.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.18.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.19.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.19.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.20.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.20.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.21.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.21.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.22.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.22.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.23.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.23.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.24.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.24.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.25.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.25.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.26.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.26.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.27.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.27.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.28.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.28.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.29.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.29.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.30.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.30.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.31.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.31.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.32.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.32.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.33.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.33.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.34.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.34.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.35.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.35.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.36.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.36.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.37.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.37.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.38.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.38.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.39.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.39.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.40.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.40.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.41.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.41.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.42.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.42.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.43.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.43.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.44.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.44.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.45.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.45.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.46.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.46.1.bias', 'flattenIntraCycleLayer.view_experts.0.experts.47.1.weight', 'flattenIntraCycleLayer.view_experts.0.experts.47.1.bias', 'flattenIntraCycleLayer.general_experts.0.1.weight', 'flattenIntraCycleLayer.general_experts.0.1.bias', 'flattenIntraCycleLayer.general_experts.1.1.weight', 'flattenIntraCycleLayer.general_experts.1.1.bias', 'flattenIntraCycleLayer.general_experts.2.1.weight', 'flattenIntraCycleLayer.general_experts.2.1.bias', 'flattenIntraCycleLayer.general_experts.3.1.weight', 'flattenIntraCycleLayer.general_experts.3.1.bias', 'intra_MoE_layers.0.view_experts.0.experts.0.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.0.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.0.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.1.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.1.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.1.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.2.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.2.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.2.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.3.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.3.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.3.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.4.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.4.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.4.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.5.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.5.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.5.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.6.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.6.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.6.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.7.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.7.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.7.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.8.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.8.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.8.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.9.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.9.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.9.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.10.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.10.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.10.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.11.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.11.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.11.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.12.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.12.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.12.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.13.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.13.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.13.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.14.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.14.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.14.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.15.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.15.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.15.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.16.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.16.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.16.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.17.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.17.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.17.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.18.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.18.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.18.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.19.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.19.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.19.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.20.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.20.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.20.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.21.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.21.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.21.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.22.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.22.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.22.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.23.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.23.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.23.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.24.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.24.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.24.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.25.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.25.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.25.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.26.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.26.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.26.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.27.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.27.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.27.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.28.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.28.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.28.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.29.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.29.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.29.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.30.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.30.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.30.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.31.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.31.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.31.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.32.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.32.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.32.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.33.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.33.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.33.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.34.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.34.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.34.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.35.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.35.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.35.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.36.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.36.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.36.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.37.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.37.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.37.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.38.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.38.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.38.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.39.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.39.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.39.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.40.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.40.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.40.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.41.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.41.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.41.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.42.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.42.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.42.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.43.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.43.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.43.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.44.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.44.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.44.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.45.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.45.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.45.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.46.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.46.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.46.out_linear.bias', 'intra_MoE_layers.0.view_experts.0.experts.47.in_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.47.out_linear.weight', 'intra_MoE_layers.0.view_experts.0.experts.47.out_linear.bias', 'intra_MoE_layers.0.general_experts.0.in_linear.weight', 'intra_MoE_layers.0.general_experts.0.out_linear.weight', 'intra_MoE_layers.0.general_experts.0.out_linear.bias', 'intra_MoE_layers.0.general_experts.1.in_linear.weight', 'intra_MoE_layers.0.general_experts.1.out_linear.weight', 'intra_MoE_layers.0.general_experts.1.out_linear.bias', 'intra_MoE_layers.0.general_experts.2.in_linear.weight', 'intra_MoE_layers.0.general_experts.2.out_linear.weight', 'intra_MoE_layers.0.general_experts.2.out_linear.bias', 'intra_MoE_layers.0.general_experts.3.in_linear.weight', 'intra_MoE_layers.0.general_experts.3.out_linear.weight', 'intra_MoE_layers.0.general_experts.3.out_linear.bias', 'intra_MoE_layers.0.norm.mlp.0.weight', 'intra_MoE_layers.0.norm.mlp.0.bias', 'intra_MoE_layers.0.norm.mlp.2.weight', 'intra_MoE_layers.0.norm.mlp.2.bias', 'flattenInterCycleLayer.view_experts.0.experts.0.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.0.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.0.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.1.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.1.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.1.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.2.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.2.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.2.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.3.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.3.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.3.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.4.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.4.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.4.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.5.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.5.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.5.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.6.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.6.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.6.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.7.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.7.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.7.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.8.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.8.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.8.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.9.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.9.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.9.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.10.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.10.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.10.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.11.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.11.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.11.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.12.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.12.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.12.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.13.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.13.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.13.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.14.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.14.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.14.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.15.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.15.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.15.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.16.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.16.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.16.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.17.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.17.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.17.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.18.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.18.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.18.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.19.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.19.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.19.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.20.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.20.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.20.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.21.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.21.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.21.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.22.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.22.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.22.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.23.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.23.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.23.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.24.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.24.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.24.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.25.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.25.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.25.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.26.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.26.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.26.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.27.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.27.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.27.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.28.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.28.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.28.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.29.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.29.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.29.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.30.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.30.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.30.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.31.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.31.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.31.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.32.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.32.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.32.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.33.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.33.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.33.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.34.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.34.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.34.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.35.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.35.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.35.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.36.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.36.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.36.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.37.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.37.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.37.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.38.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.38.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.38.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.39.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.39.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.39.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.40.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.40.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.40.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.41.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.41.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.41.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.42.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.42.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.42.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.43.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.43.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.43.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.44.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.44.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.44.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.45.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.45.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.45.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.46.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.46.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.46.W2.weight', 'flattenInterCycleLayer.view_experts.0.experts.47.W.weight', 'flattenInterCycleLayer.view_experts.0.experts.47.V.weight', 'flattenInterCycleLayer.view_experts.0.experts.47.W2.weight', 'flattenInterCycleLayer.general_experts.0.W.weight', 'flattenInterCycleLayer.general_experts.0.V.weight', 'flattenInterCycleLayer.general_experts.0.W2.weight', 'flattenInterCycleLayer.general_experts.1.W.weight', 'flattenInterCycleLayer.general_experts.1.V.weight', 'flattenInterCycleLayer.general_experts.1.W2.weight', 'flattenInterCycleLayer.general_experts.2.W.weight', 'flattenInterCycleLayer.general_experts.2.V.weight', 'flattenInterCycleLayer.general_experts.2.W2.weight', 'flattenInterCycleLayer.general_experts.3.W.weight', 'flattenInterCycleLayer.general_experts.3.V.weight', 'flattenInterCycleLayer.general_experts.3.W2.weight', 'inter_MoE_layers.0.view_experts.0.experts.0.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.0.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.0.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.1.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.1.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.1.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.2.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.2.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.2.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.3.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.3.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.3.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.4.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.4.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.4.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.5.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.5.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.5.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.6.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.6.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.6.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.7.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.7.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.7.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.8.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.8.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.8.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.9.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.9.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.9.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.10.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.10.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.10.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.11.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.11.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.11.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.12.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.12.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.12.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.13.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.13.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.13.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.14.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.14.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.14.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.15.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.15.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.15.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.16.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.16.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.16.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.17.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.17.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.17.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.18.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.18.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.18.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.19.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.19.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.19.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.20.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.20.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.20.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.21.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.21.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.21.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.22.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.22.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.22.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.23.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.23.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.23.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.24.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.24.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.24.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.25.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.25.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.25.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.26.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.26.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.26.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.27.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.27.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.27.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.28.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.28.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.28.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.29.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.29.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.29.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.30.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.30.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.30.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.31.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.31.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.31.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.32.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.32.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.32.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.33.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.33.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.33.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.34.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.34.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.34.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.35.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.35.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.35.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.36.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.36.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.36.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.37.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.37.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.37.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.38.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.38.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.38.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.39.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.39.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.39.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.40.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.40.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.40.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.41.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.41.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.41.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.42.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.42.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.42.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.43.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.43.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.43.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.44.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.44.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.44.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.45.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.45.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.45.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.46.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.46.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.46.out_linear.bias', 'inter_MoE_layers.0.view_experts.0.experts.47.in_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.47.out_linear.weight', 'inter_MoE_layers.0.view_experts.0.experts.47.out_linear.bias', 'inter_MoE_layers.0.general_experts.0.in_linear.weight', 'inter_MoE_layers.0.general_experts.0.out_linear.weight', 'inter_MoE_layers.0.general_experts.0.out_linear.bias', 'inter_MoE_layers.0.general_experts.1.in_linear.weight', 'inter_MoE_layers.0.general_experts.1.out_linear.weight', 'inter_MoE_layers.0.general_experts.1.out_linear.bias', 'inter_MoE_layers.0.general_experts.2.in_linear.weight', 'inter_MoE_layers.0.general_experts.2.out_linear.weight', 'inter_MoE_layers.0.general_experts.2.out_linear.bias', 'inter_MoE_layers.0.general_experts.3.in_linear.weight', 'inter_MoE_layers.0.general_experts.3.out_linear.weight', 'inter_MoE_layers.0.general_experts.3.out_linear.bias', 'inter_MoE_layers.0.norm.mlp.0.weight', 'inter_MoE_layers.0.norm.mlp.0.bias', 'inter_MoE_layers.0.norm.mlp.2.weight', 'inter_MoE_layers.0.norm.mlp.2.bias', 'regression_head.projection.0.weight', 'regression_head.projection.0.bias']
+[2025-04-20 11:47:52,503] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed info: version=0.15.0, git-hash=unknown, git-branch=unknown
+[2025-04-20 11:47:52,503] [INFO] [config.py:733:__init__] Config mesh_device None world_size = 2
+[2025-04-20 11:47:52,772] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+[2025-04-20 11:47:52,773] [INFO] [logging.py:96:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+[2025-04-20 11:47:52,774] [INFO] [logging.py:96:log_dist] [Rank 0] Removing param_group that has no 'params' in the basic Optimizer
+[2025-04-20 11:47:52,795] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Basic Optimizer = Adam
+[2025-04-20 11:47:52,795] [INFO] [utils.py:59:is_zero_supported_optimizer] Checking ZeRO support for optimizer=Adam type=<class 'torch.optim.adam.Adam'>
+[2025-04-20 11:47:52,795] [INFO] [logging.py:96:log_dist] [Rank 0] Creating torch.bfloat16 ZeRO stage 2 optimizer
+[2025-04-20 11:47:52,795] [INFO] [stage_1_and_2.py:148:__init__] Reduce bucket size 200000000
+[2025-04-20 11:47:52,795] [INFO] [stage_1_and_2.py:149:__init__] Allgather bucket size 200000000
+[2025-04-20 11:47:52,795] [INFO] [stage_1_and_2.py:150:__init__] CPU Offload: False
+[2025-04-20 11:47:52,795] [INFO] [stage_1_and_2.py:151:__init__] Round robin gradient partitioning: False
+[2025-04-20 11:47:53,082] [INFO] [utils.py:781:see_memory_usage] Before initializing optimizer states
+[2025-04-20 11:47:53,083] [INFO] [utils.py:782:see_memory_usage] MA 0.12 GB         Max_MA 0.14 GB         CA 0.18 GB         Max_CA 0 GB 
+[2025-04-20 11:47:53,083] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 24.28 GB, percent = 9.6%
+[2025-04-20 11:47:53,279] [INFO] [utils.py:781:see_memory_usage] After initializing optimizer states
+[2025-04-20 11:47:53,280] [INFO] [utils.py:782:see_memory_usage] MA 0.12 GB         Max_MA 0.15 GB         CA 0.21 GB         Max_CA 0 GB 
+[2025-04-20 11:47:53,280] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 24.48 GB, percent = 9.7%
+[2025-04-20 11:47:53,280] [INFO] [stage_1_and_2.py:543:__init__] optimizer state initialized
+[2025-04-20 11:47:53,452] [INFO] [utils.py:781:see_memory_usage] After initializing ZeRO optimizer
+[2025-04-20 11:47:53,453] [INFO] [utils.py:782:see_memory_usage] MA 0.12 GB         Max_MA 0.12 GB         CA 0.21 GB         Max_CA 0 GB 
+[2025-04-20 11:47:53,453] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 24.62 GB, percent = 9.8%
+[2025-04-20 11:47:53,455] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Final Optimizer = DeepSpeedZeroOptimizer
+[2025-04-20 11:47:53,456] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed using configured LR scheduler = None
+[2025-04-20 11:47:53,456] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed LR Scheduler = None
+[2025-04-20 11:47:53,456] [INFO] [logging.py:96:log_dist] [Rank 0] step=0, skipped=0, lr=[5e-05], mom=[(0.9, 0.999)]
+[2025-04-20 11:47:53,457] [INFO] [config.py:999:print] DeepSpeedEngine configuration:
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   activation_checkpointing_config  {
+    "partition_activations": false, 
+    "contiguous_memory_optimization": false, 
+    "cpu_checkpointing": false, 
+    "number_checkpoints": null, 
+    "synchronize_checkpoint_boundary": false, 
+    "profile": false
+}
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True, 'use_gds': False}
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   amp_enabled .................. False
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   amp_params ................... False
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   autotuning_config ............ {
+    "enabled": false, 
+    "start_step": null, 
+    "end_step": null, 
+    "metric_path": null, 
+    "arg_mappings": null, 
+    "metric": "throughput", 
+    "model_info": null, 
+    "results_dir": "autotuning_results", 
+    "exps_dir": "autotuning_exps", 
+    "overwrite": true, 
+    "fast": true, 
+    "start_profile_step": 3, 
+    "end_profile_step": 5, 
+    "tuner_type": "gridsearch", 
+    "tuner_early_stopping": 5, 
+    "tuner_num_trials": 50, 
+    "model_info_path": null, 
+    "mp_size": 1, 
+    "max_train_batch_size": null, 
+    "min_train_batch_size": 1, 
+    "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+    "min_train_micro_batch_size_per_gpu": 1, 
+    "num_tuning_micro_batch_sizes": 3
+}
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   bfloat16_enabled ............. True
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   bfloat16_immediate_grad_update  False
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   checkpoint_parallel_write_pipeline  False
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   checkpoint_tag_validation_enabled  True
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   checkpoint_tag_validation_fail  False
+[2025-04-20 11:47:53,458] [INFO] [config.py:1003:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x7f6abef43f50>
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   communication_data_type ...... None
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   curriculum_enabled_legacy .... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   curriculum_params_legacy ..... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   data_efficiency_config ....... {'enabled': False, 'seed': 1234, 'data_sampling': {'enabled': False, 'num_epochs': 1000, 'num_workers': 0, 'curriculum_learning': {'enabled': False}}, 'data_routing': {'enabled': False, 'random_ltd': {'enabled': False, 'layer_token_lr_schedule': {'enabled': False}}}}
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   data_efficiency_enabled ...... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   dataloader_drop_last ......... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   disable_allgather ............ False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   dump_state ................... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   dynamic_loss_scale_args ...... None
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_enabled ........... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_gas_boundary_resolution  1
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_layer_num ......... 0
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_max_iter .......... 100
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_stability ......... 1e-06
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_tol ............... 0.01
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   eigenvalue_verbose ........... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   elasticity_enabled ........... False
+[2025-04-20 11:47:53,459] [INFO] [config.py:1003:print]   flops_profiler_config ........ {
+    "enabled": false, 
+    "recompute_fwd_factor": 0.0, 
+    "profile_step": 1, 
+    "module_depth": -1, 
+    "top_modules": 1, 
+    "detailed": true, 
+    "output_file": null
+}
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   fp16_auto_cast ............... None
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   fp16_enabled ................. False
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   fp16_master_weights_and_gradients  False
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   global_rank .................. 0
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   grad_accum_dtype ............. None
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   gradient_accumulation_steps .. 1
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   gradient_clipping ............ 0.0
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   gradient_predivide_factor .... 1.0
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   graph_harvesting ............. False
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   initial_dynamic_scale ........ 1
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   load_universal_checkpoint .... False
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   loss_scale ................... 1.0
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   memory_breakdown ............. False
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   mics_hierarchial_params_gather  False
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   mics_shard_size .............. -1
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') comet=CometConfig(enabled=False, samples_log_interval=100, project=None, workspace=None, api_key=None, experiment_name=None, experiment_key=None, online=None, mode=None) wandb=WandbConfig(enabled=False, group=None, team=None, project='deepspeed') csv_monitor=CSVConfig(enabled=False, output_path='', job_name='DeepSpeedJobName')
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   nebula_config ................ {
+    "enabled": false, 
+    "persistent_storage_path": null, 
+    "persistent_time_interval": 100, 
+    "num_of_version_in_retention": 2, 
+    "enable_nebula_load": true, 
+    "load_path": null
+}
+[2025-04-20 11:47:53,460] [INFO] [config.py:1003:print]   optimizer_legacy_fusion ...... False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   optimizer_name ............... None
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   optimizer_params ............. None
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0, 'pipe_partitioned': True, 'grad_partitioned': True}
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   pld_enabled .................. False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   pld_params ................... False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   prescale_gradients ........... False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   scheduler_name ............... None
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   scheduler_params ............. None
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   seq_parallel_communication_data_type  torch.float32
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   sparse_attention ............. None
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   sparse_gradients_enabled ..... False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   steps_per_print .............. inf
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   timers_config ................ enabled=True synchronized=True
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   train_batch_size ............. 116
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   train_micro_batch_size_per_gpu  58
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   use_data_before_expert_parallel_  False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   use_node_local_storage ....... False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   wall_clock_breakdown ......... False
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   weight_quantization_config ... None
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   world_size ................... 2
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   zero_allow_untested_optimizer  True
+[2025-04-20 11:47:53,461] [INFO] [config.py:1003:print]   zero_config .................. stage=2 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=200000000 use_multi_rank_bucket_allreduce=True allgather_partitions=True allgather_bucket_size=200000000 overlap_comm=True load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1000000000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50000000 param_persistence_threshold=100000 model_persistence_threshold=9223372036854775807 max_live_parameters=1000000000 max_reuse_distance=1000000000 gather_16bit_weights_on_model_save=False use_all_reduce_for_fetch_params=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_nontrainable_weights=False zero_quantized_gradients=False mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True pipeline_loading_checkpoint=False override_module_apply=True
+[2025-04-20 11:47:53,462] [INFO] [config.py:1003:print]   zero_enabled ................. True
+[2025-04-20 11:47:53,462] [INFO] [config.py:1003:print]   zero_force_ds_cpu_optimizer .. True
+[2025-04-20 11:47:53,462] [INFO] [config.py:1003:print]   zero_optimization_stage ...... 2
+[2025-04-20 11:47:53,462] [INFO] [config.py:989:print_user_config]   json = {
+    "bf16": {
+        "enabled": true, 
+        "auto_cast": true
+    }, 
+    "zero_optimization": {
+        "stage": 2, 
+        "allgather_partitions": true, 
+        "allgather_bucket_size": 2.000000e+08, 
+        "overlap_comm": true, 
+        "reduce_scatter": true, 
+        "reduce_bucket_size": 2.000000e+08, 
+        "contiguous_gradients": true, 
+        "sub_group_size": 1.000000e+09
+    }, 
+    "gradient_accumulation_steps": 1, 
+    "train_batch_size": 116, 
+    "train_micro_batch_size_per_gpu": 58, 
+    "steps_per_print": inf, 
+    "wall_clock_breakdown": false, 
+    "fp16": {
+        "enabled": false
+    }, 
+    "zero_allow_untested_optimizer": true
+}
+Epoch: 1 cost time: 2.072949171066284
+Epoch: 1 | Train Loss: 1.00465 | Train label loss: 1.00465 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 237.5444767 | Train MAPE: 0.4444495 | Vali RMSE: 1578.2706215| Vali MAE: 1356.4683974| Vali MAPE: 0.9454601| Test RMSE: 822.0553906| Test acc1: 46.0000 | Test MAPE: 0.3112395
+The checkpoint is saved in /data/LLMs/checkpoints/BatteryMoE_DKPNorm_v2_sl1_lr5e-05_dm128_nh8_el1_dl1_df256_llmLayers32_lradjtype1_datasetexp_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_noDKPL1_dr0.05_bf16_NumE20_K3_seed42-50to1!
+type1| Updating learning rate to 5e-05
+Epoch: 2 cost time: 1.548830509185791
+Epoch: 2 | Train Loss: 0.20520 | Train label loss: 0.20520 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 107.0407537 | Train MAPE: 0.1599500 | Vali RMSE: 1575.5074909| Vali MAE: 1327.4068543| Vali MAPE: 0.7715682| Test RMSE: 830.3199462| Test acc1: 4.6667 | Test MAPE: 0.4486603
+The checkpoint is saved in /data/LLMs/checkpoints/BatteryMoE_DKPNorm_v2_sl1_lr5e-05_dm128_nh8_el1_dl1_df256_llmLayers32_lradjtype1_datasetexp_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_noDKPL1_dr0.05_bf16_NumE20_K3_seed42-50to1!
+type1| Updating learning rate to 5e-05
+Epoch: 3 cost time: 1.6090710163116455
+Epoch: 3 | Train Loss: 0.15970 | Train label loss: 0.15970 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 96.5239220 | Train MAPE: 0.1228707 | Vali RMSE: 1550.1418605| Vali MAE: 1336.9236555| Vali MAPE: 0.9599886| Test RMSE: 807.7235067| Test acc1: 47.0000 | Test MAPE: 0.3154080
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 4 cost time: 1.5839314460754395
+Epoch: 4 | Train Loss: 0.12994 | Train label loss: 0.12994 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 92.3989110 | Train MAPE: 0.1241060 | Vali RMSE: 1560.1331237| Vali MAE: 1331.2076599| Vali MAPE: 0.8721871| Test RMSE: 819.7656780| Test acc1: 8.0000 | Test MAPE: 0.4192184
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 5 cost time: 1.6034331321716309
+Epoch: 5 | Train Loss: 0.14186 | Train label loss: 0.14186 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 89.4728954 | Train MAPE: 0.1166659 | Vali RMSE: 1555.5758595| Vali MAE: 1333.5128948| Vali MAPE: 0.9101294| Test RMSE: 816.4686128| Test acc1: 14.3333 | Test MAPE: 0.3972089
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 6 cost time: 1.575598955154419
+Epoch: 6 | Train Loss: 0.11862 | Train label loss: 0.11862 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 85.1274164 | Train MAPE: 0.0932800 | Vali RMSE: 1542.7408692| Vali MAE: 1329.3441545| Vali MAPE: 0.9481585| Test RMSE: 806.5701006| Test acc1: 33.3333 | Test MAPE: 0.3530581
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 7 cost time: 1.686736822128296
+Epoch: 7 | Train Loss: 0.12466 | Train label loss: 0.12466 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 82.2102416 | Train MAPE: 0.0896133 | Vali RMSE: 1551.9842629| Vali MAE: 1325.2088676| Vali MAPE: 0.8741954| Test RMSE: 817.4129491| Test acc1: 3.0000 | Test MAPE: 0.4093817
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 8 cost time: 1.620060920715332
+Epoch: 8 | Train Loss: 0.11053 | Train label loss: 0.11053 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 81.7386921 | Train MAPE: 0.0943750 | Vali RMSE: 1566.3031848| Vali MAE: 1340.5019849| Vali MAPE: 0.9025864| Test RMSE: 827.0689778| Test acc1: 5.0000 | Test MAPE: 0.3916755
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 9 cost time: 1.4992749691009521
+Epoch: 9 | Train Loss: 0.10453 | Train label loss: 0.10453 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 77.3125170 | Train MAPE: 0.0856428 | Vali RMSE: 1577.1064388| Vali MAE: 1349.7676969| Vali MAPE: 0.9092881| Test RMSE: 834.1398846| Test acc1: 3.0000 | Test MAPE: 0.3876219
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 10 cost time: 1.613945722579956
+Epoch: 10 | Train Loss: 0.08478 | Train label loss: 0.08478 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 70.3139979 | Train MAPE: 0.0815375 | Vali RMSE: 1615.9621128| Vali MAE: 1377.4450412| Vali MAPE: 0.8949374| Test RMSE: 864.6740399| Test acc1: 0.0000 | Test MAPE: 0.4213818
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 11 cost time: 1.641688346862793
+Epoch: 11 | Train Loss: 0.09641 | Train label loss: 0.09641 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 69.3952075 | Train MAPE: 0.0749693 | Vali RMSE: 1619.0826662| Vali MAE: 1382.8250627| Vali MAPE: 0.9148911| Test RMSE: 866.0054540| Test acc1: 1.6667 | Test MAPE: 0.4080418
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 12 cost time: 1.55863356590271
+Epoch: 12 | Train Loss: 0.05685 | Train label loss: 0.05685 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 57.8276183 | Train MAPE: 0.0653565 | Vali RMSE: 1641.8910204| Vali MAE: 1400.8371183| Vali MAPE: 0.9182280| Test RMSE: 882.4037228| Test acc1: 0.0000 | Test MAPE: 0.4173198
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 13 cost time: 1.6657354831695557
+Epoch: 13 | Train Loss: 0.04979 | Train label loss: 0.04979 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 51.5136532 | Train MAPE: 0.0562214 | Vali RMSE: 1647.3166804| Vali MAE: 1408.5493888| Vali MAPE: 0.9422522| Test RMSE: 887.7663677| Test acc1: 9.6667 | Test MAPE: 0.4016169
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 14 cost time: 1.62032151222229
+Epoch: 14 | Train Loss: 0.05568 | Train label loss: 0.05568 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 53.0337836 | Train MAPE: 0.0573649 | Vali RMSE: 1644.4122784| Vali MAE: 1408.9825757| Vali MAPE: 0.9606672| Test RMSE: 884.5419753| Test acc1: 33.3333 | Test MAPE: 0.3829204
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 15 cost time: 1.6177258491516113
+Epoch: 15 | Train Loss: 0.06464 | Train label loss: 0.06464 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 59.9636760 | Train MAPE: 0.0692582 | Vali RMSE: 1644.1319847| Vali MAE: 1409.8644194| Vali MAPE: 0.9670631| Test RMSE: 882.3046279| Test acc1: 33.3333 | Test MAPE: 0.3731857
+EarlyStopping counter: 0 out of 5
+type1| Updating learning rate to 5e-05
+Epoch: 16 cost time: 1.6105918884277344
+Epoch: 16 | Train Loss: 0.05649 | Train label loss: 0.05649 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 58.0088988 | Train MAPE: 0.0629528 | Vali RMSE: 1636.7453299| Vali MAE: 1402.8467958| Vali MAPE: 0.9580200| Test RMSE: 877.9860029| Test acc1: 33.0000 | Test MAPE: 0.3732600
+EarlyStopping counter: 1 out of 5
+type1| Updating learning rate to 2.5e-05
+Epoch: 17 cost time: 1.7386369705200195
+Epoch: 17 | Train Loss: 0.05370 | Train label loss: 0.05370 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 55.6689785 | Train MAPE: 0.0660376 | Vali RMSE: 1665.1393703| Vali MAE: 1418.7060715| Vali MAPE: 0.9187161| Test RMSE: 901.6099135| Test acc1: 0.0000 | Test MAPE: 0.4206232
+EarlyStopping counter: 2 out of 5
+type1| Updating learning rate to 1.25e-05
+Epoch: 18 cost time: 1.6265828609466553
+Epoch: 18 | Train Loss: 0.03778 | Train label loss: 0.03778 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 46.8922627 | Train MAPE: 0.0633969 | Vali RMSE: 1640.9727734| Vali MAE: 1404.8162484| Vali MAPE: 0.9495689| Test RMSE: 881.7280305| Test acc1: 24.0000 | Test MAPE: 0.3865410
+EarlyStopping counter: 3 out of 5
+type1| Updating learning rate to 6.25e-06
+Epoch: 19 cost time: 1.5731210708618164
+Epoch: 19 | Train Loss: 0.03174 | Train label loss: 0.03174 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 42.3538193 | Train MAPE: 0.0551662 | Vali RMSE: 1663.5080048| Vali MAE: 1415.1044318| Vali MAPE: 0.9034741| Test RMSE: 900.3047811| Test acc1: 0.0000 | Test MAPE: 0.4387730
+EarlyStopping counter: 4 out of 5
+type1| Updating learning rate to 3.125e-06
+Epoch: 20 cost time: 1.6001842021942139
+Epoch: 20 | Train Loss: 0.02898 | Train label loss: 0.02898 | Train cl loss: 0.00000| Train align2 loss: 0.00000 | Train align loss: 0.00000 | Train DG loss: 0.00000 | Train RMSE: 39.9369275 | Train MAPE: 0.0505776 | Vali RMSE: 1649.1423985| Vali MAE: 1411.7054642| Vali MAPE: 0.9532989| Test RMSE: 887.9629810| Test acc1: 30.3333 | Test MAPE: 0.3892623
+EarlyStopping counter: 5 out of 5
+Early stopping
+Best model performance: Test MAE: 563.7628 | Test RMSE: 830.3199 | Test MAPE: 0.4487 | Test 15%-accuracy: 4.6667 | Test 10%-accuracy: 2.6667 | Val MAE: 1327.4069 | Val RMSE: 1575.5075 | Val MAPE: 0.7716 | Val 15%-accuracy: 0.0000 | Val 10%-accuracy: 0.0000 
+Best model performance: Test Seen MAPE: 0.3208 | Test Unseen MAPE: 0.7043
+Best model performance: Test Seen 15%-accuracy: 7.0000 | Test Unseen 15%-accuracy: 0.0000
+Best model performance: Test Seen 10%-accuracy: 4.0000 | Test Unseen 10%-accuracy: 0.0000
+/data/LLMs/checkpoints/BatteryMoE_DKPNorm_v2_sl1_lr5e-05_dm128_nh8_el1_dl1_df256_llmLayers32_lradjtype1_datasetexp_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_noDKPL1_dr0.05_bf16_NumE20_K3_seed42-50to1
+wandb: - 0.017 MB of 0.017 MB uploadedwandb: \ 0.017 MB of 0.017 MB uploadedwandb: | 0.017 MB of 0.017 MB uploadedwandb: / 0.017 MB of 0.143 MB uploadedwandb: - 0.017 MB of 0.143 MB uploadedwandb: \ 0.017 MB of 0.143 MB uploadedwandb: | 0.143 MB of 0.143 MB uploadedwandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:      epoch ▁▁▂▂▂▃▃▃▄▄▅▅▅▆▆▆▇▇▇██
+wandb:  test_MAPE ▁█▁▇▅▃▆▅▅▇▆▆▆▅▄▄▇▅▇▅█
+wandb:  test_RMSE ▂▃▁▂▂▁▂▃▃▅▅▇▇▇▇▆█▇█▇▃
+wandb:  test_acc1 █▂█▂▃▆▁▂▁▁▁▁▂▆▆▆▁▅▁▆▂
+wandb:  test_acc2 █▂▆▂▃▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂
+wandb: train_loss █▂▂▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:  vali_MAPE ▇▁█▅▆▇▅▆▆▅▆▆▇███▆▇▆█▁
+wandb:  vali_RMSE ▃▃▁▂▂▁▂▂▃▅▅▇▇▇▇▆█▇█▇▃
+wandb:  vali_acc1 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:  vali_acc2 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: 
+wandb: Run summary:
+wandb:      epoch 20
+wandb:  test_MAPE 0.44866
+wandb:  test_RMSE 830.31995
+wandb:  test_acc1 4.66667
+wandb:  test_acc2 2.66667
+wandb: train_loss 0.02898
+wandb:  vali_MAPE 0.77157
+wandb:  vali_RMSE 1575.50749
+wandb:  vali_acc1 0.0
+wandb:  vali_acc2 0.0
+wandb: 
+wandb: 🚀 View run 2025-04-20 11:47:38 at: https://wandb.ai/hkustgz-batteryinformatics/BatteryMoE_FixPrompt/runs/jw7bds44
+wandb: ⭐️ View project at: https://wandb.ai/hkustgz-batteryinformatics/BatteryMoE_FixPrompt
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20250420_114748-jw7bds44/logs
+wandb: WARNING The new W&B backend becomes opt-out in version 0.18.0; try it out with `wandb.require("core")`! See https://wandb.me/wandb-core for more information.
+E0420 11:49:24.714000 140511530398336 torch/distributed/elastic/multiprocessing/api.py:833] failed (exitcode: -15) local_rank: 0 (pid: 1988741) of binary: /home/trf/envs/llmpy311/bin/python
+Traceback (most recent call last):
+  File "/home/trf/envs/llmpy311/bin/accelerate", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/commands/accelerate_cli.py", line 46, in main
+    args.func(args)
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/commands/launch.py", line 1066, in launch_command
+    multi_gpu_launcher(args)
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/accelerate/commands/launch.py", line 711, in multi_gpu_launcher
+    distrib_run.run(args)
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 133, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/trf/envs/llmpy311/lib/python3.11/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+=========================================================
+run_BatteryMoE_alpha.py FAILED
+---------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+---------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-04-20_11:49:24
+  host      : user-AS-4124GS-TNR
+  rank      : 0 (local_rank: 0)
+  exitcode  : -15 (pid: 1988741)
+  error_file: <N/A>
+  traceback : Signal 15 (SIGTERM) received by PID 1988741
+=========================================================
+scripts/BatteryMoE.sh: 126: or: not found

@@ -28,6 +28,29 @@ from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
 transformers.logging.set_verbosity_error() 
+class PESumLinear(nn.Module):
+    '''
+    To improve the parameter efficient of the original CPMLP regarding the FlattenInterCycle,
+    this module is introduced.
+    '''
+    def __init__(self, configs):
+        super(PESumLinear, self).__init__()
+        self.d_model = configs.d_model
+        self.W = nn.Linear(self.d_model, self.d_model*2//3, bias=False)
+        self.act = nn.Sigmoid()
+        self.V = nn.Linear(self.d_model, self.d_model*2//3, bias=False)
+        self.W2 = nn.Linear(self.d_model*2//3, self.d_model, bias=False)
+        self.pe = PositionalEmbedding(self.d_model)
+    
+    def forward(self, x):
+        '''
+        x: [B, L, D]
+        '''
+        x = x + self.pe(x) # add positional encoding
+        swish_x = self.W(x)
+        act_x = self.W2(swish_x * self.act(swish_x) * self.V(x))
+        out = torch.sum(act_x, dim=1)
+        return out
 
 class MLPBlockGELU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
@@ -65,11 +88,6 @@ class MLPBlock(nn.Module):
         out = self.out_linear(out)
         return self.dropout(out)
 
-class FlattenInterConv(nn.Module):
-    def __init__(self, configs):
-        super(FlattenInterConv, self).__init__()
-        self.d_model = configs.d_model
-        self.conv = nn.Conv1d(configs.d_model, configs.d_model, kernel_size=2, stride=2, padding=0)
 
 class DKINorm(nn.Module):
     def __init__(self, d_model, d_llm, drop_rate=0.1):
@@ -314,7 +332,7 @@ class BatteryMoEFlattenInterCycleMoELayer(nn.Module):
         self.num_experts = num_experts
         self.activation = configs.activation
         self.top_k = topK if topK is not None else configs.topK
-        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.d_model*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([PESumLinear(configs) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(in_dim*self.early_cycle_threshold, self.d_model)) for _ in range(self.num_general_experts)])
         self.eps = 1e-9
@@ -553,7 +571,7 @@ class Model(nn.Module):
                                                     ),
                                                     norm_layer=DKINorm(self.d_model, self.d_llm, self.drop_rate),
                                                     general_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)
+                                                        PESumLinear(configs) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=False)
         
