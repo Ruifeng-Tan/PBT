@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_PESum，只不过在Sum之前再用cycle_curve_mask强制把placeholder的值设置为0了。
+基于BatteryMoE_PESum_mask，只不过在sum之后使用了Normalization
 '''
 import torch
 import torch.nn as nn
@@ -92,15 +92,16 @@ class MLPBlock(nn.Module):
 
 
 class MultiViewLayer(nn.Module):
-    def __init__(self, num_views, view_experts, norm_layer, general_experts, use_connection):
+    def __init__(self, num_views, view_experts, norm_layer, general_experts, use_connection, use_norm=True):
         super(MultiViewLayer, self).__init__()
         self.num_views = num_views
         
         self.view_experts = view_experts
         self.general_experts = general_experts
         self.use_connection = use_connection
+        self.use_norm = use_norm
         
-        if use_connection:
+        if self.use_norm:
             self.norm = norm_layer
 
     def forward(self, x, total_logits, total_masks, curve_attn_mask=None):
@@ -137,6 +138,8 @@ class MultiViewLayer(nn.Module):
         
         if self.use_connection:
             final_out = self.norm(final_out + x) # add & norm
+        elif self.use_norm:
+            final_out = self.norm(final_out) # norm
         
         total_aug_loss = total_aug_loss / aug_count if total_aug_loss !=0 else 0 
         total_guide_loss = total_guide_loss / guide_count if guide_count != 0 else 0
@@ -540,7 +543,7 @@ class Model(nn.Module):
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
-                                                    use_connection=False)
+                                                    use_connection=False, use_norm=False)
         
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts, self.topK)]
