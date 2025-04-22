@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_MHv2, 只不过在MultiViewLayer中加入了affine
+基于BatteryMoE_MHv2, 只不过在MultiViewLayer中加入了affine，但也不是每个view都有一个
 '''
 import torch
 import torch.nn as nn
@@ -103,7 +103,7 @@ class MultiViewLayer(nn.Module):
         self.use_affine = use_affine
         if use_affine:
             self.general_affine = DomainKnowledgeViewAffine(d_model)
-            self.view_affines = nn.ModuleList([DomainKnowledgeViewAffine(d_model) for _ in range(num_views)])
+            self.view_affine = DomainKnowledgeViewAffine(d_model)
 
     def forward(self, x, total_logits, total_masks):
         '''
@@ -113,8 +113,8 @@ class MultiViewLayer(nn.Module):
         '''
         total_guide_loss = 0
         final_out = 0
+        view_x = self.view_affine(x) if self.use_affine else x
         for i, view_expert in enumerate(self.view_experts):
-            view_x = self.view_affines[i](x) if self.use_affine else x
             out, guide_loss = view_expert(view_x, total_logits[i], total_masks[i])
             final_out = final_out + out
             total_guide_loss += guide_loss
