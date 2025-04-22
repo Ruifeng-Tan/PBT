@@ -218,7 +218,7 @@ def my_collate_fn(samples):
 class Dataset_BatteryLifeLLM_original(Dataset):
     def __init__(self, args, flag='train', label_scaler=None, tokenizer=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None):
+                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, use_target_dataset=False):
         '''
         init the Dataset_BatteryFormer class
         :param args:model parameters
@@ -234,7 +234,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.seq_len = args.seq_len
         self.charge_discharge_len = args.charge_discharge_length  # The resampled length for charge and discharge curves
         self.flag = flag
-        self.dataset = args.dataset
+        self.dataset = args.dataset if not use_target_dataset else args.target_dataset
         self.early_cycle_threshold = args.early_cycle_threshold
         self.cathode_json = json.load(open('./gate_data/cathodes.json'))
         self.cathode_experts = args.cathode_experts

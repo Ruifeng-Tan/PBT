@@ -427,7 +427,7 @@ class Model(nn.Module):
         self.num_views = configs.num_views
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers)))
+        self.gate = nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers))
         self.split_dim = self.d_model // self.num_views
 
         self.flattenIntraCycleLayer = MultiViewLayer(self.num_views, 

@@ -10,7 +10,7 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_PESum, baseline_CPTransformerMoE, baseline_CPMLPMoE, BatteryMoE_DKPNorm, BatteryMoE_Sparse
+from models import BatteryMoE_PESum, baseline_CPTransformerMoE, baseline_CPMLPMoE, BatteryMoE_horizontal_MHv2, BatteryMoE_Sparse
 import wandb
 from data_provider.gate_masker import gate_masker
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
@@ -213,11 +213,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_PESum.Model(model_config)
-    elif args.model == 'BatteryMoE_DKPNorm':
+    elif args.model == 'BatteryMoE_horizontal_MHv2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_DKPNorm.Model(model_config)
+        model = BatteryMoE_horizontal_MHv2.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
@@ -339,9 +339,8 @@ for ii in range(args.itr):
 
         mape = mean_absolute_percentage_error(total_references, total_preds)
 
-        accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | MAPE: {mape} | {alpha}-accuracy: {alpha_acc}% | {alpha2}-accuracy: {alpha_acc2}%')
+        accelerator.print(f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | MAPE: {mape} | {alpha}-accuracy: {alpha_acc}% | {alpha2}-accuracy: {alpha_acc2}%')
         # calculate the model performance on the samples from the seen and unseen aging conditions
-        print(total_seen_unseen_ids.shape, total_references.shape)
         seen_references = total_references[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([0])
         unseen_references = total_references[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([0])
         seen_preds = total_preds[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([1])
