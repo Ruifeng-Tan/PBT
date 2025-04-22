@@ -546,6 +546,37 @@ class OutputHead(nn.Module):
         
         return out, llm_out, llm_out
 
+class MuLayer(nn.Module):
+    '''
+    MULTILINEAR OPERATOR NETWORKS ICLR 2024
+    This is used as the gate network
+    '''
+    def __init__(self, d_llm, d_ff_gate, out_dim, drop_rate):
+        super(MuLayer, self).__init__()
+        self.A_linear = nn.Linear(d_llm, d_ff_gate, bias=False)
+        self.B_weight = nn.Parameter(torch.ones(d_ff_gate, d_ff_gate//2))
+        self.D_weight = nn.Parameter(torch.ones(d_ff_gate//2, d_llm))
+        self.ln1 = nn.LayerNorm(d_ff_gate)
+        self.ln2 = nn.LayerNorm(d_ff_gate)
+        self.drop_path = nn.Dropout(drop_rate) if drop_rate > 0.0 else nn.Identity()
+
+        self.C_linear = nn.Linear(d_ff_gate, out_dim, bias=False)
+    
+    def forward(self, DKP_embeddings):
+        '''
+        DKP_embeddings: [B, d_llm]
+        '''
+        B = DKP_embeddings.shape[0]
+        transformed_x = self.ln1(self.A_linear(DKP_embeddings)) # [B, d_ff_gate]
+        BD = torch.matmul(self.B_weight, self.D_weight).unsqueeze(0).expand(B, -1, -1) # [B, d_ff_gate, d_llm]
+
+        BD_x = self.ln2(torch.matmul(BD, DKP_embeddings.unsqueeze(-1)).squeeze(-1)) # [B, d_ff_gate]
+
+        tmp_x = transformed_x * BD_x + self.drop_path(transformed_x) # [B, d_ff_gate]
+        logits = self.C_linear(tmp_x) # [B, out_dim]
+        return logits
+
+
 class Model(nn.Module):
     '''
     The load balancing loss is from the paper "Switch Transformers: Scaling to Trillion Parameter Models
@@ -591,9 +622,7 @@ class Model(nn.Module):
         self.topK = configs.topK
         self.d_ff_gate = configs.d_ff_gate
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff_gate), 
-                                  nn.Linear(self.d_ff_gate, self.d_ff_gate*4), 
-                                  nn.Linear(self.d_ff_gate*4, self.num_experts*(2+self.moe_layers)))
+        self.gate = MuLayer(self.d_llm, self.d_ff_gate, self.num_experts*(2+self.moe_layers), self.drop_rate)
 
         self.flattenIntraCycleLayer = MultiViewLayer(self.d_model, self.num_views, 
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.cathode_experts),
