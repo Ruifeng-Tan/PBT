@@ -165,6 +165,7 @@ parser.add_argument('--alpha2', type=float, default=0.1, help='the alpha for alp
 # DA
 parser.add_argument('--target_dataset', type=str, default='None', help='the target domain dataset')
 parser.add_argument('--DA_weight', type=float, default=1, help='The weight of MMD loss')
+parser.add_argument('--DA_target_mseloss_weight', type=float, default=1, help='The weight of target mse loss')
 
 args = parser.parse_args()
 
@@ -403,7 +404,7 @@ for ii in range(args.itr):
                     target_loss = torch.mean(target_loss * target_weights)
 
                     mmd_loss = MMD_loss(embeddings, target_embeddings)
-                    loss = loss + target_loss + args.DA_weight * mmd_loss
+                    loss = loss + args.DA_target_mseloss_weight * target_loss + args.DA_weight * mmd_loss
 
                     
                 label_loss = loss.detach().float()
