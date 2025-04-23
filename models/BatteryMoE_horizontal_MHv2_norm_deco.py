@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_MHv2, 只不过在MultiViewLayer中加入了affine，但也不是每个view都有一个
+基于BatteryMoE_horizontal_MHv2_norm，只不过支持了Decorrelation loss
 '''
 import torch
 import torch.nn as nn
@@ -103,7 +103,7 @@ class MultiViewLayer(nn.Module):
         self.use_affine = use_affine
         if use_affine:
             self.general_affine = DomainKnowledgeViewAffine(d_model)
-            self.view_affine = DomainKnowledgeViewAffine(d_model)
+            self.view_affines = nn.ModuleList([DomainKnowledgeViewAffine(d_model) for _ in range(num_views)])
 
     def forward(self, x, total_logits, total_masks):
         '''
@@ -111,13 +111,30 @@ class MultiViewLayer(nn.Module):
         total_logits: [num_view, num_experts for each view expert]
         total_masks: [num_view, num_experts for each view expert]
         '''
-        total_guide_loss = 0
+        total_view_outs = []
+        decorrelation_loss = 0
         final_out = 0
-        view_x = self.view_affine(x) if self.use_affine else x
         for i, view_expert in enumerate(self.view_experts):
-            out, guide_loss = view_expert(view_x, total_logits[i], total_masks[i])
+            view_x = self.view_affines[i](x) if self.use_affine else x
+            out, _ = view_expert(view_x, total_logits[i], total_masks[i])
+            if out.dim() == 3:
+                total_view_outs.append(out.reshape(-1, out.shape[-1])) # [B*L, D]
+            elif out.dim() == 2:
+                total_view_outs.append(out) # [B, D]
             final_out = final_out + out
-            total_guide_loss += guide_loss
+
+
+        if self.training:
+            # compute the decorrelation loss
+            total_view_outs = torch.stack(total_view_outs, dim=1) # [B or B*L, num_views, D]
+            N = total_view_outs.shape[0]
+            similarity_matrix = torch.einsum('nid,njd->nij', total_view_outs, total_view_outs)
+            identity_matrix = torch.eye(self.num_views, dtype=similarity_matrix.dtype, device=similarity_matrix.device).unsqueeze(0)
+            identity_matrix = identity_matrix.expand(N, -1, -1)
+            similarity_matrix = similarity_matrix * (1 - identity_matrix)
+            # lower_sim_matrix = torch.tril(similarity_matrix)
+            decorrelation_loss = torch.mean(torch.norm(similarity_matrix, p='fro', dim=(1,2))) / (self.num_views*(self.num_views-1))
+
 
         general_x = self.general_affine(x) if self.use_affine else x
         for i in range(len(self.general_experts)):
@@ -125,7 +142,7 @@ class MultiViewLayer(nn.Module):
 
         if self.use_connection:
             final_out = self.norm(final_out + x) # add & norm
-        return final_out, total_guide_loss / self.num_views
+        return final_out, decorrelation_loss
 
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
@@ -184,11 +201,11 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         #     final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         guide_loss = 0 # guide the model to give larger weight to the correct cathode expert
-        if self.training:
-            # Guidance loss
-            masked_raw_logits = raw_logits * mask
-            sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
-            guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+        # if self.training:
+        #     # Guidance loss
+        #     masked_raw_logits = raw_logits * mask
+        #     sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+        #     guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
         return final_out, guide_loss
 
@@ -246,11 +263,11 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         # final_out = self.ln(final_out + cycle_curve_data) # add & norm
 
         guide_loss = 0
-        if self.training:
-            # Guidance loss
-            masked_raw_logits = raw_logits * mask
-            sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
-            guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+        # if self.training:
+        #     # Guidance loss
+        #     masked_raw_logits = raw_logits * mask
+        #     sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+        #     guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
         return final_out, guide_loss
 
@@ -382,11 +399,11 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
 
         aug_loss = 0
         guide_loss = 0
-        if self.training:
-            # Guidance loss
-            masked_raw_logits = raw_logits * mask
-            sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
-            guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+        # if self.training:
+        #     # Guidance loss
+        #     masked_raw_logits = raw_logits * mask
+        #     sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+        #     guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
 
         return final_out, guide_loss
@@ -576,8 +593,8 @@ class Model(nn.Module):
 
         preds = preds.float()
         llm_out = llm_out.float()
-
-        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
+        total_guide_loss = total_guide_loss / total_aug_count if total_aug_count > 0 else 0
+        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss , total_guide_loss
 
     def create_causal_mask(self, B, seq_len):
         '''
