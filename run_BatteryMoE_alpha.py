@@ -432,7 +432,7 @@ for ii in range(args.itr):
                 all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
 
                 accelerator.backward(final_loss)
-                nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
                 model_optim.step()
                 
 

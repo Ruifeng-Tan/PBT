@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_MHv2, 只不过在MultiViewLayer中加入了affine
+基于BatteryMoE_horizontal_MHv2, 只不过用hypernetwork的思想生成aging-condition-wise expert
 '''
 import torch
 import torch.nn as nn
@@ -28,30 +28,55 @@ from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
 transformers.logging.set_verbosity_error() 
-class DomainKnowledgeViewAffine(nn.Module):
-    def __init__(self, d_model):
-        super(DomainKnowledgeViewAffine, self).__init__()
-        self.d_model = d_model
-        self.weight = nn.Parameter(torch.empty(d_model))
-        self.bias = nn.Parameter(torch.empty(d_model))
+
+class ExpertHyperNetwork(nn.Module):
+    def __init__(self, d_llm, in_dim, low_d_ff, out_dim, flatten_layer=None):
+        super(ExpertHyperNetwork, self).__init__()
+        self.in_dim = in_dim
+        self.low_d_ff = low_d_ff
+        self.flatten_layer = flatten_layer
+        self.out_dim = out_dim
+
+        self.DKP_linear = nn.Linear(d_llm, low_d_ff)
+        self.W_in_generator = nn.Parameter(torch.empty(low_d_ff, in_dim*low_d_ff))
+        self.W_out_generator = nn.Parameter(torch.empty(low_d_ff, out_dim*low_d_ff))
+        self.act = nn.GELU()
+        
         self.reset_parameters()
 
     def reset_parameters(self) -> None:
-        nn.init.ones_(self.weight)
-        if self.bias is not None:
-            nn.init.zeros_(self.bias)
-    
-    def forward(self, x):
+        nn.init.xavier_normal_(self.W_in_generator)
+        nn.init.xavier_normal_(self.W_out_generator)
+        
+    def forward(self, x, DKP_embeddings):
         '''
-        x: [B, *, D]
+        x: [B, *, in_dim]. The dimension of x is 2 or 3.
+        DKP_embeddings: [B, d_llm]. The domain-knowledge-informed prompt embeddings
         '''
+        DKP_embeddings = self.DKP_linear(DKP_embeddings)
+        DKP_embeddings = DKP_embeddings.unsqueeze(1)
+        B = DKP_embeddings.shape[0]
+        W_in_generator = self.W_in_generator.unsqueeze(0).expand(B, -1, -1) # [B, d_llm, in_dim*low_d_ff]
+        W_in = torch.matmul(DKP_embeddings, W_in_generator) # [B, 1, in_dim*low_d_ff]
+        W_in = W_in.reshape(B, self.in_dim, self.low_d_ff)
+
+        W_out_generator = self.W_out_generator.unsqueeze(0).expand(B, -1, -1)
+        W_out = torch.matmul(DKP_embeddings, W_out_generator) # [B, 1, out_dim*low_d_ff]
+        W_out = W_out.reshape(B, self.low_d_ff, self.out_dim) # [B, low_d_ff, out_dim]
+
+        x = self.flatten_layer(x) if self.flatten_layer is not None else x
         if x.dim() == 2:
-            x = x * self.weight.unsqueeze(0).expand_as(x) + self.bias.unsqueeze(0).expand_as(x)
-        elif x.dim() == 3:
-            x = x * self.weight.unsqueeze(0).unsqueeze(1).expand_as(x) + self.bias.unsqueeze(0).unsqueeze(1).expand_as(x)
+            x = x.unsqueeze(1) # [B, 1, in_dim]
+            x = torch.matmul(x, W_in) # [B, 1, low_dff]
+            x = self.act(x)
+            out = torch.matmul(x, W_out).squeeze(1) # [B, out_dim]
         else:
-            raise Exception('Not implemented!')
-        return x
+            x = torch.matmul(x, W_in) # [B, L, low_dff]
+            x = self.act(x)
+            out = torch.matmul(x, W_out) # [B, L, out_dim]
+
+        return out
+
     
 class MLPBlockGELU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation):
@@ -100,7 +125,7 @@ class MultiViewLayer(nn.Module):
         if self.use_connection:
             self.norm = norm_layer
 
-    def forward(self, x, total_logits, total_masks):
+    def forward(self, x, total_logits, total_masks, DKP_embeddings=None):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
@@ -114,7 +139,7 @@ class MultiViewLayer(nn.Module):
             total_guide_loss += guide_loss
 
         for i in range(len(self.general_experts)):
-            final_out = self.general_experts[i](x) + final_out # add the general experts
+            final_out = self.general_experts[i](x, DKP_embeddings) + final_out # add the general experts
 
         if self.use_connection:
             final_out = self.norm(final_out + x) # add & norm
@@ -436,6 +461,7 @@ class Model(nn.Module):
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.d_model = configs.d_model
         self.d_llm = configs.d_llm
+        self.low_d_ff = configs.low_d_ff
         self.tokenizer.padding_side = 'right' # set the padding side
         self.e_layers = configs.e_layers
         self.d_layers = configs.d_layers
@@ -461,7 +487,7 @@ class Model(nn.Module):
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
+                                                        ExpertHyperNetwork(self.d_llm, self.charge_discharge_length*3, self.low_d_ff, self.d_model, flatten_layer=nn.Flatten(start_dim=2)) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=False)
         
@@ -473,7 +499,7 @@ class Model(nn.Module):
                                                     ]),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
+                                                        ExpertHyperNetwork(self.d_llm, self.d_model, self.low_d_ff, self.d_model) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=True) for _ in range(self.e_layers)])
 
@@ -485,7 +511,7 @@ class Model(nn.Module):
                                                     ]),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model)) for _ in range(self.num_general_experts)
+                                                        ExpertHyperNetwork(self.d_llm, self.early_cycle_threshold*self.d_model, self.low_d_ff, self.d_model, flatten_layer=nn.Flatten(start_dim=1)) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=False)
         
@@ -496,7 +522,7 @@ class Model(nn.Module):
                                                                     BatteryMoEInterCycleMoELayer(configs, self.format_experts)
                                                     ]), norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
+                                                        ExpertHyperNetwork(self.d_llm, self.d_model, self.low_d_ff, self.d_model) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=True
                                                     )
@@ -542,25 +568,25 @@ class Model(nn.Module):
         total_aug_count = 0
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks) # [B, L, d_model]
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks, DKP_embeddings) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks) # [B, L, d_model]
+            out, guide_loss = intra_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks, DKP_embeddings) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
 
         # out = out.reshape(B, -1) # flatten
-        out, guide_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
+        out, guide_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks, DKP_embeddings)
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
+            out, guide_loss = inter_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks, DKP_embeddings)
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
