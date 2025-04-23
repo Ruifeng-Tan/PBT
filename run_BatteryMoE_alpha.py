@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_horizontal_MHv2_norm_deco, baseline_CPTransformerMoE, BatteryMoE_horizontal_MHv2, BatteryMoE_MHv2_PESum_Norm, baseline_CPMLPMoE
+from models import BatteryMoE_horizontal_MHv2_hyper, baseline_CPTransformerMoE, BatteryMoE_horizontal_MHv2, BatteryMoE_MHv2_PESum_Norm, baseline_CPMLPMoE
 
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -96,7 +96,7 @@ parser.add_argument('--bottleneck_factor', type=int, default=2, help='the scale 
 parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
 parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
 parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
-parser.add_argument('--d_ff_gate', type=int, default=32, help='dimension of fcn for gate network')
+parser.add_argument('--low_d_ff', type=int, default=32, help='dimension of low rank in the matrix')
 parser.add_argument('--moving_avg', type=int, default=25, help='window size of moving average')
 parser.add_argument('--factor', type=int, default=1, help='attn factor')
 parser.add_argument('--dropout', type=float, default=0.1, help='dropout')
@@ -199,7 +199,7 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.d_ff_gate,
+        args.low_d_ff,
         args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, args.bottleneck_factor, args.num_experts, args.topK, args.seed)
 
     data_provider_func = data_provider_LLMv2
@@ -213,11 +213,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_horizontal_MHv2.Model(model_config)
-    elif args.model == 'BatteryMoE_horizontal_MHv2_norm_deco':
+    elif args.model == 'BatteryMoE_horizontal_MHv2_hyper':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_horizontal_MHv2_norm_deco.Model(model_config)
+        model = BatteryMoE_horizontal_MHv2_hyper.Model(model_config)
     elif args.model == 'BatteryMoE_MHv2_PESum_Norm':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
