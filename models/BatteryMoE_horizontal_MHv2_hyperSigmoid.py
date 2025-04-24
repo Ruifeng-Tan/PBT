@@ -429,7 +429,8 @@ class Model(nn.Module):
         self.gate = nn.Linear(self.d_llm, self.num_experts*(2+self.moe_layers))
         self.split_dim = self.d_model // self.num_views
 
-        self.aging_condition_relu = nn.Linear(self.d_llm, self.d_model)
+        self.aging_condition_act = nn.Sequential(nn.Linear(self.d_llm, self.d_model), nn.Sigmoid())
+        self.low_d_ff = configs.low_d_ff
 
         self.flattenIntraCycleLayer = MultiViewLayer(self.num_views, 
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.cathode_experts),
@@ -525,32 +526,31 @@ class Model(nn.Module):
         total_aug_count += 1
         logits_index += 1
 
-
-
-        ac_logits = self.aging_condition_relu(DKP_embeddings)
-        ac_logits = F.relu(ac_logits)
-        aging_condition_relu_mask = torch.where(ac_logits>0, torch.ones_like(ac_logits), ac_logits) # [N, d_model]
-        aging_condition_relu_mask = aging_condition_relu_mask.unsqueeze(1).expand(-1, L, -1) # [B, L, d_model]
-        out = out * aging_condition_relu_mask
+        mask = self.aging_condition_act(DKP_embeddings)
+        two_D_mask = mask.unsqueeze(1).expand(-1, L, -1) # [B, L, d_model]
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
+            out = out * two_D_mask
             out, guide_loss = intra_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
 
         # out = out.reshape(B, -1) # flatten
+        out = out * two_D_mask
         out, guide_loss = self.flattenInterCycleLayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
+            out = out * mask
             out, guide_loss = inter_MoELayer(out, [cathode_logits[:,logits_index],anode_logits[:,logits_index],temperature_logits[:,logits_index],format_logits[:,logits_index]], total_masks)
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
 
+        out = out * mask
         preds, llm_out, feature_llm_out = self.regression_head(out, attention_mask)
 
         preds = preds.float()
