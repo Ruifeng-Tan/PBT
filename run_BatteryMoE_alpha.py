@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_allNorm_hardSelect, baseline_CPTransformerMoE, BatteryMoE_horizontal_MHv2, BatteryMoE_allNorm_hardSelect_base, baseline_CPMLPMoE
+from models import BatteryMoE_CorrectNorm, baseline_CPTransformerMoE, BatteryMoE_horizontal_MHv2, BatteryMoE_allNorm_hardSelect_base, baseline_CPMLPMoE
 
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -213,11 +213,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_horizontal_MHv2.Model(model_config)
-    elif args.model == 'BatteryMoE_allNorm_hardSelect':
+    elif args.model == 'BatteryMoE_CorrectNorm':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_allNorm_hardSelect.Model(model_config)
+        model = BatteryMoE_CorrectNorm.Model(model_config)
     elif args.model == 'BatteryMoE_allNorm_hardSelect_base':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
