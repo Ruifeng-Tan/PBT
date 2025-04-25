@@ -10,8 +10,8 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_CorrectNorm, baseline_CPTransformerMoE, BatteryMoE_horizontal_MHv2, BatteryMoE_allNorm_hardSelect_base, baseline_CPMLPMoE
-
+from models import BatteryMoE_CorrectNorm, baseline_CPTransformerMoE, BatteryMoE_MHv2_PCA, BatteryMoE_allNorm_hardSelect_base, baseline_CPMLPMoE
+import pickle
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
@@ -145,11 +145,10 @@ parser.add_argument('--topK', type=int, default=2, help='The number of the exper
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
 parser.add_argument('--use_ReMoE', action='store_true', default=False, help='Set True to use relu router')
 
-# Contrastive learning
 parser.add_argument('--use_guide', action='store_true', default=False, help='Set True to use guidance loss to guide the gate to capture the assigned gating.')
 parser.add_argument('--gamma', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
-# Domain generalization
 parser.add_argument('--use_LB', action='store_true', default=False, help='Set True to use Load Balancing loss')
+parser.add_argument('--use_PCA', action='store_true', default=False, help='Set True to use prompt embeddings processed by PCA')
 
 # Pretrain
 parser.add_argument('--Pretrained_model_path', type=str, default='', help='The path to the saved pretrained model parameters')
@@ -173,6 +172,20 @@ deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero_ours.json')
 accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin, gradient_accumulation_steps=args.accumulation_steps)
 accelerator.print(args.__dict__)
 
+if args.use_PCA:
+    # Automatically find d_llm dimension
+    if args.seed == 2021:
+        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all_pca.pkl', 'rb'))
+    elif args.seed == 2024:
+        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all2024_pca.pkl', 'rb'))
+    elif args.seed == 42:
+        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all42_pca.pkl', 'rb'))
+    else:
+        raise Exception('add the prompt emebeddings for the seed here')
+
+args.d_llm = list(tmp.values())[0].shape[1]
+args.__dict__['d_llm'] = list(tmp.values())[0].shape[1]
+
 if args.Pretrained_model_path:
     pretrained = True
 else:
@@ -190,7 +203,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_K{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_K{}_PCA{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -200,7 +213,8 @@ for ii in range(args.itr):
         args.d_layers,
         args.d_ff,
         args.low_d_ff,
-        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, args.bottleneck_factor, args.num_experts, args.topK, args.seed)
+        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, 
+        args.bottleneck_factor, args.num_experts, args.topK, args.use_PCA, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -208,11 +222,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'BatteryMoE_horizontal_MHv2':
+    elif args.model == 'BatteryMoE_MHv2_PCA':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_horizontal_MHv2.Model(model_config)
+        model = BatteryMoE_MHv2_PCA.Model(model_config)
     elif args.model == 'BatteryMoE_CorrectNorm':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
