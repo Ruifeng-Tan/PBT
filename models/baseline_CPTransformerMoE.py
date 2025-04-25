@@ -26,7 +26,7 @@ from typing import List, Literal, Optional, Tuple, TypedDict
 import torch.nn.functional as F
 from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
-from layers.MLPs import MLPBlockSwishGLU
+from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error()
     
 
@@ -174,9 +174,9 @@ class IntraCycleMoELayer(nn.Module):
         self.num_experts = configs.num_experts
         self.activation = configs.activation
         self.top_k = configs.topK
-        self.experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        self.general_experts = nn.ModuleList([MLPBlockSwishGLU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
+        self.general_experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
         self.ln = nn.LayerNorm(self.d_model)
         self.noisy_gating = configs.noisy_gating
         self.gate  = PatternRouterMLP(self.d_model, self.num_experts)
