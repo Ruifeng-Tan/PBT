@@ -479,11 +479,12 @@ class Model(nn.Module):
             total_aug_count += 1
             logits_index += 1
 
-        lengths = torch.sum(curve_attn_mask, dim=1).cpu() # [N]
-        idx = (torch.as_tensor(lengths, device=out.device, dtype=torch.long) - 1).view(-1, 1).expand(
-            len(lengths), out.size(2))
-        idx = idx.unsqueeze(1)
-        out = out.gather(1, idx).squeeze(1) # [B, D]
+        # lengths = torch.sum(curve_attn_mask, dim=1).cpu() # [N]
+        # idx = (torch.as_tensor(lengths, device=out.device, dtype=torch.long) - 1).view(-1, 1).expand(
+        #     len(lengths), out.size(2))
+        # idx = idx.unsqueeze(1)
+        # out = out.gather(1, idx).squeeze(1) # [B, D]
+        out = out[:,-1]
 
         preds, llm_out, feature_llm_out = self.regression_head(out)
 
