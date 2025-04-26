@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_PCA_Transformer_Imp, baseline_CPTransformerMoE, BatteryMoE_MHv2_PCA, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
+from models import BatteryMoE_PCA_DTransformer, baseline_CPTransformerMoE, BatteryMoE_MHv2_PCA, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
 import pickle
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -227,11 +227,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_MHv2_PCA.Model(model_config)
-    elif args.model == 'BatteryMoE_PCA_Transformer_Imp':
+    elif args.model == 'BatteryMoE_PCA_DTransformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_PCA_Transformer_Imp.Model(model_config)
+        model = BatteryMoE_PCA_DTransformer.Model(model_config)
     elif args.model == 'BatteryMoE_PCA_Transformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)

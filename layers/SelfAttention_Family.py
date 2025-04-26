@@ -131,6 +131,54 @@ class DSAttention(nn.Module):
         else:
             return (V.contiguous(), None)
 
+class FullAttention_CustomDropout(nn.Module):
+    '''
+    The attention will always atten to the first token.
+    This is to avoid meaningless training when all tokens are masked by the dropout during training.
+    '''
+    def __init__(self, mask_flag=True, factor=5, scale=None, attention_dropout=0.1, output_attention=False):
+        super(FullAttention_CustomDropout, self).__init__()
+        self.scale = scale
+        self.mask_flag = mask_flag
+        self.output_attention = output_attention
+        self.dropout_rate = attention_dropout
+
+    def forward(self, queries, keys, values, attn_mask, tau=None, delta=None):
+        B, L, H, E = queries.shape
+        _, S, _, D = values.shape
+        scale = self.scale or 1. / sqrt(E)
+
+        scores = torch.einsum("blhe,bshe->bhls", queries, keys)
+        if self.mask_flag:
+            if attn_mask is None:
+                attn_mask = TriangularCausalMask(B, L, device=queries.device)
+                scores.masked_fill_(attn_mask.mask, -np.inf)
+            else:
+                scores.masked_fill_(attn_mask, -np.inf)
+                
+
+        A = self.custom_dropout(torch.softmax(scale * scores, dim=-1))
+        V = torch.einsum("bhls,bshd->blhd", A, values)
+
+        if self.output_attention:
+            return (V.contiguous(), A)
+        else:
+            return (V.contiguous(), None)
+    
+    def custom_dropout(self, x):
+        '''
+        x: [N, L, D]
+        '''
+        if not self.training or self.dropout_rate == 0.0:
+            return x
+        
+        # apply dropout
+        p = self.dropout_rate
+        dropout_mask = torch.bernoulli((1 - p) * torch.ones_like(x))
+        dropout_mask[:,0] = 1.0
+        dropped_x = x * dropout_mask
+
+        return dropped_x
 
 class FullAttention(nn.Module):
     def __init__(self, mask_flag=True, factor=5, scale=None, attention_dropout=0.1, output_attention=False):
