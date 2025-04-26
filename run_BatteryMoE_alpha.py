@@ -183,8 +183,8 @@ if args.use_PCA:
     else:
         raise Exception('add the prompt emebeddings for the seed here')
 
-args.d_llm = list(tmp.values())[0].shape[1]
-args.__dict__['d_llm'] = list(tmp.values())[0].shape[1]
+    args.d_llm = list(tmp.values())[0].shape[1]
+    args.__dict__['d_llm'] = list(tmp.values())[0].shape[1]
 
 if args.Pretrained_model_path:
     pretrained = True
