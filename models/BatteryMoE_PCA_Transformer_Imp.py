@@ -179,10 +179,11 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         total_outs = []
         total_expert_outs = []
         for i, expert in enumerate(self.experts):
-            out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
-            total_outs.append(out)
             if len(MOE_indicies[i])>=1:
+                out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
+                total_outs.append(out)
                 total_expert_outs.append(out)
+
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
 
@@ -249,10 +250,11 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         total_outs = []
         total_expert_outs = []
         for i, expert in enumerate(self.experts):
-            out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, L, d_model]
-            total_outs.append(out)
             if len(MOE_indicies[i])>=1:
+                out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
+                total_outs.append(out)
                 total_expert_outs.append(out)
+
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = total_outs
@@ -317,9 +319,9 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         total_outs = []
         total_expert_outs = []
         for i, expert in enumerate(self.experts):
-            out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
-            total_outs.append(out)
             if len(MOE_indicies[i])>=1:
+                out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
+                total_outs.append(out)
                 total_expert_outs.append(out)
 
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
