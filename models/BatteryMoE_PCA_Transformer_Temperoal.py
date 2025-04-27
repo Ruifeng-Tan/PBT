@@ -137,7 +137,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model  
         self.num_experts = num_experts # 4 types of cathodes in the training data
-        # self.top_k = 2
+        self.top_k = configs.topK
         self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
         # self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_general_experts)])
@@ -163,10 +163,17 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
         logits = logits * mask
+
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
+
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
-        
-
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
@@ -202,7 +209,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model  
         self.num_experts = num_experts # 4 types of cathodes in the training data
-        # self.top_k = 2
+        self.top_k = configs.topK
         self.activation = configs.activation
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -226,6 +233,14 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
         logits = logits * mask
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
+            
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
 
@@ -262,6 +277,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
+        self.top_k = configs.topK
         self.d_model = configs.d_model  
         self.num_experts = num_experts 
         self.activation = configs.activation
@@ -284,6 +300,15 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
         logits = logits * mask
+
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
+            
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
 
@@ -375,13 +400,14 @@ class Model(nn.Module):
         self.anode_experts = configs.anode_experts
         self.num_general_experts = configs.num_general_experts
         self.num_views = configs.num_views
+        self.scale_factor = configs.scale_factor
         self.cathode_split = self.cathode_experts
-        self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
+        self.num_experts = (self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts)*self.scale_factor
+        self.gate = nn.Sequential(nn.Linear(self.d_llm + self.d_model, self.d_ff), nn.ReLU(), 
                                   nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
-
+        self.temporal_embedding = nn.Embedding(self.early_cycle_threshold, self.d_model) # Use cycle number as the temperoal embedding
         self.flattenIntraCycleLayer = MultiViewLayer(
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
                                                                     ),
@@ -435,9 +461,14 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
+
+        cycle_numbers = torch.sum(curve_attn_mask, dim=1).int() - 1 
+        temporal_embeddings = self.temporal_embedding(cycle_numbers) # [B, D]
+        gate_input = torch.cat([DKP_embeddings, temporal_embeddings], dim=1)
+        combined_masks = torch.repeat_interleave(combined_masks, dim=1, repeats=self.scale_factor)
         total_masks = [combined_masks]
 
-        logits = self.gate(DKP_embeddings)
+        logits = self.gate(gate_input)
         logits = logits.reshape(B, -1, self.num_experts)
   
         logits_index = 0
