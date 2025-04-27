@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_PCA_Transformer，只不过Outhead只取最后一个valid token做回归任务
+基于BatteryMoE_PCA_Transformer_Imp，但是只使用cathode和anode view
 '''
 import torch
 import torch.nn as nn
@@ -404,7 +404,7 @@ class Model(nn.Module):
         self.num_views = configs.num_views
         self.scale_factor = configs.scale_factor
         self.cathode_split = self.cathode_experts
-        self.num_experts = (self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts)*self.scale_factor
+        self.num_experts = (self.cathode_experts + self.anode_experts)*self.scale_factor
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
                                   nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
@@ -463,6 +463,8 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
+
+        combined_masks = torch.cat([cathode_masks, anode_masks], dim=1)
         # combined_masks = torch.repeat_interleave(combined_masks, dim=1, repeats=self.scale_factor)
         total_masks = [combined_masks]
 

@@ -577,7 +577,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 cathode_mask = np.ones(self.cathode_experts) # assign according to the learned parameters
                 # cathode_mask = np.zeros(self.cathode_experts) # only use the general experts
 
-            cathode_mask = list(cathode_mask)
+            cathode_mask = list(cathode_mask)*self.args.scale_factor
 
             if file_name in self.temperature_json:
                 temperatures = self.temperature_json[file_name]
@@ -591,7 +591,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 temperature_mask = np.ones(self.temperature_experts) # assign according to the learned parameters
                 # temperature_mask = np.zeros(self.temperature_experts) # only use the general experts
 
-            temperature_mask = list(temperature_mask)
+            temperature_mask = list(temperature_mask)*self.args.scale_factor
 
             if file_name in self.format_json:
                 format = self.format_json[file_name][0]
@@ -604,7 +604,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 'the expert for you.')
                 format_mask = np.ones(self.format_experts) # assign according to the learned parameters
                 # format_mask = np.zeros(self.format_experts) # only use the general experts
-            format_mask = list(format_mask)
+            format_mask = list(format_mask)*self.args.scale_factor
 
             if file_name in self.anode_json:
                 anode = self.anode_json[file_name][0]
@@ -619,7 +619,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 'the expert for you.')
                 anode_mask = np.ones(self.anode_experts) # assign according to the learned parameters
                 # anode_mask = np.zeros(self.anode_experts) # only use the general experts
-            anode_mask = list(anode_mask)
+            anode_mask = list(anode_mask)*self.args.scale_factor
 
             combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask
 
