@@ -133,6 +133,7 @@ parser.add_argument('--mlp', type=int, default=0)
 parser.add_argument('--warm_up_epoches', type=int, default=0, help='The epoch number for linear Warmup')
 
 # MoE definition
+parser.add_argument('--scale_factor', type=int, default=4, help="The factor for scaling up the number of experts")
 parser.add_argument('--num_views', type=int, default=4, help="The number of the views")
 parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
 parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
@@ -203,7 +204,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_K{}_PCA{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_K{}_PCA{}_sf{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -214,7 +215,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.low_d_ff,
         args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, 
-        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.topK, args.use_PCA, args.seed)
+        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.topK, args.use_PCA, args.scale_factor, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
