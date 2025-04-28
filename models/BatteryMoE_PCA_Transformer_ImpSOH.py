@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_PCA_Transformer，只不过Outhead只取最后一个valid token做回归任务
+基于BatteryMoE_PCA_Transformer_Imp，只不过加入了SOH trajectory encoding
 '''
 import torch
 import torch.nn as nn
@@ -429,6 +429,7 @@ class Model(nn.Module):
                                                     use_connection=True) for _ in range(self.e_layers)])
         
         self.pe = PositionalEmbedding(self.d_model)
+        self.SOH_embedding = nn.Linear(1, self.d_model)
         self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(self.d_model, self.n_heads,
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
                                                     ]), 
@@ -464,6 +465,7 @@ class Model(nn.Module):
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
+        SOH_trajectory = SOH_trajectory.to(torch.bfloat16).unsqueeze(-1)
 
         total_masks = [combined_masks]
 
@@ -490,7 +492,7 @@ class Model(nn.Module):
 
 
         # Inter-cycle modelling using Transformer with MoE FFN
-        out = out + self.pe(out) # add positional encoding
+        out = out + self.pe(out) + self.SOH_embedding(SOH_trajectory) # add positional encoding and SOH embeddings
         attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L]
         attn_mask = torch.repeat_interleave(attn_mask, attn_mask.shape[-1], dim=1) # [B, L, L]
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]

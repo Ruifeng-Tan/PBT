@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_PCA_Transformer_ImpSwish, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer_Imp, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
+from models import BatteryMoE_PCA_Transformer_ImpSOH, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer_Imp, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
 import pickle
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -228,11 +228,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_PCA_Transformer_Imp.Model(model_config)
-    elif args.model == 'BatteryMoE_PCA_Transformer_ImpSwish':
+    elif args.model == 'BatteryMoE_PCA_Transformer_ImpSOH':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_PCA_Transformer_ImpSwish.Model(model_config)
+        model = BatteryMoE_PCA_Transformer_ImpSOH.Model(model_config)
     elif args.model == 'BatteryMoE_PCA_Transformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -368,7 +368,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, SOH_trajectory) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -392,6 +392,8 @@ for ii in range(args.itr):
 
                 curve_attn_mask = curve_attn_mask.float() # [B, L]
                 DKP_embeddings = DKP_embeddings.float()
+                SOH_trajectory = SOH_trajectory.float()
+
                 cathode_masks = cathode_masks.float()
                 anode_masks = anode_masks.float()
                 temperature_masks = temperature_masks.float()
@@ -405,7 +407,7 @@ for ii in range(args.itr):
                 # encoder - decoder
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                anode_masks=anode_masks, combined_masks=combined_masks)
+                anode_masks=anode_masks, combined_masks=combined_masks, SOH_trajectory=SOH_trajectory)
 
                 cut_off = labels.shape[0]
                 if args.loss == 'MSE':
