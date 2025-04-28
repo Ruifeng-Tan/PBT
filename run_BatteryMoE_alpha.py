@@ -168,8 +168,9 @@ args = parser.parse_args()
 nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 set_seed(args.seed)
 ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
-deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero_ours.json')
-accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin, gradient_accumulation_steps=args.accumulation_steps)
+# deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero_ours.json')
+# accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin, gradient_accumulation_steps=args.accumulation_steps)
+accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], gradient_accumulation_steps=args.accumulation_steps)
 accelerator.print(args.__dict__)
 
 if args.use_PCA:
