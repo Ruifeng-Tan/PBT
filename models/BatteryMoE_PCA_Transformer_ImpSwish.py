@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_PCA_Transformer，只不过Outhead只取最后一个valid token做回归任务
+基于BatteryMoE_PCA_Transformer_Imp, 只不过将FFN都改成用aging condition作为门控的SwiGLU作激活函数
 '''
 import torch
 import torch.nn as nn
@@ -27,28 +27,16 @@ import torch.nn.functional as F
 from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
-from layers.MLPs import MLPBlockGELU
+from layers.MLPs import BatteryMoESwishGLU
 transformers.logging.set_verbosity_error() 
 
-
-
-class MLPBlock(nn.Module):
-    def __init__(self, in_dim, hidden_dim, drop_rate, activation):
-        super(MLPBlock, self).__init__()
-        self.in_linear = nn.Linear(in_dim, hidden_dim)
-        self.dropout = nn.Dropout(drop_rate)
-        self.act = nn.ReLU() if activation=='relu' else nn.GELU(approximate='tanh')
-        self.out_linear = nn.Linear(hidden_dim, in_dim)
+class FlattenIntraLinear(nn.Module):
+    def __init__(self, in_dim, out_dim):
+        super(FlattenIntraLinear, self).__init__()
+        self.flatten_linear = nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(in_dim, out_dim))
     
-    def forward(self, x):
-        '''
-        x: [B, *, in_dim]
-        '''
-        out = self.in_linear(x)
-        out = self.act(out)
-        out = self.dropout(out)
-        out = self.out_linear(out)
-        return self.dropout(out)
+    def forward(self, x, DKP_embeddings=None):
+        return self.flatten_linear(x)
 
 class MultiViewLayer(nn.Module):
     def __init__(self, view_experts, norm_layer, general_experts, use_connection):
@@ -61,7 +49,7 @@ class MultiViewLayer(nn.Module):
         if self.use_connection:
             self.norm = norm_layer
 
-    def forward(self, x, total_logits, total_masks):
+    def forward(self, x, total_logits, total_masks, DKP_embeddings):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
@@ -71,12 +59,12 @@ class MultiViewLayer(nn.Module):
         total_guide_loss = 0
         final_out = 0
         for i, view_expert in enumerate(self.view_experts):
-            out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+            out, guide_loss = view_expert(x, total_logits[i], total_masks[i], DKP_embeddings)
             final_out = final_out + out
             total_guide_loss += guide_loss
 
         for i in range(len(self.general_experts)):
-            final_out = self.general_experts[i](x) + final_out # add the general experts
+            final_out = self.general_experts[i](x, DKP_embeddings) + final_out # add the general experts
 
         if self.use_connection:
             final_out = self.norm(final_out + x) # add & norm
@@ -96,7 +84,7 @@ class MultiViewTransformerLayer(nn.Module):
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
 
-    def forward(self, x, total_logits, total_masks, attn_mask):
+    def forward(self, x, total_logits, total_masks, attn_mask, DKP_embeddings):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
@@ -115,12 +103,12 @@ class MultiViewTransformerLayer(nn.Module):
         total_guide_loss = 0
         final_out = 0
         for i, view_expert in enumerate(self.view_experts):
-            out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+            out, guide_loss = view_expert(x, total_logits[i], total_masks[i], DKP_embeddings)
             final_out = final_out + out
             total_guide_loss += guide_loss
 
         for i in range(len(self.general_experts)):
-            final_out = self.general_experts[i](x) + final_out # add the general experts
+            final_out = self.general_experts[i](x, DKP_embeddings) + final_out # add the general experts
 
 
         final_out = self.norm2(self.dropout(final_out) + x) # add & norm
@@ -138,13 +126,13 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
-        self.experts = nn.ModuleList([nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([FlattenIntraLinear(self.charge_discharge_length*3, self.d_model) for _ in range(self.num_experts)])
         # self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([nn.Linear(in_dim, self.d_model) for _ in range(self.num_general_experts)])
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits, moe_masks):
+    def forward(self, cycle_curve_data, logits, moe_masks, DKP_embeddings):
         '''
         params:
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
@@ -212,14 +200,12 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([BatteryMoESwishGLU(self.d_model, self.d_llm, self.d_ff, self.drop_rate) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
-        # self.ln = nn.LayerNorm(self.d_model)
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits, moe_masks):
+    def forward(self, cycle_curve_data, logits, moe_masks, DKP_embeddings):
         '''
         params:
             cycle_curve_data: [B, L, d_model]
@@ -251,7 +237,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         total_expert_outs = []
         for i, expert in enumerate(self.experts):
             if len(MOE_indicies[i])>=1:
-                out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
+                out = expert(cycle_curve_data[MOE_indicies[i]], DKP_embeddings[MOE_indicies[i]]) # [expert_batch_size, d_llm]
                 total_outs.append(out)
                 total_expert_outs.append(out)
 
@@ -283,12 +269,12 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts 
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([BatteryMoESwishGLU(self.d_model, self.d_llm, self.d_ff, self.drop_rate) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.eps = 1e-9
 
     
-    def forward(self, cycle_curve_data, logits, moe_masks):
+    def forward(self, cycle_curve_data, logits, moe_masks, DKP_embeddings):
         '''
         params:
             cycle_curve_data: [B, L, d_model]
@@ -320,7 +306,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         total_expert_outs = []
         for i, expert in enumerate(self.experts):
             if len(MOE_indicies[i])>=1:
-                out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
+                out = expert(cycle_curve_data[MOE_indicies[i]], DKP_embeddings[MOE_indicies[i]]) # [expert_batch_size, d_llm]
                 total_outs.append(out)
                 total_expert_outs.append(out)
 
@@ -402,9 +388,8 @@ class Model(nn.Module):
         self.anode_experts = configs.anode_experts
         self.num_general_experts = configs.num_general_experts
         self.num_views = configs.num_views
-
         self.cathode_split = self.cathode_experts
-        self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
+        self.num_experts = (self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts)
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
                                   nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
@@ -415,7 +400,7 @@ class Model(nn.Module):
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Flatten(start_dim=2), nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
+                                                        FlattenIntraLinear(self.charge_discharge_length*3, self.d_model) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=False)
         
@@ -424,7 +409,7 @@ class Model(nn.Module):
                                                     ]),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
+                                                        BatteryMoESwishGLU(self.d_model, self.d_llm, self.d_ff, self.drop_rate) for _ in range(self.num_general_experts)
                                                     ]),
                                                     use_connection=True) for _ in range(self.e_layers)])
         
@@ -433,7 +418,7 @@ class Model(nn.Module):
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
                                                     ]), 
                                                     general_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
+                                                        BatteryMoESwishGLU(self.d_model, self.d_llm, self.d_ff, self.drop_rate) for _ in range(self.num_general_experts)
                                                     ]),
                                                     drop_rate=self.drop_rate
                                                     )
@@ -476,13 +461,13 @@ class Model(nn.Module):
         total_aug_count = 0
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks) # [B, L, d_model]
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, DKP_embeddings) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks) # [B, L, d_model]
+            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, DKP_embeddings) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
@@ -495,7 +480,7 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask) # [B, L, d_model]
+            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, DKP_embeddings=DKP_embeddings) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
