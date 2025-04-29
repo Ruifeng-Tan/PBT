@@ -181,6 +181,7 @@ def my_collate_fn_withId(samples):
     anode_masks = torch.vstack([i['anode_mask'] for i in samples])
     combined_masks = torch.vstack([i['combined_mask'] for i in samples])
     SOH_trajectory = torch.vstack([i['SOH_trajectory'] for i in samples])
+    CE_trajectory = torch.vstack([i['CE_trajectory'] for i in samples])
 
     curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
 
@@ -191,7 +192,7 @@ def my_collate_fn_withId(samples):
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
-    return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, SOH_trajectory
+    return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, SOH_trajectory, CE_trajectory
 
 def my_collate_fn(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
@@ -209,12 +210,13 @@ def my_collate_fn(samples):
     anode_masks = torch.vstack([i['anode_mask'] for i in samples])
     combined_masks = torch.vstack([i['combined_mask'] for i in samples])
     SOH_trajectory = torch.vstack([i['SOH_trajectory'] for i in samples])
+    CE_trajectory = torch.vstack([i['CE_trajectory'] for i in samples])
 
 
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
 
-    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, SOH_trajectory
+    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, SOH_trajectory, CE_trajectory
 
 # BatterLifeLLM dataloader
 class Dataset_BatteryLifeLLM_original(Dataset):
@@ -458,7 +460,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
 
-        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_combined_expert_masks, self.total_sample_estimated_SOHs = self.read_data()
+        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_combined_expert_masks, self.total_sample_estimated_SOHs, self.total_sample_CEs = self.read_data()
         
         self.weights = self.get_loss_weight()
         if np.any(np.isnan(self.total_charge_discharge_curves)):
@@ -548,6 +550,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         total_combined_expert_masks = []
 
         total_sample_estimated_SOHs = []
+        total_sample_CEs = []
 
         total_DKP_embeddings = []
         total_cluster_labels = []
@@ -561,7 +564,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             # center_vector_index = self.get_center_vector_index(file_name)
 
-            prompts, charge_discharge_curves, attn_masks, labels, eol, sample_estimated_SOHs = self.read_samples_from_one_cell(
+            prompts, charge_discharge_curves, attn_masks, labels, eol, sample_estimated_SOHs, sample_CEs = self.read_samples_from_one_cell(
                 file_name)
 
             if prompts is None:
@@ -650,6 +653,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             total_anode_expert_masks += [anode_mask for _ in range(len(labels))]
             total_combined_expert_masks += [combined_expert_mask for _ in range(len(labels))]
             total_sample_estimated_SOHs += sample_estimated_SOHs
+            total_sample_CEs += sample_CEs
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
             unique_labels.append(eol)
@@ -664,7 +668,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
-        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks, total_temperature_experts_masks, total_format_expert_masks, total_anode_expert_masks, total_combined_expert_masks, total_sample_estimated_SOHs
+        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks, total_temperature_experts_masks, total_format_expert_masks, total_anode_expert_masks, total_combined_expert_masks, total_sample_estimated_SOHs, total_sample_CEs
 
     
     def read_cell_data_according_to_prefix(self, file_name):
@@ -740,7 +744,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         data, eol = self.read_cell_data_according_to_prefix(file_name)
         if eol is None:
             # This battery has not reached the end of life
-            return None, None, None, None, None, None, None
+            return None, None, None, None, None, None, None, None
         cell_name = file_name.split('.pkl')[0]
         basic_prompt = self.generate_basic_prompt(cell_name)
     
@@ -772,10 +776,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             
         df = pd.concat(total_cycle_dfs)
         # obtain the charge and discahrge curves
-        charge_discharge_curves, CEs = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
+        charge_discharge_curves, CEs, SOHs = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
         # estimated_SOHs = [i / nominal_capacity / SOC_interval for i in discharge_Qs]
-        print(CEs)
-        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity, CEs
+        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity, CEs, SOHs
       
     def generate_basic_prompt(self, cell_name):
         '''
@@ -810,9 +813,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         :return: history_sohs, future_sohs, masks, cycles, prompts, charge_data, discharge_data and RPT_masks in each sample
         '''
 
-        df, charge_discharge_curves_data, basic_prompt, eol, SOC_interval, nominal_capacity, estimated_SOHs = self.read_cell_df(file_name)
+        df, charge_discharge_curves_data, basic_prompt, eol, SOC_interval, nominal_capacity, CEs, SOHs = self.read_cell_df(file_name)
         if df is None or eol<=self.early_cycle_threshold:
-            return None, None, None, None, None, None
+            return None, None, None, None, None, None, None
 
         # the charge and discharge data
         prompts = []
@@ -820,9 +823,11 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         attn_masks = []
         labels = []
         sample_estimated_SOHs = []
+        sample_CEs = []
         # get the early-life data
         early_charge_discharge_curves_data = charge_discharge_curves_data[:self.early_cycle_threshold]
-        early_estimated_SOHs = estimated_SOHs[:self.early_cycle_threshold]
+        early_estimated_SOHs = SOHs[:self.early_cycle_threshold]
+        early_CEs = CEs[:self.early_cycle_threshold]
         if np.any(np.isnan(early_charge_discharge_curves_data)):
             raise Exception(f'Failure in {file_name} | Early data contains NaN! Cycle life is {eol}!')
         for i in range(self.seq_len, self.early_cycle_threshold+1):
@@ -869,8 +874,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             prompts.append(tmp_prompt)
             attn_masks.append(tmp_attn_mask)
             sample_estimated_SOHs.append(early_estimated_SOHs)
+            sample_CEs.append(early_CEs)
 
-        return prompts, charge_discharge_curves, attn_masks, labels, eol, sample_estimated_SOHs
+        return prompts, charge_discharge_curves, attn_masks, labels, eol, sample_estimated_SOHs, sample_CEs
 
     def get_charge_discharge_curves(self, file_name, df, early_cycle_threshold, nominal_capacity):
         '''
@@ -941,7 +947,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 
                 discharge_Qs.append(discharge_capacities[-1])
                 charge_Qs.append(charge_capacities[-1])
-                
+
                 discharge_voltages, discharge_currents, discharge_capacities = self.resample_charge_discharge_curves(discharge_voltages, discharge_currents, discharge_capacities)
                 charge_voltages, charge_currents, charge_capacities = self.resample_charge_discharge_curves(charge_voltages, charge_currents, charge_capacities)
 
@@ -974,7 +980,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
               
         curves = np.concatenate(curves, axis=0) # [L, 3, fixed_len]
         CEs = [discharge_Qs[i]/charge_Qs[i] for i in range(len(charge_Qs))] # coulombic efficiency
-        return curves, CEs
+        SOHs = [i/nominal_capacity for i in discharge_Qs]
+        return curves, CEs, SOHs
 
     def resample_charge_discharge_curves(self, voltages, currents, capacity_in_battery):
         '''
@@ -1040,7 +1047,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 'cluster_label': self.total_cluster_labels[index],
                 'file_name': self.total_file_names[index],
                 'seen_unseen_id': self.total_seen_unseen_IDs[index],
-                'SOH_trajectory': torch.Tensor(self.total_sample_estimated_SOHs[index])
+                'SOH_trajectory': torch.Tensor(self.total_sample_estimated_SOHs[index]),
+                'CE_trajectory': torch.Tensor(self.total_sample_CEs[index])
             }
         return sample
  

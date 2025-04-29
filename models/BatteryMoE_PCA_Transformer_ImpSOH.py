@@ -429,7 +429,7 @@ class Model(nn.Module):
                                                     use_connection=True) for _ in range(self.e_layers)])
         
         self.pe = PositionalEmbedding(self.d_model)
-        self.SOH_embedding = nn.Linear(1, self.d_model)
+        self.SOH_embedding = nn.Linear(2, self.d_model)
         self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(self.d_model, self.n_heads,
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
                                                     ]), 
@@ -450,7 +450,8 @@ class Model(nn.Module):
                 format_masks: Optional[torch.Tensor] = None,
                 anode_masks: Optional[torch.Tensor] = None,
                 combined_masks: Optional[torch.Tensor] = None,
-                SOH_trajectory: Optional[torch.Tensor] = None
+                SOH_trajectory: Optional[torch.Tensor] = None,
+                CE_trajectory: Optional[torch.Tensor] = None
                 ):
         '''
         params:
@@ -461,12 +462,16 @@ class Model(nn.Module):
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
 
         SOH_trajectory = SOH_trajectory * curve_attn_mask # mask the unseen cycles
+        CE_trajectory = CE_trajectory * curve_attn_mask
+        CE_trajectory = CE_trajectory.unsqueeze(-1)
+        SOH_trajectory = SOH_trajectory.unsqueeze(-1)
+
+        trajectory_info = torch.cat([SOH_trajectory, CE_trajectory], dim=-1)
         tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        SOH_trajectory = SOH_trajectory.to(torch.bfloat16).unsqueeze(-1)
 
         total_masks = [combined_masks]
 
@@ -493,7 +498,7 @@ class Model(nn.Module):
 
 
         # Inter-cycle modelling using Transformer with MoE FFN
-        out = out + self.pe(out) + self.SOH_embedding(SOH_trajectory) # add positional encoding and SOH embeddings
+        out = out + self.pe(out) + self.SOH_embedding(trajectory_info) # add positional encoding and SOH embeddings
         attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L]
         attn_mask = torch.repeat_interleave(attn_mask, attn_mask.shape[-1], dim=1) # [B, L, L]
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]

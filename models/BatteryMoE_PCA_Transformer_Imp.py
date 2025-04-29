@@ -449,7 +449,8 @@ class Model(nn.Module):
                 format_masks: Optional[torch.Tensor] = None,
                 anode_masks: Optional[torch.Tensor] = None,
                 combined_masks: Optional[torch.Tensor] = None,
-                SOH_trajectory: Optional[torch.Tensor] = None
+                SOH_trajectory: Optional[torch.Tensor] = None,
+                CE_trajectory: Optional[torch.Tensor] = None
                 ):
         '''
         params:
