@@ -775,7 +775,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         # obtain the charge and discahrge curves
         charge_discharge_curves, discharge_Qs = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
         estimated_SOHs = [i / nominal_capacity / SOC_interval for i in discharge_Qs]
-        print(file_name, nominal_capacity, SOC_interval, aa)
         return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity, estimated_SOHs
       
     def generate_basic_prompt(self, cell_name):
