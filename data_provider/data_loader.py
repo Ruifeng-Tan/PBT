@@ -752,7 +752,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         else:
             nominal_capacity = data['nominal_capacity_in_Ah']
         SOC_interval = data['SOC_interval'] # get the charge and discharge soc interval
-        aa = SOC_interval
         SOC_interval = SOC_interval[1] - SOC_interval[0]
         cycle_data = data['cycle_data'] # list of cycle data dict
             
@@ -773,9 +772,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             
         df = pd.concat(total_cycle_dfs)
         # obtain the charge and discahrge curves
-        charge_discharge_curves, discharge_Qs = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
-        estimated_SOHs = [i / nominal_capacity / SOC_interval for i in discharge_Qs]
-        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity, estimated_SOHs
+        charge_discharge_curves, CEs = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
+        # estimated_SOHs = [i / nominal_capacity / SOC_interval for i in discharge_Qs]
+        print(CEs)
+        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity, CEs
       
     def generate_basic_prompt(self, cell_name):
         '''
@@ -881,6 +881,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         '''
         curves = []
         discharge_Qs = [] # collect the discharge capacities
+        charge_Qs = []
 
         prefix = file_name.split('_')[0]
         for cycle in range(1, early_cycle_threshold+1):
@@ -892,8 +893,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 current_records_in_C = current_records/nominal_capacity
                 charge_capacity_records = cycle_df['charge_capacity_in_Ah'].values
                 discharge_capacity_records = cycle_df['discharge_capacity_in_Ah'].values
-
-                discharge_Qs.append(discharge_capacity_records[-1])
 
                 time_in_s_records = cycle_df['time_in_s'].values
                 cutoff_voltage_indices = np.nonzero(current_records_in_C>=0.01) # This includes constant-voltage charge data, 49th cycle of MATR_b1c18 has some abnormal voltage records
@@ -940,7 +939,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                     charge_currents = current_records[:charge_end_index]
                     charge_times = time_in_s_records[:charge_end_index]
                 
-
+                discharge_Qs.append(discharge_capacities[-1])
+                charge_Qs.append(charge_capacities[-1])
+                
                 discharge_voltages, discharge_currents, discharge_capacities = self.resample_charge_discharge_curves(discharge_voltages, discharge_currents, discharge_capacities)
                 charge_voltages, charge_currents, charge_capacities = self.resample_charge_discharge_curves(charge_voltages, charge_currents, charge_capacities)
 
@@ -972,7 +973,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             curves.append(curve_data.reshape(1, curve_data.shape[0], self.charge_discharge_len))
               
         curves = np.concatenate(curves, axis=0) # [L, 3, fixed_len]
-        return curves, discharge_Qs
+        CEs = [discharge_Qs[i]/charge_Qs[i] for i in range(len(charge_Qs))] # coulombic efficiency
+        return curves, CEs
 
     def resample_charge_discharge_curves(self, voltages, currents, capacity_in_battery):
         '''
