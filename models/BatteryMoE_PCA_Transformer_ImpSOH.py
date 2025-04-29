@@ -460,6 +460,7 @@ class Model(nn.Module):
         # process the charge&discharge data
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
 
+        SOH_trajectory = SOH_trajectory * curve_attn_mask # mask the unseen cycles
         tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
