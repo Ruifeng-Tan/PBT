@@ -61,7 +61,7 @@ class HyperMoE(nn.Module):
         if x.dim() == 2:
             x = x.unsqueeze(1) # [B, 1, in_dim]
         
-        x = F.relu(torch.matmul(x, D_matrix)) # [B, 1 or L, low_d_ff]
+        x = F.gelu(torch.matmul(x, D_matrix)) # [B, 1 or L, low_d_ff]
         x = torch.matmul(x, U_matrix) # [B, 1 or L, out_dim]
 
         if x.dim() == 2:
