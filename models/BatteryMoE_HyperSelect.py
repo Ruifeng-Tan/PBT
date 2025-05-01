@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_Hyper，只不过hyperNetwork在生成参数的时候还考虑到的sample的DKP
+基于BatteryMoE_PCA_Transformer_Imp，只不过使用HyperExpert取代general expert
 '''
 import torch
 import torch.nn as nn
@@ -33,11 +33,11 @@ transformers.logging.set_verbosity_error()
 class HyperMoE(nn.Module):
     def __init__(self, in_dim, low_d_ff, out_dim):
         super(HyperMoE, self).__init__()
-        self.low_d_ff = low_d_ff * 3
+        self.low_d_ff = low_d_ff
         self.in_dim = in_dim
         self.out_dim = out_dim
-        self.D_matrix = nn.Parameter(torch.empty(in_dim*self.low_d_ff, self.low_d_ff))
-        self.U_matrix = nn.Parameter(torch.empty(self.low_d_ff*out_dim, self.low_d_ff))
+        self.D_matrix = nn.Parameter(torch.empty(in_dim*low_d_ff, low_d_ff))
+        self.U_matrix = nn.Parameter(torch.empty(low_d_ff*out_dim, low_d_ff))
         self.reset_parameters()
 
     def reset_parameters(self) -> None:
@@ -74,7 +74,7 @@ class MultiViewLayer(nn.Module):
         super(MultiViewLayer, self).__init__()
         self.num_views = len(view_experts)
         self.hyperMoEs = hyperMoEs
-        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff))
+        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff // 2))
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -87,13 +87,12 @@ class MultiViewLayer(nn.Module):
     def reset_parameters(self) -> None:
         nn.init.xavier_normal_(self.layer_embedding)
 
-    def forward(self, x, total_logits, total_masks, selection_embeddings, reduced_DKP_embeddings):
+    def forward(self, x, total_logits, total_masks, selection_embeddings):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
         total_masks: [num_view, num_experts for each view expert]
-        selection_embeddings: [B, num_experts, low_d_ff // 3]
-        reduced_DKP_embeddings: [B, reduced_DKP_embeddings // 3]
+        selection_embeddings: [B, num_experts, low_d_ff // 2]
         '''
         B = x.shape[0]
         layer_embedding = self.layer_embedding.expand(B, -1)
@@ -105,7 +104,7 @@ class MultiViewLayer(nn.Module):
             total_guide_loss += guide_loss
 
             # use HyperMoE
-            hyper_input = torch.cat([selection_embedding, layer_embedding, reduced_DKP_embeddings], dim=1)
+            hyper_input = torch.cat([selection_embedding, layer_embedding], dim=1)
             for i, hyperMoE in enumerate(self.hyperMoEs):
                 hyper_out = hyperMoE(x, hyper_input)
                 final_out = final_out + hyper_out
@@ -125,7 +124,7 @@ class MultiViewTransformerLayer(nn.Module):
         super(MultiViewTransformerLayer, self).__init__()
         self.num_views = len(view_experts)
         self.hyperMoEs = hyperMoEs
-        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff))
+        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff // 2))
         
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
                             output_attention=False), d_model, n_heads)
@@ -140,14 +139,13 @@ class MultiViewTransformerLayer(nn.Module):
     def reset_parameters(self) -> None:
         nn.init.xavier_normal_(self.layer_embedding)
 
-    def forward(self, x, total_logits, total_masks, attn_mask, selection_embeddings, reduced_DKP_embeddings):
+    def forward(self, x, total_logits, total_masks, attn_mask, selection_embeddings):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
         total_masks: [num_view, num_experts for each view expert]
         attn_mask: [B, 1, L, L]
-        selection_embeddings: [B, num_experts, low_d_ff // 3]
-        reduced_DKP_embeddings: [B, reduced_DKP_embeddings // 3]
+        selection_embeddings: [B, num_experts, low_d_ff // 2]
         '''
         B = x.shape[0]
         layer_embedding = self.layer_embedding.expand(B, -1)
@@ -169,7 +167,7 @@ class MultiViewTransformerLayer(nn.Module):
             total_guide_loss += guide_loss
 
             # use HyperMoE
-            hyper_input = torch.cat([selection_embedding, layer_embedding, reduced_DKP_embeddings], dim=1)
+            hyper_input = torch.cat([selection_embedding, layer_embedding], dim=1)
             for i, hyperMoE in enumerate(self.hyperMoEs):
                 hyper_out = hyperMoE(x, hyper_input)
                 final_out = final_out + hyper_out
@@ -203,7 +201,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             cycle_curve_data: [B, L, 3, fixed_length_of_curve]
             DKP_embeddings: [B, num_experts]
             moe_masks: [B, num_experts]
-            selection_embeddings: [B, num_experts, low_d_ff // 3]
+            selection_embeddings: [B, num_experts, low_d_ff // 2]
         '''
         B = cycle_curve_data.shape[0]
 
@@ -214,19 +212,22 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
 
         # get the logits for unselected experts
         inactive_mask = 1 - mask
-        # inactive_logits = inactive_logits / (torch.sum(inactive_logits, dim=1) + self.eps).unsqueeze(-1)
 
-        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
-        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//3]
-        
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
             # Create a mask where only the top-K values will be kept
-            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            top_K_mask = torch.zeros_like(logits)
             # Scatter the mask at the indices of the top-K values
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
 
+            inactive_mask =  1- top_K_mask
+
+        inactive_logits = raw_logits * inactive_mask
+        inactive_de_norm = torch.sum(inactive_logits, dim=1) + self.eps
+        inactive_logits = inactive_logits / inactive_de_norm.unsqueeze(-1)
+        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
+        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//2]
 
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -293,17 +294,22 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
 
         # get the logits for unselected experts
         inactive_mask = 1 - mask
-        # inactive_logits = inactive_logits / (torch.sum(inactive_logits, dim=1) + self.eps).unsqueeze(-1)
 
-        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
-        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//3]
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
             # Create a mask where only the top-K values will be kept
-            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            top_K_mask = torch.zeros_like(logits)
             # Scatter the mask at the indices of the top-K values
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
+
+            inactive_mask =  1- top_K_mask
+
+        inactive_logits = raw_logits * inactive_mask
+        inactive_de_norm = torch.sum(inactive_logits, dim=1) + self.eps
+        inactive_logits = inactive_logits / inactive_de_norm.unsqueeze(-1)
+        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
+        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//2]
             
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -370,18 +376,22 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
 
         # get the logits for unselected experts
         inactive_mask = 1 - mask
-        # inactive_logits = inactive_logits / (torch.sum(inactive_logits, dim=1) + self.eps).unsqueeze(-1)
-
-        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
-        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//3]
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
             # Create a mask where only the top-K values will be kept
-            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            top_K_mask = torch.zeros_like(logits)
             # Scatter the mask at the indices of the top-K values
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
+
+            inactive_mask =  1- top_K_mask
+
+        inactive_logits = raw_logits * inactive_mask
+        inactive_de_norm = torch.sum(inactive_logits, dim=1) + self.eps
+        inactive_logits = inactive_logits / inactive_de_norm.unsqueeze(-1)
+        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
+        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//2]
             
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -477,16 +487,15 @@ class Model(nn.Module):
 
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(1+self.moe_layers)))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
+                                  nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
         self.low_d_ff = configs.low_d_ff
         self.cp_hyperMoE = nn.ModuleList([HyperMoE(self.charge_discharge_length*3, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
         self.shared_hyperMoE = nn.ModuleList([HyperMoE(self.d_model, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
         
-        self.selection_embeddings = nn.Parameter(torch.empty(self.num_experts, self.low_d_ff))
-        
-        self.DKP_MLP = nn.Sequential(nn.Linear(self.d_llm, self.low_d_ff))
+        self.selection_embeddings = nn.Parameter(torch.empty(self.num_experts, self.low_d_ff // 2))
         
         self.flatten = nn.Flatten(start_dim=2)
         self.flattenIntraCycleLayer = MultiViewLayer(self.cp_hyperMoE, self.low_d_ff,
@@ -562,16 +571,15 @@ class Model(nn.Module):
         total_guide_loss = 0
         total_aug_count = 0
 
-        reduced_DKP_embeddings = self.DKP_MLP(DKP_embeddings)
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
         cycle_curve_data = self.flatten(cycle_curve_data)
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings, reduced_DKP_embeddings=reduced_DKP_embeddings) # [B, L, d_model]
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings, reduced_DKP_embeddings=reduced_DKP_embeddings) # [B, L, d_model]
+            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
@@ -584,7 +592,7 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, selection_embeddings=selection_embeddings, reduced_DKP_embeddings=reduced_DKP_embeddings) # [B, L, d_model]
+            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, selection_embeddings=selection_embeddings) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
