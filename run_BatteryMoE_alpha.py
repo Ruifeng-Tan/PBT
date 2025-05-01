@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_PCA_Transformer_ImpHyper, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer_ImpHyperv2, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
+from models import BatteryMoE_PCA_Transformer_ImpHyper, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer_Hyper, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
 import pickle
 import wandb
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
@@ -133,9 +133,10 @@ parser.add_argument('--mlp', type=int, default=0)
 parser.add_argument('--warm_up_epoches', type=int, default=0, help='The epoch number for linear Warmup')
 
 # MoE definition
+parser.add_argument('--num_hyper_experts', type=int, default=2, help="The number of the hyper experts")
 parser.add_argument('--num_views', type=int, default=4, help="The number of the views")
-parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the expert models used to process the battery data when the input itself is used for gating")
-parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert models used to process the battery data in encoder")
+parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the general experts")
+parser.add_argument('--num_experts', type=int, default=6, help="The number of the expert")
 parser.add_argument('--cathode_experts', type=int, default=13, help="The number of the expert models for proecessing different cathodes")
 parser.add_argument('--temperature_experts', type=int, default=20, help="The number of the expert models for proecessing different temperatures")
 parser.add_argument('--format_experts', type=int, default=21, help="The number of the expert models for proecessing different formats")
@@ -204,7 +205,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_K{}_PCA{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_K{}_PCA{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -215,7 +216,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.low_d_ff,
         args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, 
-        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.topK, args.use_PCA, args.seed)
+        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.topK, args.use_PCA, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -223,11 +224,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'BatteryMoE_PCA_Transformer_ImpHyperv2':
+    elif args.model == 'BatteryMoE_PCA_Transformer_Hyper':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_PCA_Transformer_ImpHyperv2.Model(model_config)
+        model = BatteryMoE_PCA_Transformer_Hyper.Model(model_config)
     elif args.model == 'BatteryMoE_PCA_Transformer_ImpHyper':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
