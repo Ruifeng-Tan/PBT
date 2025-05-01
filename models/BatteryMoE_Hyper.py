@@ -290,10 +290,11 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         logits = logits * mask
 
         # get the logits for unselected experts
-        inactive_logits = raw_logits * (1 - mask)
-        inactive_logits = inactive_logits / (torch.sum(inactive_logits, dim=1) + self.eps).unsqueeze(-1)
-        selection_embedding = selection_embeddings * inactive_logits.unsqueeze(-1)
-        selection_embedding = torch.sum(selection_embedding, dim=1) # [B, low_d_ff//2]
+        inactive_mask = 1 - mask
+        # inactive_logits = inactive_logits / (torch.sum(inactive_logits, dim=1) + self.eps).unsqueeze(-1)
+
+        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
+        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//2]
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
             # Create a mask where only the top-K values will be kept
@@ -366,10 +367,11 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         logits = logits * mask
 
         # get the logits for unselected experts
-        inactive_logits = raw_logits * (1 - mask)
-        inactive_logits = inactive_logits / (torch.sum(inactive_logits, dim=1) + self.eps).unsqueeze(-1)
-        selection_embedding = selection_embeddings * inactive_logits.unsqueeze(-1)
-        selection_embedding = torch.sum(selection_embedding, dim=1) # [B, low_d_ff//2]
+        inactive_mask = 1 - mask
+        # inactive_logits = inactive_logits / (torch.sum(inactive_logits, dim=1) + self.eps).unsqueeze(-1)
+
+        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
+        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//2]
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
