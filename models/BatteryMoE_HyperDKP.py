@@ -477,8 +477,7 @@ class Model(nn.Module):
 
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
-                                  nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
         self.low_d_ff = configs.low_d_ff
@@ -487,8 +486,7 @@ class Model(nn.Module):
         
         self.selection_embeddings = nn.Parameter(torch.empty(self.num_experts, self.low_d_ff))
         
-        self.DKP_MLP = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
-                                  nn.Linear(self.d_ff, self.low_d_ff))
+        self.DKP_MLP = nn.Sequential(nn.Linear(self.d_llm, self.low_d_ff))
         
         self.flatten = nn.Flatten(start_dim=2)
         self.flattenIntraCycleLayer = MultiViewLayer(self.cp_hyperMoE, self.low_d_ff,
