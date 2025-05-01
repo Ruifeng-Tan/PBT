@@ -33,11 +33,11 @@ transformers.logging.set_verbosity_error()
 class HyperMoE(nn.Module):
     def __init__(self, in_dim, low_d_ff, out_dim):
         super(HyperMoE, self).__init__()
-        self.low_d_ff = low_d_ff
+        self.low_d_ff = low_d_ff * 3
         self.in_dim = in_dim
         self.out_dim = out_dim
-        self.D_matrix = nn.Parameter(torch.empty(in_dim*low_d_ff, low_d_ff))
-        self.U_matrix = nn.Parameter(torch.empty(low_d_ff*out_dim, low_d_ff))
+        self.D_matrix = nn.Parameter(torch.empty(in_dim*self.low_d_ff, self.low_d_ff))
+        self.U_matrix = nn.Parameter(torch.empty(self.low_d_ff*out_dim, self.low_d_ff))
         self.reset_parameters()
 
     def reset_parameters(self) -> None:
@@ -74,7 +74,7 @@ class MultiViewLayer(nn.Module):
         super(MultiViewLayer, self).__init__()
         self.num_views = len(view_experts)
         self.hyperMoEs = hyperMoEs
-        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff // 3))
+        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff))
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -125,7 +125,7 @@ class MultiViewTransformerLayer(nn.Module):
         super(MultiViewTransformerLayer, self).__init__()
         self.num_views = len(view_experts)
         self.hyperMoEs = hyperMoEs
-        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff // 3))
+        self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff))
         
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
                             output_attention=False), d_model, n_heads)
@@ -485,10 +485,10 @@ class Model(nn.Module):
         self.cp_hyperMoE = nn.ModuleList([HyperMoE(self.charge_discharge_length*3, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
         self.shared_hyperMoE = nn.ModuleList([HyperMoE(self.d_model, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
         
-        self.selection_embeddings = nn.Parameter(torch.empty(self.num_experts, self.low_d_ff // 3))
+        self.selection_embeddings = nn.Parameter(torch.empty(self.num_experts, self.low_d_ff))
         
         self.DKP_MLP = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
-                                  nn.Linear(self.d_ff, self.low_d_ff // 3))
+                                  nn.Linear(self.d_ff, self.low_d_ff))
         
         self.flatten = nn.Flatten(start_dim=2)
         self.flattenIntraCycleLayer = MultiViewLayer(self.cp_hyperMoE, self.low_d_ff,
