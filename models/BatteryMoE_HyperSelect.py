@@ -251,9 +251,12 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         guide_loss = 0 # guide the model to give larger weight to the correct cathode expert
         if self.training:
             # Guidance loss
-            masked_raw_logits = raw_logits * mask
-            sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
-            guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+            # masked_raw_logits = raw_logits * mask
+            # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+            # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+            masked_raw_logits = raw_logits * mask # [B, num_experts]
+            masked_raw_logits = F.relu(0.5 - torch.sum(masked_raw_logits, dim=1)) # [B]
+            guide_loss = torch.mean(masked_raw_logits)
 
         return final_out, guide_loss, selection_embedding
 
@@ -334,9 +337,12 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         guide_loss = 0
         if self.training:
             # Guidance loss
-            masked_raw_logits = raw_logits * mask
-            sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
-            guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+            # masked_raw_logits = raw_logits * mask
+            # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+            # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+            masked_raw_logits = raw_logits * mask # [B, num_experts]
+            masked_raw_logits = F.relu(0.5 - torch.sum(masked_raw_logits, dim=1)) # [B]
+            guide_loss = torch.mean(masked_raw_logits)
 
         return final_out, guide_loss, selection_embedding
   
@@ -413,9 +419,12 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         guide_loss = 0
         if self.training:
             # Guidance loss
-            masked_raw_logits = raw_logits * mask
-            sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
-            guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+            # masked_raw_logits = raw_logits * mask
+            # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+            # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+            masked_raw_logits = raw_logits * mask # [B, num_experts]
+            masked_raw_logits = F.relu(0.5 - torch.sum(masked_raw_logits, dim=1)) # [B]
+            guide_loss = torch.mean(masked_raw_logits)
 
 
         return final_out, guide_loss, selection_embedding
