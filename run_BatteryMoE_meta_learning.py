@@ -208,10 +208,11 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_mlr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
+        args.meta_learning_rate,
         args.d_model,
         args.n_heads,
         args.e_layers,
@@ -322,11 +323,11 @@ for ii in range(args.itr):
     #         trained_parameters.append(p)
 
     # accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
-    maml = l2l.algorithms.MAML(model, lr=args.learning_rate)
+    maml = l2l.algorithms.MAML(model, lr=args.meta_learning_rate)
     if args.wd == 0:
-        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd, lr=args.meta_learning_rate)
+        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd, lr=args.learning_rate)
     else:
-        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd, lr=args.meta_learning_rate)
+        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd, lr=args.learning_rate)
 
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
