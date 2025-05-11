@@ -209,14 +209,12 @@ def my_collate_fn(samples):
     format_masks = torch.vstack([i['format_mask'] for i in samples])
     anode_masks = torch.vstack([i['anode_mask'] for i in samples])
     combined_masks = torch.vstack([i['combined_mask'] for i in samples])
-    SOH_trajectory = torch.vstack([i['SOH_trajectory'] for i in samples])
-    CE_trajectory = torch.vstack([i['CE_trajectory'] for i in samples])
 
 
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
 
-    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, SOH_trajectory, CE_trajectory
+    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks
 
 # BatterLifeLLM dataloader
 class Dataset_BatteryLifeLLM_original(Dataset):
@@ -355,54 +353,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.NAion_2024_train_files
             self.val_files = split_recorder.NAion_2024_val_files
             self.test_files = split_recorder.NAion_2024_test_files
-        elif self.dataset == 'MIX_CALB':
-            self.train_files = split_recorder.MIX_CALB_train_files
-            self.val_files = split_recorder.MIX_CALB_val_files
-            self.test_files = split_recorder.MIX_CALB_test_files
-        elif self.dataset == 'MIX_CALB42':
-            self.train_files = split_recorder.MIX_CALB42_train_files
-            self.val_files = split_recorder.MIX_CALB42_val_files
-            self.test_files = split_recorder.MIX_CALB42_test_files
-        elif self.dataset == 'MIX_CALB2024':
-            self.train_files = split_recorder.MIX_CALB2024_train_files
-            self.val_files = split_recorder.MIX_CALB2024_val_files
-            self.test_files = split_recorder.MIX_CALB2024_test_files
-        elif self.dataset == 'MIX_ZN':
-            self.train_files = split_recorder.MIX_ZN_train_files
-            self.val_files = split_recorder.MIX_ZN_val_files
-            self.test_files = split_recorder.MIX_ZN_test_files
-        elif self.dataset == 'MIX_ZN42':
-            self.train_files = split_recorder.MIX_ZN42_train_files
-            self.val_files = split_recorder.MIX_ZN42_val_files
-            self.test_files = split_recorder.MIX_ZN42_test_files
-        elif self.dataset == 'MIX_ZN2024':
-            self.train_files = split_recorder.MIX_ZN2024_train_files
-            self.val_files = split_recorder.MIX_ZN2024_val_files
-            self.test_files = split_recorder.MIX_ZN2024_test_files
-        elif self.dataset == 'MIX_NA':
-            self.train_files = split_recorder.MIX_NA_train_files
-            self.val_files = split_recorder.MIX_NA_val_files
-            self.test_files = split_recorder.MIX_NA_test_files
-        elif self.dataset == 'MIX_NA42':
-            self.train_files = split_recorder.MIX_NA42_train_files
-            self.val_files = split_recorder.MIX_NA42_val_files
-            self.test_files = split_recorder.MIX_NA42_test_files
-        elif self.dataset == 'MIX_NA2024':
-            self.train_files = split_recorder.MIX_NA2024_train_files
-            self.val_files = split_recorder.MIX_NA2024_val_files
-            self.test_files = split_recorder.MIX_NA2024_test_files 
-        elif self.dataset == 'MIX_all':
-            self.train_files = split_recorder.MIX_all_2021_train_files
-            self.val_files = split_recorder.MIX_all_2021_val_files
-            self.test_files = split_recorder.MIX_all_2021_test_files 
-        elif self.dataset == 'MIX_all2024':
-            self.train_files = split_recorder.MIX_all_2024_train_files
-            self.val_files = split_recorder.MIX_all_2024_val_files
-            self.test_files = split_recorder.MIX_all_2024_test_files 
-        elif self.dataset == 'MIX_all42':
-            self.train_files = split_recorder.MIX_all_42_train_files
-            self.val_files = split_recorder.MIX_all_42_val_files
-            self.test_files = split_recorder.MIX_all_42_test_files 
         
         # load the prompt embedding
         if self.seed == 2021:
@@ -581,7 +531,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 raise Exception(f'The {file_name} is not shown in the cathodes.json. We suggest the user to set the cathode in the cathodes.json and manually assign the expert'
                 'using the cathodes2mask based on domain knowledge. When it is not possible to know the cathode or to manually assign the cathode, you can consider commenting this Exception and then BatteryMoE will assign'
                 'the expert for you.')
-                cathode_mask = np.ones(self.cathode_experts) # assign according to the learned parameters
+                # cathode_mask = np.ones(self.cathode_experts) # assign according to the learned parameters
                 # cathode_mask = np.zeros(self.cathode_experts) # only use the general experts
 
             cathode_mask = list(cathode_mask)
@@ -595,7 +545,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 raise Exception(f'The {file_name} is not shown in the temperatures.json. We suggest the user to set the temperature in the temperatures.json and manually assign the expert'
                 'using the temperature2mask based on domain knowledge. When it is not possible to know the temperature or to manually assign the temperature, you can consider commenting this Exception and then BatteryMoE will assign'
                 'the expert for you.')
-                temperature_mask = np.ones(self.temperature_experts) # assign according to the learned parameters
+                # temperature_mask = np.ones(self.temperature_experts) # assign according to the learned parameters
                 # temperature_mask = np.zeros(self.temperature_experts) # only use the general experts
 
             temperature_mask = list(temperature_mask)
@@ -609,7 +559,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 raise Exception(f'The {file_name} is not shown in the formats.json. We suggest the user to set the format in the formats.json and manually assign the expert'
                 'using the format2mask based on domain knowledge. When it is not possible to know the format or to manually assign the format, you can consider commenting this Exception and then BatteryMoE will assign'
                 'the expert for you.')
-                format_mask = np.ones(self.format_experts) # assign according to the learned parameters
+                # format_mask = np.ones(self.format_experts) # assign according to the learned parameters
                 # format_mask = np.zeros(self.format_experts) # only use the general experts
             format_mask = list(format_mask)
 
@@ -624,7 +574,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 raise Exception(f'The {file_name} is not shown in the formats.json. We suggest the user to set the format in the formats.json and manually assign the expert'
                 'using the format2mask based on domain knowledge. When it is not possible to know the format or to manually assign the format, you can consider commenting this Exception and then BatteryMoE will assign'
                 'the expert for you.')
-                anode_mask = np.ones(self.anode_experts) # assign according to the learned parameters
+                # anode_mask = np.ones(self.anode_experts) # assign according to the learned parameters
                 # anode_mask = np.zeros(self.anode_experts) # only use the general experts
             anode_mask = list(anode_mask)
 

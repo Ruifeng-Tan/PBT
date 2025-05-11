@@ -13,6 +13,43 @@ from torch import nn
 from utils.losses import Battery_life_CL_loss
 import wandb
 plt.switch_backend('agg')
+def split_meta_domains(domain_ids, K):
+    """
+    Splits the domain_ids into meta-train and meta-test domains based on K% test domains.
+    
+    Args:
+        domain_ids (torch.Tensor): A 1D tensor of shape [N] containing domain IDs for each sample.
+        K (float): Percentage of domains to allocate to meta-test (0 <= K <= 100).
+    
+    Returns:
+        tuple: Two tensors, the first containing indices of meta-train samples and the second of meta-test samples.
+    """
+    unique_domains = torch.unique(domain_ids)
+    num_unique = unique_domains.size(0)
+    
+    # Calculate the number of test domains, ensuring it's an integer
+    num_test = int(round(num_unique * K / 100.0))
+    
+    # Handle edge cases where K is 0 or 100
+    if num_test == 0:
+        raise Exception("K cannot be 0, as it would result in no test domains.")
+    elif num_test >= num_unique:
+        raise Exception("K cannot be 100 or more, as it would result in all domains being test domains.")
+    else:
+        # Randomly permute the domains and split into test and train
+        perm = torch.randperm(num_unique)
+        shuffled_domains = unique_domains[perm]
+        test_domains = shuffled_domains[:num_test]
+    
+    # Create masks for test and train indices
+    test_mask = torch.isin(domain_ids, test_domains)
+    test_indices = torch.nonzero(test_mask, as_tuple=True)[0]
+    
+    train_mask = ~test_mask
+    train_indices = torch.nonzero(train_mask, as_tuple=True)[0]
+    
+    return train_indices, test_indices
+
 def is_training_label_model(epoch, args):
     if (epoch+1) <= args.least_epochs or epoch % 2 == 0:
         return True
@@ -519,22 +556,22 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
     total_seen_unseen_ids = []
     std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, SOH_trajectory, CE_trajectory) in enumerate(vali_loader):
-            cycle_curve_data = cycle_curve_data.float()# [B, S, N]
-            curve_attn_mask = curve_attn_mask.float()
-            labels = labels.float()
-            cathode_masks = cathode_masks.float()
-            temperature_masks = temperature_masks.float()
-            format_masks = format_masks.float()
-            anode_masks = anode_masks.float()
-            combined_masks = combined_masks.float()
-            SOH_trajectory = SOH_trajectory.float()
-            CE_trajectory = CE_trajectory.float()
+        for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids) in enumerate(vali_loader):
+            # cycle_curve_data = cycle_curve_data.float()# [B, S, N]
+            # curve_attn_mask = curve_attn_mask.float()
+            # labels = labels.float()
+            # cathode_masks = cathode_masks.float()
+            # temperature_masks = temperature_masks.float()
+            # format_masks = format_masks.float()
+            # anode_masks = anode_masks.float()
+            # combined_masks = combined_masks.float()
+            # SOH_trajectory = SOH_trajectory.float()
+            # CE_trajectory = CE_trajectory.float()
 
             # encoder - decoder
             outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
                                                  , temperature_masks=temperature_masks, format_masks=format_masks, anode_masks=anode_masks,
-                                                 combined_masks=combined_masks, SOH_trajectory=SOH_trajectory, CE_trajectory=CE_trajectory)
+                                                 combined_masks=combined_masks)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value
