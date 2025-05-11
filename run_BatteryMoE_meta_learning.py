@@ -291,7 +291,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="BatteryMoE",
+        project="BatteryMoE_meta",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
