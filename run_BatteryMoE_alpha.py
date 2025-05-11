@@ -119,6 +119,7 @@ parser.add_argument('--least_epochs', type=int, default=5, help='The model is tr
 parser.add_argument('--batch_size', type=int, default=32, help='batch size of train input data')
 parser.add_argument('--patience', type=int, default=10, help='early stopping patience')
 parser.add_argument('--learning_rate', type=float, default=0.0001, help='optimizer learning rate')
+parser.add_argument('--meta_learning_rate', type=float, default=0.0001, help='optimizer learning rate')
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--des', type=str, default='test', help='exp description')
 parser.add_argument('--loss', type=str, default='MSE', help='loss function')

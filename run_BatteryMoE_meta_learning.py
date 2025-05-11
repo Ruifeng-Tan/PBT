@@ -121,6 +121,7 @@ parser.add_argument('--least_epochs', type=int, default=5, help='The model is tr
 parser.add_argument('--batch_size', type=int, default=32, help='batch size of train input data')
 parser.add_argument('--patience', type=int, default=10, help='early stopping patience')
 parser.add_argument('--learning_rate', type=float, default=0.0001, help='optimizer learning rate')
+parser.add_argument('--meta_learning_rate', type=float, default=0.0001, help='optimizer learning rate')
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--des', type=str, default='test', help='exp description')
 parser.add_argument('--loss', type=str, default='MSE', help='loss function')
@@ -323,9 +324,9 @@ for ii in range(args.itr):
     # accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
     maml = l2l.algorithms.MAML(model, lr=args.learning_rate)
     if args.wd == 0:
-        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd)
+        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd, lr=args.meta_learning_rate)
     else:
-        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd)
+        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd, lr=args.meta_learning_rate)
 
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
