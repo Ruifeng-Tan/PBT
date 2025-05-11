@@ -28,7 +28,8 @@ def split_meta_domains(domain_ids, K):
     num_unique = unique_domains.size(0)
     
     # Calculate the number of test domains, ensuring it's an integer
-    num_test = int(round(num_unique * K / 100.0))
+    num_test = int(round(num_unique * K / 100.0))  
+    num_test = 1 if num_test == 0 else num_test
     
     # Handle edge cases where K is 0 or 100
     if num_test == 0:
