@@ -1,4 +1,4 @@
-from data_provider.data_loader import Dataset_BatteryLifeLLM_original
+from data_provider.data_loader import Dataset_BatteryLifeLLM_original, DomainBalancedBatchSampler
 from data_provider.data_loader import my_collate_fn, my_collate_fn_withId
 from torch.utils.data import DataLoader, RandomSampler, Dataset
 
@@ -8,7 +8,7 @@ data_dict = {
 
 def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, target_dataset='None'):
+                 class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, target_dataset='None', meta_learning=False):
     Data = data_dict[args.data]
 
     if flag == 'test' or flag == 'val':
@@ -97,7 +97,7 @@ def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eva
     
 def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None):
+                 class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, meta_learning=False):
     Data = data_dict[args.data]
 
     if flag == 'test' or flag == 'val':
@@ -125,14 +125,21 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
             cathodes2mask=cathodes2mask,
             anode2mask=anode2mask
         )
-
-    data_loader = DataLoader(
-                data_set,
-                batch_size=batch_size,
-                shuffle=shuffle_flag,
-                num_workers=args.num_workers,
-                drop_last=drop_last,
-                collate_fn=my_collate_fn)
+    
+    if meta_learning:
+        sampler = DomainBalancedBatchSampler(data_set.total_domain_ids, batch_size, min_domains=2, shuffle=True)
+        data_loader = DataLoader(
+                    data_set,
+                    num_workers=args.num_workers,
+                    collate_fn=my_collate_fn, batch_sampler=sampler) # use the sampler
+    else:
+        data_loader = DataLoader(
+                    data_set,
+                    batch_size=batch_size,
+                    shuffle=shuffle_flag,
+                    num_workers=args.num_workers,
+                    drop_last=drop_last,
+                    collate_fn=my_collate_fn)
         
     return data_set, data_loader
 

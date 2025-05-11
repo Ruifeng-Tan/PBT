@@ -269,7 +269,7 @@ for ii in range(args.itr):
         anode2mask = gate_masker.MIX_all_anodes2mask
 
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
-                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
+                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, meta_learning=True)
     label_scaler = train_data.return_label_scaler()        
     
     accelerator.print("Loading training samples......")
@@ -389,11 +389,9 @@ for ii in range(args.itr):
                             print(f'Warmup | Updating learning rate to {warm_up_lr}')
 
                 learner = maml.clone()
-
                 iter_count += 1
 
                 meta_train_indices, meta_test_indices = split_meta_domains(domain_ids, args.meta_test_percentage)
-                
                 # prepare the meta-train and meta-test data
                 # meta-train data
                 meta_train_cycle_curve_data = cycle_curve_data[meta_train_indices]
@@ -486,7 +484,7 @@ for ii in range(args.itr):
                 total_label_loss += print_label_loss
 
                 transformed_preds = outputs * std + mean_value
-                transformed_labels = labels  * std + mean_value
+                transformed_labels = meta_test_labels  * std + mean_value
                 all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
                 total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
                 total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
