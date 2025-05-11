@@ -13,7 +13,6 @@ from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemi
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_DKP, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
 import pickle
 import wandb
-from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training, AdaLoraConfig
 from data_provider.data_factory import data_provider_LLMv2
 import time
 import random
