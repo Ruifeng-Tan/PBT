@@ -110,7 +110,7 @@ parser.add_argument('--output_num', type=int, default=1, help='The number of pre
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
 # optimization
-parser.add_argument('--num_domains', type=int, default=2, help='the number of domains required in a batch of training samples')
+parser.add_argument('--num_domains', type=int, default=2, help='the minimum number of domains required in a batch of training samples')
 parser.add_argument('--meta_test_percentage', type=int, default=20, help='the percentage of the meta-test domains in each iteration')
 parser.add_argument('--meta_test_loss_weight', type=float, default=1.0, help='the weigth of the meta-test loss')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
@@ -294,7 +294,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="BatteryMoE_meta",
+        project="BatteryMoE_metaW",
         
         # track hyperparameters and run metadata
         config=args.__dict__,

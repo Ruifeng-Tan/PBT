@@ -54,11 +54,10 @@ datasetName2ids = {
 
 
 class DomainBalancedBatchSampler(BatchSampler):
-    def __init__(self, domain_ids, batch_size, min_domains=2, num_domains=None, shuffle=True):
+    def __init__(self, domain_ids, batch_size, num_domains, shuffle=True):
         self.domain_ids = np.array(domain_ids)  # Convert to NumPy for easier indexing
         self.batch_size = batch_size
-        self.min_domains = min_domains
-        self.num_domains = num_domains if num_domains is not None else min_domains
+        self.num_domains = num_domains
         self.shuffle = shuffle
 
         # Group indices by domain
@@ -66,8 +65,8 @@ class DomainBalancedBatchSampler(BatchSampler):
         self.domain_to_indices = {domain: np.where(self.domain_ids == domain)[0] for domain in self.domains}
 
         # Validate
-        if len(self.domains) < self.min_domains:
-            raise ValueError(f"Require ≥{self.min_domains} domains, but found {len(self.domains)}.")
+        if len(self.domains) < self.num_domains:
+            raise ValueError(f"Require ≥{self.num_domains} domains, but found {len(self.domains)}.")
 
     def __iter__(self):
         # Shuffle indices within each domain
@@ -82,7 +81,7 @@ class DomainBalancedBatchSampler(BatchSampler):
         pointers = {domain: 0 for domain in self.domains}
 
         # Generate batches
-        while sum(pointers.values()) + self.batch_size <= sum(domain_lengths.values()):
+        while True:
             batch = []
 
             # Select `num_domains` from domains with remaining samples
@@ -99,7 +98,20 @@ class DomainBalancedBatchSampler(BatchSampler):
                     batch.append(idx)
                     pointers[domain] += 1
 
-            yield batch
+            # If batch is incomplete, try filling it with available samples from any domain
+            if len(batch) < self.batch_size:
+                for domain in remaining_domains:
+                    while len(batch) < self.batch_size and pointers[domain] < domain_lengths[domain]:
+                        idx = self.domain_to_indices[domain][pointers[domain]]
+                        batch.append(idx)
+                        pointers[domain] += 1
+                    if len(batch) == self.batch_size:
+                        break
+
+            if len(batch) == self.batch_size:
+                yield batch
+            else:
+                break  # Stop if unable to fill a complete batch
 
     def __len__(self):
         return len(self.domain_ids) // self.batch_size
