@@ -4,9 +4,10 @@ import re
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
+from collections import defaultdict
 from tqdm import tqdm
 import copy
-from torch.utils.data.sampler import BatchSampler
+from torch.utils.data.sampler import Sampler, BatchSampler
 from sklearn.preprocessing import StandardScaler
 from scipy.interpolate import interp1d
 from Prompts.Mapping_helper import Mapping_helper
@@ -53,68 +54,69 @@ datasetName2ids = {
 }
 
 
-class DomainBalancedBatchSampler(BatchSampler):
-    def __init__(self, domain_ids, batch_size, num_domains, shuffle=True):
-        self.domain_ids = np.array(domain_ids)  # Convert to NumPy for easier indexing
-        self.batch_size = batch_size
+class DomainBatchSampler(Sampler):
+    def __init__(self, domain_ids, num_domains, batch_size, shuffle=True):
+        self.domain_ids = domain_ids
         self.num_domains = num_domains
+        self.batch_size = batch_size
         self.shuffle = shuffle
 
-        # Group indices by domain
-        self.domains = np.unique(self.domain_ids)
-        self.domain_to_indices = {domain: np.where(self.domain_ids == domain)[0] for domain in self.domains}
+        # Group indices by domain_id
+        self.domain_to_indices_original = {}
+        for idx, domain_id in enumerate(domain_ids):
+            if domain_id not in self.domain_to_indices_original:
+                self.domain_to_indices_original[domain_id] = []
+            self.domain_to_indices_original[domain_id].append(idx)
+        
+        self.domain_ids_unique = list(self.domain_to_indices_original.keys())
 
-        # Validate
-        if len(self.domains) < self.num_domains:
-            raise ValueError(f"Require ≥{self.num_domains} domains, but found {len(self.domains)}.")
+        # Calculate total samples and batches
+        self.total_samples = len(domain_ids)
+        self.total_batches = self.total_samples // self.batch_size
+
+        # Precompute sample sizes for each domain in a batch
+        self.domain_sample_sizes = [self.batch_size // self.num_domains] * self.num_domains
+        for i in range(self.batch_size % self.num_domains):
+            self.domain_sample_sizes[i] += 1
 
     def __iter__(self):
-        # Shuffle indices within each domain
+        # Refresh domain_to_indices to original state
+        domain_to_indices = {domain_id: indices[:] for domain_id, indices in self.domain_to_indices_original.items()}
+
+        # Shuffle indices within each domain if shuffling is enabled
         if self.shuffle:
-            for indices in self.domain_to_indices.values():
-                np.random.shuffle(indices)
+            for indices in domain_to_indices.values():
+                random.shuffle(indices)
+            random.shuffle(self.domain_ids_unique)
 
-        # Pre-calculate lengths
-        domain_lengths = {domain: len(indices) for domain, indices in self.domain_to_indices.items()}
-
-        # Track pointers for each domain's indices
-        pointers = {domain: 0 for domain in self.domains}
-
-        # Generate batches
-        while True:
+        batch_count = 0
+        while batch_count < self.total_batches:
             batch = []
+            available_domains = [d for d in self.domain_ids_unique if len(domain_to_indices[d]) > 0]
 
-            # Select `num_domains` from domains with remaining samples
-            remaining_domains = [d for d in self.domains if pointers[d] < domain_lengths[d]]
-            if len(remaining_domains) < self.num_domains:
-                break  # Not enough domains left, break loop
+            if len(available_domains) < self.num_domains:
+                break  # Not enough domains to form a batch
 
-            selected_domains = np.random.choice(remaining_domains, size=self.num_domains, replace=False)
+            selected_domains = random.sample(available_domains, k=self.num_domains)
 
-            # Fill the batch
-            for domain in selected_domains:
-                while len(batch) < self.batch_size and pointers[domain] < domain_lengths[domain]:
-                    idx = self.domain_to_indices[domain][pointers[domain]]
-                    batch.append(idx)
-                    pointers[domain] += 1
-
-            # If batch is incomplete, try filling it with available samples from any domain
-            if len(batch) < self.batch_size:
-                for domain in remaining_domains:
-                    while len(batch) < self.batch_size and pointers[domain] < domain_lengths[domain]:
-                        idx = self.domain_to_indices[domain][pointers[domain]]
-                        batch.append(idx)
-                        pointers[domain] += 1
-                    if len(batch) == self.batch_size:
-                        break
+            for domain_id in selected_domains:
+                indices = domain_to_indices[domain_id]
+                sample_size = self.domain_sample_sizes[selected_domains.index(domain_id)]
+                
+                # Directly extend batch with samples
+                batch.extend(indices[:sample_size])
+                
+                # Update domain indices by slicing once
+                domain_to_indices[domain_id] = indices[sample_size:]
 
             if len(batch) == self.batch_size:
                 yield batch
-            else:
-                break  # Stop if unable to fill a complete batch
+                batch_count += 1
 
     def __len__(self):
-        return len(self.domain_ids) // self.batch_size
+        # Total number of complete batches that can be formed
+        return self.total_batches
+
     
 # Temperature assignment
 # Only Li-ion
@@ -324,7 +326,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.aug_helper = BatchAugmentation_battery_revised()
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
-            self.train_files = split_recorder.Stanford_train_files[:3] + split_recorder.Tongji_train_files[:2]
+            self.train_files = split_recorder.HUST_train_files[:20] + split_recorder.Tongji_train_files[:2]
             self.val_files = split_recorder.Tongji_val_files[:2] + split_recorder.HUST_val_files[:2]
             self.test_files =  split_recorder.Tongji_test_files[:2] + split_recorder.HUST_test_files[:1]
         elif self.dataset == 'Tongji':

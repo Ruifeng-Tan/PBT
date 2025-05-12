@@ -1,4 +1,4 @@
-from data_provider.data_loader import Dataset_BatteryLifeLLM_original, DomainBalancedBatchSampler
+from data_provider.data_loader import Dataset_BatteryLifeLLM_original, DomainBatchSampler
 from data_provider.data_loader import my_collate_fn, my_collate_fn_withId
 from torch.utils.data import DataLoader, RandomSampler, Dataset
 
@@ -127,7 +127,7 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
         )
     
     if meta_learning:
-        sampler = DomainBalancedBatchSampler(data_set.total_domain_ids, batch_size, num_domains=args.num_domains, shuffle=True)
+        sampler = DomainBatchSampler(domain_ids=data_set.total_domain_ids, batch_size=batch_size, num_domains=args.num_domains, shuffle=True)
         data_loader = DataLoader(
                     data_set,
                     num_workers=args.num_workers,

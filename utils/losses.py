@@ -18,7 +18,7 @@ class domain_averaged_MSELoss(nn.Module):
         # Get unique domain IDs and their corresponding group indices
         unique_domains, group_indices = torch.unique(domain_ids, return_inverse=True)
         num_domains = unique_domains.size(0)
-        
+
         # Sum squared errors per domain using scatter_add
         sum_se = torch.zeros(num_domains, device=squared_errors.device, dtype=squared_errors.dtype)
         sum_se.scatter_add_(0, group_indices, squared_errors)
