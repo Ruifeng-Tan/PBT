@@ -54,17 +54,16 @@ datasetName2ids = {
 
 
 class DomainBalancedBatchSampler(BatchSampler):
-    def __init__(self, domain_ids, batch_size, min_domains=2, shuffle=True):
+    def __init__(self, domain_ids, batch_size, min_domains=2, num_domains=None, shuffle=True):
         self.domain_ids = np.array(domain_ids)  # Convert to NumPy for easier indexing
         self.batch_size = batch_size
         self.min_domains = min_domains
+        self.num_domains = num_domains if num_domains is not None else min_domains
         self.shuffle = shuffle
 
         # Group indices by domain
         self.domains = np.unique(self.domain_ids)
-        self.domain_to_indices = {}
-        for domain in self.domains:
-            self.domain_to_indices[domain] = np.where(self.domain_ids == domain)[0] # get the indices of samples for each domain
+        self.domain_to_indices = {domain: np.where(self.domain_ids == domain)[0] for domain in self.domains}
 
         # Validate
         if len(self.domains) < self.min_domains:
@@ -73,42 +72,34 @@ class DomainBalancedBatchSampler(BatchSampler):
     def __iter__(self):
         # Shuffle indices within each domain
         if self.shuffle:
-            for domain in self.domains:
-                np.random.shuffle(self.domain_to_indices[domain])
+            for indices in self.domain_to_indices.values():
+                np.random.shuffle(indices)
+
+        # Pre-calculate lengths
+        domain_lengths = {domain: len(indices) for domain, indices in self.domain_to_indices.items()}
 
         # Track pointers for each domain's indices
         pointers = {domain: 0 for domain in self.domains}
-        total_samples = sum(len(indices) for indices in self.domain_to_indices.values())
 
         # Generate batches
-        while total_samples >= self.batch_size:
+        while sum(pointers.values()) + self.batch_size <= sum(domain_lengths.values()):
             batch = []
-            # Ensure at least `min_domains` domains are included
-            selected_domains = np.random.choice(
-                self.domains, size=self.min_domains, replace=False
-            )
 
-            # Add at least 1 sample from each selected domain
+            # Select `num_domains` from domains with remaining samples
+            remaining_domains = [d for d in self.domains if pointers[d] < domain_lengths[d]]
+            if len(remaining_domains) < self.num_domains:
+                break  # Not enough domains left, break loop
+
+            selected_domains = np.random.choice(remaining_domains, size=self.num_domains, replace=False)
+
+            # Fill the batch
             for domain in selected_domains:
-                if pointers[domain] < len(self.domain_to_indices[domain]):
+                while len(batch) < self.batch_size and pointers[domain] < domain_lengths[domain]:
                     idx = self.domain_to_indices[domain][pointers[domain]]
                     batch.append(idx)
                     pointers[domain] += 1
-                    total_samples -= 1
 
-            # Fill the rest of the batch with random domains
-            while len(batch) < self.batch_size and total_samples > 0:
-                domain = np.random.choice(self.domains)
-                if pointers[domain] < len(self.domain_to_indices[domain]):
-                    idx = self.domain_to_indices[domain][pointers[domain]]
-                    batch.append(idx)
-                    pointers[domain] += 1
-                    total_samples -= 1
-
-            # Ensure batch has samples from ≥2 domains
-            batch_domains = self.domain_ids[batch]
-            if len(np.unique(batch_domains)) >= self.min_domains:
-                yield batch
+            yield batch
 
     def __len__(self):
         return len(self.domain_ids) // self.batch_size

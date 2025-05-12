@@ -8,7 +8,7 @@ from torch import nn, optim
 from tqdm import tqdm
 import learn2learn as l2l
 from utils.tools import train_model_course, get_parameter_number, is_training_label_model, split_meta_domains
-from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
+from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, domain_averaged_MSELoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_DKP, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
@@ -110,6 +110,7 @@ parser.add_argument('--output_num', type=int, default=1, help='The number of pre
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
 # optimization
+parser.add_argument('--num_domains', type=int, default=2, help='the number of domains required in a batch of training samples')
 parser.add_argument('--meta_test_percentage', type=int, default=20, help='the percentage of the meta-test domains in each iteration')
 parser.add_argument('--meta_test_loss_weight', type=float, default=1.0, help='the weigth of the meta-test loss')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
@@ -208,7 +209,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_mlr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_mlr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_NDomain{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -219,8 +220,8 @@ for ii in range(args.itr):
         args.d_layers,
         args.d_ff,
         args.low_d_ff,
-        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, 
-        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, args.topK, args.use_PCA, args.seed)
+        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
+        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, args.topK, args.use_PCA, args.num_domains, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -331,7 +332,8 @@ for ii in range(args.itr):
 
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
-    criterion = nn.MSELoss(reduction='none') 
+    # criterion = nn.MSELoss(reduction='none') 
+    criterion = domain_averaged_MSELoss()
 
     prompt_adapter_loss = nn.CrossEntropyLoss()
     euclidean_dist = nn.PairwiseDistance(p=2)
@@ -406,6 +408,7 @@ for ii in range(args.itr):
                 meta_train_combined_masks = combined_masks[meta_train_indices]
                 meta_train_labels = labels[meta_train_indices]
                 meta_train_weights = weights[meta_train_indices]
+                meta_train_domain_ids = domain_ids[meta_train_indices]
 
                 # meta-test data
                 meta_test_cycle_curve_data = cycle_curve_data[meta_test_indices]
@@ -418,17 +421,16 @@ for ii in range(args.itr):
                 meta_test_combined_masks = combined_masks[meta_test_indices]
                 meta_test_labels = labels[meta_test_indices]
                 meta_test_weights = weights[meta_test_indices]
+                meta_test_domain_ids = domain_ids[meta_test_indices]
 
                 # encoder - decoder
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = learner(meta_train_cycle_curve_data, meta_train_curve_attn_mask, 
                 DKP_embeddings=meta_train_DKP_embeddings, cathode_masks=meta_train_cathode_masks, temperature_masks=meta_train_temperature_masks, format_masks=meta_train_format_masks, 
                 anode_masks=meta_train_anode_masks, combined_masks=meta_train_combined_masks)
 
-                if args.loss == 'MSE':
-                    loss = criterion(outputs, meta_train_labels)
-                    loss = torch.mean(loss * meta_train_weights)
-                else:
-                    raise Exception('Not implemented!')
+
+                loss = criterion(outputs.reshape(-1), meta_train_labels.reshape(-1), meta_train_domain_ids)
+
 
                 final_loss = loss
                 if args.num_experts > 1 and args.use_LB:
@@ -456,11 +458,7 @@ for ii in range(args.itr):
                 DKP_embeddings=meta_test_DKP_embeddings, cathode_masks=meta_test_cathode_masks, temperature_masks=meta_test_temperature_masks, format_masks=meta_test_format_masks, 
                 anode_masks=meta_test_anode_masks, combined_masks=meta_test_combined_masks)
 
-                if args.loss == 'MSE':
-                    loss = criterion(outputs, meta_test_labels)
-                    loss = torch.mean(loss * meta_test_weights)
-                else:
-                    raise Exception('Not implemented!')
+                loss = criterion(outputs.reshape(-1), meta_test_labels.reshape(-1), meta_test_domain_ids)
 
                 meta_test_final_loss = loss
                 if args.num_experts > 1 and args.use_LB:

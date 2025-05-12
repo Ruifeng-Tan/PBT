@@ -127,7 +127,7 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
         )
     
     if meta_learning:
-        sampler = DomainBalancedBatchSampler(data_set.total_domain_ids, batch_size, min_domains=10, shuffle=True)
+        sampler = DomainBalancedBatchSampler(data_set.total_domain_ids, batch_size, num_domains=args.num_domains, shuffle=True)
         data_loader = DataLoader(
                     data_set,
                     num_workers=args.num_workers,

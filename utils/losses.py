@@ -7,6 +7,34 @@ import torch.nn as nn
 import numpy as np
 import pdb
 import torch.nn.functional as F
+class domain_averaged_MSELoss(nn.Module):
+    def __init__(self):
+        super(domain_averaged_MSELoss, self).__init__()
+    
+    def forward(self, outputs, labels, domain_ids):
+        # Compute squared errors for each sample
+        squared_errors = (outputs - labels) ** 2  # Shape [B]
+        
+        # Get unique domain IDs and their corresponding group indices
+        unique_domains, group_indices = torch.unique(domain_ids, return_inverse=True)
+        num_domains = unique_domains.size(0)
+        
+        # Sum squared errors per domain using scatter_add
+        sum_se = torch.zeros(num_domains, device=squared_errors.device, dtype=squared_errors.dtype)
+        sum_se.scatter_add_(0, group_indices, squared_errors)
+        
+        # Count the number of samples per domain using scatter_add
+        counts = torch.zeros(num_domains, device=squared_errors.device, dtype=torch.long)
+        counts.scatter_add_(0, group_indices, torch.ones_like(group_indices, dtype=torch.long))
+        
+        # Compute MSE for each domain and avoid division by zero (though counts are at least 1 here)
+        mse_per_domain = sum_se / counts.float()
+        
+        # Average the MSEs across all domains
+        loss = mse_per_domain.mean()
+        
+        return loss
+
 class MMD_loss(nn.Module):
     def __init__(self, kernel_mul = 2.0, kernel_num = 5):
         super(MMD_loss, self).__init__()
