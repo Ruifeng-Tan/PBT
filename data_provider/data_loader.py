@@ -92,7 +92,7 @@ class DomainBatchSampler(Sampler):
         batch_count = 0
         while batch_count < self.total_batches:
             batch = []
-            available_domains = [d for d in self.domain_ids_unique if len(domain_to_indices[d]) > 0]
+            available_domains = [d for d in self.domain_ids_unique if len(domain_to_indices[d]) >= max(self.domain_sample_sizes)]
 
             if len(available_domains) < self.num_domains:
                 break  # Not enough domains to form a batch
@@ -102,7 +102,6 @@ class DomainBatchSampler(Sampler):
             for domain_id in selected_domains:
                 indices = domain_to_indices[domain_id]
                 sample_size = self.domain_sample_sizes[selected_domains.index(domain_id)]
-                
                 # Directly extend batch with samples
                 batch.extend(indices[:sample_size])
                 

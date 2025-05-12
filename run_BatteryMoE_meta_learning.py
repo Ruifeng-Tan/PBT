@@ -109,7 +109,7 @@ parser.add_argument('--class_num', type=int, default=8, help='The number of life
 
 # optimization
 parser.add_argument('--num_domains', type=int, default=2, help='the minimum number of domains required in a batch of training samples')
-parser.add_argument('--meta_test_percentage', type=int, default=20, help='the percentage of the meta-test domains in each iteration')
+parser.add_argument('--meta_test_percentage', type=int, default=25, help='the percentage of the meta-test domains in each iteration')
 parser.add_argument('--meta_test_loss_weight', type=float, default=1.0, help='the weigth of the meta-test loss')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
@@ -203,7 +203,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_mlr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_NDomain{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_mlr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_NDomain{}_MTestW{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -214,8 +214,8 @@ for ii in range(args.itr):
         args.d_layers,
         args.d_ff,
         args.low_d_ff,
-        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
-        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, args.topK, args.use_PCA, args.num_domains, args.seed)
+        args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
+        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, args.topK, args.use_PCA, args.num_domains, args.meta_test_loss_weight, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -319,9 +319,9 @@ for ii in range(args.itr):
     # print(f'Trainable parameters are: {trained_parameters_names}')
     maml = l2l.algorithms.MAML(model, lr=args.meta_learning_rate, first_order=False, allow_unused=True)
     if args.wd == 0:
-        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd)
+        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd, lr=args.learning_rate)
     else:
-        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd)
+        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd, lr=args.learning_rate)
 
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
@@ -428,8 +428,8 @@ for ii in range(args.itr):
 
 
             loss = criterion(outputs.reshape(-1), meta_train_labels.reshape(-1), meta_train_domain_ids)
-
-
+            # loss = criterion(outputs, meta_train_labels)
+            # loss = torch.mean(loss * meta_train_weights)
             final_loss = loss
             if args.num_experts > 1 and args.use_LB:
                 # load balancing loss
@@ -456,7 +456,9 @@ for ii in range(args.itr):
             anode_masks=meta_test_anode_masks, combined_masks=meta_test_combined_masks)
 
             loss = criterion(outputs.reshape(-1), meta_test_labels.reshape(-1), meta_test_domain_ids)
-
+            # loss = criterion(outputs, meta_test_labels)
+            # loss = torch.mean(loss * meta_test_weights)
+            
             meta_test_final_loss = loss
             if args.num_experts > 1 and args.use_LB:
                 # load balancing loss

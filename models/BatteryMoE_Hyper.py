@@ -543,8 +543,8 @@ class Model(nn.Module):
         tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
-        # cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
-        # DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
+        cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
+        DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
 
         selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
 
