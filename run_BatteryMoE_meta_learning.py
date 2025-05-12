@@ -1,7 +1,6 @@
 import os
 import argparse
 import torch
-import accelerate
 from accelerate import Accelerator, DeepSpeedPlugin
 from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
@@ -37,7 +36,6 @@ from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_bat
 parser = argparse.ArgumentParser(description='BatteryLifeLLM')
 
 def set_seed(seed):
-    accelerate.utils.set_seed(seed)
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -172,11 +170,7 @@ args = parser.parse_args()
 
 nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 set_seed(args.seed)
-ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
-# deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero_ours.json')
-# accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin, gradient_accumulation_steps=args.accumulation_steps)
-accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], gradient_accumulation_steps=args.accumulation_steps)
-accelerator.print(args.__dict__)
+print(args.__dict__)
 
 if args.use_PCA:
     # Automatically find d_llm dimension
@@ -252,7 +246,7 @@ for ii in range(args.itr):
     else:
         raise Exception('Not Implemented')
 
-    
+    model = model.bfloat16().cuda()
     tokenizer = None
     if model.tokenizer:
         tokenizer = model.tokenizer
@@ -275,46 +269,45 @@ for ii in range(args.itr):
                                                   format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, meta_learning=True)
     label_scaler = train_data.return_label_scaler()        
     
-    accelerator.print("Loading training samples......")
-    accelerator.print("Loading vali samples......")
+    print("Loading training samples......")
+    print("Loading vali samples......")
     vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
-    accelerator.print("Loading test samples......")
+    print("Loading test samples......")
     test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
     
-    if accelerator.is_local_main_process and os.path.exists(path):
+    if os.path.exists(path):
         del_files(path)  # delete checkpoint files
-        accelerator.print(f'success delete {path}')
+        print(f'success delete {path}')
     
     os.makedirs(path, exist_ok=True)
-    accelerator.wait_for_everyone()
     joblib.dump(label_scaler, f'{path}/label_scaler')
 
     with open(path+'/args.json', 'w') as f:
         json.dump(args.__dict__, f)
-    if accelerator.is_local_main_process:
-        wandb.init(
-        # set the wandb project where this run will be logged
-        project="BatteryMoE_metaW",
-        
-        # track hyperparameters and run metadata
-        config=args.__dict__,
-        name=nowtime
-        )
+
+    wandb.init(
+    # set the wandb project where this run will be logged
+    project="BatteryMoE_metaW",
+    
+    # track hyperparameters and run metadata
+    config=args.__dict__,
+    name=nowtime
+    )
 
 
 
     para_res = get_parameter_number(model)
-    accelerator.print(para_res)
+    print(para_res)
 
     # Print layer names and parameter counts
     for name, param in model.named_parameters():
         if param.requires_grad:
-            accelerator.print(f"Layer: {name} | Number of parameters: {param.numel()}")
+            print(f"Layer: {name} | Number of parameters: {param.numel()}")
 
     time_now = time.time()
 
     train_steps = len(train_loader)
-    early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
+    early_stopping = EarlyStopping(args, accelerator=None, patience=args.patience, least_epochs=args.least_epochs)
 
     # trained_parameters = []
     # trained_parameters_names = []
@@ -323,12 +316,12 @@ for ii in range(args.itr):
     #         trained_parameters_names.append(name)
     #         trained_parameters.append(p)
 
-    # accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
-    maml = l2l.algorithms.MAML(model, lr=args.meta_learning_rate)
+    # print(f'Trainable parameters are: {trained_parameters_names}')
+    maml = l2l.algorithms.MAML(model, lr=args.meta_learning_rate, first_order=False, allow_unused=True)
     if args.wd == 0:
-        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd, lr=args.learning_rate)
+        model_optim = optim.Adam(maml.parameters(), weight_decay=args.wd)
     else:
-        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd, lr=args.learning_rate)
+        model_optim = optim.AdamW(maml.parameters(), weight_decay=args.wd)
 
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
@@ -338,9 +331,6 @@ for ii in range(args.itr):
     prompt_adapter_loss = nn.CrossEntropyLoss()
     euclidean_dist = nn.PairwiseDistance(p=2)
 
-    # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
-    train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(
-            train_loader, vali_loader, test_loader, model, model_optim, scheduler)
 
     best_vali_loss = float('inf')
     best_vali_MAE, best_test_MAE = 0, 0
@@ -379,139 +369,146 @@ for ii in range(args.itr):
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
         for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids) in enumerate(train_loader):
-            with accelerator.accumulate(model):
-                if epoch < args.warm_up_epoches:
-                    # adjust the learning rate
-                    warm_up_lr = args.learning_rate * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader))
-                    for param_group in model_optim.param_groups:
-                        param_group['lr'] = warm_up_lr
-
-                    if (i + 1) % 5 == 0:
-                        if accelerator is not None:
-                            accelerator.print(f'Warmup | Updating learning rate to {warm_up_lr}')
-                        else:
-                            print(f'Warmup | Updating learning rate to {warm_up_lr}')
-
-                learner = maml.clone()
-                iter_count += 1
-
-                meta_train_indices, meta_test_indices = split_meta_domains(domain_ids, args.meta_test_percentage)
-                # prepare the meta-train and meta-test data
-                # meta-train data
-                meta_train_cycle_curve_data = cycle_curve_data[meta_train_indices]
-                meta_train_curve_attn_mask = curve_attn_mask[meta_train_indices]
-                meta_train_DKP_embeddings = DKP_embeddings[meta_train_indices]
-                meta_train_cathode_masks = cathode_masks[meta_train_indices]
-                meta_train_temperature_masks = temperature_masks[meta_train_indices]
-                meta_train_format_masks = format_masks[meta_train_indices]
-                meta_train_anode_masks = anode_masks[meta_train_indices]
-                meta_train_combined_masks = combined_masks[meta_train_indices]
-                meta_train_labels = labels[meta_train_indices]
-                meta_train_weights = weights[meta_train_indices]
-                meta_train_domain_ids = domain_ids[meta_train_indices]
-
-                # meta-test data
-                meta_test_cycle_curve_data = cycle_curve_data[meta_test_indices]
-                meta_test_curve_attn_mask = curve_attn_mask[meta_test_indices]
-                meta_test_DKP_embeddings = DKP_embeddings[meta_test_indices]
-                meta_test_cathode_masks = cathode_masks[meta_test_indices]
-                meta_test_temperature_masks = temperature_masks[meta_test_indices]
-                meta_test_format_masks = format_masks[meta_test_indices]
-                meta_test_anode_masks = anode_masks[meta_test_indices]
-                meta_test_combined_masks = combined_masks[meta_test_indices]
-                meta_test_labels = labels[meta_test_indices]
-                meta_test_weights = weights[meta_test_indices]
-                meta_test_domain_ids = domain_ids[meta_test_indices]
-
-                # encoder - decoder
-                outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = learner(meta_train_cycle_curve_data, meta_train_curve_attn_mask, 
-                DKP_embeddings=meta_train_DKP_embeddings, cathode_masks=meta_train_cathode_masks, temperature_masks=meta_train_temperature_masks, format_masks=meta_train_format_masks, 
-                anode_masks=meta_train_anode_masks, combined_masks=meta_train_combined_masks)
-
-
-                loss = criterion(outputs.reshape(-1), meta_train_labels.reshape(-1), meta_train_domain_ids)
-
-
-                final_loss = loss
-                if args.num_experts > 1 and args.use_LB:
-                    # load balancing loss
-                    importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
-                    print_LB_loss = importance_loss.detach().float()
-                    final_loss = final_loss + importance_loss
-
-                if args.use_guide:
-                    # guidance loss
-                    guide_loss = args.gamma * guide_loss
-                    print_guidance_loss = guide_loss.detach().float()
-                    final_loss = final_loss + guide_loss
-
-                # collect the prediction on the meta-train domains
-                transformed_preds = outputs * std + mean_value
-                transformed_labels = meta_train_labels  * std + mean_value
-                all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
-                total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
-                total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
-
-                learner.adapt(final_loss, allow_unused=True) # adapt the model on the meta-train domains
-                # evaluate the model on the meta-test domains
-                outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = learner(meta_test_cycle_curve_data, meta_test_curve_attn_mask, 
-                DKP_embeddings=meta_test_DKP_embeddings, cathode_masks=meta_test_cathode_masks, temperature_masks=meta_test_temperature_masks, format_masks=meta_test_format_masks, 
-                anode_masks=meta_test_anode_masks, combined_masks=meta_test_combined_masks)
-
-                loss = criterion(outputs.reshape(-1), meta_test_labels.reshape(-1), meta_test_domain_ids)
-
-                meta_test_final_loss = loss
-                if args.num_experts > 1 and args.use_LB:
-                    # load balancing loss
-                    importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
-                    print_LB_loss = importance_loss.detach().float()
-                    meta_test_final_loss = meta_test_final_loss + importance_loss
-
-                if args.use_guide:
-                    # guidance loss
-                    guide_loss = args.gamma * guide_loss
-                    print_guidance_loss = guide_loss.detach().float()
-                    meta_test_final_loss = meta_test_final_loss + guide_loss
-
-                final_loss = final_loss + args.meta_test_loss_weight * meta_test_final_loss
-
-                print_label_loss = loss.item()
-                print_loss = final_loss.item()
-                
-                total_loss += final_loss.item()
-                total_guidance_loss += print_guidance_loss
-                total_LB_loss += print_LB_loss
-                total_label_loss += print_label_loss
-
-                transformed_preds = outputs * std + mean_value
-                transformed_labels = meta_test_labels  * std + mean_value
-                all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
-                total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
-                total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
-
-                model_optim.zero_grad()
-                accelerator.backward(final_loss)
-                # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
-                model_optim.step()
-                
-
+            if epoch < args.warm_up_epoches:
+                # adjust the learning rate
+                warm_up_lr = args.learning_rate * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader))
+                for param_group in model_optim.param_groups:
+                    param_group['lr'] = warm_up_lr
 
                 if (i + 1) % 5 == 0:
-                    accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | LB loss: {print_LB_loss:.7f}')
-                    speed = (time.time() - time_now) / iter_count
-                    left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
-                    accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
-                    iter_count = 0
-                    time_now = time.time()
+                        print(f'Warmup | Updating learning rate to {warm_up_lr}')
+
+            learner = maml.clone()
+            iter_count += 1
+
+            cycle_curve_data = cycle_curve_data.to(torch.bfloat16).cuda()
+            curve_attn_mask = curve_attn_mask.to(torch.bfloat16).cuda()
+            DKP_embeddings = DKP_embeddings.to(torch.bfloat16).cuda()
+            cathode_masks = cathode_masks.to(torch.bfloat16).cuda()
+            temperature_masks = temperature_masks.to(torch.bfloat16).cuda()
+            format_masks = format_masks.to(torch.bfloat16).cuda()
+            anode_masks = anode_masks.to(torch.bfloat16).cuda()
+            combined_masks = combined_masks.to(torch.bfloat16).cuda()
+            labels = labels.cuda()
+            weights = weights.cuda()
+            domain_ids = domain_ids.int().cuda()
+
+            meta_train_indices, meta_test_indices = split_meta_domains(domain_ids, args.meta_test_percentage)
+            # prepare the meta-train and meta-test data
+            # meta-train data
+            meta_train_cycle_curve_data = cycle_curve_data[meta_train_indices]
+            meta_train_curve_attn_mask = curve_attn_mask[meta_train_indices]
+            meta_train_DKP_embeddings = DKP_embeddings[meta_train_indices]
+            meta_train_cathode_masks = cathode_masks[meta_train_indices]
+            meta_train_temperature_masks = temperature_masks[meta_train_indices]
+            meta_train_format_masks = format_masks[meta_train_indices]
+            meta_train_anode_masks = anode_masks[meta_train_indices]
+            meta_train_combined_masks = combined_masks[meta_train_indices]
+            meta_train_labels = labels[meta_train_indices]
+            meta_train_weights = weights[meta_train_indices]
+            meta_train_domain_ids = domain_ids[meta_train_indices]
+
+            # meta-test data
+            meta_test_cycle_curve_data = cycle_curve_data[meta_test_indices]
+            meta_test_curve_attn_mask = curve_attn_mask[meta_test_indices]
+            meta_test_DKP_embeddings = DKP_embeddings[meta_test_indices]
+            meta_test_cathode_masks = cathode_masks[meta_test_indices]
+            meta_test_temperature_masks = temperature_masks[meta_test_indices]
+            meta_test_format_masks = format_masks[meta_test_indices]
+            meta_test_anode_masks = anode_masks[meta_test_indices]
+            meta_test_combined_masks = combined_masks[meta_test_indices]
+            meta_test_labels = labels[meta_test_indices]
+            meta_test_weights = weights[meta_test_indices]
+            meta_test_domain_ids = domain_ids[meta_test_indices]
+
+            # encoder - decoder
+            outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = learner(meta_train_cycle_curve_data, meta_train_curve_attn_mask, 
+            DKP_embeddings=meta_train_DKP_embeddings, cathode_masks=meta_train_cathode_masks, temperature_masks=meta_train_temperature_masks, format_masks=meta_train_format_masks, 
+            anode_masks=meta_train_anode_masks, combined_masks=meta_train_combined_masks)
+
+
+            loss = criterion(outputs.reshape(-1), meta_train_labels.reshape(-1), meta_train_domain_ids)
+
+
+            final_loss = loss
+            if args.num_experts > 1 and args.use_LB:
+                # load balancing loss
+                importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
+                print_LB_loss = importance_loss.detach().float()
+                final_loss = final_loss + importance_loss
+
+            if args.use_guide:
+                # guidance loss
+                guide_loss = args.gamma * guide_loss
+                print_guidance_loss = guide_loss.detach().float()
+                final_loss = final_loss + guide_loss
+
+            # collect the prediction on the meta-train domains
+            transformed_preds = outputs * std + mean_value
+            transformed_labels = meta_train_labels  * std + mean_value
+            all_predictions, all_targets = transformed_preds, transformed_labels
+            total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+            total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+            learner.adapt(final_loss) # adapt the model on the meta-train domains
+            # evaluate the model on the meta-test domains
+            outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = learner(meta_test_cycle_curve_data, meta_test_curve_attn_mask, 
+            DKP_embeddings=meta_test_DKP_embeddings, cathode_masks=meta_test_cathode_masks, temperature_masks=meta_test_temperature_masks, format_masks=meta_test_format_masks, 
+            anode_masks=meta_test_anode_masks, combined_masks=meta_test_combined_masks)
+
+            loss = criterion(outputs.reshape(-1), meta_test_labels.reshape(-1), meta_test_domain_ids)
+
+            meta_test_final_loss = loss
+            if args.num_experts > 1 and args.use_LB:
+                # load balancing loss
+                importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
+                print_LB_loss = importance_loss.detach().float()
+                meta_test_final_loss = meta_test_final_loss + importance_loss
+
+            if args.use_guide:
+                # guidance loss
+                guide_loss = args.gamma * guide_loss
+                print_guidance_loss = guide_loss.detach().float()
+                meta_test_final_loss = meta_test_final_loss + guide_loss
+
+            final_loss = final_loss + args.meta_test_loss_weight * meta_test_final_loss
+
+            print_label_loss = loss.item()
+            print_loss = final_loss.item()
+            
+            total_loss += final_loss.item()
+            total_guidance_loss += print_guidance_loss
+            total_LB_loss += print_LB_loss
+            total_label_loss += print_label_loss
+
+            transformed_preds = outputs * std + mean_value
+            transformed_labels = meta_test_labels  * std + mean_value
+            all_predictions, all_targets = transformed_preds, transformed_labels
+            total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+            total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+
+            model_optim.zero_grad()
+            final_loss.backward()
+            # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+            model_optim.step()
+            
+
+
+            if (i + 1) % 5 == 0:
+                print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | LB loss: {print_LB_loss:.7f}')
+                speed = (time.time() - time_now) / iter_count
+                left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
+                print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
+                iter_count = 0
+                time_now = time.time()
 
                 
 
         train_rmse = root_mean_squared_error(total_references, total_preds)
         train_mape = mean_absolute_percentage_error(total_references, total_preds)
-        accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
+        print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
 
-        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
-        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
+        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, None, learner.module, vali_data, vali_loader, criterion)
+        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, None, learner.module, test_data, test_loader, criterion, compute_seen_unseen=True)
         vali_loss = vali_mape
         
         if vali_loss < best_vali_loss:
@@ -541,36 +538,31 @@ for ii in range(args.itr):
         total_guidance_loss = total_guidance_loss / len(train_loader)
         total_LB_loss = total_LB_loss / len(train_loader)
         total_label_loss = total_label_loss / len(train_loader)
-        accelerator.print(
+        print(
             f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train guidance loss: {total_guidance_loss:.5f}| Train LB loss: {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
             f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
-        if accelerator.is_local_main_process:
-            wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
-                    "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
+
+        wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
+                "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
         
-        early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
+        early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, learner.module, path)
         if early_stopping.early_stop:
-            accelerator.print("Early stopping")
-            accelerator.set_trigger()
-            
-        if accelerator.check_trigger():
+            print("Early stopping")
             break
         
-        if accelerator.is_local_main_process:
-            if args.lradj != 'CosineAnnealingLR':
-                adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
-            else:
-                if epoch >= args.warm_up_epoches:
-                    scheduler.step()
-                    accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
+        if args.lradj != 'CosineAnnealingLR':
+            adjust_learning_rate(None, model_optim, scheduler, epoch + 1, args, printout=True)
+        else:
+            if epoch >= args.warm_up_epoches:
+                scheduler.step()
+                print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
 
-accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
-accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
-accelerator.print(f'Best model performance: Test Seen 15%-accuracy: {best_seen_test_alpha_acc1:.4f} | Test Unseen 15%-accuracy: {best_unseen_test_alpha_acc1:.4f}')
-accelerator.print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
-accelerator.print(path)
-accelerator.set_trigger()
-if accelerator.check_trigger() and accelerator.is_local_main_process:
-    wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
-            "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
-    wandb.finish()
+print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
+print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
+print(f'Best model performance: Test Seen 15%-accuracy: {best_seen_test_alpha_acc1:.4f} | Test Unseen 15%-accuracy: {best_unseen_test_alpha_acc1:.4f}')
+print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
+print(path)
+
+wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
+        "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
+wandb.finish()

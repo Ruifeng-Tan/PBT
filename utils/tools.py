@@ -557,16 +557,18 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
     std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
     with torch.no_grad():
         for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids) in enumerate(vali_loader):
-            # cycle_curve_data = cycle_curve_data.float()# [B, S, N]
-            # curve_attn_mask = curve_attn_mask.float()
-            # labels = labels.float()
-            # cathode_masks = cathode_masks.float()
-            # temperature_masks = temperature_masks.float()
-            # format_masks = format_masks.float()
-            # anode_masks = anode_masks.float()
-            # combined_masks = combined_masks.float()
-            # SOH_trajectory = SOH_trajectory.float()
-            # CE_trajectory = CE_trajectory.float()
+            if accelerator is None:
+                # use the GPU manually
+                cycle_curve_data = cycle_curve_data.to(torch.bfloat16).cuda()
+                curve_attn_mask = curve_attn_mask.to(torch.bfloat16).cuda()
+                DKP_embeddings = DKP_embeddings.to(torch.bfloat16).cuda()
+                cathode_masks = cathode_masks.to(torch.bfloat16).cuda()
+                temperature_masks = temperature_masks.to(torch.bfloat16).cuda()
+                format_masks = format_masks.to(torch.bfloat16).cuda()
+                anode_masks = anode_masks.to(torch.bfloat16).cuda()
+                combined_masks = combined_masks.to(torch.bfloat16).cuda()
+                labels = labels.cuda()
+
 
             # encoder - decoder
             outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
@@ -576,7 +578,10 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
             
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
-            all_predictions, all_targets, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids))
+            if accelerator is None:
+                all_predictions, all_targets, seen_unseen_ids = transformed_preds, transformed_labels, seen_unseen_ids
+            else:
+                all_predictions, all_targets, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids))
             
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
