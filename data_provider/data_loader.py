@@ -53,6 +53,9 @@ datasetName2ids = {
     'NA-ion2024':29,
 }
 
+import random
+from torch.utils.data.sampler import Sampler
+import numpy as np
 
 class DomainBatchSampler(Sampler):
     def __init__(self, domain_ids, num_domains, batch_size, shuffle=True):
@@ -60,65 +63,151 @@ class DomainBatchSampler(Sampler):
         self.num_domains = num_domains
         self.batch_size = batch_size
         self.shuffle = shuffle
-
         assert len(np.unique(domain_ids)) >= num_domains
+        if self.batch_size % self.num_domains != 0:
+            raise ValueError("batch_size must be divisible by num_domains")
+        self.s_per_batch = self.batch_size // self.num_domains
+
         # Group indices by domain_id
         self.domain_to_indices_original = {}
         for idx, domain_id in enumerate(domain_ids):
-            if domain_id not in self.domain_to_indices_original:
-                self.domain_to_indices_original[domain_id] = []
-            self.domain_to_indices_original[domain_id].append(idx)
+            self.domain_to_indices_original.setdefault(domain_id, []).append(idx)
         
         self.domain_ids_unique = list(self.domain_to_indices_original.keys())
-
-        # Calculate total samples and batches
         self.total_samples = len(domain_ids)
-        self.total_batches = self.total_samples // self.batch_size
+        self.total_batches = self._compute_total_batches()
 
-        # Precompute sample sizes for each domain in a batch
-        self.domain_sample_sizes = [self.batch_size // self.num_domains] * self.num_domains
-        for i in range(self.batch_size % self.num_domains):
-            self.domain_sample_sizes[i] += 1
+    def _compute_total_batches(self):
+        # Estimate considering even distribution; actual batches may vary
+        return (self.total_samples + self.batch_size - 1) // self.batch_size
 
     def __iter__(self):
-        # Refresh domain_to_indices to original state
-        domain_to_indices = {domain_id: indices[:] for domain_id, indices in self.domain_to_indices_original.items()}
+        domain_to_indices = {domain: idx.copy() for domain, idx in self.domain_to_indices_original.items()}
+        fresh_domain_to_indices = domain_to_indices.copy()
+        domain_list = self.domain_ids_unique.copy()
 
-        # Shuffle indices within each domain if shuffling is enabled
         if self.shuffle:
-            for indices in domain_to_indices.values():
-                random.shuffle(indices)
-            random.shuffle(self.domain_ids_unique)
+            random.shuffle(domain_list)
+            for domain in domain_list:
+                random.shuffle(domain_to_indices[domain])
 
-        batch_count = 0
-        while batch_count < self.total_batches:
-            batch = []
-            available_domains = [d for d in self.domain_ids_unique if len(domain_to_indices[d]) >= max(self.domain_sample_sizes)]
+        while True:
+            # Collect domains with at least one sample
+            available_domains = [d for d in domain_list if len(domain_to_indices[d]) > 0]
+            if not available_domains:
+                break
 
-            if len(available_domains) < self.num_domains and batch_count==0:
-                raise Exception(f'Your dataset cannot provide so many samples from {self.num_domains} domains.')
+            # Select domains, allowing repeats if necessary
             if len(available_domains) < self.num_domains:
-                break  # Not enough domains to form a batch
+                # The remaining domains are less than num_domains. We will randomly retrieve some exhausted domains to fill the gap.
+                exhausted_domains = [d for d in domain_list if len(domain_to_indices[d]) == 0]
+                selected_domains = available_domains + random.sample(exhausted_domains, k=self.num_domains-len(available_domains))
+            else:
+                selected_domains = random.sample(available_domains, self.num_domains)
 
-
-            selected_domains = random.sample(available_domains, k=self.num_domains)
-            for domain_id in selected_domains:
-                indices = domain_to_indices[domain_id]
-                sample_size = self.domain_sample_sizes[selected_domains.index(domain_id)]
-                # Directly extend batch with samples
-                batch.extend(indices[:sample_size])
-                
-                # Update domain indices by slicing once
-                domain_to_indices[domain_id] = indices[sample_size:]
-
-            if len(batch) == self.batch_size:
-                yield batch
-                batch_count += 1
-
+            batch = []
+            for domain in selected_domains:
+                indices = self.get_sample_indices_from_domain(fresh_domain_to_indices, domain_to_indices, domain=domain)
+                batch.extend(indices)
+            # Yield even if batch is smaller than batch_size (due to s < s_per_batch)
+            yield batch
 
     def __len__(self):
-        # Total number of complete batches that can be formed
         return self.total_batches
+    
+    def get_sample_indices_from_domain(self, fresh_domain_to_indices, domain_to_indices, domain):
+        '''
+        Get sample indices from a domain.
+        If the domain is not exhuasted:
+            If the domain can provide enough samples i.e. self.s_per_batch, we will get the samples from it and update the domain_to_indices for it.
+            If the domain cannot provide enough samples i.e. self.s_per_batch, we will get the remaining samples and randomly get some samples from this domain. Then, mark the domain as exhausted.
+        else:
+            Randomly get sampels from this domain.
+        Return:
+            indices
+        '''
+        if len(domain_to_indices[domain]) > 0:
+            # The domain is not exhausted
+            if len(domain_to_indices[domain]) >= self.s_per_batch:
+                indices = domain_to_indices[domain]
+                retunred_indices = indices[:self.s_per_batch]
+                domain_to_indices[domain] = indices[self.s_per_batch:]
+            else:
+                indices = domain_to_indices[domain]
+                gap_sample_size = self.s_per_batch - len(indices)
+                retunred_indices = indices + random.sample(fresh_domain_to_indices[domain], k=gap_sample_size)
+                domain_to_indices[domain] = []
+        else:
+            # This domain is exhuasted
+            retunred_indices = random.sample(fresh_domain_to_indices[domain], k=self.s_per_batch)
+        return retunred_indices
+
+    
+# class DomainBatchSampler(Sampler):
+#     def __init__(self, domain_ids, num_domains, batch_size, shuffle=True):
+#         self.domain_ids = domain_ids
+#         self.num_domains = num_domains
+#         self.batch_size = batch_size
+#         self.shuffle = shuffle
+
+#         assert len(np.unique(domain_ids)) >= num_domains
+#         # Group indices by domain_id
+#         self.domain_to_indices_original = {}
+#         for idx, domain_id in enumerate(domain_ids):
+#             if domain_id not in self.domain_to_indices_original:
+#                 self.domain_to_indices_original[domain_id] = []
+#             self.domain_to_indices_original[domain_id].append(idx)
+        
+#         self.domain_ids_unique = list(self.domain_to_indices_original.keys())
+
+#         # Calculate total samples and batches
+#         self.total_samples = len(domain_ids)
+#         self.total_batches = self.total_samples // self.batch_size
+
+#         # Precompute sample sizes for each domain in a batch
+#         self.domain_sample_sizes = [self.batch_size // self.num_domains] * self.num_domains
+#         for i in range(self.batch_size % self.num_domains):
+#             self.domain_sample_sizes[i] += 1
+
+#     def __iter__(self):
+#         # Refresh domain_to_indices to original state
+#         domain_to_indices = {domain_id: indices[:] for domain_id, indices in self.domain_to_indices_original.items()}
+
+#         # Shuffle indices within each domain if shuffling is enabled
+#         if self.shuffle:
+#             for indices in domain_to_indices.values():
+#                 random.shuffle(indices)
+#             random.shuffle(self.domain_ids_unique)
+
+#         batch_count = 0
+#         while batch_count < self.total_batches:
+#             batch = []
+#             available_domains = [d for d in self.domain_ids_unique if len(domain_to_indices[d]) >= max(self.domain_sample_sizes)]
+
+#             if len(available_domains) < self.num_domains and batch_count==0:
+#                 raise Exception(f'Your dataset cannot provide so many samples from {self.num_domains} domains.')
+#             if len(available_domains) < self.num_domains:
+#                 break  # Not enough domains to form a batch
+
+
+#             selected_domains = random.sample(available_domains, k=self.num_domains)
+#             for domain_id in selected_domains:
+#                 indices = domain_to_indices[domain_id]
+#                 sample_size = self.domain_sample_sizes[selected_domains.index(domain_id)]
+#                 # Directly extend batch with samples
+#                 batch.extend(indices[:sample_size])
+                
+#                 # Update domain indices by slicing once
+#                 domain_to_indices[domain_id] = indices[sample_size:]
+
+#             if len(batch) == self.batch_size:
+#                 yield batch
+#                 batch_count += 1
+
+
+#     def __len__(self):
+#         # Total number of complete batches that can be formed
+#         return self.total_batches
 
     
 # Temperature assignment
