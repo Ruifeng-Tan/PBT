@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_PCA_Transformer_Imp，只不过使用HyperExpert取代general expert
+基于BatteryMoE_Hyper, 加入了CycleMoE
 '''
 import torch
 import torch.nn as nn
@@ -31,14 +31,13 @@ from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error() 
 
 class HyperMoE(nn.Module):
-    def __init__(self, in_dim, d_ff, low_d_ff, out_dim):
+    def __init__(self, in_dim, low_d_ff, out_dim):
         super(HyperMoE, self).__init__()
         self.low_d_ff = low_d_ff
         self.in_dim = in_dim
-        self.d_ff = d_ff
         self.out_dim = out_dim
-        self.D_matrix = nn.Parameter(torch.empty(in_dim*d_ff, low_d_ff))
-        self.U_matrix = nn.Parameter(torch.empty(d_ff*out_dim, low_d_ff))
+        self.D_matrix = nn.Parameter(torch.empty(in_dim*low_d_ff, low_d_ff))
+        self.U_matrix = nn.Parameter(torch.empty(low_d_ff*out_dim, low_d_ff))
         self.reset_parameters()
 
     def reset_parameters(self) -> None:
@@ -56,8 +55,8 @@ class HyperMoE(nn.Module):
         D_matrix = self.D_matrix.unsqueeze(0).expand(B, -1, -1)
         U_matrix = self.U_matrix.unsqueeze(0).expand(B, -1, -1)
 
-        D_matrix = torch.matmul(D_matrix, k).reshape(B, self.in_dim, self.d_ff) # [B, in_dim, d_ff]
-        U_matrix = torch.matmul(U_matrix, k).reshape(B, self.d_ff, self.out_dim) # [B, d_ff, out_dim]
+        D_matrix = torch.matmul(D_matrix, k).reshape(B, self.in_dim, self.low_d_ff) # [B, in_dim, low_d_ff]
+        U_matrix = torch.matmul(U_matrix, k).reshape(B, self.low_d_ff, self.out_dim) # [B, low_d_ff, out_dim]
 
         if x.dim() == 2:
             x = x.unsqueeze(1) # [B, 1, in_dim]
@@ -100,7 +99,10 @@ class MultiViewLayer(nn.Module):
         total_guide_loss = 0
         final_out = 0
         for i, view_expert in enumerate(self.view_experts):
-            out, guide_loss, selection_embedding = view_expert(x, total_logits[i], total_masks[i], selection_embeddings=selection_embeddings)
+            if total_masks is not None:
+                out, guide_loss, selection_embedding = view_expert(x, total_logits[i], total_masks[i], selection_embeddings=selection_embeddings)
+            else:
+                out, guide_loss, selection_embedding = view_expert(x, total_logits[i], None, selection_embeddings=selection_embeddings)
             final_out = final_out + out
             total_guide_loss += guide_loss
 
@@ -408,6 +410,76 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
 
 
         return final_out, guide_loss, selection_embedding
+
+class BatteryMoECycleMoELayer(nn.Module):
+    def __init__(self, configs, num_experts, topK):
+        super(BatteryMoECycleMoELayer, self).__init__()
+        self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
+        self.drop_rate = configs.dropout
+        self.n_heads = configs.n_heads
+
+        self.d_ff = configs.d_ff
+        self.d_llm = configs.d_llm
+        self.top_k = topK
+        self.d_model = configs.d_model  
+        self.num_experts = num_experts 
+        self.activation = configs.activation
+        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.num_general_experts = configs.num_general_experts
+        self.eps = 1e-9
+
+    
+    def forward(self, cycle_curve_data, logits, moe_masks, selection_embeddings):
+        '''
+        params:
+            cycle_curve_data: [B, L, d_model]
+            logits: [B, num_experts]
+            moe_masks: [B, num_experts]
+            selection_embeddings: [B, num_experts, low_d_ff // 2]
+        '''
+        B = cycle_curve_data.shape[0]
+        logits = F.softmax(logits, dim=1) # [B, num_experts]
+
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
+
+        inactive_mask = 1 - top_K_mask
+        selection_embedding = selection_embeddings * inactive_mask.unsqueeze(-1)
+        selection_embedding = torch.sum(selection_embedding, dim=1) / torch.sum(inactive_mask, dim=1, keepdim=True) # [B, low_d_ff//2]
+
+        de_norm = torch.sum(logits, dim=1) + self.eps
+        logits = logits / de_norm.unsqueeze(-1)
+
+        dispatcher = MOEDispatcher(self.num_experts, logits)
+        MOE_indicies = dispatcher.dispatch()
+        total_outs = []
+        total_expert_outs = []
+        for i, expert in enumerate(self.experts):
+            if len(MOE_indicies[i])>=1:
+                out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
+                total_outs.append(out)
+                total_expert_outs.append(out)
+
+        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+        final_out = total_outs
+
+        guide_loss = 0
+        if self.training:
+            # Guidance loss
+            # masked_raw_logits = raw_logits * mask
+            # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+            # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+
+            # no guidance for CycleMoE layer
+            pass
+
+
+        return final_out, guide_loss, selection_embedding
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -481,8 +553,8 @@ class Model(nn.Module):
         self.split_dim = self.d_model // self.num_views
 
         self.low_d_ff = configs.low_d_ff
-        self.cp_hyperMoE = nn.ModuleList([HyperMoE(self.charge_discharge_length*3, self.d_ff, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
-        self.shared_hyperMoE = nn.ModuleList([HyperMoE(self.d_model, self.d_ff, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
+        self.cp_hyperMoE = nn.ModuleList([HyperMoE(self.charge_discharge_length*3, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
+        self.shared_hyperMoE = nn.ModuleList([HyperMoE(self.d_model, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
         
         self.selection_embeddings = nn.Parameter(torch.empty(self.num_experts, self.low_d_ff // 2))
         
@@ -515,6 +587,18 @@ class Model(nn.Module):
                                                     drop_rate=self.drop_rate
                                                     )
                                              for _ in range(self.d_layers)])
+        
+        self.cycle_num_experts = configs.num_experts
+        self.cycle_gate = nn.Sequential(nn.Linear(1, self.cycle_num_experts))
+        self.cycle_selection_embeddings = nn.Parameter(torch.empty(self.cycle_num_experts, self.low_d_ff // 2))
+        self.cycle_MoE_layer = MultiViewLayer(self.shared_hyperMoE, self.low_d_ff,
+                                                     nn.ModuleList([BatteryMoECycleMoELayer(configs, self.cycle_num_experts, configs.cycle_topK)
+                                                    ]),
+                                                    norm_layer=nn.LayerNorm(self.d_model),
+                                                    general_experts=nn.ModuleList([
+                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
+                                                    ]),
+                                                    use_connection=True)
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
         self.reset_parameters()
@@ -548,6 +632,7 @@ class Model(nn.Module):
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
 
         selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
+        cycle_selection_embeddings = self.cycle_selection_embeddings.unsqueeze(0).expand(B, -1, -1)
 
         total_masks = [combined_masks]
 
@@ -586,6 +671,12 @@ class Model(nn.Module):
             total_aug_count += 1
             logits_index += 1
 
+        # CycleMoE
+        cycle_numbers = torch.sum(curve_attn_mask, dim=1).unsqueeze(-1) # [B, 1]
+        cycle_logits = self.cycle_gate(cycle_numbers) # [B, num_cycle_experts]
+        out, _ = self.cycle_MoE_layer(out, [cycle_logits], None, selection_embeddings=cycle_selection_embeddings) # [B, L, d_model]
+
+        # Output layer
         lengths = torch.sum(curve_attn_mask, dim=1).cpu() # [N]
         idx = (torch.as_tensor(lengths, device=out.device, dtype=torch.long) - 1).view(-1, 1).expand(
             len(lengths), out.size(2))
