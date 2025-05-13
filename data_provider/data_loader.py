@@ -61,6 +61,7 @@ class DomainBatchSampler(Sampler):
         self.batch_size = batch_size
         self.shuffle = shuffle
 
+        assert len(np.unique(domain_ids)) >= num_domains
         # Group indices by domain_id
         self.domain_to_indices_original = {}
         for idx, domain_id in enumerate(domain_ids):
@@ -94,11 +95,13 @@ class DomainBatchSampler(Sampler):
             batch = []
             available_domains = [d for d in self.domain_ids_unique if len(domain_to_indices[d]) >= max(self.domain_sample_sizes)]
 
+            if len(available_domains) < self.num_domains and batch_count==0:
+                raise Exception(f'Your dataset cannot provide so many samples from {self.num_domains} domains.')
             if len(available_domains) < self.num_domains:
                 break  # Not enough domains to form a batch
 
-            selected_domains = random.sample(available_domains, k=self.num_domains)
 
+            selected_domains = random.sample(available_domains, k=self.num_domains)
             for domain_id in selected_domains:
                 indices = domain_to_indices[domain_id]
                 sample_size = self.domain_sample_sizes[selected_domains.index(domain_id)]
@@ -111,6 +114,7 @@ class DomainBatchSampler(Sampler):
             if len(batch) == self.batch_size:
                 yield batch
                 batch_count += 1
+
 
     def __len__(self):
         # Total number of complete batches that can be formed
