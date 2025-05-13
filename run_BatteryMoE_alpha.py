@@ -6,9 +6,8 @@ from accelerate import Accelerator, DeepSpeedPlugin
 from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
-import learn2learn as l2l
 from utils.tools import train_model_course, get_parameter_number, is_training_label_model
-from utils.losses import bmc_loss, Battery_life_alignment_CL_loss, DG_loss, Alignment_loss
+from utils.losses import bmc_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_DKP, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
@@ -62,6 +61,8 @@ parser.add_argument('--center_path', type=str, required=False, default='./Centen
 parser.add_argument('--seed', type=int, default=2021, help='random seed')
 
 # data loader
+parser.add_argument('--num_domains', type=int, default=4, help='the number of domains in a training batch')
+parser.add_argument('--use_domainSampler', action='store_true', default=False, help='set True to use domain sampler when loading training samples')
 parser.add_argument('--dataset', type=str, default='HUST', help='dataset description')
 parser.add_argument('--data', type=str, required=False, default='BatteryLifeLLM', help='dataset type')
 parser.add_argument('--root_path', type=str, default='./dataset/HUST_dataset/', help='root path of the data file')
@@ -207,7 +208,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_noDKPL{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useDSampler{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -217,8 +218,8 @@ for ii in range(args.itr):
         args.d_layers,
         args.d_ff,
         args.low_d_ff,
-        args.llm_layers, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.noDKP_layers, args.dropout, 
-        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, args.topK, args.use_PCA, args.seed)
+        args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
+        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -269,8 +270,8 @@ for ii in range(args.itr):
         anode2mask = gate_masker.MIX_all_anodes2mask
 
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
-                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
-    label_scaler = train_data.return_label_scaler()        
+                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, use_domainSampler=args.use_domainSampler)
+    label_scaler = train_data.return_label_scaler()
     
     accelerator.print("Loading training samples......")
     accelerator.print("Loading vali samples......")
@@ -291,7 +292,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="BatteryMoE",
+        project="BatteryMoE_CL",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -356,18 +357,16 @@ for ii in range(args.itr):
     for epoch in range(args.train_epochs):
         iter_count = 0
         total_loss = 0
-        total_cl_loss = 0
+        total_guidance_loss = 0
         total_alignment_loss = 0
-        total_DG_loss = 0
-        total_align2_loss = 0
+        total_LB_loss = 0
         total_label_loss = 0
         
         model.train()
         epoch_time = time.time()
-        print_cl_loss = 0
+        print_guidance_loss = 0
         print_alignment_loss = 0
-        print_DG_loss = 0
-        print_align2_loss = 0
+        print_LB_loss = 0
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
@@ -400,35 +399,28 @@ for ii in range(args.itr):
                 if args.loss == 'MSE':
                     loss = criterion(outputs[:cut_off], labels)
                     loss = torch.mean(loss * weights)
-                elif args.loss == 'BMSE':
-                    loss = criterion(outputs[:cut_off], labels, 1, False)
-                    loss = torch.mean(loss * weights)
-                elif args.loss == 'MAPE':
-                    tmp_outputs = outputs[:cut_off] * std + mean_value
-                    tmp_labels = labels * std + mean_value
-                    loss = criterion(tmp_outputs/tmp_labels, tmp_labels/tmp_labels)
-                    loss = torch.mean(loss * weights)
+                else:
+                    raise Exception('Not implemented!')
 
                 final_loss = loss
                 if args.num_experts > 1 and args.use_LB:
                     importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
-                    print_DG_loss = importance_loss.detach().float()
+                    print_LB_loss = importance_loss.detach().float()
                     final_loss = final_loss + importance_loss
 
                 if args.use_guide:
                     # contrastive learning
                     guide_loss = args.gamma * guide_loss
-                    print_cl_loss = guide_loss.detach().float()
+                    print_guidance_loss = guide_loss.detach().float()
                     final_loss = final_loss + guide_loss
 
                 print_label_loss = loss.item()
                 print_loss = final_loss.item()
                 
                 total_loss += final_loss.item()
-                total_cl_loss += print_cl_loss
+                total_guidance_loss += print_guidance_loss
                 total_alignment_loss += print_alignment_loss
-                total_DG_loss += print_DG_loss
-                total_align2_loss += print_align2_loss
+                total_LB_loss += print_LB_loss
                 total_label_loss += print_label_loss
 
                 transformed_preds = outputs[:cut_off] * std + mean_value
@@ -445,7 +437,7 @@ for ii in range(args.itr):
 
 
                 if (i + 1) % 5 == 0:
-                    accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | cl_loss: {print_cl_loss:.7f} | align_loss: {print_alignment_loss:.7f} | align2_loss: {print_align2_loss:.7f} | DG loss: {print_DG_loss:.7f}')
+                    accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
                     speed = (time.time() - time_now) / iter_count
                     left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
                     accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
@@ -486,13 +478,12 @@ for ii in range(args.itr):
             best_unseen_test_alpha_acc2 = test_unseen_alpha_acc2
             
         train_loss = total_loss / len(train_loader)
-        total_cl_loss = total_cl_loss / len(train_loader)
-        total_align2_loss = total_align2_loss / len(train_loader)
+        total_guidance_loss = total_guidance_loss / len(train_loader)
         total_alignment_loss = total_alignment_loss / len(train_loader)
-        total_DG_loss = total_DG_loss / len(train_loader)
+        total_LB_loss = total_LB_loss / len(train_loader)
         total_label_loss = total_label_loss / len(train_loader)
         accelerator.print(
-            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_cl_loss:.5f}| Train align2 loss: {total_align2_loss:.5f} | Train align loss: {total_alignment_loss:.5f} | Train DG loss: {total_DG_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
+            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
             f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
         if accelerator.is_local_main_process:
             wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
