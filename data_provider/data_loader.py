@@ -91,7 +91,8 @@ class DomainBatchSampler(Sampler):
             for domain in domain_list:
                 random.shuffle(domain_to_indices[domain])
 
-        while True:
+        batch_count = 0
+        while batch_count < self.total_batches:
             # Collect domains with at least one sample
             available_domains = [d for d in domain_list if len(domain_to_indices[d]) > 0]
             if not available_domains:
@@ -109,7 +110,9 @@ class DomainBatchSampler(Sampler):
             for domain in selected_domains:
                 indices = self.get_sample_indices_from_domain(fresh_domain_to_indices, domain_to_indices, domain=domain)
                 batch.extend(indices)
+
             # Yield even if batch is smaller than batch_size (due to s < s_per_batch)
+            batch_count += 1
             yield batch
 
     def __len__(self):
