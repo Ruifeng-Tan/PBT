@@ -542,17 +542,19 @@ class Model(nn.Module):
         '''
         # process the charge&discharge data
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
+
         if self.training and self.configs.use_aug:
-            aug_cycle_curve_data = self.add_gaussian_noise(cycle_curve_data.reshape(B, L, -1), self.g_sigma) # add noise
-            aug_cycle_curve_data = aug_cycle_curve_data.reshape(B, L, num_var, fixed_len)
+            flatten_cycle_curve_data = cycle_curve_data.reshape(B, L, -1)
+
+            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(2*B, L, -1)
+            aug_cycle_curve_data = self.add_gaussian_noise(flatten_cycle_curve_data, self.g_sigma) # add noise
+            aug_cycle_curve_data = aug_cycle_curve_data.reshape(2*B, L, num_var, fixed_len)
 
             cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
-            curve_attn_mask = torch.cat([curve_attn_mask, curve_attn_mask], dim=0)
-            DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
-            combined_masks = torch.cat([combined_masks, combined_masks], dim=0)
-
-            B = 2*B
-            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
+            curve_attn_mask = curve_attn_mask.expand(3*B, -1, -1)
+            DKP_embeddings = DKP_embeddings.expand(3*B, -1, -1)
+            combined_masks = combined_masks.expand(3*B, -1, -1)
+            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(3*B, -1, -1)
         else:
             selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
 
@@ -609,7 +611,7 @@ class Model(nn.Module):
 
         preds = preds.float()
         llm_out = llm_out.float()
-        return preds, None, llm_out, feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
+        return preds[:B], None, llm_out, feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''

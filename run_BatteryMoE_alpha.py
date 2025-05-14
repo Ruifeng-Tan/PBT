@@ -7,7 +7,7 @@ from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
 from utils.tools import train_model_course, get_parameter_number, is_training_label_model
-from utils.losses import bmc_loss, DG_loss, Alignment_loss
+from utils.losses import bmc_loss, DG_loss, Alignment_loss, RnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_aug, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
@@ -333,6 +333,7 @@ for ii in range(args.itr):
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     criterion = nn.MSELoss(reduction='none') 
+    rnc_criterion = RnCLoss()
 
     prompt_adapter_loss = nn.CrossEntropyLoss()
     euclidean_dist = nn.PairwiseDistance(p=2)
@@ -398,9 +399,9 @@ for ii in range(args.itr):
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
                 anode_masks=anode_masks, combined_masks=combined_masks)
                 
-                if args.use_aug:
-                    labels = torch.cat([labels, labels], dim=0)
-                    weights = torch.cat([weights, weights], dim=0)
+                # if args.use_aug:
+                #     labels = torch.cat([labels, labels], dim=0)
+                #     weights = torch.cat([weights, weights], dim=0)
 
                 if args.loss == 'MSE':
                     loss = criterion(outputs, labels)
