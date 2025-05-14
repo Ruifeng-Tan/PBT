@@ -404,8 +404,12 @@ for ii in range(args.itr):
                     loss = torch.mean(loss * weights)
                 else:
                     raise Exception('Not implemented!')
+                
+                if epoch <=10 and args.use_aug:
+                    final_loss = 0
+                else:
+                    final_loss = loss
 
-                final_loss = loss
                 if args.num_experts > 1 and args.use_LB:
                     importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
                     print_LB_loss = importance_loss.detach().float()
