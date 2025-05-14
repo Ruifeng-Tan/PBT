@@ -51,7 +51,8 @@ class RnCLoss(nn.Module):
         # labels: [bs, label_dim]
 
         # features = torch.cat([features[:, 0], features[:, 1]], dim=0)  # [2bs, feat_dim]
-        labels = torch.repeat_interleave(labels, dim=0, repeats=2)  # [2bs, label_dim]
+        # labels = torch.repeat_interleave(labels, dim=0, repeats=2)  # [2bs, label_dim]
+        labels = labels.repeat(2, 1)
 
         label_diffs = self.label_diff_fn(labels)
         logits = self.feature_sim_fn(features).div(self.t)
