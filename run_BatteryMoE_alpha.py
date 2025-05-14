@@ -127,13 +127,17 @@ parser.add_argument('--loss', type=str, default='MSE', help='loss function')
 parser.add_argument('--lradj', type=str, default='constant', help='adjust learning rate')
 parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learning rate decay factor')
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
-parser.add_argument('--use_aug', action='store_true', help='use data augmentation', default=False)
 parser.add_argument('--g_sigma', type=float, default=0.01, help='the sigma for Gaussian noise')
 parser.add_argument('--llm_layers', type=int, default=6)
 parser.add_argument('--top_p', type=float, default=0.5, help='The threshold used to control the number of activated experts')
 parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
 parser.add_argument('--warm_up_epoches', type=int, default=0, help='The epoch number for linear Warmup')
+parser.add_argument('--use_guide', action='store_true', default=False, help='Set True to use guidance loss to guide the gate to capture the assigned gating.')
+parser.add_argument('--gamma', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
+parser.add_argument('--use_LB', action='store_true', default=False, help='Set True to use Load Balancing loss')
+parser.add_argument('--use_aug', action='store_true', help='use data augmentation', default=False)
+parser.add_argument('--aug_w', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
 
 # MoE definition
 parser.add_argument('--num_condition_experts', type=int, default=2, help="The very specialized experts for one aging condition")
@@ -150,10 +154,6 @@ parser.add_argument('--topK', type=int, default=2, help='The number of the exper
 parser.add_argument('--cycle_topK', type=int, default=2, help='The number of the experts used in CycleMoE layer')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
 parser.add_argument('--use_ReMoE', action='store_true', default=False, help='Set True to use relu router')
-
-parser.add_argument('--use_guide', action='store_true', default=False, help='Set True to use guidance loss to guide the gate to capture the assigned gating.')
-parser.add_argument('--gamma', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
-parser.add_argument('--use_LB', action='store_true', default=False, help='Set True to use Load Balancing loss')
 parser.add_argument('--use_PCA', action='store_true', default=False, help='Set True to use prompt embeddings processed by PCA')
 
 # Pretrain
@@ -210,7 +210,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useS{}_cycleK{}_aug{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useS{}_cycleK{}_aug{}_augW{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -222,7 +222,7 @@ for ii in range(args.itr):
         args.low_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
         args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.cycle_topK, args.use_aug, args.seed)
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.cycle_topK, args.use_aug, args.aug_w, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -418,7 +418,7 @@ for ii in range(args.itr):
                     final_loss = final_loss + guide_loss
 
                 if args.use_aug:
-                    aug_loss = rnc_criterion(embeddings, labels)
+                    aug_loss = args.aug_w * rnc_criterion(embeddings, labels)
                     print_alignment_loss = aug_loss.detach().float()
                     final_loss = final_loss + aug_loss
 
