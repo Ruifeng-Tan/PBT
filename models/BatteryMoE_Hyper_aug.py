@@ -542,18 +542,20 @@ class Model(nn.Module):
         '''
         # process the charge&discharge data
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
-
+        cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
+        DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
         if self.training and self.configs.use_aug:
             flatten_cycle_curve_data = cycle_curve_data.reshape(B, L, -1)
 
-            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(2*B, L, -1)
-            aug_cycle_curve_data = self.add_gaussian_noise(flatten_cycle_curve_data, self.g_sigma) # add noise
-            aug_cycle_curve_data = aug_cycle_curve_data.reshape(2*B, L, num_var, fixed_len)
+            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, L, D]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, L, flatten_cycle_curve_data.shape[-1])  # [3*B, L, D]
+            flatten_cycle_curve_data[B:] = self.add_gaussian_noise(flatten_cycle_curve_data[B:], self.g_sigma) # add noise
+            cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
 
-            cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
-            curve_attn_mask = curve_attn_mask.expand(3*B, -1, -1)
-            DKP_embeddings = DKP_embeddings.expand(3*B, -1, -1)
-            combined_masks = combined_masks.expand(3*B, -1, -1)
+            # cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
+            curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
+            DKP_embeddings = DKP_embeddings.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
+            combined_masks = combined_masks.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
             selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(3*B, -1, -1)
         else:
             selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
@@ -561,13 +563,10 @@ class Model(nn.Module):
         tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
-        cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
-        DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-
 
         total_masks = [combined_masks]
         logits = self.gate(DKP_embeddings)
-        logits = logits.reshape(B, -1, self.num_experts)
+        logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
         logits_index = 0
 
@@ -607,11 +606,11 @@ class Model(nn.Module):
         idx = idx.unsqueeze(1)
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
-        preds, llm_out, feature_llm_out = self.regression_head(out)
+        preds, embeddings, feature_llm_out = self.regression_head(out)
 
         preds = preds.float()
-        llm_out = llm_out.float()
-        return preds[:B], None, llm_out, feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
+        embeddings = embeddings.float()
+        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''

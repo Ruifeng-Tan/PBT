@@ -335,9 +335,6 @@ for ii in range(args.itr):
     criterion = nn.MSELoss(reduction='none') 
     rnc_criterion = RnCLoss()
 
-    prompt_adapter_loss = nn.CrossEntropyLoss()
-    euclidean_dist = nn.PairwiseDistance(p=2)
-
     # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
     train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(
             train_loader, vali_loader, test_loader, model, model_optim, scheduler)
@@ -391,11 +388,10 @@ for ii in range(args.itr):
                             print(f'Warmup | Updating learning rate to {warm_up_lr}')
 
                 model_optim.zero_grad()
-                lambd = np.random.beta(1, 6) # dominant ratio of X2
                 iter_count += 1
 
                 # encoder - decoder
-                outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
+                outputs, _, embeddings, _, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
                 anode_masks=anode_masks, combined_masks=combined_masks)
                 
@@ -420,6 +416,13 @@ for ii in range(args.itr):
                     guide_loss = args.gamma * guide_loss
                     print_guidance_loss = guide_loss.detach().float()
                     final_loss = final_loss + guide_loss
+
+                if args.use_aug:
+                    aug_loss = rnc_criterion(embeddings, labels)
+                    print_alignment_loss = aug_loss.detach().float()
+                    final_loss = final_loss + aug_loss
+
+
 
                 print_label_loss = loss.item()
                 print_loss = final_loss.item()
