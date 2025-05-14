@@ -1,10 +1,12 @@
 '''
-基于BatteryMoE_PCA_Transformer_Imp，只不过使用HyperExpert取代general expert
+基于BatteryMoE_Hyper，只不过在augmented X上做训练
 '''
 import torch
+import copy
 import torch.nn as nn
 from torch.nn import MultiheadAttention, LayerNorm
 import transformers
+from scipy import signal
 from math import sqrt
 from transformers import LlamaConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from transformers import GPT2Config, GPT2Tokenizer, GPT2Model, AutoTokenizer, AutoModel, AutoConfig, Phi3Config
@@ -70,11 +72,10 @@ class HyperMoE(nn.Module):
         return x
 
 class MultiViewLayer(nn.Module):
-    def __init__(self, conditionhyperMoEs, hyperMoEs, low_d_ff, view_experts, norm_layer, general_experts, use_connection):
+    def __init__(self, hyperMoEs, low_d_ff, view_experts, norm_layer, general_experts, use_connection):
         super(MultiViewLayer, self).__init__()
         self.num_views = len(view_experts)
         self.hyperMoEs = hyperMoEs
-        self.conditionhyperMoEs = conditionhyperMoEs
         self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff // 2))
         
         self.view_experts = view_experts
@@ -88,13 +89,12 @@ class MultiViewLayer(nn.Module):
     def reset_parameters(self) -> None:
         nn.init.xavier_normal_(self.layer_embedding)
 
-    def forward(self, x, total_logits, total_masks, selection_embeddings, DKP_hpyer_input):
+    def forward(self, x, total_logits, total_masks, selection_embeddings):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
         total_masks: [num_view, num_experts for each view expert]
         selection_embeddings: [B, num_experts, low_d_ff // 2]
-        DKP_hpyer_input: [B, low_d_ff // 2]
         '''
         B = x.shape[0]
         layer_embedding = self.layer_embedding.expand(B, -1)
@@ -105,17 +105,11 @@ class MultiViewLayer(nn.Module):
             final_out = final_out + out
             total_guide_loss += guide_loss
 
-            # use HyperMoE for unselected experts
+            # use HyperMoE
             hyper_input = torch.cat([selection_embedding, layer_embedding], dim=1)
             for i, hyperMoE in enumerate(self.hyperMoEs):
                 hyper_out = hyperMoE(x, hyper_input)
                 final_out = final_out + hyper_out
-            
-        # use HyperMoE for one aging condition
-        DKP_hpyer_input = torch.cat([DKP_hpyer_input, layer_embedding], dim=1)
-        for i, hyperMoE in enumerate(self.conditionhyperMoEs):
-            hyper_out = hyperMoE(x, DKP_hpyer_input)
-            final_out = final_out + hyper_out
 
 
         for i in range(len(self.general_experts)):
@@ -128,11 +122,10 @@ class MultiViewLayer(nn.Module):
 
 
 class MultiViewTransformerLayer(nn.Module):
-    def __init__(self, conditionhyperMoEs, hyperMoEs, low_d_ff, d_model, n_heads, view_experts, general_experts, drop_rate):
+    def __init__(self, hyperMoEs, low_d_ff, d_model, n_heads, view_experts, general_experts, drop_rate):
         super(MultiViewTransformerLayer, self).__init__()
         self.num_views = len(view_experts)
         self.hyperMoEs = hyperMoEs
-        self.conditionhyperMoEs = conditionhyperMoEs
         self.layer_embedding = nn.Parameter(torch.empty(1, low_d_ff // 2))
         
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
@@ -148,14 +141,13 @@ class MultiViewTransformerLayer(nn.Module):
     def reset_parameters(self) -> None:
         nn.init.xavier_normal_(self.layer_embedding)
 
-    def forward(self, x, total_logits, total_masks, attn_mask, selection_embeddings, DKP_hpyer_input):
+    def forward(self, x, total_logits, total_masks, attn_mask, selection_embeddings):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
         total_masks: [num_view, num_experts for each view expert]
         attn_mask: [B, 1, L, L]
         selection_embeddings: [B, num_experts, low_d_ff // 2]
-        DKP_hpyer_input: [DKP_hpyer_input, low_d_ff // 2]
         '''
         B = x.shape[0]
         layer_embedding = self.layer_embedding.expand(B, -1)
@@ -176,17 +168,11 @@ class MultiViewTransformerLayer(nn.Module):
             final_out = final_out + out
             total_guide_loss += guide_loss
 
-            # use HyperMoE for unselected experts
+            # use HyperMoE
             hyper_input = torch.cat([selection_embedding, layer_embedding], dim=1)
             for i, hyperMoE in enumerate(self.hyperMoEs):
                 hyper_out = hyperMoE(x, hyper_input)
                 final_out = final_out + hyper_out
-            
-        # use HyperMoE for one aging condition
-        DKP_hpyer_input = torch.cat([DKP_hpyer_input, layer_embedding], dim=1)
-        for i, hyperMoE in enumerate(self.conditionhyperMoEs):
-            hyper_out = hyperMoE(x, DKP_hpyer_input)
-            final_out = final_out + hyper_out
 
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
@@ -479,7 +465,7 @@ class Model(nn.Module):
         self.tokenizer.padding_side = 'right' # set the padding side
         self.e_layers = configs.e_layers
         self.d_layers = configs.d_layers
-        self.moe_layers = configs.e_layers+configs.d_layers+1
+        self.moe_layers = configs.e_layers+configs.d_layers
         self.drop_rate = configs.dropout
         self.activation = configs.activation
         self.cathode_experts = configs.cathode_experts
@@ -491,21 +477,19 @@ class Model(nn.Module):
 
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
+        self.g_sigma = configs.g_sigma
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
-                                  nn.Linear(self.d_ff, self.num_experts*self.moe_layers))
+                                  nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
         self.low_d_ff = configs.low_d_ff
-        self.cp_hyperMoEs = nn.ModuleList([HyperMoE(self.charge_discharge_length*3, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
-        self.shared_hyperMoEs = nn.ModuleList([HyperMoE(self.d_model, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
+        self.cp_hyperMoE = nn.ModuleList([HyperMoE(self.charge_discharge_length*3, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
+        self.shared_hyperMoE = nn.ModuleList([HyperMoE(self.d_model, self.low_d_ff, self.d_model) for _ in range(configs.num_hyper_experts)])
         
         self.selection_embeddings = nn.Parameter(torch.empty(self.num_experts, self.low_d_ff // 2))
-        self.DKP_MLP = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), nn.Linear(self.d_ff, self.low_d_ff//2))
-        self.condition_cp_hyperMoEs = nn.ModuleList([HyperMoE(self.charge_discharge_length*3, self.low_d_ff, self.d_model) for _ in range(configs.num_condition_experts)])
-        self.condition_shared_hyperMoEs = nn.ModuleList([HyperMoE(self.d_model, self.low_d_ff, self.d_model) for _ in range(configs.num_condition_experts)])
-
+        
         self.flatten = nn.Flatten(start_dim=2)
-        self.flattenIntraCycleLayer = MultiViewLayer(self.condition_cp_hyperMoEs, self.cp_hyperMoEs, self.low_d_ff,
+        self.flattenIntraCycleLayer = MultiViewLayer(self.cp_hyperMoE, self.low_d_ff,
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
@@ -514,7 +498,7 @@ class Model(nn.Module):
                                                     ]),
                                                     use_connection=False)
         
-        self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(self.condition_shared_hyperMoEs, self.shared_hyperMoEs, self.low_d_ff,
+        self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(self.shared_hyperMoE, self.low_d_ff,
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts)
                                                     ]),
                                                     norm_layer=nn.LayerNorm(self.d_model),
@@ -524,7 +508,7 @@ class Model(nn.Module):
                                                     use_connection=True) for _ in range(self.e_layers)])
         
         self.pe = PositionalEmbedding(self.d_model)
-        self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(self.condition_shared_hyperMoEs, self.shared_hyperMoEs, self.low_d_ff, self.d_model, self.n_heads,
+        self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(self.shared_hyperMoE, self.low_d_ff, self.d_model, self.n_heads,
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
                                                     ]), 
                                                     general_experts=nn.ModuleList([
@@ -558,6 +542,19 @@ class Model(nn.Module):
         '''
         # process the charge&discharge data
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
+        if self.training and self.configs.use_aug:
+            aug_cycle_curve_data = self.add_gaussian_noise(cycle_curve_data.reshape(B, L, -1), self.g_sigma) # add noise
+            aug_cycle_curve_data = aug_cycle_curve_data.reshape(B, L, num_var, fixed_len)
+
+            cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
+            curve_attn_mask = torch.cat([curve_attn_mask, curve_attn_mask], dim=0)
+            DKP_embeddings = torch.cat([DKP_embeddings, DKP_embeddings], dim=0)
+            combined_masks = torch.cat([combined_masks, combined_masks], dim=0)
+
+            B = 2*B
+            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
+        else:
+            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
 
         tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
@@ -565,11 +562,8 @@ class Model(nn.Module):
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
 
-        selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
-        DKP_hpyer_input = self.DKP_MLP(DKP_embeddings)
 
         total_masks = [combined_masks]
-
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(B, -1, self.num_experts)
   
@@ -581,13 +575,13 @@ class Model(nn.Module):
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
         cycle_curve_data = self.flatten(cycle_curve_data)
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings, DKP_hpyer_input=DKP_hpyer_input) # [B, L, d_model]
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings, DKP_hpyer_input=DKP_hpyer_input) # [B, L, d_model]
+            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, selection_embeddings=selection_embeddings) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
@@ -600,7 +594,7 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, selection_embeddings=selection_embeddings, DKP_hpyer_input=DKP_hpyer_input) # [B, L, d_model]
+            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, selection_embeddings=selection_embeddings) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
@@ -626,3 +620,23 @@ class Model(nn.Module):
         mask = torch.tril(torch.ones(seq_len, seq_len))  # (L, L)
         mask = mask.unsqueeze(0).expand(B, -1, -1)
         return mask
+
+    def add_gaussian_noise(self, X: torch.Tensor, sigma: float = 0.01) -> torch.Tensor:
+        """
+        Adds Gaussian noise to input tensor.
+        
+        Args:
+            X: Input tensor of shape [Batch, Sequence Length, Features]
+            sigma: Standard deviation of the Gaussian noise (controls noise magnitude)
+        
+        Returns:
+            Noisy tensor with same shape as input [B, L, D]
+        """
+        # Generate Gaussian noise with same shape as X
+        noise = torch.randn_like(X) * sigma
+        
+        # Add noise to original tensor
+        X_noisy = X + noise
+        
+        return X_noisy
+    

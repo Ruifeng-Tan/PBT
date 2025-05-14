@@ -698,3 +698,5 @@ class Model(nn.Module):
         mask = torch.tril(torch.ones(seq_len, seq_len))  # (L, L)
         mask = mask.unsqueeze(0).expand(B, -1, -1)
         return mask
+
+    

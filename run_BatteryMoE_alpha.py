@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, DG_loss, Alignment_loss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper, BatteryMoE_HyperCycle, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
+from models import BatteryMoE_Hyper, BatteryMoE_Hyper_aug, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -127,7 +127,8 @@ parser.add_argument('--loss', type=str, default='MSE', help='loss function')
 parser.add_argument('--lradj', type=str, default='constant', help='adjust learning rate')
 parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learning rate decay factor')
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
-parser.add_argument('--use_amp', action='store_true', help='use automatic mixed precision training', default=False)
+parser.add_argument('--use_aug', action='store_true', help='use data augmentation', default=False)
+parser.add_argument('--g_sigma', type=float, default=0.01, help='the sigma for Gaussian noise')
 parser.add_argument('--llm_layers', type=int, default=6)
 parser.add_argument('--top_p', type=float, default=0.5, help='The threshold used to control the number of activated experts')
 parser.add_argument('--accumulation_steps', type=int, default=1)
@@ -209,7 +210,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useDSampler{}_cycleK{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useS{}_cycleK{}_aug{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -220,7 +221,8 @@ for ii in range(args.itr):
         args.d_ff,
         args.low_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
-        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.cycle_topK, args.seed)
+        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.cycle_topK, args.use_aug, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -233,11 +235,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_Hyper.Model(model_config)
-    elif args.model == 'BatteryMoE_HyperCycle':
+    elif args.model == 'BatteryMoE_Hyper_aug':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_HyperCycle.Model(model_config)
+        model = BatteryMoE_Hyper_aug.Model(model_config)
     elif args.model == 'BatteryMoE_PCA_Transformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -395,10 +397,13 @@ for ii in range(args.itr):
                 outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
                 anode_masks=anode_masks, combined_masks=combined_masks)
+                
+                if args.use_aug:
+                    labels = torch.cat([labels, labels], dim=0)
+                    weights = torch.cat([weights, weights], dim=0)
 
-                cut_off = labels.shape[0]
                 if args.loss == 'MSE':
-                    loss = criterion(outputs[:cut_off], labels)
+                    loss = criterion(outputs, labels)
                     loss = torch.mean(loss * weights)
                 else:
                     raise Exception('Not implemented!')
@@ -424,8 +429,8 @@ for ii in range(args.itr):
                 total_LB_loss += print_LB_loss
                 total_label_loss += print_label_loss
 
-                transformed_preds = outputs[:cut_off] * std + mean_value
-                transformed_labels = labels[:cut_off]  * std + mean_value
+                transformed_preds = outputs * std + mean_value
+                transformed_labels = labels * std + mean_value
                 all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
 
                 accelerator.backward(final_loss)
