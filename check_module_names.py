@@ -35,9 +35,9 @@ para_res = get_parameter_number(language_model)
 print(para_res)
 enc_out = language_model.get_input_embeddings()(torch.LongTensor([pad_token_id,pad_token_id])) 
 print(enc_out)
-for n,m in language_model.named_modules():
-    print(n, m)
-# for n,m in language_model.named_parameters():
+# for n,m in language_model.named_modules():
 #     print(n, m)
+for n,m in language_model.named_parameters():
+    print(n)
 
 

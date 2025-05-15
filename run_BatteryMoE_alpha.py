@@ -10,7 +10,7 @@ from utils.tools import train_model_course, get_parameter_number, is_training_la
 from utils.losses import bmc_loss, DG_loss, Alignment_loss, RnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper, BatteryMoE_Hyper_aug, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
+from models import BatteryMoE_Hyper, BatteryMoE_Hyper_SOED, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -235,11 +235,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_Hyper.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_aug':
+    elif args.model == 'BatteryMoE_Hyper_SOED':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_aug.Model(model_config)
+        model = BatteryMoE_Hyper_SOED.Model(model_config)
     elif args.model == 'BatteryMoE_PCA_Transformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -405,11 +405,7 @@ for ii in range(args.itr):
                 else:
                     raise Exception('Not implemented!')
                 
-                if epoch <=10 and args.use_aug:
-                    final_loss = 0
-                else:
-                    final_loss = loss
-
+                final_loss = loss
                 if args.num_experts > 1 and args.use_LB:
                     importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
                     print_LB_loss = importance_loss.detach().float()
