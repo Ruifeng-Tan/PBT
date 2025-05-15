@@ -631,7 +631,7 @@ for epoch in range(args.train_epochs):
 
     train_rmse = root_mean_squared_error(total_references, total_preds)
     train_mape = mean_absolute_percentage_error(total_references, total_preds)
-    accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
+    accelerator.print("Stage2 Epoch: {} cost time: {}".format(epoch + 1 + stage1_trained_epoch, time.time() - epoch_time))
 
     vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
     test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
