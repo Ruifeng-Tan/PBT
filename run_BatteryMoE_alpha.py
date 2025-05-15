@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import bmc_loss, DG_loss, Alignment_loss, RnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper, BatteryMoE_Hyper_SOED, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
+from models import BatteryMoE_Hyper, BatteryMoE_Hyper_allMoE, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -31,7 +31,7 @@ def list_of_ints(arg):
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
 os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
 os.environ["TORCH_USE_CUDA_DSA"] = "true"
-from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM, load_content
+from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM
 
 parser = argparse.ArgumentParser(description='BatteryLifeLLM')
 
@@ -235,11 +235,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_Hyper.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_SOED':
+    elif args.model == 'BatteryMoE_Hyper_allMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_SOED.Model(model_config)
+        model = BatteryMoE_Hyper_allMoE.Model(model_config)
     elif args.model == 'BatteryMoE_PCA_Transformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -398,7 +398,6 @@ for ii in range(args.itr):
                 # if args.use_aug:
                 #     labels = torch.cat([labels, labels], dim=0)
                 #     weights = torch.cat([weights, weights], dim=0)
-
                 if args.loss == 'MSE':
                     loss = criterion(outputs, labels)
                     loss = torch.mean(loss * weights)

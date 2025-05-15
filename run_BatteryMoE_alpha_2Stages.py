@@ -111,6 +111,7 @@ parser.add_argument('--output_num', type=int, default=1, help='The number of pre
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
 # optimization
+parser.add_argument('--temperature', type=float, default=0.5, help='temperature for contrastive learning')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
 parser.add_argument('--itr', type=int, default=1, help='experiments times')
@@ -334,7 +335,7 @@ else:
 
 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
 criterion = nn.MSELoss(reduction='none') 
-rnc_criterion = RnCLoss()
+rnc_criterion = RnCLoss(temperature=args.temperature)
 
 # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
 train_loader, vali_loader, test_loader, model, model_optim, model_optim2, scheduler = accelerator.prepare(
@@ -620,7 +621,7 @@ for epoch in range(args.train_epochs):
 
 
             if (i + 1) % 5 == 0:
-                accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
+                accelerator.print(f'\titeras: {i+1}, epoch: {epoch + 1 + stage1_trained_epoch} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
                 speed = (time.time() - time_now) / iter_count
                 left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
                 accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))

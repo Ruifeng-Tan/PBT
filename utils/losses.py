@@ -32,6 +32,8 @@ class FeatureSimilarity(nn.Module):
         # output: [bs, bs]
         if self.similarity_type == 'l2':
             return - (features[:, None, :] - features[None, :, :]).norm(2, dim=-1)
+        elif self.similarity_type == 'dot':
+            return torch.matmul(features[:, :], features[:, :].transpose(0,1)) # [bs, bs]
         else:
             raise ValueError(self.similarity_type)
         
@@ -73,6 +75,7 @@ class RnCLoss(nn.Module):
             pos_label_diffs = label_diffs[:, k]  # 2bs
             neg_mask = (label_diffs >= pos_label_diffs.view(-1, 1)).float()  # [2bs, 2bs - 1]
             pos_log_probs = pos_logits - torch.log((neg_mask * exp_logits).sum(dim=-1))  # 2bs
+            # print(torch.log((neg_mask * exp_logits).sum(dim=-1)))
             loss += - (pos_log_probs / (n * (n - 1))).sum()
 
         return loss
