@@ -6,7 +6,7 @@ from accelerate import Accelerator, DeepSpeedPlugin
 from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
-from utils.tools import train_model_course, get_parameter_number, is_training_label_model
+from utils.tools import get_parameter_number
 from utils.losses import bmc_loss, DG_loss, Alignment_loss, RnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
@@ -418,9 +418,9 @@ for ii in range(args.itr):
                     final_loss = final_loss + guide_loss
 
                 if args.use_aug:
-                    aug_loss = args.aug_w * rnc_criterion(embeddings, labels)
-                    print_alignment_loss = aug_loss.detach().float()
-                    final_loss = final_loss + aug_loss
+                    rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
+                    print_alignment_loss = rnc_loss.detach().float()
+                    final_loss = final_loss + rnc_loss
 
 
 

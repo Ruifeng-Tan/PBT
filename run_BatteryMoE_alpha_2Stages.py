@@ -6,7 +6,7 @@ from accelerate import Accelerator, DeepSpeedPlugin
 from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
-from utils.tools import train_model_course, get_parameter_number, is_training_label_model
+from utils.tools import get_parameter_number
 from utils.losses import bmc_loss, DG_loss, Alignment_loss, RnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
@@ -31,7 +31,7 @@ def list_of_ints(arg):
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
 os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
 os.environ["TORCH_USE_CUDA_DSA"] = "true"
-from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM, load_content
+from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM, vali_batteryLifeLLM_stage1
 
 parser = argparse.ArgumentParser(description='BatteryLifeLLM')
 
@@ -305,23 +305,32 @@ time_now = time.time()
 
 train_steps = len(train_loader)
 early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
+early_stopping2 = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
+
 
 trained_parameters = []
 trained_parameters_names = []
 for name, p in model.named_parameters():
-    if p.requires_grad is True:
+    if p.requires_grad is True and 'regression_head' not in name:
         trained_parameters_names.append(name)
         trained_parameters.append(p)
 
+trained_parameters2 = []
+trained_parameters_names2 = []
+for name, p in model.named_parameters():
+    if p.requires_grad is True and 'regression_head' in name:
+        trained_parameters_names2.append(name)
+        trained_parameters2.append(p)
 
-
-accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
+accelerator.print(f'Stage 1 Trainable parameters are: {trained_parameters_names}')
+accelerator.print(f'Stage 2 Trainable parameters are: {trained_parameters_names2}')
 if args.wd == 0:
     model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+    model_optim2 = optim.Adam(trained_parameters2, lr=args.learning_rate, weight_decay=args.wd)
 else:
     model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+    model_optim2 = optim.Adam(trained_parameters2, lr=args.learning_rate, weight_decay=args.wd)
 
-model_optim2 = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
 
 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
 criterion = nn.MSELoss(reduction='none') 
@@ -331,6 +340,7 @@ rnc_criterion = RnCLoss()
 train_loader, vali_loader, test_loader, model, model_optim, model_optim2, scheduler = accelerator.prepare(
         train_loader, vali_loader, test_loader, model, model_optim, model_optim2, scheduler)
 
+# First-stage: Train the model for representation learning
 best_vali_loss = float('inf')
 best_vali_MAE, best_test_MAE = 0, 0
 best_vali_RMSE, best_test_RMSE = 0, 0
@@ -346,7 +356,6 @@ best_vali_MAPE, best_test_MAPE = 0, 0
 best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
 best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
 
-# First-stage: Train the model for representation learning
 for epoch in range(args.train_epochs):
     iter_count = 0
     total_loss = 0
@@ -356,7 +365,6 @@ for epoch in range(args.train_epochs):
     total_label_loss = 0
     
     model.train()
-    model.regression_head.eval()
 
     epoch_time = time.time()
     print_guidance_loss = 0
@@ -409,9 +417,9 @@ for epoch in range(args.train_epochs):
             #     print_guidance_loss = guide_loss.detach().float()
             #     final_loss = final_loss + guide_loss
 
-            aug_loss = rnc_criterion(embeddings, labels)
-            print_alignment_loss = aug_loss.detach().float()
-            final_loss = aug_loss
+            rnc_loss = rnc_criterion(embeddings, labels)
+            print_alignment_loss = rnc_loss.detach().float()
+            final_loss = rnc_loss
 
 
             print_label_loss = 0
@@ -450,6 +458,181 @@ for epoch in range(args.train_epochs):
     train_mape = mean_absolute_percentage_error(total_references, total_preds)
     accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
 
+    vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2, vali_rnc_loss = vali_batteryLifeLLM_stage1(args, accelerator, model, vali_data, vali_loader, criterion)
+    test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2, test_rnc_loss = vali_batteryLifeLLM_stage1(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
+    vali_loss = vali_rnc_loss
+    
+    if vali_loss < best_vali_loss:
+        best_vali_loss = vali_loss
+        best_vali_MAE = vali_mae_loss
+        best_test_MAE = test_mae_loss
+        best_vali_RMSE = vali_rmse
+        best_test_RMSE = test_rmse
+        best_vali_MAPE = vali_mape
+        best_test_MAPE = test_mape
+
+        # alpha-accuracy
+        best_vali_alpha_acc1 = vali_alpha_acc1
+        best_vali_alpha_acc2 = vali_alpha_acc2
+        best_test_alpha_acc1 = test_alpha_acc1
+        best_test_alpha_acc2 = test_alpha_acc2
+
+        # seen, unseen
+        best_seen_test_MAPE = test_seen_mape
+        best_unseen_test_MAPE = test_unseen_mape
+        best_seen_test_alpha_acc1 = test_seen_alpha_acc1
+        best_unseen_test_alpha_acc1 = test_unseen_alpha_acc1
+        best_seen_test_alpha_acc2 = test_seen_alpha_acc2
+        best_unseen_test_alpha_acc2 = test_unseen_alpha_acc2
+        
+    train_loss = total_loss / len(train_loader)
+    total_guidance_loss = total_guidance_loss / len(train_loader)
+    total_alignment_loss = total_alignment_loss / len(train_loader)
+    total_LB_loss = total_LB_loss / len(train_loader)
+    total_label_loss = total_label_loss / len(train_loader)
+    accelerator.print(
+        f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Vali align loss: {vali_rnc_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
+        f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
+    if accelerator.is_local_main_process:
+        wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
+                "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
+    
+    early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
+    if early_stopping.early_stop:
+        accelerator.print("Early stopping")
+        accelerator.set_trigger()
+        
+    if accelerator.check_trigger():
+        break
+    
+    if accelerator.is_local_main_process:
+        if args.lradj != 'CosineAnnealingLR':
+            adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
+        else:
+            if epoch >= args.warm_up_epoches:
+                scheduler.step()
+                accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
+
+# Stage-2: Train the model for prediction
+stage1_trained_epoch = epoch
+
+best_vali_loss = float('inf')
+best_vali_MAE, best_test_MAE = 0, 0
+best_vali_RMSE, best_test_RMSE = 0, 0
+best_vali_alpha_acc1, best_test_alpha_acc1 = 0, 0 
+best_vali_alpha_acc2, best_test_alpha_acc2 = 0, 0 
+
+best_seen_vali_alpha_acc1, best_seen_test_alpha_acc1 = 0, 0
+best_seen_vali_alpha_acc2, best_seen_test_alpha_acc2 = 0, 0
+best_unseen_vali_alpha_acc1, best_unseen_test_alpha_acc1 = 0, 0
+best_unseen_vali_alpha_acc2, best_unseen_test_alpha_acc2 = 0, 0
+
+best_vali_MAPE, best_test_MAPE = 0, 0
+best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
+best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
+
+for epoch in range(args.train_epochs):
+    iter_count = 0
+    total_loss = 0
+    total_guidance_loss = 0
+    total_alignment_loss = 0
+    total_LB_loss = 0
+    total_label_loss = 0
+    
+    model.train()
+    epoch_time = time.time()
+    print_guidance_loss = 0
+    print_alignment_loss = 0
+    print_LB_loss = 0
+    print_label_loss = 0
+    std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
+    total_preds, total_references = [], []
+    for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids) in enumerate(train_loader):
+        with accelerator.accumulate(model):
+            # batch_x_mark is the total_masks
+            # batch_y_mark is the total_used_cycles
+            if epoch < args.warm_up_epoches:
+                # adjust the learning rate
+                warm_up_lr = args.learning_rate * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader))
+                for param_group in model_optim.param_groups:
+                    param_group['lr'] = warm_up_lr
+
+                if (i + 1) % 5 == 0:
+                    if accelerator is not None:
+                        accelerator.print(f'Warmup | Updating learning rate to {warm_up_lr}')
+                    else:
+                        print(f'Warmup | Updating learning rate to {warm_up_lr}')
+
+            iter_count += 1
+
+            # encoder - decoder
+            outputs, _, embeddings, _, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
+            DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
+            anode_masks=anode_masks, combined_masks=combined_masks)
+            
+
+            if args.loss == 'MSE':
+                loss = criterion(outputs, labels)
+                loss = torch.mean(loss * weights)
+            else:
+                raise Exception('Not implemented!')
+            
+            final_loss = loss
+            if args.num_experts > 1 and args.use_LB:
+                importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
+                print_LB_loss = importance_loss.detach().float()
+                final_loss = final_loss + importance_loss
+
+            if args.use_guide:
+                # contrastive learning
+                guide_loss = args.gamma * guide_loss
+                print_guidance_loss = guide_loss.detach().float()
+                final_loss = final_loss + guide_loss
+
+            # if args.use_aug:
+            #     rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
+            #     print_alignment_loss = rnc_loss.detach().float()
+            #     final_loss = final_loss + rnc_loss
+
+
+
+            print_label_loss = loss.item()
+            print_loss = final_loss.item()
+            
+            total_loss += final_loss.item()
+            total_guidance_loss += print_guidance_loss
+            total_alignment_loss += print_alignment_loss
+            total_LB_loss += print_LB_loss
+            total_label_loss += print_label_loss
+
+            transformed_preds = outputs * std + mean_value
+            transformed_labels = labels * std + mean_value
+            all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
+
+            model_optim2.zero_grad()
+            accelerator.backward(final_loss)
+            # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+            model_optim2.step()
+            
+
+            total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+            total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+
+
+            if (i + 1) % 5 == 0:
+                accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
+                speed = (time.time() - time_now) / iter_count
+                left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
+                accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
+                iter_count = 0
+                time_now = time.time()
+
+            
+
+    train_rmse = root_mean_squared_error(total_references, total_preds)
+    train_mape = mean_absolute_percentage_error(total_references, total_preds)
+    accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
+
     vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
     test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
     vali_loss = vali_mape
@@ -483,14 +666,14 @@ for epoch in range(args.train_epochs):
     total_LB_loss = total_LB_loss / len(train_loader)
     total_label_loss = total_label_loss / len(train_loader)
     accelerator.print(
-        f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
+        f"Stage2 Epoch: {epoch + 1 + stage1_trained_epoch} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
         f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
     if accelerator.is_local_main_process:
-        wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
+        wandb.log({"epoch": epoch + stage1_trained_epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
                 "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
     
-    early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
-    if early_stopping.early_stop:
+    early_stopping2(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
+    if early_stopping2.early_stop:
         accelerator.print("Early stopping")
         accelerator.set_trigger()
         
@@ -504,9 +687,6 @@ for epoch in range(args.train_epochs):
             if epoch >= args.warm_up_epoches:
                 scheduler.step()
                 accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
-
-# Stage-2: Train the model for prediction
-
 
 
 accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')

@@ -533,7 +533,8 @@ class Model(nn.Module):
                 anode_masks: Optional[torch.Tensor] = None,
                 combined_masks: Optional[torch.Tensor] = None,
                 SOH_trajectory: Optional[torch.Tensor] = None,
-                CE_trajectory: Optional[torch.Tensor] = None
+                CE_trajectory: Optional[torch.Tensor] = None,
+                return_aug_views: bool = False
                 ):
         '''
         params:
@@ -544,7 +545,7 @@ class Model(nn.Module):
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        if self.training and self.configs.use_aug:
+        if (self.training and self.configs.use_aug) or return_aug_views:
             flatten_cycle_curve_data = cycle_curve_data.reshape(B, L, -1)
 
             flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, L, D]
