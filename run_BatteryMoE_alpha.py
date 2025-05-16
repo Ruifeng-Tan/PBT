@@ -396,8 +396,8 @@ for ii in range(args.itr):
                 anode_masks=anode_masks, combined_masks=combined_masks, use_aug=args.use_aug)
                 
                 if args.use_aug:
-                    labels = labels.repeat(outputs.shape[0] / labels.shape[0], 1)
-                    weights = labels.repeat(outputs.shape[0] / weights.shape[0], 1)
+                    labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
+                    weights = labels.repeat(int(outputs.shape[0] / weights.shape[0]), 1)
 
                 if args.loss == 'MSE':
                     loss = criterion(outputs, labels)
