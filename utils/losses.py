@@ -28,14 +28,19 @@ class FeatureSimilarity(nn.Module):
         self.similarity_type = similarity_type
 
     def forward(self, features):
-        # labels: [bs, feat_dim]
-        # output: [bs, bs]
         if self.similarity_type == 'l2':
+            # Compute negative L2 distance
             return - (features[:, None, :] - features[None, :, :]).norm(2, dim=-1)
         elif self.similarity_type == 'dot':
-            return torch.matmul(features[:, :], features[:, :].transpose(0,1)) # [bs, bs]
+            # Compute dot product similarity
+            return torch.matmul(features, features.transpose(0, 1))
+        elif self.similarity_type == 'cosine':
+            # Compute cosine similarity
+            # Normalize the features to unit vectors
+            features_normalized = F.normalize(features, p=2, dim=-1)
+            return torch.matmul(features_normalized, features_normalized.transpose(0, 1))
         else:
-            raise ValueError(self.similarity_type)
+            raise ValueError(f"Unknown similarity type: {self.similarity_type}")
         
 class RnCLoss(nn.Module):
     '''
@@ -58,8 +63,8 @@ class RnCLoss(nn.Module):
 
         label_diffs = self.label_diff_fn(labels)
         logits = self.feature_sim_fn(features).div(self.t)
-        logits_max, _ = torch.max(logits, dim=1, keepdim=True)
-        logits -= logits_max.detach()
+        # logits_max, _ = torch.max(logits, dim=1, keepdim=True)
+        # logits -= logits_max.detach()
         exp_logits = logits.exp()
 
         n = logits.shape[0]  # n = 2bs
@@ -70,13 +75,28 @@ class RnCLoss(nn.Module):
         label_diffs = label_diffs.masked_select((1 - torch.eye(n).to(logits.device)).bool()).view(n, n - 1)
 
         loss = 0.
+        valid_count = 0  # Count of samples with valid negative samples
+        # print(logits)
         for k in range(n - 1):
-            pos_logits = logits[:, k]  # 2bs
-            pos_label_diffs = label_diffs[:, k]  # 2bs
-            neg_mask = (label_diffs >= pos_label_diffs.view(-1, 1)).float()  # [2bs, 2bs - 1]
-            pos_log_probs = pos_logits - torch.log((neg_mask * exp_logits).sum(dim=-1))  # 2bs
-            # print(torch.log((neg_mask * exp_logits).sum(dim=-1)))
-            loss += - (pos_log_probs / (n * (n - 1))).sum()
+            pos_logits = logits[:, k]
+            pos_label_diffs = label_diffs[:, k]
+            neg_mask = (label_diffs > pos_label_diffs.view(-1, 1)).float()
+
+            # Check if there are negative samples
+            sum_neg_mask = (neg_mask * exp_logits).sum(dim=-1)
+            zero_neg_mask = (sum_neg_mask == 0)
+
+            # Compute the log probabilities only for samples with negative samples
+            pos_log_probs = torch.zeros_like(pos_logits)
+            if (~zero_neg_mask).any():
+                pos_log_probs[~zero_neg_mask] = pos_logits[~zero_neg_mask] - torch.log(sum_neg_mask[~zero_neg_mask])
+                valid_count += (~zero_neg_mask).sum().item()  # Count valid samples
+
+            loss += - pos_log_probs[~zero_neg_mask].sum()
+            # print(pos_log_probs)
+        # Normalize the loss by the number of valid samples
+        if valid_count > 0:
+            loss /= valid_count
 
         return loss
     
