@@ -1,5 +1,6 @@
 '''
-基于BatteryMoE_Hyper_aug，只不过使用SOED做数据增强
+基于BatteryMoE_Hyper_aug，只不过使用自定义的数据增强策略
+在这个增强策略中我们随机取原始序列中的一部分point，然后再做插值。
 SOED: Contrastive BiLSTM-enabled Health Representation Learning for Remaining Useful Life Prediction
 '''
 import torch
@@ -550,7 +551,7 @@ class Model(nn.Module):
 
             flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, L, D]
             flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, L, flatten_cycle_curve_data.shape[-1])  # [3*B, L, D]
-            flatten_cycle_curve_data[B:] = self.SOED_augmentation(flatten_cycle_curve_data[B:]) # add noise
+            flatten_cycle_curve_data[B:] = self.Crop_augmentation(flatten_cycle_curve_data[B:]) # add noise
             cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
 
             # cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
@@ -623,43 +624,55 @@ class Model(nn.Module):
         mask = mask.unsqueeze(0).expand(B, -1, -1)
         return mask
 
-    def SOED_augmentation(self, X: torch.Tensor) -> torch.Tensor:
+    def Crop_augmentation(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
         """
-        Efficient odd/even interpolation with edge case handling
+        Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
+        
         Args:
-            X: Input tensor of shape [B, L, D]
+            X (torch.Tensor): Input tensor of shape [B, L, D].
+            random_point_num (int): Number of points to randomly select, must be at least 2.
         
         Returns:
-            odd_interp: Interpolated from odd indices [B, L, D]
-            even_interp: Interpolated from even indices [B, L, D]
+            torch.Tensor: Resampled tensor of shape [B, L, D].
         """
         B, L, D = X.shape
-        
-        # Get even and odd elements using efficient slicing
-        X_even = X[:B//2, ::2, :]  # Even indices (0, 2, 4...)
-        X_odd = X[B//2:, 1::2, :]  # Odd indices (1, 3, 5...)
-        
-        def _interpolate(sub_X, original_length):
-            """Helper function for safe interpolation"""
-            if sub_X.size(1) == 0:  # Handle empty tensor case
-                return torch.zeros(B//2, original_length, D, device=X.device)
-            
-            # Reshape for interpolation (B, D, sub_L)
-            sub_X = sub_X.permute(0, 2, 1)
-            
-            # Perform linear interpolation
-            interp = F.interpolate(
-                sub_X,
-                size=original_length,
+        K = random_point_num
+
+        if K < 2:
+            raise ValueError("random_point_num must be at least 2")
+        if L < 2:
+            raise ValueError("L must be at least 2")
+
+        # Step 1: Generate indices including 0 and L-1, plus random middle points
+        middle = L - 2  # Possible middle indices count (1 to L-2)
+        k_middle = K - 2
+
+        if k_middle > 0:
+            if middle < k_middle:
+                raise ValueError(f"Cannot select {k_middle} middle points when middle={middle}")
+
+            # Generate random middle indices without replacement
+            rand_vals = torch.rand(B, middle, device=X.device)
+            middle_indices = rand_vals.argsort(dim=1)[:, :k_middle]  # [B, k_middle]
+            middle_indices += 1  # Shift to range 1 to L-2 (inclusive)
+        else:
+            raise Exception(f'random_point_num is {random_point_num}. You should set it larger than 2!')
+
+        # Combine with start and end indices
+        zeros = torch.zeros(B, 1, dtype=torch.long, device=X.device) # start indices
+        ends = (L - 1) * torch.ones(B, 1, dtype=torch.long, device=X.device) # end indices
+        indices = torch.cat([zeros, middle_indices, ends], dim=1)
+        indices, _ = torch.sort(indices, dim=1)  # Sort indices for each batch
+
+        # Step 2: Gather the selected points
+        selected_X = torch.gather(X, 1, indices.unsqueeze(-1).expand(-1, -1, D))
+
+        # Step 3: do the linear interpolation
+        interpolated = F.interpolate(
+                selected_X,
+                size=L,
                 mode='linear',
                 align_corners=True
             )
-            
-            return interp.permute(0, 2, 1)  # Back to (B//2, L, D)
         
-        # Interpolate both branches
-        even_interp = _interpolate(X_even, L)
-        odd_interp = _interpolate(X_odd, L)
-        
-        output = torch.cat([even_interp, odd_interp], dim=0)
-        return output
+        return interpolated
