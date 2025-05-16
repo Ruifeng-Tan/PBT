@@ -397,7 +397,7 @@ def vali_batteryLifeLLM_stage1(args, accelerator, model, vali_data, vali_loader,
             # encoder - decoder
             outputs, _, embeddings, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
                                                  , temperature_masks=temperature_masks, format_masks=format_masks, anode_masks=anode_masks,
-                                                 combined_masks=combined_masks, return_aug_views=True)
+                                                 combined_masks=combined_masks, use_aug=True)
             # self.accelerator.wait_for_everyone()
             rnc_loss = rnc_criterion(embeddings, labels)
             rnc_loss = rnc_loss.detach().float()

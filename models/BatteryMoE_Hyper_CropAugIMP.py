@@ -546,21 +546,23 @@ class Model(nn.Module):
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        if self.training and use_aug:
-            random_point_num = L // 3 * 2
+        if use_aug:
+            random_point_num = fixed_len // 4 * 3
 
-            flatten_cycle_curve_data = cycle_curve_data.reshape(B, L, -1)
+            flatten_cycle_curve_data = cycle_curve_data.reshape(B, L*num_var, -1)
+            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [B, fixed_len, L*num_var]
 
-            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(2, -1, -1, -1)  # [3, B, L, D]
-            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(2 * B, L, flatten_cycle_curve_data.shape[-1])  # [3*B, L, D]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [2, B, fixed_len, L*num_var]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, fixed_len, flatten_cycle_curve_data.shape[-1])  # [2*B, fixed_len, L*num_var]
             flatten_cycle_curve_data[B:] = self.CD_Crop_augmentation(flatten_cycle_curve_data[B:], random_point_num) # add noise
-            cycle_curve_data = flatten_cycle_curve_data.reshape(2*B, L, num_var, fixed_len)
+            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [2*B, L*num_var, fixed_len]
+            cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
 
             # cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
-            curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(2, -1, -1).reshape(2*B, -1)
-            DKP_embeddings = DKP_embeddings.unsqueeze(0).expand(2, -1, -1).reshape(2*B, -1)
-            combined_masks = combined_masks.unsqueeze(0).expand(2, -1, -1).reshape(2*B, -1)
-            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(2*B, -1, -1)
+            curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
+            DKP_embeddings = DKP_embeddings.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
+            combined_masks = combined_masks.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
+            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(3*B, -1, -1)
         else:
             selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
 
@@ -614,7 +616,7 @@ class Model(nn.Module):
 
         preds = preds.float()
         embeddings = embeddings.float()
-        return preds, None, embeddings, feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
+        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''
@@ -640,13 +642,14 @@ class Model(nn.Module):
         B, L, D = X.shape
         charge_X = X[:, :L//2]
         discharge_X = X[:, L//2:]
-        aug_charge_X = self.Crop_augmentation(charge_X, random_point_num=random_point_num//2)
-        aug_discharge_X = self.Crop_augmentation(discharge_X, random_point_num=random_point_num//2)
+        aug_charge_X = self.Crop(charge_X, random_point_num=random_point_num//2)
+        aug_discharge_X = self.Crop(discharge_X, random_point_num=random_point_num//2)
 
-        X = torch.cat([aug_charge_X, aug_discharge_X], dim=1)
+        X = torch.cat([aug_charge_X, aug_discharge_X], dim=1) # [B, random_point_num, D]
+        X = self.cubic_interpolate_sequence(X, L) # resample back to the same shape
         return X
 
-    def Crop_augmentation(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
+    def Crop(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
         """
         Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
         
@@ -699,3 +702,28 @@ class Model(nn.Module):
             )
         
         return interpolated.transpose(1, 2)
+
+    def cubic_interpolate_sequence(self, X, new_length):
+        """
+        Perform cubic interpolation on the sequence length dimension of the input tensor.
+
+        Parameters:
+        - X (torch.Tensor): Input tensor of shape [B, L, D].
+        - new_length (int): The desired length of the sequence after interpolation.
+
+        Returns:
+        - torch.Tensor: Interpolated tensor of shape [B, new_length, D].
+        """
+        # Get the dimensions of the input tensor
+        # B, L, D = X.shape
+        
+        # Reshape to [B, D, L, 1] to treat L as a spatial dimension with an extra dummy dimension
+        X_reshaped = X.permute(0, 2, 1).unsqueeze(3)
+        
+        # Perform cubic interpolation along the L dimension (3rd dimension)
+        interpolated = F.interpolate(X_reshaped, size=(new_length, 1), mode='bicubic', align_corners=True)
+        
+        # Remove the dummy dimension and reshape back to [B, new_length, D]
+        interpolated_reshaped = interpolated.squeeze(3).permute(0, 2, 1)
+        
+        return interpolated_reshaped
