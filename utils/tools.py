@@ -286,7 +286,7 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
             # encoder - decoder
             outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
                                                  , temperature_masks=temperature_masks, format_masks=format_masks, anode_masks=anode_masks,
-                                                 combined_masks=combined_masks)
+                                                 combined_masks=combined_masks, use_aug=False)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value

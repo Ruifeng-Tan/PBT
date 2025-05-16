@@ -535,7 +535,7 @@ class Model(nn.Module):
                 combined_masks: Optional[torch.Tensor] = None,
                 SOH_trajectory: Optional[torch.Tensor] = None,
                 CE_trajectory: Optional[torch.Tensor] = None,
-                return_aug_views: bool = False
+                use_aug: bool = False
                 ):
         '''
         params:
@@ -546,19 +546,21 @@ class Model(nn.Module):
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        if (self.training and self.configs.use_aug) or return_aug_views:
+        if self.training and use_aug:
+            random_point_num = L // 3 * 2
+
             flatten_cycle_curve_data = cycle_curve_data.reshape(B, L, -1)
 
-            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, L, D]
-            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, L, flatten_cycle_curve_data.shape[-1])  # [3*B, L, D]
-            flatten_cycle_curve_data[B:] = self.Crop_augmentation(flatten_cycle_curve_data[B:]) # add noise
-            cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
+            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(2, -1, -1, -1)  # [3, B, L, D]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(2 * B, L, flatten_cycle_curve_data.shape[-1])  # [3*B, L, D]
+            flatten_cycle_curve_data[B:] = self.Crop_augmentation(flatten_cycle_curve_data[B:], random_point_num) # add noise
+            cycle_curve_data = flatten_cycle_curve_data.reshape(2*B, L, num_var, fixed_len)
 
             # cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
-            curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
-            DKP_embeddings = DKP_embeddings.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
-            combined_masks = combined_masks.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
-            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(3*B, -1, -1)
+            curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(2, -1, -1).reshape(2*B, -1)
+            DKP_embeddings = DKP_embeddings.unsqueeze(0).expand(2, -1, -1).reshape(2*B, -1)
+            combined_masks = combined_masks.unsqueeze(0).expand(2, -1, -1).reshape(2*B, -1)
+            selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(2*B, -1, -1)
         else:
             selection_embeddings = self.selection_embeddings.unsqueeze(0).expand(B, -1, -1)
 
@@ -612,7 +614,7 @@ class Model(nn.Module):
 
         preds = preds.float()
         embeddings = embeddings.float()
-        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
+        return preds, None, embeddings, feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''
@@ -666,6 +668,7 @@ class Model(nn.Module):
 
         # Step 2: Gather the selected points
         selected_X = torch.gather(X, 1, indices.unsqueeze(-1).expand(-1, -1, D))
+        selected_X = selected_X.transpose(1, 2) # [B, D, random_point_num]
 
         # Step 3: do the linear interpolation
         interpolated = F.interpolate(
@@ -675,4 +678,4 @@ class Model(nn.Module):
                 align_corners=True
             )
         
-        return interpolated
+        return interpolated.transpose(1, 2)
