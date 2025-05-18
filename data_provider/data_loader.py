@@ -421,9 +421,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.aug_helper = BatchAugmentation_battery_revised()
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
-            self.train_files = split_recorder.HUST_train_files[:20] + split_recorder.Tongji_train_files[:2]
-            self.val_files = split_recorder.Tongji_val_files[:2] + split_recorder.HUST_val_files[:2]
-            self.test_files =  split_recorder.Tongji_test_files[:2] + split_recorder.HUST_test_files[:1]
+            self.train_files = split_recorder.HUST_train_files[:2]
+            self.val_files = split_recorder.Tongji_val_files[:2]
+            self.test_files =  split_recorder.Tongji_test_files[:2]
         elif self.dataset == 'Tongji':
             self.train_files = split_recorder.Tongji_train_files
             self.val_files = split_recorder.Tongji_val_files

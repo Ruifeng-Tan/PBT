@@ -285,7 +285,7 @@ with open(path+'/args.json', 'w') as f:
 if accelerator.is_local_main_process:
     wandb.init(
     # set the wandb project where this run will be logged
-    project="BatteryMoE_CL",
+    project="BatteryMoE_2Stages",
     
     # track hyperparameters and run metadata
     config=args.__dict__,
@@ -305,7 +305,7 @@ for name, param in model.named_parameters():
 time_now = time.time()
 
 train_steps = len(train_loader)
-early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
+early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=100)
 early_stopping2 = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
 
 
@@ -422,7 +422,6 @@ for epoch in range(args.train_epochs):
             print_alignment_loss = rnc_loss.detach().float()
             final_loss = rnc_loss
 
-
             print_label_loss = 0
             print_loss = final_loss.item()
             
@@ -438,7 +437,7 @@ for epoch in range(args.train_epochs):
 
             model_optim.zero_grad()
             accelerator.backward(final_loss)
-            # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+            nn.utils.clip_grad_norm_(trained_parameters, max_norm=5) # gradient clipping
             model_optim.step()
             
 

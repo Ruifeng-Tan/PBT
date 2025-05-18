@@ -100,12 +100,8 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
                  class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, use_domainSampler=False):
     Data = data_dict[args.data]
 
-    if flag == 'test':
+    if flag == 'test' or flag == 'val':
         shuffle_flag = False
-        drop_last = False
-        batch_size = args.batch_size
-    elif flag == 'val':
-        shuffle_flag = True
         drop_last = False
         batch_size = args.batch_size
     else:

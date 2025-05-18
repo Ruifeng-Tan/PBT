@@ -552,8 +552,8 @@ class Model(nn.Module):
             flatten_cycle_curve_data = cycle_curve_data.reshape(B, L*num_var, -1)
             flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [B, fixed_len, L*num_var]
 
-            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [2, B, fixed_len, L*num_var]
-            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, fixed_len, flatten_cycle_curve_data.shape[-1])  # [2*B, fixed_len, L*num_var]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, fixed_len, L*num_var]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, fixed_len, flatten_cycle_curve_data.shape[-1])  # [3*B, fixed_len, L*num_var]
             flatten_cycle_curve_data[B:] = self.CD_Crop_augmentation(flatten_cycle_curve_data[B:], random_point_num) # add noise
             flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [2*B, L*num_var, fixed_len]
             cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
@@ -646,7 +646,7 @@ class Model(nn.Module):
         aug_discharge_X = self.Crop(discharge_X, random_point_num=random_point_num//2)
 
         X = torch.cat([aug_charge_X, aug_discharge_X], dim=1) # [B, random_point_num, D]
-        X = self.cubic_interpolate_sequence(X, L) # resample back to the same shape
+        # X = self.cubic_interpolate_sequence(X, L) # resample back to the same shape
         return X
 
     def Crop(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:

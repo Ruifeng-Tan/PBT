@@ -379,6 +379,7 @@ def vali_batteryLifeLLM_stage1(args, accelerator, model, vali_data, vali_loader,
     total_preds, total_references = [], []
     total_seen_unseen_ids = []
     std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
+    total_rnc_loss = []
     with torch.no_grad():
         for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids) in enumerate(vali_loader):
             if accelerator is None:
@@ -405,12 +406,13 @@ def vali_batteryLifeLLM_stage1(args, accelerator, model, vali_data, vali_loader,
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
             if accelerator is None:
-                all_predictions, all_targets, seen_unseen_ids = transformed_preds, transformed_labels, seen_unseen_ids
+                all_predictions, all_targets, seen_unseen_ids, rnc_loss = transformed_preds, transformed_labels, seen_unseen_ids, rnc_loss
             else:
-                all_predictions, all_targets, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids))
+                all_predictions, all_targets, seen_unseen_ids, rnc_loss = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids, rnc_loss))
             
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+            total_rnc_loss = total_rnc_loss + rnc_loss.detach().cpu().numpy().reshape(-1).tolist()
             if compute_seen_unseen:
                 total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
                 
@@ -478,7 +480,7 @@ def vali_batteryLifeLLM_stage1(args, accelerator, model, vali_data, vali_loader,
             unseen_alpha_acc2 = -10000
 
         model.train()
-        return  rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape, seen_mape, unseen_alpha_acc1, seen_alpha_acc1, unseen_alpha_acc2, seen_alpha_acc2, rnc_loss
+        return  rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape, seen_mape, unseen_alpha_acc1, seen_alpha_acc1, unseen_alpha_acc2, seen_alpha_acc2, np.mean(total_rnc_loss)
 
     model.train()
-    return rmse, mae, mape, alpha_acc1, alpha_acc2, rnc_loss
+    return rmse, mae, mape, alpha_acc1, alpha_acc2, np.mean(total_rnc_loss)
