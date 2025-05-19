@@ -211,7 +211,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_bf{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useS{}_cycleK{}_aug{}_augW{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useS{}_cycleK{}_aug{}_augW{}_tem{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -222,8 +222,8 @@ for ii in range(args.itr):
         args.d_ff,
         args.low_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
-        args.bottleneck_factor, args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.cycle_topK, args.use_aug, args.aug_w, args.seed)
+        args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.cycle_topK, args.use_aug, args.aug_w, args.temperature, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
