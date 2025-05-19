@@ -7,7 +7,7 @@ from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
 from utils.tools import get_parameter_number
-from utils.losses import bmc_loss, DG_loss, Alignment_loss, RnCLoss
+from utils.losses import bmc_loss, DG_loss, Alignment_loss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_CropAugIMP, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
@@ -305,7 +305,7 @@ for name, param in model.named_parameters():
 time_now = time.time()
 
 train_steps = len(train_loader)
-early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=100)
+early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
 early_stopping2 = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
 
 
@@ -335,7 +335,7 @@ else:
 
 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
 criterion = nn.MSELoss(reduction='none') 
-rnc_criterion = RnCLoss(temperature=args.temperature)
+rnc_criterion = WeightedRnCLoss(temperature=args.temperature)
 
 # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
 train_loader, vali_loader, test_loader, model, model_optim, model_optim2, scheduler = accelerator.prepare(

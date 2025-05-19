@@ -421,8 +421,7 @@ class OutputHead(nn.Module):
         self.early_cycle_threshold = ec_config.early_cycle_threshold
         self.drop_rate = ec_config.dropout
         self.n_heads = ec_config.n_heads
-        self.projection = nn.Sequential(nn.Linear(self.d_model, self.d_ff), nn.ReLU(),
-                                        nn.Linear(self.d_ff, ec_config.output_num))
+        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
         
     def forward(self, llm_out):
         '''

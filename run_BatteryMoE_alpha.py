@@ -7,7 +7,7 @@ from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
 from utils.tools import get_parameter_number
-from utils.losses import bmc_loss, DG_loss, Alignment_loss, RnCLoss
+from utils.losses import bmc_loss, DG_loss, Alignment_loss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_CropAugIMP, baseline_CPTransformerMoE, BatteryMoE_PCA_Transformer, baseline_CPMLPMoE
@@ -111,6 +111,7 @@ parser.add_argument('--output_num', type=int, default=1, help='The number of pre
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
 # optimization
+parser.add_argument('--temperature', type=float, default=1.0, help='temperature for contrastive learning')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
 parser.add_argument('--itr', type=int, default=1, help='experiments times')
@@ -333,7 +334,7 @@ for ii in range(args.itr):
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     criterion = nn.MSELoss(reduction='none') 
-    rnc_criterion = RnCLoss()
+    rnc_criterion = WeightedRnCLoss(temperature=args.temperature)
 
     # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
     train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(
@@ -395,9 +396,9 @@ for ii in range(args.itr):
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
                 anode_masks=anode_masks, combined_masks=combined_masks, use_aug=args.use_aug)
                 
-                if args.use_aug:
-                    labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
-                    weights = labels.repeat(int(outputs.shape[0] / weights.shape[0]), 1)
+                # if args.use_aug:
+                #     labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
+                #     weights = labels.repeat(int(outputs.shape[0] / weights.shape[0]), 1)
 
                 if args.loss == 'MSE':
                     loss = criterion(outputs, labels)
@@ -417,11 +418,10 @@ for ii in range(args.itr):
                     print_guidance_loss = guide_loss.detach().float()
                     final_loss = final_loss + guide_loss
 
-                # if args.use_aug:
-                #     rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
-                #     print_alignment_loss = rnc_loss.detach().float()
-                #     final_loss = final_loss + rnc_loss
-
+                if args.use_aug:
+                    rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
+                    print_alignment_loss = rnc_loss.detach().float()
+                    final_loss = final_loss + rnc_loss
 
 
                 print_label_loss = loss.item()

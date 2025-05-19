@@ -11,7 +11,7 @@ from scipy.signal.windows import gaussian
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error
 import time
 from torch import nn
-from utils.losses import RnCLoss
+from utils.losses import WeightedRnCLoss
 import wandb
 plt.switch_backend('agg')
 def split_meta_domains(domain_ids, K):
@@ -372,10 +372,10 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
 
 def vali_batteryLifeLLM_stage1(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
     '''
-    Revised based on vali_batteryLifeLLM. Only add the output of RnCLoss
+    Revised based on vali_batteryLifeLLM. Only add the output of WeightedRnCLoss
     '''
     model.eval()
-    rnc_criterion = RnCLoss()
+    rnc_criterion = WeightedRnCLoss()
     total_preds, total_references = [], []
     total_seen_unseen_ids = []
     std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
