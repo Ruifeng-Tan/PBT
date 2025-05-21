@@ -7,7 +7,7 @@ from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
 from utils.tools import get_parameter_number
-from utils.losses import bmc_loss, DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
+from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_CropAugMLP, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE
