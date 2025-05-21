@@ -54,6 +54,7 @@ class WeightedRnCLoss(nn.Module):
         self.t = temperature
         self.label_diff_fn = LabelDifference(label_diff)
         self.feature_sim_fn = FeatureSimilarity(feature_sim)
+        self.eps = 1e-8
 
     def forward(self, features, labels):
         # features: [2*bs, feat_dim]. features from augmented views
@@ -86,13 +87,16 @@ class WeightedRnCLoss(nn.Module):
             neg_mask = (label_diffs > pos_label_diffs.view(-1, 1)).float()
             # neg_mask[:, k] = 1.0 # include the sample itself into the negative pairs to keep the training stability
 
-            # neg_sample_num = neg_mask.sum(dim=-1)
-            # neg_weight_logits = label_diffs - pos_label_diffs.view(-1, 1)
-            # neg_weight_logits = neg_weight_logits.masked_fill_(neg_mask == 0, -np.inf)
-            # # neg_weights = F.softmax(neg_weight_logits, dim=-1) * neg_sample_num.unsqueeze(-1)
-            # neg_weights = F.softmax(neg_weight_logits, dim=-1)
+
+            neg_weight_logits = label_diffs - pos_label_diffs.view(-1, 1) # [2bs, 2bs-1]
+            neg_weight_logits = 1 / (neg_weight_logits + self.eps)
+            neg_weight_logits = neg_weight_logits * neg_mask # keep only the logits of the samples that have larger label differences
+            neg_weights = neg_weight_logits / (torch.sum(neg_weight_logits, dim=1, keepdim=True)+self.eps) # eps is added to avoid nan
+            neg_weights = neg_mask * neg_weights
+            
             zero_neg_mask = (neg_mask.sum(dim=-1) == 0)
-            sum_neg_mask = (neg_mask * exp_logits).mean(dim=-1)
+            # sum_neg_mask = (neg_mask * exp_logits).mean(dim=-1)
+            sum_neg_mask = (neg_weights * exp_logits).sum(dim=-1)
             
             pos_log_probs = torch.zeros_like(pos_logits)
             if (~zero_neg_mask).any():
@@ -106,6 +110,133 @@ class WeightedRnCLoss(nn.Module):
         if valid_count > 0:
             loss /= valid_count
         return loss
+
+class AverageRnCLoss(nn.Module):
+    '''
+    Revised from https://github.com/kaiwenzha/Rank-N-Contrast/blob/main/loss.py#L34
+    - We only use the samples whose label diff is larger than the pos label diff as negative samples
+    - The similarities of the negative pairs are weighted according to their label diff to the anchor sample
+    2023NIPS Rank-N-Contrast: Learning Continuous Representations for Regression
+    '''
+    def __init__(self, temperature=2, label_diff='l1', feature_sim='l2'):
+        super(AverageRnCLoss, self).__init__()
+        self.t = temperature
+        self.label_diff_fn = LabelDifference(label_diff)
+        self.feature_sim_fn = FeatureSimilarity(feature_sim)
+        self.eps = 1e-8
+
+    def forward(self, features, labels):
+        # features: [2*bs, feat_dim]. features from augmented views
+        # labels: [bs, label_dim]
+
+        # features = torch.cat([features[:, 0], features[:, 1]], dim=0)  # [2bs, feat_dim]
+        # labels = torch.repeat_interleave(labels, dim=0, repeats=2)  # [2bs, label_dim]
+        labels = labels.repeat(2, 1)
+
+        label_diffs = self.label_diff_fn(labels)
+        logits = self.feature_sim_fn(features).div(self.t)
+        # logits_max, _ = torch.max(logits, dim=1, keepdim=True)
+        # logits -= logits_max.detach()
+        exp_logits = logits.exp()
+        # print(exp_logits)
+
+        n = logits.shape[0]  # n = 2bs
+
+        # remove diagonal
+        logits = logits.masked_select((1 - torch.eye(n).to(logits.device)).bool()).view(n, n - 1)
+        exp_logits = exp_logits.masked_select((1 - torch.eye(n).to(logits.device)).bool()).view(n, n - 1)
+        label_diffs = label_diffs.masked_select((1 - torch.eye(n).to(logits.device)).bool()).view(n, n - 1)
+
+        loss = 0.
+        valid_count = 0  # Count of samples with valid negative samples
+        # print(logits)
+        for k in range(n - 1):
+            pos_logits = logits[:, k]
+            pos_label_diffs = label_diffs[:, k]
+            neg_mask = (label_diffs > pos_label_diffs.view(-1, 1)).float()
+            neg_weights = torch.ones_like(neg_mask) / (torch.sum(neg_mask, dim=1, keepdim=True)+self.eps)
+            neg_weights = neg_weights * neg_mask
+
+            zero_neg_mask = (neg_mask.sum(dim=-1) == 0)
+            sum_neg_mask = (neg_weights * exp_logits).sum(dim=-1)
+            
+            pos_log_probs = torch.zeros_like(pos_logits)
+            if (~zero_neg_mask).any():
+                pos_log_probs[~zero_neg_mask] = pos_logits[~zero_neg_mask] - torch.log(sum_neg_mask[~zero_neg_mask])
+                valid_count += (~zero_neg_mask).sum().item()
+
+            # Only add to loss for samples with valid negatives
+            loss += -pos_log_probs[~zero_neg_mask].sum()
+
+        # Normalize the loss by the number of valid samples
+        if valid_count > 0:
+            loss /= valid_count
+        return loss
+    
+# class AverageRnCLoss(nn.Module):
+#     '''
+#     Revised from https://github.com/kaiwenzha/Rank-N-Contrast/blob/main/loss.py#L34
+#     - We only use the samples whose label diff is larger than the pos label diff as negative samples
+#     - The similarities of the negative pairs are weighted according to their label diff to the anchor sample
+#     2023NIPS Rank-N-Contrast: Learning Continuous Representations for Regression
+#     '''
+#     def __init__(self, temperature=2, label_diff='l1', feature_sim='l2'):
+#         super(AverageRnCLoss, self).__init__()
+#         self.t = temperature
+#         self.label_diff_fn = LabelDifference(label_diff)
+#         self.feature_sim_fn = FeatureSimilarity(feature_sim)
+
+#     def forward(self, features, labels):
+#         # features: [2*bs, feat_dim]. features from augmented views
+#         # labels: [bs, label_dim]
+
+#         # features = torch.cat([features[:, 0], features[:, 1]], dim=0)  # [2bs, feat_dim]
+#         # labels = torch.repeat_interleave(labels, dim=0, repeats=2)  # [2bs, label_dim]
+#         labels = labels.repeat(2, 1)
+
+#         label_diffs = self.label_diff_fn(labels)
+#         logits = self.feature_sim_fn(features).div(self.t)
+#         # logits_max, _ = torch.max(logits, dim=1, keepdim=True)
+#         # logits -= logits_max.detach()
+#         exp_logits = logits.exp()
+#         # print(exp_logits)
+
+#         n = logits.shape[0]  # n = 2bs
+
+#         # remove diagonal
+#         logits = logits.masked_select((1 - torch.eye(n).to(logits.device)).bool()).view(n, n - 1)
+#         exp_logits = exp_logits.masked_select((1 - torch.eye(n).to(logits.device)).bool()).view(n, n - 1)
+#         label_diffs = label_diffs.masked_select((1 - torch.eye(n).to(logits.device)).bool()).view(n, n - 1)
+
+#         loss = 0.
+#         valid_count = 0  # Count of samples with valid negative samples
+#         # print(logits)
+#         for k in range(n - 1):
+#             pos_logits = logits[:, k]
+#             pos_label_diffs = label_diffs[:, k]
+#             neg_mask = (label_diffs > pos_label_diffs.view(-1, 1)).float()
+#             # neg_mask[:, k] = 1.0 # include the sample itself into the negative pairs to keep the training stability
+
+#             # neg_sample_num = neg_mask.sum(dim=-1)
+#             # neg_weight_logits = label_diffs - pos_label_diffs.view(-1, 1)
+#             # neg_weight_logits = neg_weight_logits.masked_fill_(neg_mask == 0, -np.inf)
+#             # # neg_weights = F.softmax(neg_weight_logits, dim=-1) * neg_sample_num.unsqueeze(-1)
+#             # neg_weights = F.softmax(neg_weight_logits, dim=-1)
+#             zero_neg_mask = (neg_mask.sum(dim=-1) == 0)
+#             sum_neg_mask = (neg_mask * exp_logits).mean(dim=-1)
+            
+#             pos_log_probs = torch.zeros_like(pos_logits)
+#             if (~zero_neg_mask).any():
+#                 pos_log_probs[~zero_neg_mask] = pos_logits[~zero_neg_mask] - torch.log(sum_neg_mask[~zero_neg_mask])
+#                 valid_count += (~zero_neg_mask).sum().item()
+
+#             # Only add to loss for samples with valid negatives
+#             loss += -pos_log_probs[~zero_neg_mask].sum()
+
+#         # Normalize the loss by the number of valid samples
+#         if valid_count > 0:
+#             loss /= valid_count
+#         return loss
 
 class RnCLoss(nn.Module):
     '''

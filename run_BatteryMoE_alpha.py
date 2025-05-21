@@ -7,7 +7,7 @@ from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
 from utils.tools import get_parameter_number
-from utils.losses import bmc_loss, DG_loss, Alignment_loss, WeightedRnCLoss
+from utils.losses import bmc_loss, DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper, BatteryMoE_Hyper_CropAugMLP, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE
@@ -111,6 +111,7 @@ parser.add_argument('--output_num', type=int, default=1, help='The number of pre
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
 # optimization
+parser.add_argument('--weighted_CLDG', action='store_true', default=False, help='use weighted CLDG loss')
 parser.add_argument('--temperature', type=float, default=1.0, help='temperature for contrastive learning')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
 parser.add_argument('--num_workers', type=int, default=1, help='data loader num workers')
@@ -211,7 +212,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_NumE{}_NumGE{}_NumHE{}_NumCE{}_K{}_PCA{}_Ndomain{}_useS{}_cycleK{}_aug{}_augW{}_tem{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -223,7 +224,7 @@ for ii in range(args.itr):
         args.low_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
         args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.cycle_topK, args.use_aug, args.aug_w, args.temperature, args.seed)
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -296,7 +297,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="BatteryMoE_CL",
+        project="BatteryMoE_CLDG",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -334,7 +335,7 @@ for ii in range(args.itr):
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     criterion = nn.MSELoss(reduction='none') 
-    rnc_criterion = WeightedRnCLoss(temperature=args.temperature)
+    rnc_criterion = WeightedRnCLoss(temperature=args.temperature) if args.weighted_CLDG else AverageRnCLoss(temperature=args.temperature)
 
     # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
     train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(
