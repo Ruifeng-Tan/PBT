@@ -62,7 +62,7 @@ class WeightedRnCLoss(nn.Module):
 
         # features = torch.cat([features[:, 0], features[:, 1]], dim=0)  # [2bs, feat_dim]
         # labels = torch.repeat_interleave(labels, dim=0, repeats=2)  # [2bs, label_dim]
-        labels = labels.repeat(2, 1)
+        labels = labels.repeat(int(features.shape[0]/labels.shape[0]), 1)
 
         label_diffs = self.label_diff_fn(labels)
         logits = self.feature_sim_fn(features).div(self.t)
@@ -131,7 +131,7 @@ class AverageRnCLoss(nn.Module):
 
         # features = torch.cat([features[:, 0], features[:, 1]], dim=0)  # [2bs, feat_dim]
         # labels = torch.repeat_interleave(labels, dim=0, repeats=2)  # [2bs, label_dim]
-        labels = labels.repeat(2, 1)
+        labels = labels.repeat(int(features.shape[0]/labels.shape[0]), 1)
 
         label_diffs = self.label_diff_fn(labels)
         logits = self.feature_sim_fn(features).div(self.t)
