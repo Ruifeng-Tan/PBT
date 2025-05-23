@@ -330,7 +330,7 @@ if args.wd == 0:
     model_optim2 = optim.Adam(trained_parameters2, lr=args.learning_rate, weight_decay=args.wd)
 else:
     model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
-    model_optim2 = optim.Adam(trained_parameters2, lr=args.learning_rate, weight_decay=args.wd)
+    model_optim2 = optim.AdamW(trained_parameters2, lr=args.learning_rate, weight_decay=args.wd)
 
 
 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
