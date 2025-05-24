@@ -213,33 +213,6 @@ class ReplicationPad1d(nn.Module):
         output = torch.cat([input, replicate_padding], dim=-1)
         return output
 
-class PatchEmbedding_pe(nn.Module):
-    def __init__(self, d_model, patch_len, stride, dropout):
-        super(PatchEmbedding_pe, self).__init__()
-        # Patching
-        self.patch_len = patch_len
-        self.stride = stride
-        self.padding_patch_layer = ReplicationPad1d((0, stride))
-        self.position_embedding = PositionalEmbedding(d_model=d_model)
-
-        # Backbone, Input encoding: projection of feature vectors onto a d-dim vector space
-        self.value_embedding = TokenEmbedding(patch_len, d_model)
-
-        # Positional embedding
-        # self.position_embedding = PositionalEmbedding(d_model)
-
-        # Residual dropout
-        self.dropout = nn.Dropout(dropout)
-
-    def forward(self, x):
-        # do patching
-        n_vars = x.shape[1]
-        x = self.padding_patch_layer(x)
-        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride)
-        x = torch.reshape(x, (x.shape[0] * x.shape[1], x.shape[2], x.shape[3]))
-        # Input encoding
-        x = self.value_embedding(x) + self.position_embedding(x)
-        return self.dropout(x), n_vars
 
 class PatchEmbedding(nn.Module):
     def __init__(self, d_model, patch_len, stride, padding, dropout):
@@ -288,10 +261,14 @@ class ChannelMixingPatchEmbedding(nn.Module):
         self.patch_len = patch_len
         self.stride = stride
         self.num_vars = num_vars
-        # self.padding_patch_layer = nn.ReplicationPad1d((0, padding))
+        self.padding_patch_layer = nn.ReplicationPad1d((0, padding))
 
         # Backbone, Input encoding: projection of feature vectors onto a d-dim vector space
-        self.value_embedding = nn.Linear(patch_len*num_vars, d_model, bias=False)
+        self.value_embedding = nn.Sequential(nn.Flatten(start_dim=2),
+                                             nn.Linear(patch_len*num_vars, d_model, bias=False))
+
+        # Positional embedding
+        # self.position_embedding = PositionalEmbedding(d_model)
 
         # Residual dropout
         self.dropout = nn.Dropout(dropout)
@@ -299,15 +276,19 @@ class ChannelMixingPatchEmbedding(nn.Module):
     def forward(self, x):
         '''
         param:
-            x: [N, num_vars, fixed_len]
+            x: [B, L, num_vars, fixed_len]
         return:
-            x: [N, n_patches, d_model]
+            x: [B, L, n_patches, d_model]
         '''
         # do patching
-        n_vars = x.shape[1]
-        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride) # [N, num_vars, n_patches, patch_len]
-        x = x.permute(0, 2, 1, 3) # [N, n_patches, num_vars, patch_len]
-        x = x.reshape(x.shape[0], x.shape[1], self.num_vars*self.patch_len)
+        B, L, n_vars = x.shape[0], x.shape[1], x.shape[2]
+        x = x.reshape(B*L, n_vars, -1)
+        x = self.padding_patch_layer(x)
+        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride) # [B, L, num_vars, n_patches, patch_len]
+        x = x.permute(0, 2, 1, 3) # [B*L, n_patches, num_vars, patch_len]
+        # print(x.shape)
+        # x = x.reshape(x.shape[0], x.shape[1], self.num_vars*self.patch_len)
         # Input encoding
-        x = self.value_embedding(x) 
+        x = self.value_embedding(x) # [B*L, n_patches, d_model]
+        x = x.reshape(B, L, x.shape[1], -1)
         return self.dropout(x), n_vars

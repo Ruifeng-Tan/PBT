@@ -114,18 +114,16 @@ class MOEDispatcher(nn.Module):
         Returns:
           a `Tensor` with shape `[batch_size, <extra_output_dims>]`.
         """
-        try:
-          stitched = torch.cat(expert_out, 0)
-          if multiply_by_gates:
-              # stitched = stitched.mul(self._nonzero_gates)
-              stitched = torch.einsum('i...,ij->i...', stitched, self._nonzero_gates)
 
-          shape = list(expert_out[-1].shape)
-          shape[0] = self._gates.size(0)
-          zeros = torch.zeros(*shape, requires_grad=True,
-                              device=expert_out[-1].device)
-          # combine samples that have been processed by the same k experts
-          combined = zeros.index_add(0, self._batch_index, stitched.float())
-          return combined
-        except Exception as e:
-            print(self._gates)
+        stitched = torch.cat(expert_out, 0)
+        if multiply_by_gates:
+            # stitched = stitched.mul(self._nonzero_gates)
+            stitched = torch.einsum('i...,ij->i...', stitched, self._nonzero_gates)
+
+        shape = list(expert_out[-1].shape)
+        shape[0] = self._gates.size(0)
+        zeros = torch.zeros(*shape, requires_grad=True,
+                            device=expert_out[-1].device)
+        # combine samples that have been processed by the same k experts
+        combined = zeros.index_add(0, self._batch_index, stitched.float())
+        return combined
