@@ -10,7 +10,7 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_PESum, baseline_CPTransformerMoE, baseline_CPMLPMoE, BatteryMoE_horizontal_MHv2, BatteryMoE_Sparse
+from models import BatteryMoE_Hyper_CropAugIMPR2, baseline_CPTransformerMoE, baseline_CPMLPMoE
 import wandb
 from data_provider.gate_masker import gate_masker
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
@@ -26,7 +26,7 @@ import datetime
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
 # os.environ["CUDA_VISIBLE_DEVICES"] = '2,3,4,5'
 import joblib
-from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM, load_content
+from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM
 parser = argparse.ArgumentParser(description='Time-LLM')
 
 def set_seed(seed):
@@ -185,7 +185,7 @@ args_json['batch_size'] = batch_size
 args.__dict__ = args_json
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_pretrained{}_noDKPL{}_dr{}_IW{}_NumE{}_K{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -194,7 +194,11 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.llm_layers, args.lradj, trained_dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, False, args.noDKP_layers, args.dropout, args.importance_weight, args.num_experts, args.topK)
+        args.low_d_ff,
+        args.lradj, trained_dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
+        args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.seed)
+
 
 
     data_provider_func = data_provider_LLM_evaluate
@@ -208,16 +212,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPMLPMoE.Model(model_config)
-    elif args.model == 'BatteryMoE_PESum':
+    elif args.model == 'BatteryMoE_Hyper_CropAugIMPR2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_PESum.Model(model_config)
-    elif args.model == 'BatteryMoE_horizontal_MHv2':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_horizontal_MHv2.Model(model_config)
+        model = BatteryMoE_Hyper_CropAugIMPR2.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
@@ -286,7 +285,7 @@ for ii in range(args.itr):
     total_seen_unseen_ids = []
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks) in tqdm(enumerate(test_loader)):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, _) in tqdm(enumerate(test_loader)):
             cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
 
             curve_attn_mask = curve_attn_mask.float() # [B, L]
