@@ -516,6 +516,21 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             self.train_files = split_recorder.NAion_2024_train_files
             self.val_files = split_recorder.NAion_2024_val_files
             self.test_files = split_recorder.NAion_2024_test_files
+        elif self.dataset == 'MIX_all':
+            self.train_files = split_recorder.MIX_all_train_files
+            self.val_files = split_recorder.MIX_all_val_files
+            self.test_files = split_recorder.MIX_all_test_files
+        elif self.dataset == 'MIX_all42':
+            self.train_files = split_recorder.MIX_all_42_train_files
+            self.val_files = split_recorder.MIX_all_42_val_files
+            self.test_files = split_recorder.MIX_all_42_test_files
+        elif self.dataset == 'MIX_all2024':
+            self.train_files = split_recorder.MIX_all_2024_train_files
+            self.val_files = split_recorder.MIX_all_2024_val_files
+            self.test_files = split_recorder.MIX_all_2024_test_files
+        else:
+            raise Exception(f'{self.dataset} is not supported!')
+
         
         # load the prompt embedding
         if self.seed == 2021:

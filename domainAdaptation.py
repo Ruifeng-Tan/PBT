@@ -341,8 +341,8 @@ for ii in range(args.itr):
         iterator_target = iter(train_target_loader)
         for i in range(len(train_loader)):
             with accelerator.accumulate(model):
-                cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks = next(iterator_source)
-                target_cycle_curve_data, target_curve_attn_mask, target_labels, target_weights, _, target_DKP_embeddings, _, target_cathode_masks, target_temperature_masks, target_format_masks, target_anode_masks, target_combined_masks = next(iterator_target)
+                cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, _ = next(iterator_source)
+                target_cycle_curve_data, target_curve_attn_mask, target_labels, target_weights, _, target_DKP_embeddings, _, target_cathode_masks, target_temperature_masks, target_format_masks, target_anode_masks, target_combined_masks, _ = next(iterator_target)
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
                 if epoch < args.warm_up_epoches:
@@ -360,30 +360,30 @@ for ii in range(args.itr):
                 model_optim.zero_grad()
                 iter_count += 1
                 
-                cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
-                curve_attn_mask = curve_attn_mask.float() # [B, L]
-                DKP_embeddings = DKP_embeddings.float()
-                cathode_masks = cathode_masks.float()
-                anode_masks = anode_masks.float()
-                temperature_masks = temperature_masks.float()
-                format_masks = format_masks.float()
-                combined_masks = combined_masks.float()
-                # cluster_labels = cluster_labels.long()
-                labels = labels.float()
-                weights = weights.float()
+                # cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
+                # curve_attn_mask = curve_attn_mask.float() # [B, L]
+                # DKP_embeddings = DKP_embeddings.float()
+                # cathode_masks = cathode_masks.float()
+                # anode_masks = anode_masks.float()
+                # temperature_masks = temperature_masks.float()
+                # format_masks = format_masks.float()
+                # combined_masks = combined_masks.float()
+                # # cluster_labels = cluster_labels.long()
+                # labels = labels.float()
+                # weights = weights.float()
 
 
-                target_cycle_curve_data = target_cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
-                target_curve_attn_mask = target_curve_attn_mask.float() # [B, L]
-                target_DKP_embeddings = target_DKP_embeddings.float()
-                target_cathode_masks = target_cathode_masks.float()
-                target_anode_masks = target_anode_masks.float()
-                target_temperature_masks = target_temperature_masks.float()
-                target_format_masks = target_format_masks.float()
-                target_combined_masks = target_combined_masks.float()
-                # cluster_labels = cluster_labels.long()
-                target_labels = target_labels.float()
-                target_weights = target_weights.float()
+                # target_cycle_curve_data = target_cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
+                # target_curve_attn_mask = target_curve_attn_mask.float() # [B, L]
+                # target_DKP_embeddings = target_DKP_embeddings.float()
+                # target_cathode_masks = target_cathode_masks.float()
+                # target_anode_masks = target_anode_masks.float()
+                # target_temperature_masks = target_temperature_masks.float()
+                # target_format_masks = target_format_masks.float()
+                # target_combined_masks = target_combined_masks.float()
+                # # cluster_labels = cluster_labels.long()
+                # target_labels = target_labels.float()
+                # target_weights = target_weights.float()
                 
                 
                 # encoder - decoder
