@@ -1,5 +1,5 @@
 '''
-基于BatteryMoE_Hyper_CropAugIMP，但是对插值做了若干修正使其正确。
+基于BatteryMoE_Hyper_CropAugIMPR2，只不过修复了随机取中间点的index应该变量统一index
 在这个增强策略中我们随机取原始序列中的一部分point，然后再做插值。
 SOED: Contrastive BiLSTM-enabled Health Representation Learning for Remaining Useful Life Prediction
 '''
@@ -546,14 +546,16 @@ class Model(nn.Module):
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
         if use_aug:
-            random_point_num = fixed_len // 4 * 3
+            random_point_num =  np.random.randint(int(fixed_len*0.7), int(fixed_len*0.8))
 
-            flatten_cycle_curve_data = cycle_curve_data # [B, L, num_variables, fixed_length_of_curve]
+            flatten_cycle_curve_data = cycle_curve_data.reshape(B, L*num_var, -1)
+            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [B, fixed_len, L*num_var]
 
-            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1, -1)  # [3, B, L, num_variables, fixed_length_of_curve]
-            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, L, num_var, fixed_len)  # [3*B, L, num_variables, fixed_length_of_curve]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, fixed_len, L*num_var]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, fixed_len, flatten_cycle_curve_data.shape[-1])  # [3*B, fixed_len, L*num_var]
             flatten_cycle_curve_data[B:] = self.CD_Crop_augmentation(flatten_cycle_curve_data[B:], random_point_num) # add noise
-            cycle_curve_data = flatten_cycle_curve_data
+            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [2*B, L*num_var, fixed_len]
+            cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
 
             # cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
             curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
@@ -630,66 +632,98 @@ class Model(nn.Module):
         Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
         
         Args:
-            X (torch.Tensor): Input tensor of shape [B, L, num_vars, fixed_len].
+            X (torch.Tensor): Input tensor of shape [B, L, D].
             random_point_num (int): Number of points to randomly select, must be at least 2.
         
         Returns:
             torch.Tensor: Resampled tensor of shape [B, L, D].
         """
-        L = X.shape[-1]
-        charge_X = X[..., :L//2]
-        discharge_X = X[..., L//2:]
+        B, L, D = X.shape
+        charge_X = X[:, :L//2]
+        discharge_X = X[:, L//2:]
         aug_charge_X = self.Crop(charge_X, random_point_num=random_point_num//2)
         aug_discharge_X = self.Crop(discharge_X, random_point_num=random_point_num//2)
 
-        X = torch.cat([aug_charge_X, aug_discharge_X], dim=-1) # [B, L, num_vars, fixed_len]
+        X = torch.cat([aug_charge_X, aug_discharge_X], dim=1) # [B, random_point_num, D]
         # X = self.cubic_interpolate_sequence(X, L) # resample back to the same shape
         return X
 
     def Crop(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
         """
+        Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
+        
         Args:
-            X: Input tensor of shape [B, L, num_vars, fixed_len]
-            random_point_num: Target number of points after interpolation (must be ≥ 2)
+            X (torch.Tensor): Input tensor of shape [B, L, D].
+            random_point_num (int): Number of points to randomly select, must be at least 2.
+        
         Returns:
-            X_sampled: Uniformly interpolated tensor of shape [B, L, num_vars, random_point_num]
+            torch.Tensor: Resampled tensor of shape [B, L, D].
         """
-        B, L, num_vars, fixed_len = X.shape
-        device = X.device
+        B, L, D = X.shape
+        K = random_point_num
 
-        # 1. Generate unique random indices (excluding start/end)
-        # Create a pool of indices [1, 2, ..., fixed_len - 2]
-        pool = torch.arange(1, fixed_len - 1, device=device)  # [1, ..., fixed_len - 2]
+        if K < 2:
+            raise ValueError("random_point_num must be at least 2")
+        if L < 2:
+            raise ValueError("L must be at least 2")
 
-        # Shuffle and select (random_point_num - 2) unique indices
-        rand_indices = torch.randperm(len(pool), device=device)[:random_point_num - 2]
-        sampled_middle = pool[rand_indices]  # [random_point_num - 2]
+        # Step 1: Generate indices including 0 and L-1, plus random middle points
+        middle = L - 2  # Possible middle indices count (1 to L-2)
+        k_middle = K - 2
 
-        # Combine with start (0) and end (fixed_len - 1), then sort
-        sampled_indices = torch.cat([
-            torch.tensor([0], device=device),
-            sampled_middle,
-            torch.tensor([fixed_len - 1], device=device)
-        ]).sort().values  # [random_point_num]
+        if k_middle > 0:
+            if middle < k_middle:
+                raise ValueError(f"Cannot select {k_middle} middle points when middle={middle}")
 
-        # 2. Gather sampled points from X (using broadcasting)
-        # Reshape X for advanced indexing: [B, L, num_vars, fixed_len] -> [B, L, num_vars, 1, fixed_len]
-        # Expand indices to match: [random_point_num] -> [1, 1, 1, random_point_num]
-        X_sampled = X[..., sampled_indices]  # [B, L, num_vars, random_point_num]
+            # Generate random middle indices without replacement
+            rand_vals = torch.rand(1, middle, device=X.device)
+            middle_indices = rand_vals.argsort(dim=1)[:, :k_middle]  # [B, k_middle]
+            middle_indices += 1  # Shift to range 1 to L-2 (inclusive)
+            middle_indices = middle_indices.expand(B, -1)  # Expand to batch size
+        else:
+            raise Exception(f'random_point_num is {random_point_num}. You should set it larger than 2!')
 
-        # 3. Upsample back to fixed_len using linear interpolation
-        # Reshape for F.interpolate: [B*L*num_vars, 1, random_point_num]
-        X_sampled_reshaped = X_sampled.view(-1, 1, random_point_num)
-        X_upsampled = F.interpolate(
-            X_sampled_reshaped,
-            size=fixed_len,
-            mode='linear',
-            align_corners=True  # Preserve start/end exactly
-        )
+        # Combine with start and end indices
+        zeros = torch.zeros(B, 1, dtype=torch.long, device=X.device) # start indices
+        ends = (L - 1) * torch.ones(B, 1, dtype=torch.long, device=X.device) # end indices
+        indices = torch.cat([zeros, middle_indices, ends], dim=1)
+        indices, _ = torch.sort(indices, dim=1)  # Sort indices for each batch
 
-        # Reshape back to original dimensions
-        X_upsampled = X_upsampled.view(B, L, num_vars, fixed_len)
+        # Step 2: Gather the selected points
+        selected_X = torch.gather(X, 1, indices.unsqueeze(-1).expand(-1, -1, D))
+        selected_X = selected_X.transpose(1, 2) # [B, D, random_point_num]
 
-        return X_upsampled
+        # Step 3: do the linear interpolation
+        interpolated = F.interpolate(
+                selected_X,
+                size=L,
+                mode='linear',
+                align_corners=True
+            )
+        
+        return interpolated.transpose(1, 2)
 
-   
+    def cubic_interpolate_sequence(self, X, new_length):
+        """
+        Perform cubic interpolation on the sequence length dimension of the input tensor.
+
+        Parameters:
+        - X (torch.Tensor): Input tensor of shape [B, L, D].
+        - new_length (int): The desired length of the sequence after interpolation.
+
+        Returns:
+        - torch.Tensor: Interpolated tensor of shape [B, new_length, D].
+        """
+        # Get the dimensions of the input tensor
+        # B, L, D = X.shape
+        
+        # Reshape to [B, D, L, 1] to treat L as a spatial dimension with an extra dummy dimension
+        X_reshaped = X.permute(0, 2, 1).unsqueeze(3)
+        
+        # Perform cubic interpolation along the L dimension (3rd dimension)
+        interpolated = F.interpolate(X_reshaped, size=(new_length, 1), mode='bicubic', align_corners=True)
+        
+        # Remove the dummy dimension and reshape back to [B, new_length, D]
+        interpolated_reshaped = interpolated.squeeze(3).permute(0, 2, 1)
+        
+        return interpolated_reshaped
