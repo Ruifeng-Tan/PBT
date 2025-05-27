@@ -235,9 +235,8 @@ for ii in range(args.itr):
     else:
         temperature2mask = gate_masker.MIX_all_temperature2mask
         format2mask = gate_masker.MIX_all_format2mask
-        cathodes2mask = gate_masker.MIX_all_cathodes2mask
-        anode2mask = gate_masker.MIX_all_anodes2mask
-
+        cathodes2mask = gate_masker.MIX_all_cathode2mask
+        anode2mask = gate_masker.MIX_all_anode2mask
 
     label_scaler = joblib.load(f'{path}label_scaler')
     std, mean_value = np.sqrt(label_scaler.var_[-1]), label_scaler.mean_[-1]

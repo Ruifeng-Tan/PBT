@@ -715,12 +715,12 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             if file_name in self.temperature_json:
                 temperatures = self.temperature_json[file_name]
-                if file_name.startswith('NA-ion'):
-                    temperatures = 'Na'
-                elif file_name.startswith('ZN-ion'):
-                    temperatures = 'Zn'
-                else:
-                    temperatures = 'Li_' + str(temperatures)
+                # if file_name.startswith('NA-ion'):
+                #     temperatures = 'Na'
+                # elif file_name.startswith('ZN-ion'):
+                #     temperatures = 'Zn'
+                # else:
+                #     temperatures = 'Li_' + str(temperatures)
                 
                 temperature_index = self.temperature2mask[temperatures]
                 temperature_mask = np.zeros(self.temperature_experts)
