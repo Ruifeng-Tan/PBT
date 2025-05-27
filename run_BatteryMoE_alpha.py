@@ -272,7 +272,7 @@ for ii in range(args.itr):
         temperature2mask = gate_masker.MIX_all_temperature2mask
         format2mask = gate_masker.MIX_all_format2mask
         cathodes2mask = gate_masker.MIX_all_cathodes2mask
-        anode2mask = gate_masker.MIX_all_anodes2mask
+        anode2mask = gate_masker.MIX_all_anode2mask
 
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
                                                   format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, use_domainSampler=args.use_domainSampler)
