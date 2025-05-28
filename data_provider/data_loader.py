@@ -736,8 +736,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             if file_name in self.format_json:
                 format = self.format_json[file_name][0]
-                if file_name.startswith('NA-ion'):
-                    format = 'Na_cylindrical' # Na-ion cylindrical is not mixed with Li cylindrical
+                # if file_name.startswith('NA-ion'):
+                #     format = 'Na_cylindrical' # Na-ion cylindrical is not mixed with Li cylindrical
                 format_index = self.format2mask[format]
                 format_mask = np.zeros(self.format_experts)
                 format_mask[format_index] = 1
