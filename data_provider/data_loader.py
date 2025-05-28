@@ -382,7 +382,8 @@ def my_collate_fn(samples):
 class Dataset_BatteryLifeLLM_original(Dataset):
     def __init__(self, args, flag='train', label_scaler=None, tokenizer=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, ion2mask=None, use_target_dataset=False):
+                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, 
+                 anode2mask=None, ion2mask=None, trained_dataset=None, use_target_dataset=False):
         '''
         init the Dataset_BatteryFormer class
         :param args:model parameters
@@ -409,6 +410,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.anode_json = json.load(open('./gate_data/anodes.json'))
         self.anode_experts = args.anode_experts
         self.ion_experts = args.ion_experts
+        self.trained_dataset = trained_dataset
 
         self.temperature2mask = temperature2mask
         self.format2mask = format2mask
@@ -766,21 +768,55 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 # anode_mask = np.zeros(self.anode_experts) # only use the general experts
             anode_mask = list(anode_mask)
 
-            if self.dataset.startswith('MIX_all'):
-                if file_name.startswith('ZN-coin'):
-                    ion_index = self.ion2mask['Zn']
-                    ion_type_mask = np.zeros(self.ion_experts)
-                    ion_type_mask[ion_index] = 1
-                elif file_name.startswith('NA-ion'):
-                    ion_index = self.ion2mask['Na']
-                    ion_type_mask = np.zeros(self.ion_experts)
-                    ion_type_mask[ion_index] = 1
+            if self.flag == 'train':
+                if self.dataset.startswith('MIX_all'):
+                    if file_name.startswith('ZN-coin'):
+                        ion_index = self.ion2mask['Zn']
+                        ion_type_mask = np.zeros(self.ion_experts)
+                        ion_type_mask[ion_index] = 1
+                    elif file_name.startswith('NA-ion'):
+                        ion_index = self.ion2mask['Na']
+                        ion_type_mask = np.zeros(self.ion_experts)
+                        ion_type_mask[ion_index] = 1
+                    else:
+                        ion_index = self.ion2mask['Li']
+                        ion_type_mask = np.zeros(self.ion_experts)
+                        ion_type_mask[ion_index] = 1
                 else:
-                    ion_index = self.ion2mask['Li']
-                    ion_type_mask = np.zeros(self.ion_experts)
-                    ion_type_mask[ion_index] = 1
+                    ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
             else:
-                ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
+                if self.trained_dataset is not None:
+                    if self.trained_dataset.startswith('MIX_all'):
+                        if file_name.startswith('ZN-coin'):
+                            ion_index = self.ion2mask['Zn']
+                            ion_type_mask = np.zeros(self.ion_experts)
+                            ion_type_mask[ion_index] = 1
+                        elif file_name.startswith('NA-ion'):
+                            ion_index = self.ion2mask['Na']
+                            ion_type_mask = np.zeros(self.ion_experts)
+                            ion_type_mask[ion_index] = 1
+                        else:
+                            ion_index = self.ion2mask['Li']
+                            ion_type_mask = np.zeros(self.ion_experts)
+                            ion_type_mask[ion_index] = 1
+                    else:
+                        ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
+                else:
+                    if self.dataset.startswith('MIX_all'):
+                        if file_name.startswith('ZN-coin'):
+                            ion_index = self.ion2mask['Zn']
+                            ion_type_mask = np.zeros(self.ion_experts)
+                            ion_type_mask[ion_index] = 1
+                        elif file_name.startswith('NA-ion'):
+                            ion_index = self.ion2mask['Na']
+                            ion_type_mask = np.zeros(self.ion_experts)
+                            ion_type_mask[ion_index] = 1
+                        else:
+                            ion_index = self.ion2mask['Li']
+                            ion_type_mask = np.zeros(self.ion_experts)
+                            ion_type_mask[ion_index] = 1
+                    else:
+                        ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
             ion_type_mask = list(ion_type_mask)
             
             combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask + ion_type_mask
