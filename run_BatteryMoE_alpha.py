@@ -278,7 +278,7 @@ for ii in range(args.itr):
         ion2mask = gate_masker.MIX_all_ion2mask
 
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
-                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, use_domainSampler=args.use_domainSampler)
+                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, use_domainSampler=args.use_domainSampler)
     label_scaler = train_data.return_label_scaler()
     
     accelerator.print("Loading training samples......")
