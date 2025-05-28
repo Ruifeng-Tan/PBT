@@ -79,6 +79,12 @@ class gate_masker:
         'zinc metal': [11],
         'Unknown': [12]
     }
+
+    MIX_all_ion2mask = {
+        'Li': [0, 1],
+        'Zn': [2, 3],
+        'Na': [4, 5]
+    }
     # '''
     # -5.0: 0
     # 0.0: 1

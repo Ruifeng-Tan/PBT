@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper_FixCrop, BatteryMoE_Hyper_CropAugIMPR2, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE
+from models import BatteryMoE, BatteryMoE_Hyper_CropAugIMPR2, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -151,6 +151,7 @@ parser.add_argument('--cathode_experts', type=int, default=13, help="The number 
 parser.add_argument('--temperature_experts', type=int, default=20, help="The number of the expert models for proecessing different temperatures")
 parser.add_argument('--format_experts', type=int, default=21, help="The number of the expert models for proecessing different formats")
 parser.add_argument('--anode_experts', type=int, default=11, help="The number of the expert models for proecessing different anodes")
+parser.add_argument('--ion_experts', type=int, default=6, help="The number of the expert models for proecessing different ion types")
 parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--cycle_topK', type=int, default=2, help='The number of the experts used in CycleMoE layer')
@@ -212,7 +213,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -223,7 +224,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.low_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
-        args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
+        args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
         args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.seed)
 
     data_provider_func = data_provider_LLMv2
@@ -232,11 +233,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_FixCrop':
+    elif args.model == 'BatteryMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_FixCrop.Model(model_config)
+        model = BatteryMoE.Model(model_config)
     elif args.model == 'BatteryMoE_Hyper_CropAugIMPR2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)

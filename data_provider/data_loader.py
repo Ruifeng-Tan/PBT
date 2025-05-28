@@ -382,7 +382,7 @@ def my_collate_fn(samples):
 class Dataset_BatteryLifeLLM_original(Dataset):
     def __init__(self, args, flag='train', label_scaler=None, tokenizer=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, use_target_dataset=False):
+                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, ion2mask=None, use_target_dataset=False):
         '''
         init the Dataset_BatteryFormer class
         :param args:model parameters
@@ -408,11 +408,13 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.format_experts = args.format_experts
         self.anode_json = json.load(open('./gate_data/anodes.json'))
         self.anode_experts = args.anode_experts
+        self.ion_experts = args.ion_experts
 
         self.temperature2mask = temperature2mask
         self.format2mask = format2mask
         self.cathodes2mask = cathodes2mask
         self.anode2mask = anode2mask
+        self.ion2mask = ion2mask
 
         self.name2domainID = json.load(open(f'{self.root_path}/name2domainID.json'))
 
@@ -764,7 +766,23 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 # anode_mask = np.zeros(self.anode_experts) # only use the general experts
             anode_mask = list(anode_mask)
 
-            combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask
+            if self.dataset.startswith('MIX_all'):
+                if file_name.startswith('ZN-coin'):
+                    ion_index = self.ion2mask['Zn']
+                    ion_type_mask = np.zeros(self.ion_experts)
+                    ion_type_mask[ion_index] = 1
+                elif file_name.startswith('NA-ion'):
+                    ion_index = self.ion2mask['Na']
+                    ion_type_mask = np.zeros(self.ion_experts)
+                    ion_type_mask[ion_index] = 1
+                else:
+                    ion_index = self.ion2mask['Li']
+                    ion_type_mask = np.zeros(self.ion_experts)
+                    ion_type_mask[ion_index] = 1
+            else:
+                ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
+
+            combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask + ion_type_mask
 
             cell_name = file_name.split('.pkl')[0]
             if self.flag == 'train':
