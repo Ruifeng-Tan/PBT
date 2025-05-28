@@ -269,11 +269,13 @@ for ii in range(args.itr):
         format2mask = gate_masker.MIX_large_format2mask
         cathodes2mask = gate_masker.MIX_large_cathodes2mask
         anode2mask = gate_masker.MIX_large_anode2mask
+        ion2mask = None
     else:
         temperature2mask = gate_masker.MIX_all_temperature2mask
         format2mask = gate_masker.MIX_all_format2mask
         cathodes2mask = gate_masker.MIX_all_cathode2mask
         anode2mask = gate_masker.MIX_all_anode2mask
+        ion2mask = gate_masker.MIX_all_ion2mask
 
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
                                                   format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, use_domainSampler=args.use_domainSampler)
@@ -281,9 +283,9 @@ for ii in range(args.itr):
     
     accelerator.print("Loading training samples......")
     accelerator.print("Loading vali samples......")
-    vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
+    vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
+    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
     
     if accelerator.is_local_main_process and os.path.exists(path):
         del_files(path)  # delete checkpoint files

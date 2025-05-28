@@ -97,7 +97,7 @@ def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eva
     
 def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, use_domainSampler=False):
+                 class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, ion2mask=None, use_domainSampler=False):
     Data = data_dict[args.data]
 
     if flag == 'test' or flag == 'val':
@@ -123,7 +123,8 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
             temperature2mask=temperature2mask,
             format2mask=format2mask,
             cathodes2mask=cathodes2mask,
-            anode2mask=anode2mask
+            anode2mask=anode2mask,
+            ion2mask=ion2mask
         )
     
     if use_domainSampler:
