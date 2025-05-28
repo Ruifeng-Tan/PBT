@@ -781,7 +781,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                     ion_type_mask[ion_index] = 1
             else:
                 ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
-
+            ion_type_mask = list(ion_type_mask)
+            
             combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask + ion_type_mask
 
             cell_name = file_name.split('.pkl')[0]
