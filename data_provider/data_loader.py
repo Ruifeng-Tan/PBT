@@ -771,40 +771,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 # anode_mask = np.zeros(self.anode_experts) # only use the general experts
             anode_mask = list(anode_mask)
 
-            if self.flag == 'train':
-                if self.dataset.startswith('MIX_all'):
-                    if file_name.startswith('ZN-coin'):
-                        ion_index = self.ion2mask['Zn']
-                        ion_type_mask = np.zeros(self.ion_experts)
-                        ion_type_mask[ion_index] = 1
-                    elif file_name.startswith('NA-ion'):
-                        ion_index = self.ion2mask['Na']
-                        ion_type_mask = np.zeros(self.ion_experts)
-                        ion_type_mask[ion_index] = 1
-                    else:
-                        ion_index = self.ion2mask['Li']
-                        ion_type_mask = np.zeros(self.ion_experts)
-                        ion_type_mask[ion_index] = 1
-                else:
-                    ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
-            else:
-                if self.trained_dataset is not None:
-                    if self.trained_dataset.startswith('MIX_all'):
-                        if file_name.startswith('ZN-coin'):
-                            ion_index = self.ion2mask['Zn']
-                            ion_type_mask = np.zeros(self.ion_experts)
-                            ion_type_mask[ion_index] = 1
-                        elif file_name.startswith('NA-ion'):
-                            ion_index = self.ion2mask['Na']
-                            ion_type_mask = np.zeros(self.ion_experts)
-                            ion_type_mask[ion_index] = 1
-                        else:
-                            ion_index = self.ion2mask['Li']
-                            ion_type_mask = np.zeros(self.ion_experts)
-                            ion_type_mask[ion_index] = 1
-                    else:
-                        ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
-                else:
+            if self.ion_experts > 0:
+                if self.flag == 'train':
                     if self.dataset.startswith('MIX_all'):
                         if file_name.startswith('ZN-coin'):
                             ion_index = self.ion2mask['Zn']
@@ -820,6 +788,41 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                             ion_type_mask[ion_index] = 1
                     else:
                         ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
+                else:
+                    if self.trained_dataset is not None:
+                        if self.trained_dataset.startswith('MIX_all'):
+                            if file_name.startswith('ZN-coin'):
+                                ion_index = self.ion2mask['Zn']
+                                ion_type_mask = np.zeros(self.ion_experts)
+                                ion_type_mask[ion_index] = 1
+                            elif file_name.startswith('NA-ion'):
+                                ion_index = self.ion2mask['Na']
+                                ion_type_mask = np.zeros(self.ion_experts)
+                                ion_type_mask[ion_index] = 1
+                            else:
+                                ion_index = self.ion2mask['Li']
+                                ion_type_mask = np.zeros(self.ion_experts)
+                                ion_type_mask[ion_index] = 1
+                        else:
+                            ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
+                    else:
+                        if self.dataset.startswith('MIX_all'):
+                            if file_name.startswith('ZN-coin'):
+                                ion_index = self.ion2mask['Zn']
+                                ion_type_mask = np.zeros(self.ion_experts)
+                                ion_type_mask[ion_index] = 1
+                            elif file_name.startswith('NA-ion'):
+                                ion_index = self.ion2mask['Na']
+                                ion_type_mask = np.zeros(self.ion_experts)
+                                ion_type_mask[ion_index] = 1
+                            else:
+                                ion_index = self.ion2mask['Li']
+                                ion_type_mask = np.zeros(self.ion_experts)
+                                ion_type_mask[ion_index] = 1
+                        else:
+                            ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
+            else:
+                ion_type_mask = []
             ion_type_mask = list(ion_type_mask)
             
             combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask

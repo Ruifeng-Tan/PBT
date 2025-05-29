@@ -169,10 +169,13 @@ if eval_cycle_min < 0 or eval_cycle_max <0:
     eval_cycle_max = None
 nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 set_seed(args.seed)
+# ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
+# deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero_ours.json')
+# accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin)
 ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
-deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero_ours.json')
-accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin)
-
+# deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero_ours.json')
+# accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin, gradient_accumulation_steps=args.accumulation_steps)
+accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], gradient_accumulation_steps=args.accumulation_steps)
 # load from the saved path
 args_path = args.args_path
 dataset = args.eval_dataset
@@ -286,24 +289,24 @@ for ii in range(args.itr):
     total_seen_unseen_ids = []
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, _) in tqdm(enumerate(test_loader)):
-            cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, _) in tqdm(enumerate(test_loader)):
+            # cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
 
-            curve_attn_mask = curve_attn_mask.float() # [B, L]
-            DKP_embeddings = DKP_embeddings.float()
-            cathode_masks = cathode_masks.float()
-            anode_masks = anode_masks.float()
-            temperature_masks = temperature_masks.float()
-            format_masks = format_masks.float()
-            combined_masks = combined_masks.float()
-            # cluster_labels = cluster_labels.long()
-            labels = labels.float()
-            weights = weights.float()
+            # curve_attn_mask = curve_attn_mask.float() # [B, L]
+            # DKP_embeddings = DKP_embeddings.float()
+            # cathode_masks = cathode_masks.float()
+            # anode_masks = anode_masks.float()
+            # temperature_masks = temperature_masks.float()
+            # format_masks = format_masks.float()
+            # combined_masks = combined_masks.float()
+            # # cluster_labels = cluster_labels.long()
+            # labels = labels.float()
+            # weights = weights.float()
 
             # encoder - decoder
             outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
             DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-            anode_masks=anode_masks, combined_masks=combined_masks)
+            anode_masks=anode_masks, ion_type_masks=ion_type_masks, combined_masks=combined_masks)
             # self.accelerator.wait_for_everyone()
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
