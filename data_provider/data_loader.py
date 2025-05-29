@@ -341,6 +341,7 @@ def my_collate_fn_withId(samples):
     temperature_masks = torch.vstack([i['temperature_mask'] for i in samples])
     format_masks = torch.vstack([i['format_mask'] for i in samples])
     anode_masks = torch.vstack([i['anode_mask'] for i in samples])
+    ion_type_masks = torch.vstack([i['ion_type_mask'] for i in samples])
     combined_masks = torch.vstack([i['combined_mask'] for i in samples])
 
     curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
@@ -353,7 +354,7 @@ def my_collate_fn_withId(samples):
     dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
     domain_ids = torch.Tensor([i['domain_ids'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
-    return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids
+    return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids
 
 def my_collate_fn(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
@@ -369,6 +370,7 @@ def my_collate_fn(samples):
     temperature_masks = torch.vstack([i['temperature_mask'] for i in samples])
     format_masks = torch.vstack([i['format_mask'] for i in samples])
     anode_masks = torch.vstack([i['anode_mask'] for i in samples])
+    ion_type_masks = torch.vstack([i['ion_type_mask'] for i in samples])
     combined_masks = torch.vstack([i['combined_mask'] for i in samples])
 
 
@@ -376,7 +378,7 @@ def my_collate_fn(samples):
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
     domain_ids = torch.Tensor([i['domain_ids'] for i in samples])
 
-    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids
+    return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids
 
 # BatterLifeLLM dataloader
 class Dataset_BatteryLifeLLM_original(Dataset):
@@ -592,7 +594,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
 
-        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_combined_expert_masks, self.total_domain_ids = self.read_data()
+        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_ion_type_masks, self.total_combined_expert_masks, self.total_domain_ids = self.read_data()
         
         self.weights = self.get_loss_weight()
         if np.any(np.isnan(self.total_charge_discharge_curves)):
@@ -680,6 +682,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         total_temperature_experts_masks = []
         total_format_expert_masks = []
         total_anode_expert_masks = []
+        total_ion_type_masks = []
         total_combined_expert_masks = []
 
 
@@ -819,7 +822,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                         ion_type_mask = [] # ion experts are used only when many ion types are available in the training data
             ion_type_mask = list(ion_type_mask)
             
-            combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask + ion_type_mask
+            combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask
 
             cell_name = file_name.split('.pkl')[0]
             if self.flag == 'train':
@@ -844,6 +847,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             total_format_expert_masks += [format_mask for _ in range(len(labels))]
             total_temperature_experts_masks += [temperature_mask for _ in range(len(labels))]
             total_anode_expert_masks += [anode_mask for _ in range(len(labels))]
+            total_ion_type_masks += [ion_type_mask for _ in range(len(labels))]
             total_combined_expert_masks += [combined_expert_mask for _ in range(len(labels))]
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
@@ -859,7 +863,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
-        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks, total_temperature_experts_masks, total_format_expert_masks, total_anode_expert_masks, total_combined_expert_masks, total_domain_ids
+        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks, total_temperature_experts_masks, total_format_expert_masks, total_anode_expert_masks, total_ion_type_masks, total_combined_expert_masks, total_domain_ids
     
     def read_cell_data_according_to_prefix(self, file_name):
         '''
@@ -1217,6 +1221,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 'anode_mask': torch.Tensor(self.total_anode_expert_masks[index]),
                 'temperature_mask': torch.Tensor(self.total_temperature_experts_masks[index]),
                 'format_mask': torch.Tensor(self.total_format_expert_masks[index]),
+                'ion_type_mask': torch.Tensor(self.total_ion_type_masks[index]),
                 'combined_mask': torch.Tensor(self.total_combined_expert_masks[index]),
                 'DKP_embedding': torch.from_numpy(self.total_DKP_embeddings[index]),
                 'cluster_label': self.total_cluster_labels[index],

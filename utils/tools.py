@@ -269,7 +269,7 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
     total_seen_unseen_ids = []
     std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids) in enumerate(vali_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in enumerate(vali_loader):
             if accelerator is None:
                 # use the GPU manually
                 cycle_curve_data = cycle_curve_data.to(torch.bfloat16).cuda()
@@ -286,7 +286,7 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
             # encoder - decoder
             outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
                                                  , temperature_masks=temperature_masks, format_masks=format_masks, anode_masks=anode_masks,
-                                                 combined_masks=combined_masks, use_aug=False)
+                                                 combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=False)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value
