@@ -487,7 +487,7 @@ class Model(nn.Module):
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
         if use_aug:
-            random_point_num =  np.random.randint(int(fixed_len*(self.down_sample_ratio-0.05)), int(fixed_len*(self.down_sample_ratio+0.05)))
+            random_point_num =  int(fixed_len*self.down_sample_ratio)
 
             flatten_cycle_curve_data = cycle_curve_data.reshape(B, L*num_var, -1)
             flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [B, fixed_len, L*num_var]

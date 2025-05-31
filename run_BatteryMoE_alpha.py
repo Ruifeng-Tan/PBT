@@ -299,7 +299,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBNet_aug",
+        project="PBNet_final",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
