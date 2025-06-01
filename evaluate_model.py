@@ -347,7 +347,8 @@ for ii in range(args.itr):
         save_res[dataset]['mapes'] = list(tmp_mapes)
         save_res[dataset]['domain_ids'] = list(total_domain_ids)
         trained_seed = args_json['seed']
-        with open(f'{res_path}/{dataset}_{trained_seed}.json', 'w') as f:
+        model_name = args_json['model']
+        with open(f'{res_path}/{model_name}_{dataset}_{trained_seed}.json', 'w') as f:
             json.dump(save_res, f)
         
 
