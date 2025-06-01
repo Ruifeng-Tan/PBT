@@ -594,7 +594,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 self.calb_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
 
-        self.total_prompts, self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_ion_type_masks, self.total_combined_expert_masks, self.total_domain_ids = self.read_data()
+        self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_ion_type_masks, self.total_combined_expert_masks, self.total_domain_ids = self.read_data()
         
         self.weights = self.get_loss_weight()
         if np.any(np.isnan(self.total_charge_discharge_curves)):
@@ -668,7 +668,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         :return: x_enc, x_cycle_numbers, prompts, charge_data, discharge_data, RPT_masks, labels
         '''
     
-        total_prompts = []
         total_domain_ids = []
         total_charge_discharge_curves = []
         total_curve_attn_masks = []
@@ -698,10 +697,10 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
             # center_vector_index = self.get_center_vector_index(file_name)
 
-            prompts, charge_discharge_curves, attn_masks, labels, eol = self.read_samples_from_one_cell(
+            charge_discharge_curves, attn_masks, labels, eol = self.read_samples_from_one_cell(
                 file_name)
 
-            if prompts is None:
+            if eol is None:
                 # This battery has not reached end of life
                 continue
 
@@ -835,8 +834,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             DKP_embedding = self.cellName_prompt[cell_name]
             domain_id = self.name2domainID[cell_name]
 
-            
-            total_prompts += prompts
 
             total_charge_discharge_curves += charge_discharge_curves
             total_curve_attn_masks += attn_masks
@@ -866,7 +863,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
-        return total_prompts, total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks, total_temperature_experts_masks, total_format_expert_masks, total_anode_expert_masks, total_ion_type_masks, total_combined_expert_masks, total_domain_ids
+        return total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, total_dataset_ids, total_center_vector_indices, total_file_names, total_cluster_labels, total_DKP_embeddings, total_seen_unseen_IDs, total_cathode_expert_masks, total_temperature_experts_masks, total_format_expert_masks, total_anode_expert_masks, total_ion_type_masks, total_combined_expert_masks, total_domain_ids
     
     def read_cell_data_according_to_prefix(self, file_name):
         '''
@@ -1011,10 +1008,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
 
         df, charge_discharge_curves_data, basic_prompt, eol, SOC_interval, nominal_capacity = self.read_cell_df(file_name)
         if df is None or eol<=self.early_cycle_threshold:
-            return None, None, None, None, None
+            return None, None, None, None
 
         # the charge and discharge data
-        prompts = []
         charge_discharge_curves = []  # [N, seq_len, fix_charge_resample_len]
         attn_masks = []
         labels = []
@@ -1046,27 +1042,26 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 tmp_prompt = basic_prompt
                 # tmp_prompt = basic_prompt + f' Usage information: The battery has operated for {cycle_number} cycles. The current state of health is {last_soh}. '
             
-            if 'Instruct' in self.args.LLM_path:
-                # Llama-instruct
-                messages = [
-                    {"role": "system", "content": "You are an expert in predicting battery cycle life."},
-                    {"role": "user", "content": tmp_prompt}
-                ]
+            # if 'Instruct' in self.args.LLM_path:
+            #     # Llama-instruct
+            #     messages = [
+            #         {"role": "system", "content": "You are an expert in predicting battery cycle life."},
+            #         {"role": "user", "content": tmp_prompt}
+            #     ]
 
-                tmp_prompt = self.tokenizer.apply_chat_template(
-                    messages,
-                    tokenize=False,
-                    add_generation_prompt=True
-                )
-            else:
-                tmp_prompt = '<|begin_of_text|>' + tmp_prompt
+            #     tmp_prompt = self.tokenizer.apply_chat_template(
+            #         messages,
+            #         tokenize=False,
+            #         add_generation_prompt=True
+            #     )
+            # else:
+            #     tmp_prompt = '<|begin_of_text|>' + tmp_prompt
 
             labels.append(eol)
             charge_discharge_curves.append(early_charge_discharge_curves_data)
-            prompts.append(tmp_prompt)
             attn_masks.append(tmp_attn_mask)
 
-        return prompts, charge_discharge_curves, attn_masks, labels, eol
+        return charge_discharge_curves, attn_masks, labels, eol
 
     def get_charge_discharge_curves(self, file_name, df, early_cycle_threshold, nominal_capacity):
         '''

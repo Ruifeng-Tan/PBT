@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper_FixCrop, BatteryMoE_Hyper_RMS, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE
+from models import BatteryMoE_Hyper_CropAugIMPR2, PBNet, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -31,7 +31,7 @@ def list_of_ints(arg):
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
 os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
 os.environ["TORCH_USE_CUDA_DSA"] = "true"
-from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM
+from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_baseline
 
 parser = argparse.ArgumentParser(description='BatteryLifeLLM')
 
@@ -97,7 +97,6 @@ parser.add_argument('--bottleneck_factor', type=int, default=2, help='the scale 
 parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
 parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
 parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
-parser.add_argument('--low_d_ff', type=int, default=32, help='dimension of low rank in the matrix')
 parser.add_argument('--moving_avg', type=int, default=25, help='window size of moving average')
 parser.add_argument('--factor', type=int, default=1, help='attn factor')
 parser.add_argument('--dropout', type=float, default=0.1, help='dropout')
@@ -111,7 +110,7 @@ parser.add_argument('--output_num', type=int, default=1, help='The number of pre
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
 
 # optimization
-parser.add_argument('--cl_epoches', type=int, default=0, help='the number of cl pretraining epoches')
+parser.add_argument('--down_sample_ratio', type=float, default=0.75, help='the down sampling ratio for data augmentation')
 parser.add_argument('--weighted_CLDG', action='store_true', default=False, help='use weighted CLDG loss')
 parser.add_argument('--temperature', type=float, default=1.0, help='temperature for contrastive learning')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
@@ -152,6 +151,7 @@ parser.add_argument('--cathode_experts', type=int, default=13, help="The number 
 parser.add_argument('--temperature_experts', type=int, default=20, help="The number of the expert models for proecessing different temperatures")
 parser.add_argument('--format_experts', type=int, default=21, help="The number of the expert models for proecessing different formats")
 parser.add_argument('--anode_experts', type=int, default=11, help="The number of the expert models for proecessing different anodes")
+parser.add_argument('--ion_experts', type=int, default=6, help="The number of the expert models for proecessing different ion types")
 parser.add_argument('--noisy_gating', action='store_true', default=False, help='Set True to use Noisy Gating')
 parser.add_argument('--topK', type=int, default=2, help='The number of the experts used to do the prediction')
 parser.add_argument('--cycle_topK', type=int, default=2, help='The number of the experts used in CycleMoE layer')
@@ -213,7 +213,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_dfg{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_cle{}_augW{}_tem{}_wDG{}_seed{}'.format(
+    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -222,44 +222,26 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.low_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
-        args.num_experts, args.num_general_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.cl_epoches, args.aug_w, args.temperature, args.weighted_CLDG, args.seed)
+        args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.seed)
 
     data_provider_func = data_provider_LLMv2
-    if args.model == 'baseline_CPTransformerMoE':
+    if args.model == 'CPMLP':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_FixCrop':
+        model = CPMLP.Model(model_config)
+    elif args.model == 'CPTransformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_FixCrop.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_RMS':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_RMS.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_CropAugIMP':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_CropAugIMP.Model(model_config)
-    elif args.model == 'baseline_CPMLPMoE':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = baseline_CPMLPMoE.Model(model_config)
+        model = CPTransformer.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
     
     tokenizer = None
-    if model.tokenizer:
-        tokenizer = model.tokenizer
     
     path = os.path.join(args.checkpoints,
                         setting + '-' + args.model_comment)  # unique checkpoint saving path
@@ -269,21 +251,23 @@ for ii in range(args.itr):
         format2mask = gate_masker.MIX_large_format2mask
         cathodes2mask = gate_masker.MIX_large_cathodes2mask
         anode2mask = gate_masker.MIX_large_anode2mask
+        ion2mask = None
     else:
         temperature2mask = gate_masker.MIX_all_temperature2mask
         format2mask = gate_masker.MIX_all_format2mask
-        cathodes2mask = gate_masker.MIX_all_cathodes2mask
-        anode2mask = gate_masker.MIX_all_anodes2mask
+        cathodes2mask = gate_masker.MIX_all_cathode2mask
+        anode2mask = gate_masker.MIX_all_anode2mask
+        ion2mask = gate_masker.MIX_all_ion2mask
 
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
-                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, use_domainSampler=args.use_domainSampler)
+                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, use_domainSampler=args.use_domainSampler)
     label_scaler = train_data.return_label_scaler()
     
     accelerator.print("Loading training samples......")
     accelerator.print("Loading vali samples......")
-    vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
+    vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask)
+    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
     
     if accelerator.is_local_main_process and os.path.exists(path):
         del_files(path)  # delete checkpoint files
@@ -298,7 +282,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="BatteryMoE_CLDG",
+        project="PBNet_final",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -327,20 +311,12 @@ for ii in range(args.itr):
             trained_parameters_names.append(name)
             trained_parameters.append(p)
 
-    trained_parameters2 = []
-    trained_parameters_names2 = []
-    for name, p in model.named_parameters():
-        if p.requires_grad is True and 'regression_head' not in name:
-            trained_parameters_names2.append(name)
-            trained_parameters2.append(p) # for cl training
-
     accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
     if args.wd == 0:
         model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
-        model_optim_cl = optim.Adam(trained_parameters2, lr=args.learning_rate, weight_decay=args.wd)
     else:
         model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
-        model_optim_cl = optim.AdamW(trained_parameters2, lr=args.learning_rate, weight_decay=args.wd)
+
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     criterion = nn.MSELoss(reduction='none') 
@@ -382,7 +358,7 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, combined_masks, domain_ids) in enumerate(train_loader):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in enumerate(train_loader):
             with accelerator.accumulate(model):
                 # batch_x_mark is the total_masks
                 # batch_y_mark is the total_used_cycles
@@ -398,13 +374,18 @@ for ii in range(args.itr):
                         else:
                             print(f'Warmup | Updating learning rate to {warm_up_lr}')
 
+                model_optim.zero_grad()
                 iter_count += 1
 
                 # encoder - decoder
-                outputs, _, embeddings, _, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
-                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                anode_masks=anode_masks, combined_masks=combined_masks, use_aug=args.use_aug)
-                
+                if args.use_aug:
+                    outputs, embeddings = model(cycle_curve_data, curve_attn_mask, 
+                    DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
+                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=args.use_aug)
+                else:
+                    outputs = model(cycle_curve_data, curve_attn_mask, 
+                    DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
+                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=False)
                 # if args.use_aug:
                 #     labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
                 #     weights = labels.repeat(int(outputs.shape[0] / weights.shape[0]), 1)
@@ -416,16 +397,8 @@ for ii in range(args.itr):
                     raise Exception('Not implemented!')
                 
                 final_loss = loss
-                if args.num_experts > 1 and args.use_LB:
-                    importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
-                    print_LB_loss = importance_loss.detach().float()
-                    final_loss = final_loss + importance_loss
 
-                if args.use_guide:
-                    # contrastive learning
-                    guide_loss = args.gamma * guide_loss
-                    print_guidance_loss = guide_loss.detach().float()
-                    final_loss = final_loss + guide_loss
+
 
                 if args.use_aug:
                     rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
@@ -446,16 +419,9 @@ for ii in range(args.itr):
                 transformed_labels = labels * std + mean_value
                 all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
 
-
-                model_optim.zero_grad()
-                model_optim_cl.zero_grad()
-
                 accelerator.backward(final_loss)
                 # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
-                if epoch >= args.cl_epoches:
-                    model_optim.step()
-                else:
-                    model_optim_cl.step()
+                model_optim.step()
                 
 
                 total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
@@ -476,8 +442,8 @@ for ii in range(args.itr):
         train_mape = mean_absolute_percentage_error(total_references, total_preds)
         accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
 
-        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
-        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
+        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion)
+        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_baseline(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
         vali_loss = vali_mape
         
         if vali_loss < best_vali_loss:

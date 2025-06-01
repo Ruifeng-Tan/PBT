@@ -475,7 +475,8 @@ class Model(nn.Module):
                 combined_masks: Optional[torch.Tensor] = None,
                 SOH_trajectory: Optional[torch.Tensor] = None,
                 CE_trajectory: Optional[torch.Tensor] = None,
-                use_aug: bool = False
+                use_aug: bool = False,
+                return_embedding: bool=False
                 ):
         '''
         params:
