@@ -285,10 +285,11 @@ for ii in range(args.itr):
     sample_size = 0
     total_preds, total_references = [], []
     total_dataset_ids = []
+    total_domain_ids = []
     total_seen_unseen_ids = []
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, _) in tqdm(enumerate(test_loader)):
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in tqdm(enumerate(test_loader)):
             # cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
 
             # curve_attn_mask = curve_attn_mask.float() # [B, L]
@@ -309,18 +310,23 @@ for ii in range(args.itr):
             # self.accelerator.wait_for_everyone()
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
-            all_predictions, all_targets, dataset_ids, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, dataset_ids, seen_unseen_ids))
+            all_predictions, all_targets, dataset_ids, seen_unseen_ids, domain_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, dataset_ids, seen_unseen_ids, domain_ids))
             
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+            total_domain_ids = total_domain_ids + domain_ids.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
             total_dataset_ids = total_dataset_ids + dataset_ids.detach().cpu().numpy().reshape(-1).tolist()
             total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
 
     res_path='./results'
+    save_res = {}
+    save_res[dataset] = {}
     # accelerator.wait_for_everyone()
     accelerator.set_trigger()
     if accelerator.check_trigger():
+        os.makedirs(res_path, exist_ok=True)
         total_dataset_ids = np.array(total_dataset_ids)
+        total_domain_ids = np.array(total_domain_ids)
         total_references = np.array(total_references)
         total_seen_unseen_ids = np.array(total_seen_unseen_ids)
         total_preds = np.array(total_preds)
@@ -338,6 +344,12 @@ for ii in range(args.itr):
         hit_num = sum(relative_error<=alpha)
         alpha_acc = hit_num / len(total_references) * 100
 
+        tmp_mapes = np.abs(total_preds-total_references) / total_references
+        save_res[dataset]['mapes'] = list(tmp_mapes)
+        save_res[dataset]['domain_ids'] = list(total_domain_ids)
+        trained_seed = args_json['seed']
+        with open(f'{res_path}/{dataset}_{trained_seed}.json', 'w') as f:
+            json.dump(save_res, f)
 
         mape = mean_absolute_percentage_error(total_references, total_preds)
 
