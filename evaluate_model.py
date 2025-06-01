@@ -26,7 +26,7 @@ import datetime
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
 # os.environ["CUDA_VISIBLE_DEVICES"] = '2,3,4,5'
 import joblib
-from utils.tools import del_files, EarlyStopping, adjust_learning_rate, vali_batteryLifeLLM
+from utils.tools import del_files, EarlyStopping, domain_average, vali_batteryLifeLLM
 parser = argparse.ArgumentParser(description='Time-LLM')
 
 def set_seed(seed):
@@ -331,9 +331,6 @@ for ii in range(args.itr):
         total_seen_unseen_ids = np.array(total_seen_unseen_ids)
         total_preds = np.array(total_preds)
 
-        relative_error = abs(total_preds - total_references) / total_references
-        hit_num = sum(relative_error<=alpha)
-        alpha_acc = hit_num / len(total_references) * 100
 
         relative_error = abs(total_preds - total_references) / total_references
         hit_num = sum(relative_error<=alpha2)
@@ -345,15 +342,19 @@ for ii in range(args.itr):
         alpha_acc = hit_num / len(total_references) * 100
 
         tmp_mapes = np.abs(total_preds-total_references) / total_references
+
+        domain_average_MAPE = torch.mean(domain_average(torch.tensor(total_domain_ids), torch.tensor(tmp_mapes))).detach().float()
         save_res[dataset]['mapes'] = list(tmp_mapes)
         save_res[dataset]['domain_ids'] = list(total_domain_ids)
         trained_seed = args_json['seed']
         with open(f'{res_path}/{dataset}_{trained_seed}.json', 'w') as f:
             json.dump(save_res, f)
+        
 
         mape = mean_absolute_percentage_error(total_references, total_preds)
 
         accelerator.print(f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | MAPE: {mape} | {alpha}-accuracy: {alpha_acc}% | {alpha2}-accuracy: {alpha_acc2}%')
+        accelerator.print(f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Domain average MAPE: {domain_average_MAPE}')
         # calculate the model performance on the samples from the seen and unseen aging conditions
         seen_references = total_references[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([0])
         unseen_references = total_references[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([0])
