@@ -172,6 +172,7 @@ parser.add_argument('--alpha1', type=float, default=0.15, help='the alpha for al
 parser.add_argument('--alpha2', type=float, default=0.1, help='the alpha for alpha-accuracy')
 
 # finetune 
+parser.add_argument('--finetune_method', type=str, default='FT', help='the fine-tuning method. [FT, EFT]')
 parser.add_argument('--finetune_dataset', type=str, help='the target dataset for model finetuning')
 parser.add_argument('--args_path', type=str, help='the path to the pretrained model parameters')
 
@@ -190,6 +191,7 @@ args_path = args.args_path
 dataset = args.finetune_dataset
 batch_size = args.batch_size
 learning_rate = args.learning_rate
+finetune_method = args.finetune_method
 
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
@@ -242,7 +244,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_ST{}_seed{}'.format(
+    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_ST{}_{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.batch_size,
@@ -254,7 +256,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
         args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, trained_dataset, args.seed)
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, trained_dataset, finetune_method, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -336,7 +338,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBNet_final_FT",
+        project="PBNet_final_FT2",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -360,19 +362,26 @@ for ii in range(args.itr):
 
     trained_parameters = []
     trained_parameters_names = []
+    use_view_experts = True
 
-    # only tune the cyclePatch layer, output layer and gate networks
-    for name, p in model.named_parameters():
-        # if not ('gate' in name or 'flattenIntraCycleLayer' in name or 'regression_head' in name):
-        #     continue
-        if 'general_experts' in name:
-            continue
-        # if not ('flattenIntraCycleLayer' in name or 'regression_head' in name):
-        #     continue
+    if finetune_method == 'FT':
+        # free the general experts and tune other parameters
+        for name, p in model.named_parameters():
+            if p.requires_grad is True:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
+    elif finetune_method == 'EFT':
+        # use_view_experts = False
+        # tune only the shared experts, normalization and output layer
+        for name, p in model.named_parameters():
+            if not ('general_experts' in name or 'norm' in name or 'regression_head' in name):
+                continue
 
-        if p.requires_grad is True:
-            trained_parameters_names.append(name)
-            trained_parameters.append(p)
+            if p.requires_grad is True:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
+    else:
+        raise Exception(f'{finetune_method} is not implemented!')
 
     accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
     if args.wd == 0:
@@ -448,7 +457,7 @@ for ii in range(args.itr):
                 # encoder - decoder
                 outputs, _, embeddings, _, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=args.use_aug)
+                anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=args.use_aug, use_view_experts=use_view_experts)
                 
                 # if args.use_aug:
                 #     labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
