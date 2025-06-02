@@ -381,11 +381,11 @@ for ii in range(args.itr):
                 if args.use_aug:
                     outputs, embeddings = model(cycle_curve_data, curve_attn_mask, 
                     DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=args.use_aug)
+                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=args.use_aug, return_embedding=True)
                 else:
                     outputs = model(cycle_curve_data, curve_attn_mask, 
                     DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=False)
+                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=False, return_embedding=False)
                 # if args.use_aug:
                 #     labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
                 #     weights = labels.repeat(int(outputs.shape[0] / weights.shape[0]), 1)
