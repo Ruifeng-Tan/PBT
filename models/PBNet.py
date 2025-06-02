@@ -556,7 +556,7 @@ class Model(nn.Module):
 
         preds = preds.float()
         embeddings = embeddings.float()
-        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, total_aug_loss , total_guide_loss / total_aug_count
+        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, None , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''
@@ -586,7 +586,6 @@ class Model(nn.Module):
         aug_discharge_X = self.Crop(discharge_X, random_point_num=random_point_num//2)
 
         X = torch.cat([aug_charge_X, aug_discharge_X], dim=1) # [B, random_point_num, D]
-        # X = self.cubic_interpolate_sequence(X, L) # resample back to the same shape
         return X
 
     def Crop(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
@@ -642,28 +641,3 @@ class Model(nn.Module):
             )
         
         return interpolated.transpose(1, 2)
-
-    def cubic_interpolate_sequence(self, X, new_length):
-        """
-        Perform cubic interpolation on the sequence length dimension of the input tensor.
-
-        Parameters:
-        - X (torch.Tensor): Input tensor of shape [B, L, D].
-        - new_length (int): The desired length of the sequence after interpolation.
-
-        Returns:
-        - torch.Tensor: Interpolated tensor of shape [B, new_length, D].
-        """
-        # Get the dimensions of the input tensor
-        # B, L, D = X.shape
-        
-        # Reshape to [B, D, L, 1] to treat L as a spatial dimension with an extra dummy dimension
-        X_reshaped = X.permute(0, 2, 1).unsqueeze(3)
-        
-        # Perform cubic interpolation along the L dimension (3rd dimension)
-        interpolated = F.interpolate(X_reshaped, size=(new_length, 1), mode='bicubic', align_corners=True)
-        
-        # Remove the dummy dimension and reshape back to [B, new_length, D]
-        interpolated_reshaped = interpolated.squeeze(3).permute(0, 2, 1)
-        
-        return interpolated_reshaped

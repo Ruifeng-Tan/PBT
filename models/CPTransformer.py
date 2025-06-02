@@ -27,8 +27,9 @@ class MLPBlock(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, configs):
+    def __init__(self, battery_life_config):
         super(Model, self).__init__()
+        configs = battery_life_config.ec_config.get_configs()
         self.d_ff = configs.d_ff
         self.d_model = configs.d_model
         self.charge_discharge_length = configs.charge_discharge_length

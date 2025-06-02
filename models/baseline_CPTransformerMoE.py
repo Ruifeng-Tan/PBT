@@ -151,16 +151,16 @@ class FlattenIntraCycleMoELayer(nn.Module):
             final_out = self.general_experts[i](cycle_curve_data) + final_out
         final_out = final_out.reshape(B, L, -1) # [B*L, D] --> [B, L, D]
 
-        aug_loss = 0
+        LB_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / (B*L) # [num_experts]
-            aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
+            LB_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
           
 
-        return final_out, aug_loss
+        return final_out, LB_loss
     
 class IntraCycleMoELayer(nn.Module):
     def __init__(self, configs):
@@ -232,14 +232,14 @@ class IntraCycleMoELayer(nn.Module):
         final_out = self.ln(final_out + cycle_curve_data) # add & norm
         final_out = final_out.reshape(B, L, -1)
 
-        aug_loss = 0
+        LB_loss = 0
         if self.training:
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / (B*L) # [num_experts]. The number of tokens dispatched to each expert
-            aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
+            LB_loss = torch.mean(expert_logits * expert_sample_count) # [1]
 
-        return final_out, aug_loss
+        return final_out, LB_loss
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -253,8 +253,7 @@ class OutputHead(nn.Module):
         self.n_heads = ec_config.n_heads
 
 
-        self.projection = nn.Sequential(nn.Flatten(start_dim=1), 
-                                        nn.Linear(self.d_model*self.early_cycle_threshold, ec_config.output_num))
+        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
         
     
     def forward(self, x):
@@ -295,6 +294,7 @@ class Model(BatteryLifeLLM):
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.d_model = configs.d_model
         self.d_llm = configs.d_llm
+        self.down_sample_ratio = configs.down_sample_ratio
         self.tokenizer.padding_side = 'right' # set the padding side
         self.e_layers = configs.e_layers
         self.d_layers = configs.d_layers
@@ -327,7 +327,12 @@ class Model(BatteryLifeLLM):
                 temperature_masks: Optional[torch.Tensor] = None,
                 format_masks: Optional[torch.Tensor] = None,
                 anode_masks: Optional[torch.Tensor] = None,
-                combined_masks: Optional[torch.Tensor] = None
+                ion_type_masks: Optional[torch.Tensor] = None,
+                combined_masks: Optional[torch.Tensor] = None,
+                SOH_trajectory: Optional[torch.Tensor] = None,
+                CE_trajectory: Optional[torch.Tensor] = None,
+                use_aug: bool = False,
+                return_embedding: bool=False
                 ):
         '''
         params:
@@ -336,40 +341,58 @@ class Model(BatteryLifeLLM):
         '''
         # process the charge&discharge data
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
+        cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
+
+        if use_aug:
+            random_point_num =  int(fixed_len*self.down_sample_ratio)
+
+            flatten_cycle_curve_data = cycle_curve_data.reshape(B, L*num_var, -1)
+            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [B, fixed_len, L*num_var]
+
+            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, fixed_len, L*num_var]
+            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, fixed_len, flatten_cycle_curve_data.shape[-1])  # [3*B, fixed_len, L*num_var]
+            flatten_cycle_curve_data[B:] = self.CD_Crop_augmentation(flatten_cycle_curve_data[B:], random_point_num) # add noise
+            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [2*B, L*num_var, fixed_len]
+            cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
+
+            # cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
+            curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
 
         tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
-
-        cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
-
-        total_aug_loss = 0
-        total_aug_count = 0
-        out, aug_loss = self.flattenIntraCycleLayer(cycle_curve_data) # [B, L, d_model]
-        total_aug_loss += aug_loss
-        total_aug_count += 1
+        total_LB_loss = 0
+        total_LB_count = 0
+        out, LB_loss = self.flattenIntraCycleLayer(cycle_curve_data) # [B, L, d_model]
+        total_LB_loss += LB_loss
+        total_LB_count += 1
 
         for i, expert in enumerate(self.intraCycleLayers):
-            out, aug_loss = expert(out)
-            total_aug_loss += aug_loss
-            total_aug_count += 1
+            out, LB_loss = expert(out)
+            total_LB_loss += LB_loss
+            total_LB_count += 1
         
         # Inter-cycle modelling using Transformer with MoE FFN
         out = out + self.pe(out) # add positional encoding
-        curve_attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L]
-        curve_attn_mask = torch.repeat_interleave(curve_attn_mask, curve_attn_mask.shape[-1], dim=1) # [B, L, L]
-        curve_attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L, L]
-        curve_attn_mask = curve_attn_mask==0 # set True to mask
+        attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L]
+        attn_mask = torch.repeat_interleave(attn_mask, attn_mask.shape[-1], dim=1) # [B, L, L]
+        attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
+        attn_mask = attn_mask==0 # set True to mask
 
-        out, _, aug_loss = self.inter_cycle_encoder(out, attn_mask=curve_attn_mask)
-        total_aug_loss += aug_loss
-        total_aug_loss += self.d_layers
-        
+        out, _, LB_loss = self.inter_cycle_encoder(out, attn_mask=attn_mask)
+        total_LB_loss += LB_loss
+        total_LB_count += self.d_layers
+
+        lengths = torch.sum(curve_attn_mask, dim=1).cpu() # [N]
+        idx = (torch.as_tensor(lengths, device=out.device, dtype=torch.long) - 1).view(-1, 1).expand(
+            len(lengths), out.size(2))
+        idx = idx.unsqueeze(1)
+        out = out.gather(1, idx).squeeze(1) # [B, D]
 
         preds = self.regression_head(out)
 
         preds = preds.float()
 
-        return preds, None, None, None, None, None, total_aug_loss / total_aug_count, 0
+        return preds[:B], None, out[B:], None, None, None, total_LB_loss / total_LB_count, 0
 
     def create_causal_mask(self, B, seq_len):
         '''
@@ -380,3 +403,77 @@ class Model(BatteryLifeLLM):
         mask = torch.tril(torch.ones(seq_len, seq_len))  # (L, L)
         mask = mask.unsqueeze(0).expand(B, -1, -1)
         return mask
+
+    def CD_Crop_augmentation(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
+        """
+        Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
+        
+        Args:
+            X (torch.Tensor): Input tensor of shape [B, L, D].
+            random_point_num (int): Number of points to randomly select, must be at least 2.
+        
+        Returns:
+            torch.Tensor: Resampled tensor of shape [B, L, D].
+        """
+        B, L, D = X.shape
+        charge_X = X[:, :L//2]
+        discharge_X = X[:, L//2:]
+        aug_charge_X = self.Crop(charge_X, random_point_num=random_point_num//2)
+        aug_discharge_X = self.Crop(discharge_X, random_point_num=random_point_num//2)
+
+        X = torch.cat([aug_charge_X, aug_discharge_X], dim=1) # [B, random_point_num, D]
+        return X
+
+    def Crop(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
+        """
+        Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
+        
+        Args:
+            X (torch.Tensor): Input tensor of shape [B, L, D].
+            random_point_num (int): Number of points to randomly select, must be at least 2.
+        
+        Returns:
+            torch.Tensor: Resampled tensor of shape [B, L, D].
+        """
+        B, L, D = X.shape
+        K = random_point_num
+
+        if K < 2:
+            raise ValueError("random_point_num must be at least 2")
+        if L < 2:
+            raise ValueError("L must be at least 2")
+
+        # Step 1: Generate indices including 0 and L-1, plus random middle points
+        middle = L - 2  # Possible middle indices count (1 to L-2)
+        k_middle = K - 2
+
+        if k_middle > 0:
+            if middle < k_middle:
+                raise ValueError(f"Cannot select {k_middle} middle points when middle={middle}")
+
+            # Generate random middle indices without replacement
+            rand_vals = torch.rand(B, middle, device=X.device)
+            middle_indices = rand_vals.argsort(dim=1)[:, :k_middle]  # [B, k_middle]
+            middle_indices += 1  # Shift to range 1 to L-2 (inclusive)
+        else:
+            raise Exception(f'random_point_num is {random_point_num}. You should set it larger than 2!')
+
+        # Combine with start and end indices
+        zeros = torch.zeros(B, 1, dtype=torch.long, device=X.device) # start indices
+        ends = (L - 1) * torch.ones(B, 1, dtype=torch.long, device=X.device) # end indices
+        indices = torch.cat([zeros, middle_indices, ends], dim=1)
+        indices, _ = torch.sort(indices, dim=1)  # Sort indices for each batch
+
+        # Step 2: Gather the selected points
+        selected_X = torch.gather(X, 1, indices.unsqueeze(-1).expand(-1, -1, D))
+        selected_X = selected_X.transpose(1, 2) # [B, D, random_point_num]
+
+        # Step 3: do the linear interpolation
+        interpolated = F.interpolate(
+                selected_X,
+                size=L,
+                mode='linear',
+                align_corners=True
+            )
+        
+        return interpolated.transpose(1, 2)

@@ -252,39 +252,6 @@ class EncoderLayer(nn.Module):
         y = self.dropout(self.conv2(y).transpose(-1, 1))
 
         return self.norm2(x + y), attn
-
-# class BatteryMoEEncoder(nn.Module):
-#     def __init__(self, attn_layers, conv_layers=None, norm_layer=None):
-#         super(BatteryMoEEncoder, self).__init__()
-#         self.attn_layers = nn.ModuleList(attn_layers)
-#         self.conv_layers = nn.ModuleList(conv_layers) if conv_layers is not None else None
-#         self.norm = norm_layer
-
-#     def forward(self, x, DKP_embeddings, attn_mask=None, tau=None, delta=None):
-#         # x [B, L, D]
-#         # DKP_embeddings [B, d_llm]
-#         attns = []
-#         total_aug_loss = 0
-#         if self.conv_layers is not None:
-#             for i, (attn_layer, conv_layer) in enumerate(zip(self.attn_layers, self.conv_layers)):
-#                 delta = delta if i == 0 else None
-#                 x, attn, aug_loss = attn_layer(x, DKP_embeddings, attn_mask=attn_mask, tau=tau, delta=delta)
-#                 x = conv_layer(x)
-#                 attns.append(attn)
-#                 total_aug_loss += aug_loss
-
-#             x, attn = self.attn_layers[-1](x, tau=tau, delta=None)
-#             attns.append(attn)
-#         else:
-#             for attn_layer in self.attn_layers:
-#                 x, attn, aug_loss = attn_layer(x, DKP_embeddings, attn_mask=attn_mask, tau=tau, delta=delta)
-#                 attns.append(attn)
-#                 total_aug_loss += aug_loss
-
-#         if self.norm is not None:
-#             x = self.norm(x)
-
-#         return x, attns, total_aug_loss
     
 class MoEEncoder(nn.Module):
     def __init__(self, attn_layers, conv_layers=None, norm_layer=None):
@@ -296,14 +263,14 @@ class MoEEncoder(nn.Module):
     def forward(self, x, attn_mask=None, tau=None, delta=None):
         # x [B, L, D]
         attns = []
-        total_aug_loss = 0
+        total_LB_count = 0
         if self.conv_layers is not None:
             for i, (attn_layer, conv_layer) in enumerate(zip(self.attn_layers, self.conv_layers)):
                 delta = delta if i == 0 else None
                 x, attn, aug_loss = attn_layer(x, attn_mask=attn_mask, tau=tau, delta=delta)
                 x = conv_layer(x)
                 attns.append(attn)
-                total_aug_loss += aug_loss
+                total_LB_count += aug_loss
 
             x, attn = self.attn_layers[-1](x, tau=tau, delta=None)
             attns.append(attn)
@@ -311,12 +278,12 @@ class MoEEncoder(nn.Module):
             for attn_layer in self.attn_layers:
                 x, attn, aug_loss = attn_layer(x, attn_mask=attn_mask, tau=tau, delta=delta)
                 attns.append(attn)
-                total_aug_loss += aug_loss
+                total_LB_count += aug_loss
 
         if self.norm is not None:
             x = self.norm(x)
 
-        return x, attns, total_aug_loss
+        return x, attns, total_LB_count
     
 class Encoder(nn.Module):
     def __init__(self, attn_layers, conv_layers=None, norm_layer=None):
