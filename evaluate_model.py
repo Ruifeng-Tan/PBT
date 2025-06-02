@@ -188,9 +188,10 @@ args_json['batch_size'] = batch_size
 args.__dict__ = args_json
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_seed{}'.format(
+    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_seed{}'.format(
         args.model,
         args.seq_len,
+        args.batch_size,
         args.learning_rate,
         args.d_model,
         args.n_heads,
