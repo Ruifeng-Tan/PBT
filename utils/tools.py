@@ -370,23 +370,26 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
     model.train()
     return rmse, mae, mape, alpha_acc1, alpha_acc2
 
-def domain_average(total_domain_ids, MAPEs):
+def domain_average(total_domain_ids, MAPEs, return_IDs=False):
     assert total_domain_ids.shape[0] == MAPEs.shape[0], "Inputs must have the same length"
     
     device = MAPEs.device
     total_domain_ids = total_domain_ids.to(device)
     
     unique_ids, inverse_indices, counts = torch.unique(total_domain_ids, 
-                                                       return_inverse=True, 
-                                                       return_counts=True)
+                                                      return_inverse=True, 
+                                                      return_counts=True)
     domain_N = unique_ids.shape[0]
     res = torch.zeros(domain_N, dtype=MAPEs.dtype, device=device)
     res.index_add_(0, inverse_indices, MAPEs)
     counts = counts.to(MAPEs.dtype)
-    res /= counts
+    res /= counts  # Compute averages
     
-    return res
-
+    if return_IDs:
+        return np.array(unique_ids), np.array(res)  # Return domain IDs and their average MAPEs
+    else:
+        return np.array(res)
+    
 def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
     model.eval()
     total_preds, total_references = [], []

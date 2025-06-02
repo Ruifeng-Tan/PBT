@@ -5,7 +5,6 @@ __pycache__/
 
 
 # Dataset and checkpoints
-plot_scripts/
 legacy/
 
 play_scripts/

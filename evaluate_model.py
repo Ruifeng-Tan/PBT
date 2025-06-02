@@ -344,7 +344,7 @@ for ii in range(args.itr):
 
         tmp_mapes = np.abs(total_preds-total_references) / total_references
 
-        domain_average_MAPE = torch.mean(domain_average(torch.tensor(total_domain_ids), torch.tensor(tmp_mapes))).detach().float()
+        domain_average_MAPE = np.mean(domain_average(torch.tensor(total_domain_ids), torch.tensor(tmp_mapes)))
         save_res[dataset]['mapes'] = list(tmp_mapes)
         save_res[dataset]['total_references'] = list(total_references)
         save_res[dataset]['total_preds'] = list(total_preds)
