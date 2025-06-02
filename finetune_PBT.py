@@ -190,6 +190,7 @@ args_path = args.args_path
 dataset = args.finetune_dataset
 batch_size = args.batch_size
 learning_rate = args.learning_rate
+
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
 args_json['least_epochs'] = args.least_epochs
@@ -205,6 +206,9 @@ args_json['topK'] = args.topK
 args_json['use_aug'] = args.use_aug
 args_json['aug_w'] = args.aug_w
 args_json['temperature'] = args.temperature
+args_json['lradj'] = args.lradj
+args_json['patience'] = args.patience
+args_json['train_epochs'] = args.train_epochs
 args.__dict__ = args_json
 
 if args.use_PCA:
@@ -307,8 +311,10 @@ for ii in range(args.itr):
         anode2mask = gate_masker.MIX_all_anode2mask
         ion2mask = gate_masker.MIX_all_ion2mask
 
+    label_scaler = joblib.load(f'{args_path}label_scaler')
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
-                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, use_domainSampler=args.use_domainSampler)
+                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, 
+                                                  use_domainSampler=args.use_domainSampler, label_scaler=label_scaler)
     label_scaler = train_data.return_label_scaler()
     
     accelerator.print("Loading training samples......")
@@ -357,8 +363,12 @@ for ii in range(args.itr):
 
     # only tune the cyclePatch layer, output layer and gate networks
     for name, p in model.named_parameters():
-        if not ('gate' in name or 'flattenIntraCycleLayer' in name or 'regression_head' in name):
+        # if not ('gate' in name or 'flattenIntraCycleLayer' in name or 'regression_head' in name):
+        #     continue
+        if 'general_experts' in name:
             continue
+        # if not ('flattenIntraCycleLayer' in name or 'regression_head' in name):
+        #     continue
 
         if p.requires_grad is True:
             trained_parameters_names.append(name)
