@@ -345,6 +345,8 @@ for ii in range(args.itr):
 
         domain_average_MAPE = torch.mean(domain_average(torch.tensor(total_domain_ids), torch.tensor(tmp_mapes))).detach().float()
         save_res[dataset]['mapes'] = list(tmp_mapes)
+        save_res[dataset]['total_references'] = list(total_references)
+        save_res[dataset]['total_preds'] = list(total_preds)
         save_res[dataset]['domain_ids'] = list(total_domain_ids)
         trained_seed = args_json['seed']
         model_name = args_json['model']
