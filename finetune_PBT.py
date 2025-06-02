@@ -375,7 +375,7 @@ for ii in range(args.itr):
         # use_view_experts = False
         # tune only the shared experts, normalization and output layer
         for name, p in model.named_parameters():
-            if not ('flattenIntraCycleLayer.general_experts' in name or 'norm' in name or 'regression_head' in name):
+            if not ('flattenIntraCycleLayer' in name or 'norm' in name or 'regression_head' in name or 'gate' in name):
                 continue
 
             if p.requires_grad is True:
