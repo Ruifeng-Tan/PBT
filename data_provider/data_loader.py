@@ -707,7 +707,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             if file_name in self.cathode_json:
                 cathodes = self.cathode_json[file_name]
                 cathodes = '_'.join(cathodes)
-                cathode_index = self.cathodes2mask[cathodes] 
+                cathode_index = self.cathodes2mask[cathodes] if cathodes in self.cathodes2mask else np.arange(self.cathode_experts) # if no domain knowledge, the model learns the gating
                 cathode_mask = np.zeros(self.cathode_experts) # 1 indicates activated
                 cathode_mask[cathode_index] = 1
             else:
@@ -728,7 +728,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 # else:
                 #     temperatures = 'Li_' + str(temperatures)
                 
-                temperature_index = self.temperature2mask[temperatures]
+                temperature_index = self.temperature2mask[temperatures] if temperatures in self.temperature2mask else np.arange(self.temperature_experts)
                 temperature_mask = np.zeros(self.temperature_experts)
                 temperature_mask[temperature_index] = 1
             else:
@@ -744,7 +744,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 format = self.format_json[file_name][0]
                 # if file_name.startswith('NA-ion'):
                 #     format = 'Na_cylindrical' # Na-ion cylindrical is not mixed with Li cylindrical
-                format_index = self.format2mask[format]
+                format_index = self.format2mask[format] if format in self.format2mask else np.arange(self.format_experts)
                 format_mask = np.zeros(self.format_experts)
                 format_mask[format_index] = 1
             else:
@@ -759,7 +759,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 anode = self.anode_json[file_name][0]
                 if anode == 'graphite' or anode == 'artificial graphite' or anode == 'carbon':
                     anode = 'graphite' # we assume other anodes are graphite
-                anode_index = self.anode2mask[anode]
+                anode_index = self.anode2mask[anode] if anode in self.anode2mask else np.arange(self.anode_experts)
                 anode_mask = np.zeros(self.anode_experts)
                 anode_mask[anode_index] = 1
             else:

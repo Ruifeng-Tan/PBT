@@ -189,14 +189,22 @@ accelerator.print(args.__dict__)
 args_path = args.args_path
 dataset = args.finetune_dataset
 batch_size = args.batch_size
+learning_rate = args.learning_rate
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
+args_json['least_epochs'] = args.least_epochs
 args_json['dataset'] = dataset
 args_json['batch_size'] = batch_size
+args_json['dropout'] = args.dropout
+args_json['learning_rate'] = learning_rate
 args_json['alpha1'] = args.alpha1
 args_json['alpha2'] = args.alpha2
 args_json['save_path'] = args.checkpoints
 args_json['model'] = args.model
+args_json['topK'] = args.topK
+args_json['use_aug'] = args.use_aug
+args_json['aug_w'] = args.aug_w
+args_json['temperature'] = args.temperature
 args.__dict__ = args_json
 
 if args.use_PCA:
@@ -230,7 +238,7 @@ for ii in range(args.itr):
     #     args.d_layers,
     #     args.d_ff,
     #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_seed{}'.format(
+    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_ST{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.batch_size,
@@ -242,7 +250,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
         args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.seed)
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, trained_dataset, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -322,7 +330,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBNet_final",
+        project="PBNet_final_FT",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -346,7 +354,12 @@ for ii in range(args.itr):
 
     trained_parameters = []
     trained_parameters_names = []
+
+    # only tune the cyclePatch layer, output layer and gate networks
     for name, p in model.named_parameters():
+        if not ('gate' in name or 'flattenIntraCycleLayer' in name or 'regression_head' in name):
+            continue
+
         if p.requires_grad is True:
             trained_parameters_names.append(name)
             trained_parameters.append(p)
@@ -361,7 +374,8 @@ for ii in range(args.itr):
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     criterion = nn.MSELoss(reduction='none') 
     rnc_criterion = WeightedRnCLoss(temperature=args.temperature) if args.weighted_CLDG else AverageRnCLoss(temperature=args.temperature)
-    load_checkpoint_in_model(model, args_path) # load the saved parameters into model
+    
+    load_checkpoint_in_model(model, args_path) # load the pretrained parameters into model
     accelerator.print(f'The model is {args.model}')
     accelerator.print(f'load model from:\n {args_path}')
     accelerator.print(f'Model is loaded!')
