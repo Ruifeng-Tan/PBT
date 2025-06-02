@@ -211,6 +211,7 @@ args_json['temperature'] = args.temperature
 args_json['lradj'] = args.lradj
 args_json['patience'] = args.patience
 args_json['train_epochs'] = args.train_epochs
+args_json['finetune_method'] = args.finetune_method
 args.__dict__ = args_json
 
 if args.use_PCA:
