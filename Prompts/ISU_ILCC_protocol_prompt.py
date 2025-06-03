@@ -1,7 +1,7 @@
 class ISU_ILCC_protocol_prompt():
     Protocols_prompts = {
         1.0:  # G1C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -13,7 +13,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 72.03% to 100%.\n",
         2.0:  # G1C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -25,7 +25,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 70.55% to 100%.\n",
         3.0:  # G1C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -37,7 +37,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 70.51% to 100%.\n",
         4.0:  # G1C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -49,7 +49,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 69.04% to 100%.\n",
         5.0:  # G2C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -61,7 +61,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 49.14% to 100%.\n",
         6.0:  # G2C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -73,7 +73,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 44.71% to 100%.\n",
         7.0:  # G2C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -85,7 +85,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 48.15% to 100%.\n",
         8.0:  # G2C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -97,7 +97,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.89% to 100%.\n",
         9.0:  # G3C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -109,7 +109,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 25.03% to 100%.\n",
         10.0:  # G3C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -121,7 +121,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 21.69% to 100%.\n",
         11.0:  # G3C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -133,7 +133,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.58% to 100%.\n",
         12.0:  # G3C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -145,7 +145,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 21.84% to 100%.\n",
         13.0:  # G4C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -157,7 +157,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.24% to 100%.\n",
         14.0:  # G4C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -169,7 +169,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.30% to 100%.\n",
         15.0:  # G4C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -181,7 +181,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 46.53% to 100%.\n",
         16.0:  # G4C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -193,7 +193,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.26% to 100%.\n",
         17.0:  # G5C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -205,7 +205,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         18.0:  # G5C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -217,7 +217,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         19.0:  # G5C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -229,7 +229,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         20.0:  # G5C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -241,7 +241,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         21.0:  # G6C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -253,7 +253,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 68.72% to 100%.\n",
         22.0:  # G6C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -265,7 +265,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 69.90% to 100%.\n",
         23.0:  # G6C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -277,7 +277,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 67.72% to 100%.\n",
         24.0:  # G6C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -289,7 +289,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 68.05% to 100%.\n",
         25.0:  # G7C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -301,7 +301,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 45.53% to 100%.\n",
         26.0:  # G7C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -313,7 +313,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 45.84% to 100%.\n",
         27.0:  # G7C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -325,7 +325,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 48.18% to 100%.\n",
         28.0:  # G7C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -337,7 +337,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 46.04% to 100%.\n",
         29.0:  # G8C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -349,7 +349,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 25.30% to 100%.\n",
         30.0:  # G8C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -361,7 +361,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 22.83% to 100%.\n",
         31.0:  # G8C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -373,7 +373,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 24.87% to 100%.\n",
         32.0:  # G8C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -385,7 +385,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 21.94% to 100%.\n",
         33.0:  # G9C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -397,7 +397,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         34.0:  # G9C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -409,7 +409,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         35.0:  # G9C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -421,7 +421,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         36.0:  # G10C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -433,7 +433,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.96% to 100%.\n",
         37.0:  # G10C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -445,7 +445,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.42% to 100%.\n",
         38.0:  # G10C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -457,7 +457,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 44.30% to 100%.\n",
         39.0:  # G10C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -469,7 +469,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.40% to 100%.\n",
         40.0:  # G12C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -481,7 +481,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 65.90% to 100%.\n",
         41.0:  # G12C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -493,7 +493,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 66.10% to 100%.\n",
         42.0:  # G12C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -505,7 +505,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 67.87% to 100%.\n",
         43.0:  # G12C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -517,7 +517,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 66.82% to 100%.\n",
         44.0:  # G13C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -529,7 +529,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 46.47% to 100%.\n",
         45.0:  # G13C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -541,7 +541,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.06% to 100%.\n",
         46.0:  # G13C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -553,7 +553,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.58% to 100%.\n",
         47.0:  # G13C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -565,7 +565,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.38% to 100%.\n",
         48.0:  # G14C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -577,7 +577,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.06% to 100%.\n",
         49.0:  # G14C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -589,7 +589,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.89% to 100%.\n",
         50.0:  # G14C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -601,7 +601,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 23.70% to 100%.\n",
         51.0:  # G14C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -613,7 +613,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.58% to 100%.\n",
         52.0:  # G16C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -625,7 +625,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         53.0:  # G16C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -637,7 +637,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         54.0:  # G16C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -649,7 +649,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         55.0:  # G16C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -661,7 +661,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         56.0:  # G17C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -673,7 +673,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 25.11% to 100%.\n",
         57.0:  # G17C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -685,7 +685,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.92% to 100%.\n",
         58.0:  # G17C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -697,7 +697,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 20.94% to 100%.\n",
         59.0:  # G17C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -709,7 +709,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.45% to 100%.\n",
         60.0:  # G18C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -721,7 +721,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 69.61% to 100%.\n",
         61.0:  # G18C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -733,7 +733,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 67.99% to 100%.\n",
         62.0:  # G18C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -745,7 +745,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 68.70% to 100%.\n",
         63.0:  # G18C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -757,7 +757,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 67.64% to 100%.\n",
         64.0:  # G19C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -769,7 +769,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 24.23% to 100%.\n",
         65.0:  # G19C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -781,7 +781,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 24.23% to 100%.\n",
         66.0:  # G19C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -793,7 +793,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 23.68% to 100%.\n",
         67.0:  # G19C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -805,7 +805,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 21.94% to 100%.\n",
         68.0:  # G20C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -817,7 +817,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         69.0:  # G21C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -829,7 +829,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         70.0:  # G22C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -841,7 +841,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         71.0:  # G23C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -853,7 +853,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         72.0:  # G24C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -865,7 +865,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         73.0:  # G25C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -877,7 +877,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.6 C until reaching 3.7047 V. "
             f"The cycling state-of-charge of this battery ranges from 40.07% to 100%.\n",
         74.0:  # G25C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -889,7 +889,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.6 C until reaching 3.7047 V. "
             f"The cycling state-of-charge of this battery ranges from 42.79% to 100%.\n",
         75.0:  # G25C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -901,7 +901,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.6 C until reaching 3.7047 V. "
             f"The cycling state-of-charge of this battery ranges from 40.56% to 100%.\n",
         76.0:  # G27C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -913,7 +913,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 39.39% to 100%.\n",
         77.0:  # G27C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -925,7 +925,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 31.47% to 100%.\n",
         78.0:  # G27C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -937,7 +937,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 34.13% to 100%.\n",
         79.0:  # G27C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -949,7 +949,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 34.94% to 100%.\n",
         80.0:  # G28C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -961,7 +961,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 6.27% to 100%.\n",
         81.0:  # G28C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -973,7 +973,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 4.86% to 100%.\n",
         82.0:  # G28C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -985,7 +985,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 8.29% to 100%.\n",
         83.0:  # G28C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -997,7 +997,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 5.85% to 100%.\n",
         84.0:  # G29C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1009,7 +1009,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.8 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 41.28% to 100%.\n",
         85.0:  # G29C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1021,7 +1021,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.8 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 41.00% to 100%.\n",
         86.0:  # G29C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1033,7 +1033,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.8 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 41.18% to 100%.\n",
         87.0:  # G29C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1045,7 +1045,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 42.13% to 100%.\n",
         88.0:  # G30C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1057,7 +1057,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 9.65% to 100%.\n",
         89.0:  # G30C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1069,7 +1069,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 14.11% to 100%.\n",
         90.0:  # G30C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1081,7 +1081,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 14.65% to 100%.\n",
         91.0:  # G30C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1093,7 +1093,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 8.98% to 100%.\n",
         92.0:  # G31C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1105,7 +1105,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 31.60% to 100%.\n",
         93.0:  # G31C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1117,7 +1117,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 30.00% to 100%.\n",
         94.0:  # G31C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1129,7 +1129,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 30.67% to 100%.\n",
         95.0:  # G31C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1141,7 +1141,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 29.40% to 100%.\n",
         96.0:  # G32C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1153,7 +1153,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 56.73% to 100%.\n",
         97.0:  # G32C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1165,7 +1165,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 55.63% to 100%.\n",
         98.0:  # G32C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1177,7 +1177,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 54.90% to 100%.\n",
         99.0:  # G32C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1189,7 +1189,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 57.31% to 100%.\n",
         100.0:  # G33C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1201,7 +1201,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 52.31% to 100%.\n",
         101.0:  # G33C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1213,7 +1213,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 53.17% to 100%.\n",
         102.0:  # G33C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1225,7 +1225,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 60.10% to 100%.\n",
         103.0:  # G33C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1237,7 +1237,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 50.23% to 100%.\n",
         104.0:  # G34C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1249,7 +1249,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 64.89% to 100%.\n",
         105.0:  # G34C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1261,7 +1261,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 75.47% to 100%.\n",
         106.0:  # G34C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1273,7 +1273,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 68.86% to 100%.\n",
         107.0:  # G34C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1285,7 +1285,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 66.48% to 100%.\n",
         108.0:  # G35C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1297,7 +1297,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         109.0:  # G361-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1309,7 +1309,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         110.0:  # G37C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1321,7 +1321,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         111.0:  # G38C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1333,7 +1333,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         112.0:  # G39C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1345,7 +1345,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         113.0:  # G40C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1357,7 +1357,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 60.31% to 100%.\n",
         114.0:  # G40C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1369,7 +1369,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 58.98% to 100%.\n",
         115.0:  # G40C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1381,7 +1381,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 71.52% to 100%.\n",
         116.0:  # G40C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1393,7 +1393,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 59.06% to 100%.\n",
         117.0:  # G41C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1405,7 +1405,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 24.43% to 100%.\n",
         118.0:  # G41C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1417,7 +1417,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 23.65% to 100%.\n",
         119.0:  # G41C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1429,7 +1429,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 23.62% to 100%.\n",
         120.0:  # G41C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1441,7 +1441,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 24.38% to 100%.\n",
         121.0:  # G42C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1453,7 +1453,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 52.19% to 100%.\n",
         122.0:  # G42C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1465,7 +1465,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 53.62% to 100%.\n",
         123.0:  # G42C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1477,7 +1477,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 50.16% to 100%.\n",
         124.0:  # G42C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1489,7 +1489,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 85.84% to 100%.\n",
         125.0:  # G43C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1501,7 +1501,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 57.06% to 100%.\n",
         126.0:  # G43C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1513,7 +1513,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 57.05% to 100%.\n",
         127.0:  # G43C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1525,7 +1525,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 59.39% to 100%.\n",
         128.0:  # G43C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1537,7 +1537,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 56.49% to 100%.\n",
         129.0:  # G44C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1549,7 +1549,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 59.15% to 100%.\n",
         130.0:  # G44C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1561,7 +1561,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 57.81% to 100%.\n",
         131.0:  # G44C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1573,7 +1573,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 56.80% to 100%.\n",
         132.0:  # G44C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1585,7 +1585,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 57.17% to 100%.\n",
         133.0:  # G45C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1597,7 +1597,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 9.61% to 100%.\n",
         134.0:  # G45C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1609,7 +1609,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 7.15% to 100%.\n",
         135.0:  # G45C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1621,7 +1621,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 8.92% to 100%.\n",
         136.0:  # G45C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1633,7 +1633,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 8.79% to 100%.\n",
         137.0:  # G46C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1645,7 +1645,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 15.99% to 100%.\n",
         138.0:  # G46C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1657,7 +1657,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 13.35% to 100%.\n",
         139.0:  # G46C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1669,7 +1669,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 14.62% to 100%.\n",
         140.0:  # G46C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1681,7 +1681,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 13.03% to 100%.\n",
         141.0:  # G47C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1693,7 +1693,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 47.83% to 100%.\n",
         142.0:  # G47C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1705,7 +1705,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 46.91% to 100%.\n",
         143.0:  # G47C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1717,7 +1717,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 45.85% to 100%.\n",
         144.0:  # G47C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1729,7 +1729,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 45.65% to 100%.\n",
         145.0:  # G48C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1741,7 +1741,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 34.64% to 100%.\n",
         146.0:  # G48C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1753,7 +1753,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 36.16% to 100%.\n",
         147.0:  # G48C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1765,7 +1765,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 31.64% to 100%.\n",
         148.0:  # G48C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1777,7 +1777,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 36.42% to 100%.\n",
         149.0:  # G49C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1789,7 +1789,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 76.83% to 100%.\n",
         150.0:  # G49C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1801,7 +1801,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 76.51% to 100%.\n",
         151.0:  # G49C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1813,7 +1813,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 83.63% to 100%.\n",
         152.0:  # G49C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1825,7 +1825,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 75.83% to 100%.\n",
         153.0:  # G50C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1837,7 +1837,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 75.81% to 100%.\n",
         154.0:  # G50C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1849,7 +1849,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 75.77% to 100%.\n",
         155.0:  # G50C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1861,7 +1861,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 79.71% to 100%.\n",
         156.0:  # G50C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1873,7 +1873,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 76.50% to 100%.\n",
         157.0:  # G51C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1885,7 +1885,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 37.48% to 100%.\n",
         158.0:  # G51C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1897,7 +1897,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 44.56% to 100%.\n",
         159.0:  # G51C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1909,7 +1909,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 37.26% to 100%.\n",
         160.0:  # G51C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1921,7 +1921,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 40.77% to 100%.\n",
         161.0:  # G52C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1933,7 +1933,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 4.65% to 100%.\n",
         162.0:  # G52C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1945,7 +1945,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 2.68% to 100%.\n",
         163.0:  # G52C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1957,7 +1957,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 3.83% to 100%.\n",
         164.0:  # G52C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1969,7 +1969,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 5.91% to 100%.\n",
         165.0:  # G53C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1981,7 +1981,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.825 C until reaching 3.2738 V. "
             f"The cycling state-of-charge of this battery ranges from 8.5% to 100%.\n",
         166.0:  # G54C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -1993,7 +1993,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 69.74% to 100%.\n",
         167.0:  # G54C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2005,7 +2005,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 70.15% to 100%.\n",
         168.0:  # G54C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2017,7 +2017,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 68.41% to 100%.\n",
         169.0:  # G54C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2029,7 +2029,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 67.82% to 100%.\n",
         170.0:  # G55C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2041,7 +2041,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.475 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 31.10% to 100%.\n",
         171.0:  # G55C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2053,7 +2053,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.475 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 32.86% to 100%.\n",
         172.0:  # G55C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2065,7 +2065,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.475 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 30.07% to 100%.\n",
         173.0:  # G55C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2077,7 +2077,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 31.15% to 100%.\n",
         174.0:  # G56C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2089,7 +2089,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 38.51% to 100%.\n",
         175.0:  # G56C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2101,7 +2101,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 39.33% to 100%.\n",
         176.0:  # G56C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2113,7 +2113,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 39.20% to 100%.\n",
         177.0:  # G56C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2125,7 +2125,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 40.46% to 100%.\n",
         178.0:  # G57C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2137,7 +2137,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 78.45% to 100%.\n",
         179.0:  # G57C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2149,7 +2149,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 81.64% to 100%.\n",
         180.0:  # G57C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2161,7 +2161,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 79.41% to 100%.\n",
         181.0:  # G57C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2173,7 +2173,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 80.40% to 100%.\n",
         182.0:  # G58C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2185,7 +2185,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 52.69% to 100%.\n",
         183.0:  # G58C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2197,7 +2197,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 52.27% to 100%.\n",
         184.0:  # G58C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2209,7 +2209,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 50.84% to 100%.\n",
         185.0:  # G58C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2221,7 +2221,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 50.56% to 100%.\n",
         186.0:  # G59C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2233,7 +2233,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 63.60% to 100%.\n",
         187.0:  # G59C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2245,7 +2245,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 64.74% to 100%.\n",
         188.0:  # G59C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2257,7 +2257,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 64.45% to 100%.\n",
         189.0:  # G59C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2269,7 +2269,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 65.73% to 100%.\n",
         190.0:  # G60C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2281,7 +2281,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 3.28% to 100%.\n",
         191.0:  # G60C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2293,7 +2293,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 6.47% to 100%.\n",
         192.0:  # G60C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2305,7 +2305,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 4.06% to 100%.\n",
         193.0:  # G60C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2317,7 +2317,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 5.29% to 100%.\n",
         194.0:  # G61C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2329,7 +2329,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.975 C until reaching 3.5447 V. "
             f"The cycling state-of-charge of this battery ranges from 41.67% to 100%.\n",
         195.0:  # G61C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2341,7 +2341,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.975 C until reaching 3.5447 V. "
             f"The cycling state-of-charge of this battery ranges from 38.47% to 100%.\n",
         196.0:  # G61C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2353,7 +2353,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.975 C until reaching 3.5447 V. "
             f"The cycling state-of-charge of this battery ranges from 40.81% to 100%.\n",
         197.0:  # G62C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2365,7 +2365,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 31.20% to 100%.\n",
         198.0:  # G62C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2377,7 +2377,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 27.72% to 100%.\n",
         199.0:  # G62C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2389,7 +2389,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 28.68% to 100%.\n",
         200.0:  # G62C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2401,7 +2401,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 22.79% to 100%.\n",
         201.0:  # G63C1
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2413,7 +2413,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 8.88% to 100%.\n",
         202.0:  # G63C2
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2425,7 +2425,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 7.13% to 100%.\n",
         203.0:  # G63C3
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2437,7 +2437,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 7.64% to 100%.\n",
         204.0:  # G63C4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
@@ -2449,7 +2449,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 6.86% to 100%.\n",
         205.0:  # G64C1-4
-            f"Battery specifications: The data comes from a lithium-ion battery in a format of 502030-size Li-polymer battery. "
+            f"Battery specifications: The data comes from a Li-polymer battery in a format of 502030-size pouch battery. "
             f"Its positive electrode is lithium nickel manganese cobalt oxide (NCM). "
             f"Its negative electrode is graphite. "
             f"The electrolyte formula is unknown. "
