@@ -733,7 +733,8 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             temperature_mask = list(temperature_mask)
 
             if file_name in self.format_json:
-                format = '_'.join(self.format_json[file_name])
+                # format = '_'.join(self.format_json[file_name])
+                format = self.format_json[file_name][0]
                 # if file_name.startswith('NA-ion'):
                 #     format = 'Na_cylindrical' # Na-ion cylindrical is not mixed with Li cylindrical
                 format_index = self.format2mask[format] if format in self.format2mask else np.arange(self.format_experts)

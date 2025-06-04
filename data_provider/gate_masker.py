@@ -38,10 +38,9 @@ class gate_masker:
     #     'pouch': [10]
     # } 
     MIX_large_format2mask = {
-        'prismatic_': [0],
-        'cylindrical_18650': [1,2,3,4,5,6],
-        'pouch_502030-size': [7,8,9],
-        'pouch_': [10]
+        'prismatic': [0],
+        'cylindrical': [1,2,3,4,5,6],
+        'pouch': [7,8,9,10],
     } 
 
     MIX_large_cathodes2mask = {
