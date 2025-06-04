@@ -537,37 +537,29 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         else:
             raise Exception(f'{self.dataset} is not supported!')
 
-        
+         
         # load the prompt embedding
-        if self.seed == 2021:
-            if not self.args.use_PCA:
-                train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all.pkl', 'rb'))
-                val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all.pkl', 'rb'))
-                test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all.pkl', 'rb'))
-            else:
-                train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_pca.pkl', 'rb'))
-                val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all_pca.pkl', 'rb'))
-                test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all_pca.pkl', 'rb'))
-        elif self.seed == 2024:
-            if not self.args.use_PCA:
-                train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all2024.pkl', 'rb'))
-                val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all2024.pkl', 'rb'))
-                test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all2024.pkl', 'rb'))
-            else:
-                train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all2024_pca.pkl', 'rb'))
-                val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all2024_pca.pkl', 'rb'))
-                test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all2024_pca.pkl', 'rb'))
-        elif self.seed == 42:
-            if not self.args.use_PCA:
-                train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all42.pkl', 'rb'))
-                val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all42.pkl', 'rb'))
-                test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all42.pkl', 'rb'))
-            else:
-                train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all42_pca.pkl', 'rb'))
-                val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all42_pca.pkl', 'rb'))
-                test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all42_pca.pkl', 'rb'))
-        else:
-            raise Exception('Plases generate the prompt emebddigns for this seed.')
+        # The domain-knowledge prompt embeddings are only affected by the LLM and prompt
+        train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all.pkl', 'rb'))
+        val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all.pkl', 'rb'))
+        test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all.pkl', 'rb'))
+        if args.use_PCA:
+            self.pca_scaler = pickle.load(open(args.pca_path, 'rb'))
+            tmp_train_part = {}
+            tmp_val_part = {}
+            tmp_test_part = {}
+
+            for name, value in train_part.items():
+                tmp_train_part[name] = self.pca_scaler.transform(value)
+            train_part = tmp_train_part
+
+            for name, value in val_part.items():
+                tmp_val_part[name] = self.pca_scaler.transform(value)
+            val_part = tmp_val_part
+
+            for name, value in test_part.items():
+                tmp_test_part[name] = self.pca_scaler.transform(value)
+            test_part = tmp_test_part
 
         self.cellName_prompt = train_part | val_part | test_part
         if flag == 'train':
