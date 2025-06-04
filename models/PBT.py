@@ -43,7 +43,7 @@ class MultiViewLayer(nn.Module):
         if self.use_connection:
             self.norm = norm_layer
 
-    def forward(self, x, total_logits, total_masks, ion_type_masks):
+    def forward(self, x, total_logits, total_masks, ion_type_masks, use_view_experts):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
@@ -53,10 +53,12 @@ class MultiViewLayer(nn.Module):
         B = x.shape[0]
         total_guide_loss = 0
         final_out = 0
-        for i, view_expert in enumerate(self.view_experts):
-            out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
-            final_out = final_out + out
-            total_guide_loss += guide_loss
+
+        if use_view_experts:
+            for i, view_expert in enumerate(self.view_experts):
+                out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+                final_out = final_out + out
+                total_guide_loss += guide_loss
 
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
@@ -96,7 +98,7 @@ class MultiViewTransformerLayer(nn.Module):
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
 
-    def forward(self, x, total_logits, total_masks, attn_mask, ion_type_masks):
+    def forward(self, x, total_logits, total_masks, attn_mask, ion_type_masks, use_view_experts):
         '''
         x: [N, *, in_dim]
         total_logits: [num_view, num_experts for each view expert]
@@ -116,10 +118,11 @@ class MultiViewTransformerLayer(nn.Module):
         # MoE FFN
         total_guide_loss = 0
         final_out = 0
-        for i, view_expert in enumerate(self.view_experts):
-            out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
-            final_out = final_out + out
-            total_guide_loss += guide_loss
+        if use_view_experts:
+            for i, view_expert in enumerate(self.view_experts):
+                out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+                final_out = final_out + out
+                total_guide_loss += guide_loss
 
 
         for i in range(len(self.general_experts)):
@@ -476,7 +479,8 @@ class Model(nn.Module):
                 SOH_trajectory: Optional[torch.Tensor] = None,
                 CE_trajectory: Optional[torch.Tensor] = None,
                 use_aug: bool = False,
-                return_embedding: bool=False
+                return_embedding: bool=False,
+                use_view_experts: bool=True
                 ):
         '''
         params:
@@ -522,13 +526,13 @@ class Model(nn.Module):
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
         cycle_curve_data = self.flatten(cycle_curve_data)
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks) # [B, L, d_model]
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks) # [B, L, d_model]
+            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
@@ -541,7 +545,7 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks) # [B, L, d_model]
+            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1

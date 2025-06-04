@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper_CropAugIMPR2, PBNet, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -56,6 +56,8 @@ parser.add_argument('--model', type=str, required=False, default='Autoformer',
                     help='model name, options: [Autoformer, DLinear]')
 parser.add_argument('--LLM_path', type=str, required=False, default='/home/trf/LLMs/llama2-hf-7b',
                     help='The path to the saved LLM checkpoints')
+parser.add_argument('--pca_path', type=str, required=False, default='/data/trf/python_works/BatteryLife/dataset/MIX_large_pca.pkl',
+                    help='The path to the saved pca')
 parser.add_argument('--center_path', type=str, required=False, default='./Centenr_vectors',
                     help='The path to the preset cluster centers')
 parser.add_argument('--seed', type=int, default=2021, help='random seed')
@@ -223,11 +225,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'PBNet':
+    elif args.model == 'PBT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBNet.Model(model_config)
+        model = PBT.Model(model_config)
     elif args.model == 'BatteryMoE_Hyper_CropAugIMPR2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -295,7 +297,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBNet_final",
+        project="PBT",
         
         # track hyperparameters and run metadata
         config=args.__dict__,

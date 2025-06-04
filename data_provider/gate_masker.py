@@ -31,11 +31,16 @@ class gate_masker:
         45.0: [13],
     }
 
+    # MIX_large_format2mask = {
+    #     'prismatic': [0],
+    #     'cylindrical': [1,2,3,4,5,6],
+    #     'polymer': [7,8,9],
+    #     'pouch': [10]
+    # } 
     MIX_large_format2mask = {
         'prismatic': [0],
         'cylindrical': [1,2,3,4,5,6],
-        'polymer': [7,8,9],
-        'pouch': [10]
+        'pouch': [7,8,9,10]
     } 
 
     MIX_large_cathodes2mask = {
