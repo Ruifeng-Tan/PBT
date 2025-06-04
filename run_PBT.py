@@ -186,17 +186,12 @@ accelerator.print(args.__dict__)
 
 if args.use_PCA:
     # Automatically find d_llm dimension
-    if args.seed == 2021:
-        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all_pca.pkl', 'rb'))
-    elif args.seed == 2024:
-        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all2024_pca.pkl', 'rb'))
-    elif args.seed == 42:
-        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all42_pca.pkl', 'rb'))
-    else:
-        raise Exception('add the prompt emebeddings for the seed here')
+    pca_scaler = pickle.load(open(args.pca_path, 'rb'))
+    tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all.pkl', 'rb'))
 
-    args.d_llm = list(tmp.values())[0].shape[1]
-    args.__dict__['d_llm'] = list(tmp.values())[0].shape[1]
+    new_d_llm = pca_scaler.transform(list(tmp.values())[0]).shape[1]
+    args.d_llm = new_d_llm
+    args.__dict__['d_llm'] = new_d_llm
 
 if args.Pretrained_model_path:
     pretrained = True
