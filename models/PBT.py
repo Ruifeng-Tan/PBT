@@ -230,13 +230,14 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             # mask is only used during model training
             return logits
         
-        # Clone to preserve original tensor and maintain gradients
-        result = logits.clone()
+
         
         # Early return if no masking needed
         if p <= 0:
-            return result
+            return logits
 
+        # Clone to preserve original tensor and maintain gradients
+        result = logits.clone()
         # Identify non-zero positions
         # non_zero_mask = (logits != 0)
         
@@ -339,12 +340,12 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             # mask is only used during model training
             return logits
         
-        # Clone to preserve original tensor and maintain gradients
-        result = logits.clone()
-        
         # Early return if no masking needed
         if p <= 0:
-            return result
+            return logits
+
+        # Clone to preserve original tensor and maintain gradients
+        result = logits.clone()
 
         # Identify non-zero positions
         # non_zero_mask = (logits != 0)
@@ -445,12 +446,12 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
             # mask is only used during model training
             return logits
         
-        # Clone to preserve original tensor and maintain gradients
-        result = logits.clone()
-        
         # Early return if no masking needed
         if p <= 0:
-            return result
+            return logits
+
+        # Clone to preserve original tensor and maintain gradients
+        result = logits.clone()
 
         # Identify non-zero positions
         # non_zero_mask = (logits != 0)
