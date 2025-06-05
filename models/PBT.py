@@ -535,8 +535,8 @@ class Model(nn.Module):
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
         self.g_sigma = configs.g_sigma
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(),
-                                  nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_llm//8), nn.ReLU(), nn.Linear(self.d_llm//8, self.d_llm//64), nn.ReLU(),
+                                  nn.Linear(self.d_llm//64, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
         
