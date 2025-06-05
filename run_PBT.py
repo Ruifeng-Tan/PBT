@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT2, PBT, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models import PBT, PBT_copy, baseline_CPTransformerMoE, PBT_Conv, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -221,21 +221,21 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
+    elif args.model == 'PBT_copy':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = PBT_copy.Model(model_config)
     elif args.model == 'PBT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = PBT.Model(model_config)
-    elif args.model == 'PBT2':
+    elif args.model == 'PBT_Conv':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBT2.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_CropAugIMP':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_CropAugIMP.Model(model_config)
+        model = PBT_Conv.Model(model_config)
     elif args.model == 'baseline_CPMLPMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)

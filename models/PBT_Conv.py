@@ -36,12 +36,8 @@ class CPConvExpert(nn.Module):
     This is a convoltion expert used for modeling the data of one cycle
     '''
     def __init__(self, configs, kernel_size=5):
-        self.conv1 = nn.Conv1d(3, 3, kernel_size=kernel_size, stride=1, padding=2, padding_mode='circular')
-        self.dropout = nn.Dropout(configs.dropout)
-        self.avg_pool1 = nn.AvgPool1d(kernel_size=5, stride=2)
-        self.conv2 = nn.Conv1d(3, 1, kernel_size=kernel_size, stride=1, padding=2, padding_mode='circular')
-        self.avg_pool2 = nn.AvgPool1d(kernel_size=5, stride=2)
-        self.linear = nn.Linear(72, configs.d_model)
+        super(CPConvExpert, self).__init__()
+        self.conv1 = nn.Conv1d(3, configs.d_model, kernel_size=300, stride=1)
     
     def forward(self, x):
         '''
@@ -50,11 +46,7 @@ class CPConvExpert(nn.Module):
         B, L, n_vars, fixed_len = x.shape[0], x.shape[1], x.shape[2], x.shape[3]
         x = x.reshape(B*L, n_vars, fixed_len)
         x = self.dropout(F.relu(self.conv1(x)))
-        x = self.avg_pool1(x)
-        x = self.dropout(F.relu(self.conv2(x))) # [B*L, 1, L\prime]
-        x = self.avg_pool2(x)
-        x = x.squeeze(1).reshape(B, L, -1)
-        out = self.linear(x)
+        
         return out
 
 class MultiViewLayer(nn.Module):
@@ -561,8 +553,8 @@ class Model(nn.Module):
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
         self.g_sigma = configs.g_sigma
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, 40), nn.Linear(40, self.d_ff), nn.ReLU(),
-                                  nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, 40), nn.ReLU(),
+                                  nn.Linear(40, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
         
@@ -571,10 +563,10 @@ class Model(nn.Module):
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
+                                                        CPConvExpert(configs) for _ in range(self.num_general_experts)
                                                     ]),
                                                     ion_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.ion_experts)
+                                                        CPConvExpert(configs) for _ in range(self.ion_experts)
                                                     ]),
                                                     use_connection=False)
         
