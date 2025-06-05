@@ -151,6 +151,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         super(BatteryMoEFlattenIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
+        self.expert_drop_rate = configs.expert_dropout
         self.n_heads = configs.n_heads
 
         self.d_ff = configs.d_ff
@@ -184,6 +185,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
 
+        logits = self.random_mask_logits(logits, self.expert_drop_rate)
 
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -212,12 +214,48 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
         return final_out, guide_loss
+    
+    def random_mask_logits(self, logits: torch.Tensor, p: float) -> torch.Tensor:
+        """
+        Randomly masks 'p' ratio of non-zero values in a logits tensor by setting them to zero.
+        
+        Args:
+            logits: Input tensor of shape [B, N]
+            p: Ratio of non-zero values to mask (0.0 to 1.0)
+        
+        Returns:
+            Masked tensor of same shape as input
+        """
+        if not self.training:
+            # mask is only used during model training
+            return logits
+        
+        # Clone to preserve original tensor and maintain gradients
+        result = logits.clone()
+        
+        # Early return if no masking needed
+        if p <= 0:
+            return result
+
+        # Identify non-zero positions
+        # non_zero_mask = (logits != 0)
+        
+        # Only proceed if there are non-zeros to mask
+
+        # Generate random mask with same probability p
+        rand_mask = torch.rand(logits.size(), device=logits.device) < p
+        
+        # Apply masking
+        result[rand_mask] = 0
+            
+        return result
 
 class BatteryMoEIntraCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
         super(BatteryMoEIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
+        self.expert_drop_rate = configs.expert_dropout
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
@@ -254,7 +292,9 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             # Scatter the mask at the indices of the top-K values
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
-            
+        
+        logits = self.random_mask_logits(logits, self.expert_drop_rate)
+
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
 
@@ -283,12 +323,48 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
         return final_out, guide_loss
-  
+
+    def random_mask_logits(self, logits: torch.Tensor, p: float) -> torch.Tensor:
+        """
+        Randomly masks 'p' ratio of non-zero values in a logits tensor by setting them to zero.
+        
+        Args:
+            logits: Input tensor of shape [B, N]
+            p: Ratio of non-zero values to mask (0.0 to 1.0)
+        
+        Returns:
+            Masked tensor of same shape as input
+        """
+        if not self.training:
+            # mask is only used during model training
+            return logits
+        
+        # Clone to preserve original tensor and maintain gradients
+        result = logits.clone()
+        
+        # Early return if no masking needed
+        if p <= 0:
+            return result
+
+        # Identify non-zero positions
+        # non_zero_mask = (logits != 0)
+        
+        # Only proceed if there are non-zeros to mask
+
+        # Generate random mask with same probability p
+        rand_mask = torch.rand(logits.size(), device=logits.device) < p
+        
+        # Apply masking
+        result[rand_mask] = 0
+            
+        return result
+    
 class BatteryMoEInterCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
         super(BatteryMoEInterCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
+        self.expert_drop_rate = configs.expert_dropout
         self.n_heads = configs.n_heads
 
         self.d_ff = configs.d_ff
@@ -324,7 +400,9 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
             # Scatter the mask at the indices of the top-K values
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
-            
+        
+        logits = self.random_mask_logits(logits, self.expert_drop_rate)
+
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
 
@@ -351,6 +429,41 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
 
 
         return final_out, guide_loss
+
+    def random_mask_logits(self, logits: torch.Tensor, p: float) -> torch.Tensor:
+        """
+        Randomly masks 'p' ratio of non-zero values in a logits tensor by setting them to zero.
+        
+        Args:
+            logits: Input tensor of shape [B, N]
+            p: Ratio of non-zero values to mask (0.0 to 1.0)
+        
+        Returns:
+            Masked tensor of same shape as input
+        """
+        if not self.training:
+            # mask is only used during model training
+            return logits
+        
+        # Clone to preserve original tensor and maintain gradients
+        result = logits.clone()
+        
+        # Early return if no masking needed
+        if p <= 0:
+            return result
+
+        # Identify non-zero positions
+        # non_zero_mask = (logits != 0)
+        
+        # Only proceed if there are non-zeros to mask
+
+        # Generate random mask with same probability p
+        rand_mask = torch.rand(logits.size(), device=logits.device) < p
+        
+        # Apply masking
+        result[rand_mask] = 0
+            
+        return result
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -421,8 +534,8 @@ class Model(nn.Module):
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
         self.g_sigma = configs.g_sigma
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
-                                  nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, 40),
+                                  nn.Linear(40, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
         
