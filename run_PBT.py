@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, PBT_copy, baseline_CPTransformerMoE, PBT_Conv, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models import PBT, PBT_Imp, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation, PBTv2
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -221,21 +221,21 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'PBT_copy':
+    elif args.model == 'PBT_Imp':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBT_copy.Model(model_config)
+        model = PBT_Imp.Model(model_config)
     elif args.model == 'PBT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = PBT.Model(model_config)
-    elif args.model == 'PBT_Conv':
+    elif args.model == 'PBTv2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBT_Conv.Model(model_config)
+        model = PBTv2.Model(model_config)
     elif args.model == 'baseline_CPMLPMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)

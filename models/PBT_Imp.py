@@ -31,13 +31,22 @@ import json
 from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error() 
 
-class CPConvExpert(nn.Module):
+class CyclePatchExpert(nn.Module):
     '''
     This is a convoltion expert used for modeling the data of one cycle
     '''
-    def __init__(self, configs, kernel_size=5):
-        super(CPConvExpert, self).__init__()
-        self.conv1 = nn.Conv1d(3, configs.d_model, kernel_size=300, stride=1)
+    def __init__(self, configs):
+        super(CyclePatchExpert, self).__init__()
+        self.d_model = configs.d_model
+        self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
+        remainder = self.charge_discharge_length % configs.d_model
+        padding = configs.d_model - remainder
+        self.padding_patch_layer = nn.ReplicationPad1d((0, padding))
+        self.patch_len = int((self.charge_discharge_length+padding) // self.d_model)
+        self.stride = self.patch_len
+        self.linear = nn.Linear(3*self.patch_len, 1)
+
+
     
     def forward(self, x):
         '''
@@ -45,8 +54,12 @@ class CPConvExpert(nn.Module):
         '''
         B, L, n_vars, fixed_len = x.shape[0], x.shape[1], x.shape[2], x.shape[3]
         x = x.reshape(B*L, n_vars, fixed_len)
-        x = self.dropout(F.relu(self.conv1(x)))
-        
+        x = self.padding_patch_layer(x)
+        x = x.unfold(dimension=-1, size=self.patch_len, step=self.stride) # [B*L, num_vars, patch_num, patch_len]
+        x = x.permute(0, 2, 1, 3) # [B*L, patch_num, num_vars, patch_len]
+        x = x.reshape(B*L, self.d_model, -1)
+        x = self.linear(x).squeeze(-1)
+        out = x.reshape(B, L, -1)
         return out
 
 class MultiViewLayer(nn.Module):
@@ -177,7 +190,7 @@ class BatteryMoECPMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
-        self.experts = nn.ModuleList([CPConvExpert(configs) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([CyclePatchExpert(configs) for _ in range(self.num_experts)])
         self.eps = 1e-9
     
     def forward(self, cycle_curve_data, logits, moe_masks):
@@ -563,10 +576,10 @@ class Model(nn.Module):
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        CPConvExpert(configs) for _ in range(self.num_general_experts)
+                                                        CyclePatchExpert(configs) for _ in range(self.num_general_experts)
                                                     ]),
                                                     ion_experts=nn.ModuleList([
-                                                        CPConvExpert(configs) for _ in range(self.ion_experts)
+                                                        CyclePatchExpert(configs) for _ in range(self.ion_experts)
                                                     ]),
                                                     use_connection=False)
         
