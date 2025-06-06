@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, PBT_Imp, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation, PBTv2
+from models import PBT, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -102,7 +102,7 @@ parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
 parser.add_argument('--moving_avg', type=int, default=25, help='window size of moving average')
 parser.add_argument('--factor', type=int, default=1, help='attn factor')
 parser.add_argument('--dropout', type=float, default=0.1, help='dropout')
-parser.add_argument('--expert_dropout', type=float, default=0.1, help='dropout for expert network selection')
+parser.add_argument('--gate_d_ff', type=int, default=32, help='the _dff for gate')
 parser.add_argument('--embed', type=str, default='timeF',
                     help='time features encoding, options:[timeF, fixed, learned]')
 parser.add_argument('--activation', type=str, default='relu', help='activation')
@@ -201,7 +201,7 @@ else:
     
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_edr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_seed{}'.format(
+    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.batch_size,
@@ -211,7 +211,7 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.expert_dropout, 
+        args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
         args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
         args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.seed)
 
@@ -221,11 +221,6 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'PBT_Imp':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBT_Imp.Model(model_config)
     elif args.model == 'PBT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
