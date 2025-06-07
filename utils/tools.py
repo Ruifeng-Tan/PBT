@@ -116,32 +116,30 @@ def adjust_learning_rate(accelerator, optimizer, scheduler, epoch, args, printou
         if args.lradj == 'type1':
             # lr_adjust = {epoch: args.learning_rate * (0.5 ** ((epoch - 1) // 1))}
             if epoch > args.least_epochs:
-                lr_adjust = {epoch: args.learning_rate * (0.5 ** ((epoch - args.least_epochs) // 1))}
+                for param_group in optimizer.param_groups:
+                    param_group['lr'] = param_group['lr'] * 0.5
+                new_lr = args.learning_rate * (0.5 ** ((epoch - args.least_epochs) // 1))
+                accelerator.print(f'{args.lradj}| Updating learning rate to {new_lr}')
             else:
-                lr_adjust = {epoch: args.learning_rate}
-        elif args.lradj == 'type2':
-            lr_adjust = {
-                2: 5e-5, 4: 1e-5, 6: 5e-6, 8: 1e-6,
-                10: 5e-7, 15: 1e-7, 20: 5e-8
-            }
-        elif args.lradj == 'type3':
-            lr_adjust = {epoch: args.learning_rate if epoch < 3 else args.learning_rate * (0.9 ** ((epoch - 3) // 1))}
-        elif args.lradj == 'PEMS':
-            lr_adjust = {epoch: args.learning_rate * (0.95 ** (epoch // 1))}
-        elif args.lradj == 'TST':
-            lr_adjust = {epoch: scheduler.get_last_lr()[0]}
+                accelerator.print(f'{args.lradj}| Updating learning rate to {args.learning_rate}')
         elif args.lradj == 'constant':
-            lr_adjust = {epoch: args.learning_rate}
+            accelerator.print(f'{args.lradj}| Updating learning rate to {args.learning_rate}')
     
-    if epoch in lr_adjust.keys():
-        lr = lr_adjust[epoch]
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = lr
-        if printout:
-            if accelerator is not None:
-                accelerator.print(f'{args.lradj}| Updating learning rate to {lr}')
-            else:
-                print(f'{args.lradj}| Updating learning rate to {lr}')
+    # if epoch in lr_adjust.keys():
+    #     lr = lr_adjust[epoch]
+    #     for param_group in optimizer.param_groups:
+    #         param_group['lr'] = lr
+    #     if printout:
+    #         if accelerator is not None:
+    #             accelerator.print(f'{args.lradj}| Updating learning rate to {lr}')
+    #         else:
+    #             print(f'{args.lradj}| Updating learning rate to {lr}')
+
+    # if printout:
+    #     if accelerator is not None:
+    #         accelerator.print(f'{args.lradj}| Updating learning rate to {lr}')
+    #     else:
+    #         print(f'{args.lradj}| Updating learning rate to {lr}')
 
 
 class EarlyStopping:
