@@ -283,7 +283,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_final2",
+        project="PBT_Qwen",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -294,7 +294,8 @@ for ii in range(args.itr):
 
     para_res = get_parameter_number(model)
     accelerator.print(para_res)
-
+    
+    
     # Print layer names and parameter counts
     for name, param in model.named_parameters():
         if param.requires_grad:
@@ -309,14 +310,27 @@ for ii in range(args.itr):
     trained_parameters_names = []
     for name, p in model.named_parameters():
         if p.requires_grad is True:
+            if 'flattenIntraCycleLayer' in name:
+                para_dict = {
+                    'lr': args.learning_rate*0.1,
+                    'weight_decay': args.wd,
+                    'params': [p]
+                }
+            else:
+                para_dict = {
+                    'lr': args.learning_rate,
+                    'weight_decay': args.wd,
+                    'params': [p]
+                }
+            trained_parameters.append(para_dict)
             trained_parameters_names.append(name)
-            trained_parameters.append(p)
+            
 
     accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
     if args.wd == 0:
-        model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+        model_optim = optim.Adam(trained_parameters)
     else:
-        model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+        model_optim = optim.AdamW(trained_parameters)
 
 
     # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
