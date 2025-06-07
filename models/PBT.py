@@ -36,8 +36,7 @@ class MultiViewLayer(nn.Module):
         super(MultiViewLayer, self).__init__()
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.gate_d_ff = gate_d_ff
-        self.gate = nn.Sequential(nn.Linear(d_llm, gate_d_ff), nn.ReLU(),
-                                  nn.Linear(gate_d_ff, num_experts))
+        self.gate = nn.Sequential(nn.Linear(d_llm, num_experts))
 
         self.view_expert = view_expert
         self.general_experts = general_experts
@@ -87,8 +86,7 @@ class MultiViewLayer(nn.Module):
 class MultiViewTransformerLayer(nn.Module):
     def __init__(self, d_llm, gate_d_ff, num_experts, d_model, n_heads, view_expert, general_experts, ion_experts, drop_rate):
         super(MultiViewTransformerLayer, self).__init__()
-        self.gate = nn.Sequential(nn.Linear(d_llm, gate_d_ff), nn.ReLU(),
-                                  nn.Linear(gate_d_ff, num_experts))
+        self.gate = nn.Sequential(nn.Linear(d_llm, num_experts))
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
