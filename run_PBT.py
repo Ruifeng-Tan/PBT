@@ -496,12 +496,12 @@ for ii in range(args.itr):
             break
         
         if accelerator.is_local_main_process:
-            # if args.lradj != 'CosineAnnealingLR':
-            #     adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
-            # else:
-            if epoch >= args.warm_up_epoches:
-                scheduler.step(vali_mape)
-                accelerator.print('Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
+            if args.lradj != 'scheduler':
+                adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
+            else:
+                if epoch >= args.warm_up_epoches:
+                    scheduler.step(vali_mape)
+                    accelerator.print('Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
 
 accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
 accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
