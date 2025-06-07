@@ -201,7 +201,7 @@ else:
     
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_seed{}'.format(
+    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.batch_size,
@@ -213,7 +213,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
         args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.seed)
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -283,7 +283,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_final",
+        project="PBT_final2",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -319,7 +319,8 @@ for ii in range(args.itr):
         model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
 
 
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
+    # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(model_optim, mode='min', factor=0.5, patience=2, verbose=False, min_lr=1e-6)
     criterion = nn.MSELoss(reduction='none') 
     rnc_criterion = WeightedRnCLoss(temperature=args.temperature) if args.weighted_CLDG else AverageRnCLoss(temperature=args.temperature)
 
@@ -365,7 +366,7 @@ for ii in range(args.itr):
                 # batch_y_mark is the total_used_cycles
                 if epoch < args.warm_up_epoches:
                     # adjust the learning rate
-                    warm_up_lr = args.learning_rate * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader))
+                    warm_up_lr = (args.learning_rate - 1e-6) * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader)) + 1e-6
                     for param_group in model_optim.param_groups:
                         param_group['lr'] = warm_up_lr
 
@@ -495,12 +496,12 @@ for ii in range(args.itr):
             break
         
         if accelerator.is_local_main_process:
-            if args.lradj != 'CosineAnnealingLR':
-                adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
-            else:
-                if epoch >= args.warm_up_epoches:
-                    scheduler.step()
-                    accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
+            # if args.lradj != 'CosineAnnealingLR':
+            #     adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
+            # else:
+            if epoch >= args.warm_up_epoches:
+                scheduler.step(vali_mape)
+                accelerator.print('Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
 
 accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
 accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
