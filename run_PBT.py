@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models import PBT_Imp, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -60,6 +60,7 @@ parser.add_argument('--pca_path', type=str, required=False, default='/data/trf/p
                     help='The path to the saved pca')
 parser.add_argument('--center_path', type=str, required=False, default='./Centenr_vectors',
                     help='The path to the preset cluster centers')
+parser.add_argument('--llm_choice', type=str, required=False, default='Qwen3_8B', choices=['Qwen3_0.6B', 'Qwen3_8B'], help='The choice of the LLM embedding')
 parser.add_argument('--seed', type=int, default=2021, help='random seed')
 
 # data loader
@@ -221,11 +222,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'PBT':
+    elif args.model == 'PBT_Imp':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBT.Model(model_config)
+        model = PBT_Imp.Model(model_config)
     elif args.model == 'baseline_CPMLPMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)

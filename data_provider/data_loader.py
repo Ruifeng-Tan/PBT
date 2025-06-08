@@ -392,6 +392,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         :param flag:including train, val, test
         :param scaler:scaler or not
         '''
+        self.llm_choice = args.llm_choice
         self.eval_cycle_max = eval_cycle_max
         self.eval_cycle_min = eval_cycle_min
         self.tokenizer = tokenizer
@@ -540,9 +541,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
          
         # load the prompt embedding
         # The domain-knowledge prompt embeddings are only affected by the LLM and prompt
-        train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_Qwen3_8B.pkl', 'rb'))
-        val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all_Qwen3_8B.pkl', 'rb'))
-        test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all_Qwen3_8B.pkl', 'rb'))
+        train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
+        val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
+        test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
         if args.use_PCA:
             self.pca_scaler = pickle.load(open(args.pca_path, 'rb'))
             tmp_train_part = {}
