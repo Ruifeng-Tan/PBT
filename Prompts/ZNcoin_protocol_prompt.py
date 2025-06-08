@@ -8,7 +8,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004751693904399872 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -20,7 +20,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004994277954101562 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -32,7 +32,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00047109711170196535 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -44,7 +44,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004585157036781311 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -56,7 +56,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004526075124740601 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -68,7 +68,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004226545095443726 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -80,7 +80,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.000475053995847702 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -92,7 +92,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.000621853768825531 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -104,7 +104,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004641743302345276 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -116,7 +116,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004925062656402588 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -128,7 +128,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004294106960296631 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -140,7 +140,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038873344659805297 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -152,7 +152,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.000453093945980072 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -164,7 +164,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004384713768959045 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -176,7 +176,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.000378625363111496 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -188,7 +188,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004329408705234528 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -200,7 +200,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004234147667884827 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -212,7 +212,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00043065726757049563 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -224,7 +224,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004204671084880829 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -236,7 +236,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00041137132048606873 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -248,7 +248,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003785559237003326 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -260,7 +260,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038028126955032347 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -272,7 +272,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038710948824882506 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -284,7 +284,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00042561426758766177 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -296,7 +296,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038851797580718994 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -308,7 +308,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00043834811449050906 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -320,7 +320,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00035135626792907713 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -332,7 +332,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00041189679503440856 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -344,7 +344,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038991567492485045 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -356,7 +356,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00036054766178131103 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -368,7 +368,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003763844668865204 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -380,7 +380,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004675816595554352 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -392,7 +392,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004587776958942413 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -404,7 +404,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004299670159816742 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -416,7 +416,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004250287115573883 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -428,7 +428,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003863229155540466 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -440,7 +440,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00043551909923553465 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -452,7 +452,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00043639346957206725 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -464,7 +464,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004203526973724365 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -476,7 +476,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00046649965643882755 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -488,7 +488,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00045467743277549747 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -500,7 +500,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003994918465614319 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -512,7 +512,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00042858856916427613 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -524,7 +524,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00041481757164001467 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -536,7 +536,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004319513738155365 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -548,7 +548,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004462861716747284 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -560,7 +560,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004470699727535248 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -572,7 +572,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00042967867851257324 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -584,7 +584,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00036351224780082703 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -596,7 +596,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00041365092992782593 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -608,7 +608,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003732273876667023 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -620,7 +620,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003759955763816834 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -632,7 +632,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003700626492500305 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -644,7 +644,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003870791494846344 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -656,7 +656,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003428637385368347 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -668,7 +668,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00032911241054534913 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -680,7 +680,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00032639029622077943 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -692,7 +692,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002961892485618591 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -704,7 +704,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00031694412231445316 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -716,7 +716,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00035596323013305665 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -728,7 +728,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.000371635913848877 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -740,7 +740,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038484591245651245 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -752,7 +752,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003427266180515289 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -764,7 +764,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003367028534412384 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -776,7 +776,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00033713558316230774 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -788,7 +788,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002962441146373749 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -800,7 +800,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003071562647819519 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -812,7 +812,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00036730805039405823 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -824,7 +824,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003670700490474701 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -836,7 +836,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00034472373127937317 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -848,7 +848,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003239899873733521 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -860,7 +860,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00031282302737236023 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -872,7 +872,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00028273671865463256 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -884,7 +884,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004554402828216553 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -896,7 +896,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0005107021331787109 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -908,7 +908,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.000501872479915619 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -920,7 +920,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0005078868865966797 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -932,7 +932,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0005143577456474304 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -944,7 +944,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004868154525756836 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -956,7 +956,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00030474486947059635 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -968,7 +968,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002936209440231323 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -980,7 +980,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003201135993003845 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -992,7 +992,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00032050311565399173 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1004,7 +1004,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00032913541793823246 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1016,7 +1016,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003452623784542084 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1028,7 +1028,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00034152165055274965 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1040,7 +1040,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003036242425441742 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1052,7 +1052,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00033867016434669495 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1064,7 +1064,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003200136125087738 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1076,7 +1076,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003274102509021759 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1088,7 +1088,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003344997763633728 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1100,7 +1100,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00022195017337799073 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1112,7 +1112,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00022155697643756866 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1124,7 +1124,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00022350119054317474 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1136,7 +1136,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002449151873588562 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1148,7 +1148,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00022168368101119996 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1160,7 +1160,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00023034805059432984 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1172,7 +1172,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00022805438935756683 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1184,7 +1184,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002305854558944702 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1196,7 +1196,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00021888884902000427 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1208,7 +1208,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002361009418964386 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1219,7 +1219,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002322484701871872 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1231,7 +1231,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002439502477645874 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1243,7 +1243,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038466259837150574 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1255,7 +1255,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038061031699180604 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1267,7 +1267,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003691455125808716 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1279,7 +1279,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00024173340201377868 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1291,7 +1291,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00024077711999416352 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1303,7 +1303,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00023713454604148865 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1315,7 +1315,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00032304641604423526 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1327,7 +1327,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003172803521156311 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1339,7 +1339,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003827188611030579 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1351,7 +1351,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038651281595230105 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1363,7 +1363,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038796445727348327 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1375,7 +1375,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003979995846748352 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1387,7 +1387,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00041241684556007387 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1399,7 +1399,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0004011527597904205 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1411,7 +1411,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003418417870998383 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1423,7 +1423,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00031878238916397094 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1435,7 +1435,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003465886414051056 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1447,7 +1447,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00033755600452423096 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1459,7 +1459,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00032712620496749877 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1471,7 +1471,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002969532907009125 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1483,7 +1483,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.000353466272354126 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1495,7 +1495,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00033882397413253785 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1507,7 +1507,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00030923911929130556 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1519,7 +1519,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003503900170326233 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1531,7 +1531,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00029382717609405517 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1543,7 +1543,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003299170136451721 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1555,7 +1555,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003761504888534546 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1567,7 +1567,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00034497278928756714 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1579,7 +1579,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00038641908764839173 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1591,7 +1591,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00031906595826148985 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1603,7 +1603,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0003737882971763611 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1615,7 +1615,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00027060756087303163 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1627,7 +1627,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.0002668435275554657 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1639,7 +1639,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00027952104806900025 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1651,7 +1651,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00021058979630470277 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1663,7 +1663,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00021736423671245576 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1675,7 +1675,7 @@ class ZNcoin_protocol_prompt():
             f"The battery manufacturer is ME. "
             f"The nominal capacity is 0.00020809079706668855 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 8 C until reaching 1.8 V, "
             f"The battery was then discharged at a constant current of 8 C until reaching 0.8 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",

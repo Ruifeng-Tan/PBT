@@ -8,7 +8,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.9 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 2.9 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -20,7 +20,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3.9 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 3.9 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -32,7 +32,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4.5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4.5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -44,7 +44,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -56,7 +56,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -68,7 +68,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -80,7 +80,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -92,7 +92,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4.2 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4.2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -104,7 +104,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.8 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.8 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -116,7 +116,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -128,7 +128,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.7 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.7 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -140,7 +140,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.3 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -152,7 +152,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.8 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.8 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -164,7 +164,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -176,7 +176,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4.7 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4.7 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -188,7 +188,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.1 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -200,7 +200,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.3 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -212,7 +212,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.3 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -224,7 +224,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -236,7 +236,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -248,7 +248,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4.2 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4.2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -260,7 +260,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -272,7 +272,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -284,7 +284,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4.8 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4.8 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -296,7 +296,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.8 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.8 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -308,7 +308,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.7 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.7 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -320,7 +320,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -332,7 +332,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4.5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4.5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -344,7 +344,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -356,7 +356,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -368,7 +368,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.1 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -380,7 +380,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.1 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -392,7 +392,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.1 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -404,7 +404,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 2.5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -416,7 +416,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.7 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.7 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -428,7 +428,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.1 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -440,7 +440,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -452,7 +452,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4.5 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4.5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -464,7 +464,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -476,7 +476,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -488,7 +488,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -500,7 +500,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -512,7 +512,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -524,7 +524,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.7 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.7 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -536,7 +536,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -548,7 +548,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.7 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.7 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -560,7 +560,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 5.8 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 5.8 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -572,7 +572,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 4 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 4 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -584,7 +584,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -596,7 +596,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -608,7 +608,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -620,7 +620,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -632,7 +632,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -644,7 +644,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -656,7 +656,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -668,7 +668,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -680,7 +680,7 @@ class NA_protocol_prompt():
             f"The battery manufacturer is Zhuhai Punashidai New Energy Co., Ltd. "
             f"The nominal capacity is 1 Ah. "
             f"Operating condition: "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 6 C until reaching 4 V, "
             f"The battery was then discharged at a constant current of 6 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",

@@ -8,7 +8,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 72.03% to 100%.\n",
@@ -20,7 +20,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 70.55% to 100%.\n",
@@ -32,7 +32,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 70.51% to 100%.\n",
@@ -44,7 +44,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 69.04% to 100%.\n",
@@ -56,7 +56,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 49.14% to 100%.\n",
@@ -68,7 +68,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 44.71% to 100%.\n",
@@ -80,7 +80,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 48.15% to 100%.\n",
@@ -92,7 +92,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.89% to 100%.\n",
@@ -104,7 +104,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 25.03% to 100%.\n",
@@ -116,7 +116,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 21.69% to 100%.\n",
@@ -128,7 +128,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.58% to 100%.\n",
@@ -140,7 +140,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 21.84% to 100%.\n",
@@ -152,7 +152,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.24% to 100%.\n",
@@ -164,7 +164,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.30% to 100%.\n",
@@ -176,7 +176,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 46.53% to 100%.\n",
@@ -188,7 +188,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.26% to 100%.\n",
@@ -200,7 +200,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -212,7 +212,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -224,7 +224,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -236,7 +236,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -248,7 +248,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 68.72% to 100%.\n",
@@ -260,7 +260,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 69.90% to 100%.\n",
@@ -272,7 +272,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 67.72% to 100%.\n",
@@ -284,7 +284,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 68.05% to 100%.\n",
@@ -296,7 +296,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 45.53% to 100%.\n",
@@ -308,7 +308,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 45.84% to 100%.\n",
@@ -320,7 +320,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 48.18% to 100%.\n",
@@ -332,7 +332,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 46.04% to 100%.\n",
@@ -344,7 +344,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 25.30% to 100%.\n",
@@ -356,7 +356,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 22.83% to 100%.\n",
@@ -368,7 +368,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 24.87% to 100%.\n",
@@ -380,7 +380,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 21.94% to 100%.\n",
@@ -392,7 +392,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -404,7 +404,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -416,7 +416,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -428,7 +428,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.96% to 100%.\n",
@@ -440,7 +440,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.42% to 100%.\n",
@@ -452,7 +452,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 44.30% to 100%.\n",
@@ -464,7 +464,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 47.40% to 100%.\n",
@@ -476,7 +476,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 65.90% to 100%.\n",
@@ -488,7 +488,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 66.10% to 100%.\n",
@@ -500,7 +500,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 67.87% to 100%.\n",
@@ -512,7 +512,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 66.82% to 100%.\n",
@@ -524,7 +524,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 46.47% to 100%.\n",
@@ -536,7 +536,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.06% to 100%.\n",
@@ -548,7 +548,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.58% to 100%.\n",
@@ -560,7 +560,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.7565 V. "
             f"The cycling state-of-charge of this battery ranges from 45.38% to 100%.\n",
@@ -572,7 +572,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.06% to 100%.\n",
@@ -584,7 +584,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.89% to 100%.\n",
@@ -596,7 +596,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 23.70% to 100%.\n",
@@ -608,7 +608,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 3 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.58% to 100%.\n",
@@ -620,7 +620,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -632,7 +632,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -644,7 +644,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -656,7 +656,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -668,7 +668,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 25.11% to 100%.\n",
@@ -680,7 +680,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.92% to 100%.\n",
@@ -692,7 +692,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 20.94% to 100%.\n",
@@ -704,7 +704,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 22.45% to 100%.\n",
@@ -716,7 +716,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 69.61% to 100%.\n",
@@ -728,7 +728,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 67.99% to 100%.\n",
@@ -740,7 +740,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 68.70% to 100%.\n",
@@ -752,7 +752,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.8736 V. "
             f"The cycling state-of-charge of this battery ranges from 67.64% to 100%.\n",
@@ -764,7 +764,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 24.23% to 100%.\n",
@@ -776,7 +776,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 24.23% to 100%.\n",
@@ -788,7 +788,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 23.68% to 100%.\n",
@@ -800,7 +800,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.5844 V. "
             f"The cycling state-of-charge of this battery ranges from 21.94% to 100%.\n",
@@ -812,7 +812,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -824,7 +824,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -836,7 +836,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.4 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -848,7 +848,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -860,7 +860,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -872,7 +872,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.6 C until reaching 3.7047 V. "
             f"The cycling state-of-charge of this battery ranges from 40.07% to 100%.\n",
@@ -884,7 +884,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.6 C until reaching 3.7047 V. "
             f"The cycling state-of-charge of this battery ranges from 42.79% to 100%.\n",
@@ -896,7 +896,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.6 C until reaching 3.7047 V. "
             f"The cycling state-of-charge of this battery ranges from 40.56% to 100%.\n",
@@ -908,7 +908,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 39.39% to 100%.\n",
@@ -920,7 +920,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 31.47% to 100%.\n",
@@ -932,7 +932,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 34.13% to 100%.\n",
@@ -944,7 +944,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.4 C until reaching 3.4604 V. "
             f"The cycling state-of-charge of this battery ranges from 34.94% to 100%.\n",
@@ -956,7 +956,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.4 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 6.27% to 100%.\n",
@@ -968,7 +968,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.4 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 4.86% to 100%.\n",
@@ -980,7 +980,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.4 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 8.29% to 100%.\n",
@@ -992,7 +992,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.4 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.3612 V. "
             f"The cycling state-of-charge of this battery ranges from 5.85% to 100%.\n",
@@ -1004,7 +1004,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.8 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 41.28% to 100%.\n",
@@ -1016,7 +1016,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.8 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 41.00% to 100%.\n",
@@ -1028,7 +1028,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.6 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.8 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 41.18% to 100%.\n",
@@ -1040,7 +1040,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.6 C until reaching 3.5717 V. "
             f"The cycling state-of-charge of this battery ranges from 42.13% to 100%.\n",
@@ -1052,7 +1052,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 9.65% to 100%.\n",
@@ -1064,7 +1064,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 14.11% to 100%.\n",
@@ -1076,7 +1076,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 14.65% to 100%.\n",
@@ -1088,7 +1088,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.8 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.8 C until reaching 3.4626 V. "
             f"The cycling state-of-charge of this battery ranges from 8.98% to 100%.\n",
@@ -1100,7 +1100,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 31.60% to 100%.\n",
@@ -1112,7 +1112,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 30.00% to 100%.\n",
@@ -1124,7 +1124,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 30.67% to 100%.\n",
@@ -1136,7 +1136,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1 C until reaching 3.5779 V. "
             f"The cycling state-of-charge of this battery ranges from 29.40% to 100%.\n",
@@ -1148,7 +1148,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 56.73% to 100%.\n",
@@ -1160,7 +1160,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 55.63% to 100%.\n",
@@ -1172,7 +1172,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 54.90% to 100%.\n",
@@ -1184,7 +1184,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.4 C until reaching 3.7165 V. "
             f"The cycling state-of-charge of this battery ranges from 57.31% to 100%.\n",
@@ -1196,7 +1196,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 52.31% to 100%.\n",
@@ -1208,7 +1208,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 53.17% to 100%.\n",
@@ -1220,7 +1220,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 60.10% to 100%.\n",
@@ -1232,7 +1232,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.2 C until reaching 3.7087 V. "
             f"The cycling state-of-charge of this battery ranges from 50.23% to 100%.\n",
@@ -1244,7 +1244,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 64.89% to 100%.\n",
@@ -1256,7 +1256,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 75.47% to 100%.\n",
@@ -1268,7 +1268,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 68.86% to 100%.\n",
@@ -1280,7 +1280,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2..2 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2 C until reaching 3.7233 V. "
             f"The cycling state-of-charge of this battery ranges from 66.48% to 100%.\n",
@@ -1292,7 +1292,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.825 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1304,7 +1304,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.075 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1316,7 +1316,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.725 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1328,7 +1328,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.875 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1340,7 +1340,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.475 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -1352,7 +1352,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.825 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 60.31% to 100%.\n",
@@ -1364,7 +1364,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.825 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 58.98% to 100%.\n",
@@ -1376,7 +1376,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.825 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 71.52% to 100%.\n",
@@ -1388,7 +1388,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.825 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.025 C until reaching 3.7639 V. "
             f"The cycling state-of-charge of this battery ranges from 59.06% to 100%.\n",
@@ -1400,7 +1400,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.075 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 24.43% to 100%.\n",
@@ -1412,7 +1412,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.075 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 23.65% to 100%.\n",
@@ -1424,7 +1424,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.075 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 23.62% to 100%.\n",
@@ -1436,7 +1436,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.075 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.775 C until reaching 3.4337 V. "
             f"The cycling state-of-charge of this battery ranges from 24.38% to 100%.\n",
@@ -1448,7 +1448,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.725 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 52.19% to 100%.\n",
@@ -1460,7 +1460,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.725 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 53.62% to 100%.\n",
@@ -1472,7 +1472,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.725 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 50.16% to 100%.\n",
@@ -1484,7 +1484,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.725 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.375 C until reaching 3.5782 V. "
             f"The cycling state-of-charge of this battery ranges from 85.84% to 100%.\n",
@@ -1496,7 +1496,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.875 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 57.06% to 100%.\n",
@@ -1508,7 +1508,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.875 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 57.05% to 100%.\n",
@@ -1520,7 +1520,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.875 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 59.39% to 100%.\n",
@@ -1532,7 +1532,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.875 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.325 C until reaching 3.6207 V. "
             f"The cycling state-of-charge of this battery ranges from 56.49% to 100%.\n",
@@ -1544,7 +1544,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 59.15% to 100%.\n",
@@ -1556,7 +1556,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 57.81% to 100%.\n",
@@ -1568,7 +1568,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 56.80% to 100%.\n",
@@ -1580,7 +1580,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.275 C until reaching 3.7382 V. "
             f"The cycling state-of-charge of this battery ranges from 57.17% to 100%.\n",
@@ -1592,7 +1592,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.125 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 9.61% to 100%.\n",
@@ -1604,7 +1604,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.125 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 7.15% to 100%.\n",
@@ -1616,7 +1616,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.125 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 8.92% to 100%.\n",
@@ -1628,7 +1628,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.125 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.725 C until reaching 3.3615 V. "
             f"The cycling state-of-charge of this battery ranges from 8.79% to 100%.\n",
@@ -1640,7 +1640,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.225 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 15.99% to 100%.\n",
@@ -1652,7 +1652,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.225 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 13.35% to 100%.\n",
@@ -1664,7 +1664,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.225 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 14.62% to 100%.\n",
@@ -1676,7 +1676,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.225 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.025 C until reaching 3.3773 V. "
             f"The cycling state-of-charge of this battery ranges from 13.03% to 100%.\n",
@@ -1688,7 +1688,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 47.83% to 100%.\n",
@@ -1700,7 +1700,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 46.91% to 100%.\n",
@@ -1712,7 +1712,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 45.85% to 100%.\n",
@@ -1724,7 +1724,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.925 C until reaching 3.6095 V. "
             f"The cycling state-of-charge of this battery ranges from 45.65% to 100%.\n",
@@ -1736,7 +1736,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.375 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 34.64% to 100%.\n",
@@ -1748,7 +1748,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.375 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 36.16% to 100%.\n",
@@ -1760,7 +1760,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.375 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 31.64% to 100%.\n",
@@ -1772,7 +1772,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.375 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.225 C until reaching 3.4824 V. "
             f"The cycling state-of-charge of this battery ranges from 36.42% to 100%.\n",
@@ -1784,7 +1784,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 76.83% to 100%.\n",
@@ -1796,7 +1796,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 76.51% to 100%.\n",
@@ -1808,7 +1808,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 83.63% to 100%.\n",
@@ -1820,7 +1820,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.675 C until reaching 3.9109 V. "
             f"The cycling state-of-charge of this battery ranges from 75.83% to 100%.\n",
@@ -1832,7 +1832,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 75.81% to 100%.\n",
@@ -1844,7 +1844,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 75.77% to 100%.\n",
@@ -1856,7 +1856,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 79.71% to 100%.\n",
@@ -1868,7 +1868,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.625 C until reaching 3.8185 V. "
             f"The cycling state-of-charge of this battery ranges from 76.50% to 100%.\n",
@@ -1880,7 +1880,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.275 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 37.48% to 100%.\n",
@@ -1892,7 +1892,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.275 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 44.56% to 100%.\n",
@@ -1904,7 +1904,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.275 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 37.26% to 100%.\n",
@@ -1916,7 +1916,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.275 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.875 C until reaching 3.5314 V. "
             f"The cycling state-of-charge of this battery ranges from 40.77% to 100%.\n",
@@ -1928,7 +1928,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 4.65% to 100%.\n",
@@ -1940,7 +1940,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 2.68% to 100%.\n",
@@ -1952,7 +1952,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 3.83% to 100%.\n",
@@ -1964,7 +1964,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.425 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.875 C until reaching 3.4288 V. "
             f"The cycling state-of-charge of this battery ranges from 5.91% to 100%.\n",
@@ -1976,7 +1976,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2025 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.825 C until reaching 3.2738 V. "
             f"The cycling state-of-charge of this battery ranges from 8.5% to 100%.\n",
@@ -1988,7 +1988,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.925 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 69.74% to 100%.\n",
@@ -2000,7 +2000,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.925 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 70.15% to 100%.\n",
@@ -2012,7 +2012,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.925 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 68.41% to 100%.\n",
@@ -2024,7 +2024,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.925 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.125 C until reaching 3.8039 V. "
             f"The cycling state-of-charge of this battery ranges from 67.82% to 100%.\n",
@@ -2036,7 +2036,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.025 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.475 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 31.10% to 100%.\n",
@@ -2048,7 +2048,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.025 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.475 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 32.86% to 100%.\n",
@@ -2060,7 +2060,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.025 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.475 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 30.07% to 100%.\n",
@@ -2072,7 +2072,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 3.4325 V. "
             f"The cycling state-of-charge of this battery ranges from 31.15% to 100%.\n",
@@ -2084,7 +2084,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2..175 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 38.51% to 100%.\n",
@@ -2096,7 +2096,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2..175 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 39.33% to 100%.\n",
@@ -2108,7 +2108,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2..175 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 39.20% to 100%.\n",
@@ -2120,7 +2120,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2..175 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.975 C until reaching 3.6411 V. "
             f"The cycling state-of-charge of this battery ranges from 40.46% to 100%.\n",
@@ -2132,7 +2132,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 78.45% to 100%.\n",
@@ -2144,7 +2144,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 81.64% to 100%.\n",
@@ -2156,7 +2156,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 79.41% to 100%.\n",
@@ -2168,7 +2168,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.775 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.175 C until reaching 3.8724 V. "
             f"The cycling state-of-charge of this battery ranges from 80.40% to 100%.\n",
@@ -2180,7 +2180,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.475 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 52.69% to 100%.\n",
@@ -2192,7 +2192,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.475 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 52.27% to 100%.\n",
@@ -2204,7 +2204,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.475 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 50.84% to 100%.\n",
@@ -2216,7 +2216,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.475 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 0.575 C until reaching 3.7772 V. "
             f"The cycling state-of-charge of this battery ranges from 50.56% to 100%.\n",
@@ -2228,7 +2228,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 63.60% to 100%.\n",
@@ -2240,7 +2240,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 64.74% to 100%.\n",
@@ -2252,7 +2252,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 64.45% to 100%.\n",
@@ -2264,7 +2264,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.325 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.825 C until reaching 3.7062 V. "
             f"The cycling state-of-charge of this battery ranges from 65.73% to 100%.\n",
@@ -2276,7 +2276,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.675 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 3.28% to 100%.\n",
@@ -2288,7 +2288,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.675 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 6.47% to 100%.\n",
@@ -2300,7 +2300,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.675 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 4.06% to 100%.\n",
@@ -2312,7 +2312,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.675 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.325 C until reaching 3.3696 V. "
             f"The cycling state-of-charge of this battery ranges from 5.29% to 100%.\n",
@@ -2324,7 +2324,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.125 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.975 C until reaching 3.5447 V. "
             f"The cycling state-of-charge of this battery ranges from 41.67% to 100%.\n",
@@ -2336,7 +2336,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.125 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.975 C until reaching 3.5447 V. "
             f"The cycling state-of-charge of this battery ranges from 38.47% to 100%.\n",
@@ -2348,7 +2348,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 2.125 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.975 C until reaching 3.5447 V. "
             f"The cycling state-of-charge of this battery ranges from 40.81% to 100%.\n",
@@ -2360,7 +2360,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.575 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 31.20% to 100%.\n",
@@ -2372,7 +2372,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.575 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 27.72% to 100%.\n",
@@ -2384,7 +2384,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.575 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 28.68% to 100%.\n",
@@ -2396,7 +2396,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.575 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 2.425 C until reaching 3.4021 V. "
             f"The cycling state-of-charge of this battery ranges from 22.79% to 100%.\n",
@@ -2408,7 +2408,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 8.88% to 100%.\n",
@@ -2420,7 +2420,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 7.13% to 100%.\n",
@@ -2432,7 +2432,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 7.64% to 100%.\n",
@@ -2444,7 +2444,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.975 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.675 C until reaching 3.351 V. "
             f"The cycling state-of-charge of this battery ranges from 6.86% to 100%.\n",
@@ -2456,7 +2456,7 @@ class ISU_ILCC_protocol_prompt():
             f"The battery manufacturer is Shenzhen Honghaosheng Electronics Co., Ltd. "
             f"The nominal capacity is 0.25 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30 degree Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 1.175 C until reaching 4.2 V. "
             f"The battery was then discharged at a constant current of 1.425 C until reaching 3.1256 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",

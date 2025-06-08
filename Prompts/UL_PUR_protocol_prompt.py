@@ -8,7 +8,7 @@ class UL_PUR_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 3.4 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 23 degree Celsius. "
+            f"The working ambient temperature of this battery is 23 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V, "
             f"and then 4.2 V was sustained until the current dropped to 0.0147 C. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2.7 V, "

@@ -8,7 +8,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"The battery was charged at a constant current of 0.25 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -20,7 +20,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -32,7 +32,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -44,7 +44,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 35 degree Celsius. "
+            f"The working ambient temperature of this battery is 35 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -56,7 +56,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is SAMSUNG. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 45 degree Celsius. "
+            f"The working ambient temperature of this battery is 45 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.65 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -68,7 +68,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is LG CHEM. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 45 degree Celsius. "
+            f"The working ambient temperature of this battery is 45 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -80,7 +80,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is LG CHEM. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 35 degree Celsius. "
+            f"The working ambient temperature of this battery is 35 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -92,7 +92,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is LG CHEM. "
             f"The nominal capacity is 3.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 45 degree Celsius. "
+            f"The working ambient temperature of this battery is 45 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -104,7 +104,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -116,7 +116,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -128,7 +128,7 @@ class Tongji_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 2.5 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 25 degree Celsius. "
+            f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"The battery was charged at a constant current of 0.5 C until reaching 4.2 V, at which the battery was constant-voltage charged until the current dropped to 0.05 C. "
             f"The battery was then discharged at a constant current of 4 C until reaching 2.5 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
