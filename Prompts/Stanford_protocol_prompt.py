@@ -81,7 +81,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -93,7 +93,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -105,7 +105,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -117,7 +117,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -129,7 +129,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -141,7 +141,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -153,7 +153,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -165,7 +165,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -177,7 +177,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -189,7 +189,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -201,7 +201,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -213,7 +213,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -225,7 +225,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -237,7 +237,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -249,7 +249,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -261,7 +261,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -273,7 +273,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -285,7 +285,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -297,7 +297,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -309,7 +309,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -321,7 +321,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -333,7 +333,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -345,7 +345,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -357,7 +357,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -369,7 +369,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -381,7 +381,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -393,7 +393,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -405,7 +405,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -417,7 +417,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -429,7 +429,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -441,7 +441,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -453,7 +453,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -465,7 +465,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -477,7 +477,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -489,7 +489,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -501,7 +501,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
@@ -513,7 +513,7 @@ class Stanford_protocol_prompt():
             f"The battery manufacturer is unknown. "
             f"The nominal capacity is 0.24 Ah. "
             f"Operating condition: The working history of this battery is just after formation. "
-            f"The working ambient temperature of this battery is 30  degrees Celsius. "
+            f"The working ambient temperature of this battery is 30 degrees Celsius. "
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
