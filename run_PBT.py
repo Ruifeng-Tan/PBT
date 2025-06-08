@@ -138,6 +138,7 @@ parser.add_argument('--llm_layers', type=int, default=6)
 parser.add_argument('--top_p', type=float, default=0.5, help='The threshold used to control the number of activated experts')
 parser.add_argument('--accumulation_steps', type=int, default=1)
 parser.add_argument('--mlp', type=int, default=0)
+parser.add_argument('--cl_epoches', type=int, default=0, help='The epoch number for pure contrastive learning')
 parser.add_argument('--warm_up_epoches', type=int, default=0, help='The epoch number for linear Warmup')
 parser.add_argument('--use_guide', action='store_true', default=False, help='Set True to use guidance loss to guide the gate to capture the assigned gating.')
 parser.add_argument('--gamma', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
@@ -202,7 +203,7 @@ else:
     
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_seed{}'.format(
+    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ce{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.batch_size,
@@ -214,7 +215,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
         args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.seed)
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.cl_epoches, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -334,14 +335,16 @@ for ii in range(args.itr):
     if args.wd == 0:
         # model_optim = optim.Adam(trained_parameters)
         model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+        cl_model_optim = optim.Adam(trained_parameters, lr=5e-4, weight_decay=args.wd)
     else:
         model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
+        cl_model_optim = optim.Adam(trained_parameters, lr=5e-4, weight_decay=args.wd)
 
 
     # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(model_optim, mode='min', factor=0.5, patience=2, verbose=False, min_lr=1e-6)
     criterion = nn.MSELoss(reduction='none') 
-    rnc_criterion = WeightedRnCLoss(temperature=args.temperature) if args.weighted_CLDG else AverageRnCLoss(temperature=args.temperature)
+    rnc_criterion = AverageRnCLoss(temperature=args.temperature)
 
     # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
     train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(
@@ -395,7 +398,7 @@ for ii in range(args.itr):
                         else:
                             print(f'Warmup | Updating learning rate to {warm_up_lr}')
 
-                model_optim.zero_grad()
+                
                 iter_count += 1
 
                 # encoder - decoder
@@ -413,22 +416,28 @@ for ii in range(args.itr):
                 else:
                     raise Exception('Not implemented!')
                 
-                final_loss = loss
-                if args.num_experts > 1 and args.use_LB:
-                    importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
-                    print_LB_loss = importance_loss.detach().float()
-                    final_loss = final_loss + importance_loss
+                if epoch < args.cl_epoches:
+                    if args.use_aug:
+                        rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
+                        print_alignment_loss = rnc_loss.detach().float()
+                        final_loss = rnc_loss
+                else:
+                    final_loss = loss
+                    if args.num_experts > 1 and args.use_LB:
+                        importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
+                        print_LB_loss = importance_loss.detach().float()
+                        final_loss = final_loss + importance_loss
 
-                if args.use_guide:
-                    # contrastive learning
-                    guide_loss = args.gamma * guide_loss
-                    print_guidance_loss = guide_loss.detach().float()
-                    final_loss = final_loss + guide_loss
+                    if args.use_guide:
+                        # contrastive learning
+                        guide_loss = args.gamma * guide_loss
+                        print_guidance_loss = guide_loss.detach().float()
+                        final_loss = final_loss + guide_loss
 
-                if args.use_aug:
-                    rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
-                    print_alignment_loss = rnc_loss.detach().float()
-                    final_loss = final_loss + rnc_loss
+                    if args.use_aug:
+                        rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
+                        print_alignment_loss = rnc_loss.detach().float()
+                        final_loss = final_loss + rnc_loss
 
 
                 print_label_loss = loss.item()
@@ -444,9 +453,16 @@ for ii in range(args.itr):
                 transformed_labels = labels * std + mean_value
                 all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
 
-                accelerator.backward(final_loss)
-                # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
-                model_optim.step()
+                if epoch < args.cl_epoches:
+                    cl_model_optim.zero_grad()
+                    accelerator.backward(final_loss)
+                    # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                    cl_model_optim.step()
+                else:
+                    model_optim.zero_grad()
+                    accelerator.backward(final_loss)
+                    # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                    model_optim.step()
                 
 
                 total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()

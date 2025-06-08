@@ -32,35 +32,33 @@ from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error() 
 
 class MultiViewLayer(nn.Module):
-    def __init__(self, gate_network, d_model, view_expert, norm_layer, general_experts, ion_experts, use_connection):
+    def __init__(self, view_experts, norm_layer, general_experts, ion_experts, use_connection):
         super(MultiViewLayer, self).__init__()
+        self.num_views = len(view_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
-        self.gate = gate_network
-        self.layer_embedding = nn.Parameter(torch.zeros(1, d_model)) # for the gate
-
-        self.view_expert = view_expert
+        
+        self.view_experts = view_experts
         self.general_experts = general_experts
         self.use_connection = use_connection
         if self.use_connection:
             self.norm = norm_layer
 
-    def forward(self, x, DKP_embeddings, total_masks, ion_type_masks, use_view_experts):
+    def forward(self, x, total_logits, total_masks, ion_type_masks, use_view_experts):
         '''
         x: [N, *, in_dim]
-        DKP_embeddings: [B, d_llm]
-        total_masks: [B, num_experts]
+        total_logits: [num_view, num_experts for each view expert]
+        total_masks: [num_view, num_experts for each view expert]
         ion_type_masks: [B, ion_expert_num]. 1 indicates activated
         '''
         B = x.shape[0]
         total_guide_loss = 0
         final_out = 0
-        DKP_embeddings = torch.cat([DKP_embeddings, self.layer_embedding.expand(B, -1)], dim=-1) # [B, d_llm + d_model]
-        
+
         if use_view_experts:
-            total_logits = self.gate(DKP_embeddings) # [B, num_experts]
-            out, guide_loss = self.view_expert(x, total_logits, total_masks)
-            final_out = final_out + out
-            total_guide_loss += guide_loss
+            for i, view_expert in enumerate(self.view_experts):
+                out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+                final_out = final_out + out
+                total_guide_loss += guide_loss
 
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
@@ -81,31 +79,30 @@ class MultiViewLayer(nn.Module):
 
         if self.use_connection:
             final_out = self.norm(final_out + x) # add & norm
-        return final_out, total_guide_loss
+        return final_out, total_guide_loss / self.num_views
+    
 
 
 class MultiViewTransformerLayer(nn.Module):
-    def __init__(self, gate_network, d_model, n_heads, view_expert, general_experts, ion_experts, drop_rate):
+    def __init__(self, d_model, n_heads, view_experts, general_experts, ion_experts, drop_rate):
         super(MultiViewTransformerLayer, self).__init__()
-        self.gate = gate_network
+        self.num_views = len(view_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
                             output_attention=False), d_model, n_heads)
-        self.layer_embedding = nn.Parameter(torch.zeros(1, d_model)) # for the gate
-
         self.dropout = nn.Dropout(drop_rate)
-        self.view_expert = view_expert
+        self.view_experts = view_experts
         self.general_experts = general_experts
 
         self.norm1 = nn.LayerNorm(d_model)
         self.norm2 = nn.LayerNorm(d_model)
 
-    def forward(self, x, DKP_embeddings, total_masks, attn_mask, ion_type_masks, use_view_experts):
+    def forward(self, x, total_logits, total_masks, attn_mask, ion_type_masks, use_view_experts):
         '''
         x: [N, *, in_dim]
-        DKP_embeddings: [B, gate_d_ff]
-        total_masks: [B, num_experts]
+        total_logits: [num_view, num_experts for each view expert]
+        total_masks: [num_view, num_experts for each view expert]
         attn_mask: [B, 1, L, L]
         '''
         B = x.shape[0]
@@ -119,14 +116,13 @@ class MultiViewTransformerLayer(nn.Module):
         x = self.norm1(x)
 
         # MoE FFN
-        DKP_embeddings = torch.cat([DKP_embeddings, self.layer_embedding.expand(B, -1)], dim=-1) # [B, d_llm + d_model]
         total_guide_loss = 0
         final_out = 0
         if use_view_experts:
-            total_logits = self.gate(DKP_embeddings) # [B, num_experts]
-            out, guide_loss = self.view_expert(x, total_logits, total_masks)
-            final_out = final_out + out
-            total_guide_loss += guide_loss
+            for i, view_expert in enumerate(self.view_experts):
+                out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+                final_out = final_out + out
+                total_guide_loss += guide_loss
 
 
         for i in range(len(self.general_experts)):
@@ -148,7 +144,7 @@ class MultiViewTransformerLayer(nn.Module):
 
         final_out = self.norm2(self.dropout(final_out) + x) # add & norm
 
-        return final_out, total_guide_loss
+        return final_out, total_guide_loss / self.num_views
     
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
@@ -188,6 +184,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
 
+
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
         dispatcher = MOEDispatcher(self.num_experts, logits)
@@ -215,42 +212,6 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
         return final_out, guide_loss
-    
-    def random_mask_logits(self, logits: torch.Tensor, p: float) -> torch.Tensor:
-        """
-        Randomly masks 'p' ratio of non-zero values in a logits tensor by setting them to zero.
-        
-        Args:
-            logits: Input tensor of shape [B, N]
-            p: Ratio of non-zero values to mask (0.0 to 1.0)
-        
-        Returns:
-            Masked tensor of same shape as input
-        """
-        if not self.training:
-            # mask is only used during model training
-            return logits
-        
-
-        
-        # Early return if no masking needed
-        if p <= 0:
-            return logits
-
-        # Clone to preserve original tensor and maintain gradients
-        result = logits.clone()
-        # Identify non-zero positions
-        # non_zero_mask = (logits != 0)
-        
-        # Only proceed if there are non-zeros to mask
-
-        # Generate random mask with same probability p
-        rand_mask = torch.rand(logits.size(), device=logits.device) < p
-        
-        # Apply masking
-        result[rand_mask] = 0
-            
-        return result
 
 class BatteryMoEIntraCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
@@ -293,7 +254,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             # Scatter the mask at the indices of the top-K values
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
-
+            
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
 
@@ -322,42 +283,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
         return final_out, guide_loss
-
-    def random_mask_logits(self, logits: torch.Tensor, p: float) -> torch.Tensor:
-        """
-        Randomly masks 'p' ratio of non-zero values in a logits tensor by setting them to zero.
-        
-        Args:
-            logits: Input tensor of shape [B, N]
-            p: Ratio of non-zero values to mask (0.0 to 1.0)
-        
-        Returns:
-            Masked tensor of same shape as input
-        """
-        if not self.training:
-            # mask is only used during model training
-            return logits
-        
-        # Early return if no masking needed
-        if p <= 0:
-            return logits
-
-        # Clone to preserve original tensor and maintain gradients
-        result = logits.clone()
-
-        # Identify non-zero positions
-        # non_zero_mask = (logits != 0)
-        
-        # Only proceed if there are non-zeros to mask
-
-        # Generate random mask with same probability p
-        rand_mask = torch.rand(logits.size(), device=logits.device) < p
-        
-        # Apply masking
-        result[rand_mask] = 0
-            
-        return result
-    
+  
 class BatteryMoEInterCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
         super(BatteryMoEInterCycleMoELayer, self).__init__()
@@ -398,7 +324,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
             # Scatter the mask at the indices of the top-K values
             top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
             logits = logits * top_K_mask
-        
+            
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
 
@@ -425,41 +351,6 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
 
 
         return final_out, guide_loss
-
-    def random_mask_logits(self, logits: torch.Tensor, p: float) -> torch.Tensor:
-        """
-        Randomly masks 'p' ratio of non-zero values in a logits tensor by setting them to zero.
-        
-        Args:
-            logits: Input tensor of shape [B, N]
-            p: Ratio of non-zero values to mask (0.0 to 1.0)
-        
-        Returns:
-            Masked tensor of same shape as input
-        """
-        if not self.training:
-            # mask is only used during model training
-            return logits
-        
-        # Early return if no masking needed
-        if p <= 0:
-            return logits
-
-        # Clone to preserve original tensor and maintain gradients
-        result = logits.clone()
-
-        # Identify non-zero positions
-        # non_zero_mask = (logits != 0)
-        
-        # Only proceed if there are non-zeros to mask
-
-        # Generate random mask with same probability p
-        rand_mask = torch.rand(logits.size(), device=logits.device) < p
-        
-        # Apply masking
-        result[rand_mask] = 0
-            
-        return result
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -529,16 +420,16 @@ class Model(nn.Module):
 
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
-        self.gate_d_ff = configs.gate_d_ff
+        self.g_sigma = configs.g_sigma
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.d_ff), nn.ReLU(), 
+                                  nn.Linear(self.d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
-        self.gate_network = nn.Sequential(nn.Linear(self.d_llm+self.d_model, self.gate_d_ff),
-                                    nn.ReLU(),
-                                    nn.Linear(self.gate_d_ff, self.num_experts))
-
+        
         self.flatten = nn.Flatten(start_dim=2)
-        self.flattenIntraCycleLayer = MultiViewLayer(self.gate_network, self.d_model,
-                                                    BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts),
+        self.flattenIntraCycleLayer = MultiViewLayer(
+                                                     nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
+                                                                    ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
@@ -548,8 +439,9 @@ class Model(nn.Module):
                                                     ]),
                                                     use_connection=False)
         
-        self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(self.gate_network, self.d_model,
-                                                    BatteryMoEIntraCycleMoELayer(configs, self.num_experts),
+        self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(
+                                                     nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts)
+                                                    ]),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
@@ -560,9 +452,9 @@ class Model(nn.Module):
                                                     use_connection=True) for _ in range(self.e_layers)])
         
         self.pe = PositionalEmbedding(self.d_model)
-        self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(self.gate_network,
-                                                                         self.d_model, self.n_heads,
-                                                    BatteryMoEInterCycleMoELayer(configs, self.num_experts), 
+        self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(self.d_model, self.n_heads,
+                                                     nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
+                                                    ]), 
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
@@ -622,9 +514,9 @@ class Model(nn.Module):
         cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
 
-        total_masks = combined_masks
-        # gates = self.gate(DKP_embeddings)
-        # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
+        total_masks = [combined_masks]
+        logits = self.gate(DKP_embeddings)
+        logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
         logits_index = 0
 
@@ -634,13 +526,13 @@ class Model(nn.Module):
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
         cycle_curve_data = self.flatten(cycle_curve_data)
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
@@ -653,7 +545,7 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, DKP_embeddings, total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
