@@ -530,9 +530,9 @@ class Model(nn.Module):
 
         total_masks = [combined_masks]
         if self.use_PCA:
-            DKP_embeddings = F.relu(DKP_embeddings @ self.gate_pca.T) # [B, pca_dim]
+            DKP_embeddings = DKP_embeddings @ self.gate_pca.T # [B, pca_dim]
         else:
-            DKP_embeddings = F.relu(self.gate_pca(DKP_embeddings)) # [B, gate_d_ff]
+            DKP_embeddings = self.gate_pca(DKP_embeddings) # [B, gate_d_ff]
         # logits = self.gate(DKP_embeddings)
         # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
