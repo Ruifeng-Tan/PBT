@@ -33,10 +33,11 @@ from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error() 
 
 class MultiViewLayer(nn.Module):
-    def __init__(self, view_experts, norm_layer, general_experts, ion_experts, use_connection):
+    def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, ion_experts, use_connection):
         super(MultiViewLayer, self).__init__()
         self.num_views = len(view_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
+        self.distribution_fit = nn.Linear(gate_input_dim, num_experts)
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -44,20 +45,20 @@ class MultiViewLayer(nn.Module):
         if self.use_connection:
             self.norm = norm_layer
 
-    def forward(self, x, total_logits, total_masks, ion_type_masks, use_view_experts):
+    def forward(self, x, gate_input, total_masks, ion_type_masks, use_view_experts):
         '''
         x: [N, *, in_dim]
-        total_logits: [num_view, num_experts for each view expert]
+        gate_input: [B, gate_input_dim]
         total_masks: [num_view, num_experts for each view expert]
         ion_type_masks: [B, ion_expert_num]. 1 indicates activated
         '''
         B = x.shape[0]
         total_guide_loss = 0
         final_out = 0
-
+        total_logits = self.distribution_fit(gate_input) # [B, num_experts]
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
-                out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+                out, guide_loss = view_expert(x, total_logits, total_masks[i])
                 final_out = final_out + out
                 total_guide_loss += guide_loss
 
@@ -85,11 +86,12 @@ class MultiViewLayer(nn.Module):
 
 
 class MultiViewTransformerLayer(nn.Module):
-    def __init__(self, d_model, n_heads, view_experts, general_experts, ion_experts, drop_rate):
+    def __init__(self, gate_input_dim, num_experts, d_model, n_heads, view_experts, general_experts, ion_experts, drop_rate):
         super(MultiViewTransformerLayer, self).__init__()
         self.num_views = len(view_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
-        
+        self.distribution_fit = nn.Linear(gate_input_dim, num_experts)
+
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
                             output_attention=False), d_model, n_heads)
         self.dropout = nn.Dropout(drop_rate)
@@ -99,10 +101,10 @@ class MultiViewTransformerLayer(nn.Module):
         self.norm1 = nn.RMSNorm(d_model)
         self.norm2 = nn.RMSNorm(d_model)
 
-    def forward(self, x, total_logits, total_masks, attn_mask, ion_type_masks, use_view_experts):
+    def forward(self, x, gate_input, total_masks, attn_mask, ion_type_masks, use_view_experts):
         '''
         x: [N, *, in_dim]
-        total_logits: [num_view, num_experts for each view expert]
+        gate_input: [B, gate_input_dim]
         total_masks: [num_view, num_experts for each view expert]
         attn_mask: [B, 1, L, L]
         '''
@@ -119,9 +121,10 @@ class MultiViewTransformerLayer(nn.Module):
         # MoE FFN
         total_guide_loss = 0
         final_out = 0
+        total_logits = self.distribution_fit(gate_input) # [B, num_experts]
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
-                out, guide_loss = view_expert(x, total_logits[i], total_masks[i])
+                out, guide_loss = view_expert(x, total_logits, total_masks[i])
                 final_out = final_out + out
                 total_guide_loss += guide_loss
 
@@ -430,17 +433,15 @@ class Model(nn.Module):
 
         if configs.use_PCA:
             self.gate_pca = nn.Parameter(torch.from_numpy(pca_components_).float())
-            self.gate = nn.Sequential(nn.Sigmoid(),
-                        nn.Linear(self.d_llm, self.num_experts*(1+self.moe_layers)))
+            gate_input_dim = self.d_llm
         else:
-            self.gate_pca = nn.Linear(self.d_llm, self.gate_d_ff, bias=False)
-            self.gate = nn.Sequential(nn.Sigmoid(),
-                        nn.Linear(self.gate_d_ff, self.num_experts*(1+self.moe_layers)))
+            self.gate_pca = nn.Linear(self.d_llm, self.gate_d_ff)
+            gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
 
         
         self.flatten = nn.Flatten(start_dim=2)
-        self.flattenIntraCycleLayer = MultiViewLayer(
+        self.flattenIntraCycleLayer = MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
                                                                     ),
                                                     norm_layer=nn.RMSNorm(self.d_model),
@@ -452,7 +453,7 @@ class Model(nn.Module):
                                                     ]),
                                                     use_connection=False)
         
-        self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(
+        self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts)
                                                     ]),
                                                     norm_layer=nn.RMSNorm(self.d_model),
@@ -465,7 +466,7 @@ class Model(nn.Module):
                                                     use_connection=True) for _ in range(self.e_layers)])
         
         self.pe = PositionalEmbedding(self.d_model)
-        self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(self.d_model, self.n_heads,
+        self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(gate_input_dim, self.num_experts,self.d_model, self.n_heads,
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
                                                     ]), 
                                                     general_experts=nn.ModuleList([
@@ -529,11 +530,11 @@ class Model(nn.Module):
 
         total_masks = [combined_masks]
         if self.use_PCA:
-            DKP_embeddings = DKP_embeddings @ self.gate_pca.T # [B, pca_dim]
+            DKP_embeddings = F.relu(DKP_embeddings @ self.gate_pca.T) # [B, pca_dim]
         else:
-            DKP_embeddings = self.gate_pca(DKP_embeddings) # [B, gate_d_ff]
-        logits = self.gate(DKP_embeddings)
-        logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
+            DKP_embeddings = F.relu(self.gate_pca(DKP_embeddings)) # [B, gate_d_ff]
+        # logits = self.gate(DKP_embeddings)
+        # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
         logits_index = 0
 
@@ -543,13 +544,13 @@ class Model(nn.Module):
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
         cycle_curve_data = self.flatten(cycle_curve_data)
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, [logits[:,logits_index]], total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss = intra_MoELayer(out, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
@@ -562,7 +563,7 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, [logits[:,logits_index]], total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss = inter_MoELayer(out, DKP_embeddings, total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_aug_count += 1
             logits_index += 1
