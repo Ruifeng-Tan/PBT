@@ -3,6 +3,7 @@
 '''
 import torch
 import copy
+import pickle
 import torch.nn as nn
 from torch.nn import MultiheadAttention, RMSNorm
 import transformers
@@ -422,8 +423,19 @@ class Model(nn.Module):
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
 
         self.gate_d_ff = configs.gate_d_ff
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff), nn.BatchNorm1d(self.gate_d_ff), nn.ReLU(),
-                                  nn.Linear(self.gate_d_ff, self.num_experts*(1+self.moe_layers), bias=False))
+
+        self.pca_scaler = pickle.load(open(configs.pca_path, 'rb'))
+        pca_components_ = self.pca_scaler.components_
+        self.use_PCA = configs.use_PCA
+
+        if configs.use_PCA:
+            self.gate_pca = nn.Parameter(torch.from_numpy(pca_components_).float())
+            self.gate = nn.Sequential(nn.ReLU(),
+                        nn.Linear(self.d_llm, self.num_experts*(1+self.moe_layers)))
+        else:
+            self.gate_pca = nn.Linear(self.d_llm, self.gate_d_ff, bias=False)
+            self.gate = nn.Sequential(nn.ReLU(),
+                        nn.Linear(self.gate_d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
         
@@ -516,6 +528,10 @@ class Model(nn.Module):
 
 
         total_masks = [combined_masks]
+        if self.use_PCA:
+            DKP_embeddings = DKP_embeddings @ self.gate_pca.T # [B, pca_dim]
+        else:
+            DKP_embeddings = self.gate_pca(DKP_embeddings) # [B, gate_d_ff]
         logits = self.gate(DKP_embeddings)
         logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
