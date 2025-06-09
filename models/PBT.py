@@ -422,7 +422,7 @@ class Model(nn.Module):
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
 
         self.gate_d_ff = configs.gate_d_ff
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=False), nn.Sigmoid(), nn.Dropout(self.drop_rate),
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff), nn.BatchNorm1d(self.gate_d_ff), nn.ReLU(),
                                   nn.Linear(self.gate_d_ff, self.num_experts*(1+self.moe_layers), bias=False))
         self.split_dim = self.d_model // self.num_views
 
