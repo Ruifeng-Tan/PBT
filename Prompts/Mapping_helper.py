@@ -5,7 +5,7 @@
 
 from Prompts import (HUST_protocol_prompt, MATR_protocol_prompt, SNL_protocol_prompt, RWTH_protocol_prompt,
                               HNEI_protocol_prompt, CALCE_protocol_prompt, UL_PUR_protocol_prompt,
-                              MICH_protocol_prompt, Tongji_protocol_prompt, Stanford_protocol_prompt, Stanford2_protocol_prompt, 
+                              MICH_protocol_prompt, Tongji_protocol_prompt, Stanford_protocol_prompt, 
                               ISU_ILCC_protocol_prompt, XJTU_protocol_prompt, ZNcoin_protocol_prompt,
                               CALB_protocol_prompt, NA_protocol_prompt)
 
