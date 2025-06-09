@@ -430,11 +430,11 @@ class Model(nn.Module):
 
         if configs.use_PCA:
             self.gate_pca = nn.Parameter(torch.from_numpy(pca_components_).float())
-            self.gate = nn.Sequential(nn.ReLU(),
+            self.gate = nn.Sequential(nn.Sigmoid(),
                         nn.Linear(self.d_llm, self.num_experts*(1+self.moe_layers)))
         else:
             self.gate_pca = nn.Linear(self.d_llm, self.gate_d_ff, bias=False)
-            self.gate = nn.Sequential(nn.ReLU(),
+            self.gate = nn.Sequential(nn.Sigmoid(),
                         nn.Linear(self.gate_d_ff, self.num_experts*(1+self.moe_layers)))
         self.split_dim = self.d_model // self.num_views
 
