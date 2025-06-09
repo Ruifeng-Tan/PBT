@@ -5,7 +5,7 @@ import torch
 import copy
 import pickle
 import torch.nn as nn
-from torch.nn import MultiheadAttention, RMSNorm
+from torch.nn import MultiheadAttention, LayerNorm
 import transformers
 from scipy import signal
 from math import sqrt
@@ -33,7 +33,7 @@ from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error() 
 
 class MultiViewLayer(nn.Module):
-    def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, ion_experts, use_connection):
+    def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, ion_experts, use_connection, use_norm=True):
         super(MultiViewLayer, self).__init__()
         self.num_views = len(view_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
@@ -42,7 +42,8 @@ class MultiViewLayer(nn.Module):
         self.view_experts = view_experts
         self.general_experts = general_experts
         self.use_connection = use_connection
-        if self.use_connection:
+        self.use_norm = use_norm
+        if self.use_norm:
             self.norm = norm_layer
 
     def forward(self, x, gate_input, total_masks, ion_type_masks, use_view_experts):
@@ -56,6 +57,8 @@ class MultiViewLayer(nn.Module):
         total_guide_loss = 0
         final_out = 0
         total_logits = self.distribution_fit(gate_input) # [B, num_experts]
+
+        x = self.norm(x) if self.use_norm else x # pre norm
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
                 out, guide_loss = view_expert(x, total_logits, total_masks[i])
@@ -80,7 +83,7 @@ class MultiViewLayer(nn.Module):
             final_out = final_out + total_ion_outs
 
         if self.use_connection:
-            final_out = self.norm(final_out + x) # add & norm
+            final_out = final_out + x # residual connection
         return final_out, total_guide_loss / self.num_views
     
 
@@ -98,8 +101,8 @@ class MultiViewTransformerLayer(nn.Module):
         self.view_experts = view_experts
         self.general_experts = general_experts
 
-        self.norm1 = nn.RMSNorm(d_model)
-        self.norm2 = nn.RMSNorm(d_model)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
 
     def forward(self, x, gate_input, total_masks, attn_mask, ion_type_masks, use_view_experts):
         '''
@@ -108,6 +111,7 @@ class MultiViewTransformerLayer(nn.Module):
         total_masks: [num_view, num_experts for each view expert]
         attn_mask: [B, 1, L, L]
         '''
+        x = self.norm1(x) # pre norm
         B = x.shape[0]
         # casual masked self-attention
         new_x, _ = self.attention(
@@ -115,8 +119,8 @@ class MultiViewTransformerLayer(nn.Module):
             attn_mask=attn_mask,
             tau=None, delta=None
         )
-        x = x + self.dropout(new_x) # add & norm
-        x = self.norm1(x)
+        x = x + self.dropout(new_x) # residual connection 
+        x = self.norm2(x) # post attention norm
 
         # MoE FFN
         total_guide_loss = 0
@@ -146,7 +150,7 @@ class MultiViewTransformerLayer(nn.Module):
             total_ion_outs = torch.sum(total_ion_outs * ion_type_masks, dim=1)
             final_out = final_out + total_ion_outs
 
-        final_out = self.norm2(self.dropout(final_out) + x) # add & norm
+        final_out = self.dropout(final_out) + x # residual connection
 
         return final_out, total_guide_loss / self.num_views
     
@@ -232,7 +236,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
-        # self.ln = nn.RMSNorm(self.d_model)
+        # self.ln = nn.LayerNorm(self.d_model)
         self.eps = 1e-9
     
     def forward(self, cycle_curve_data, logits, moe_masks):
@@ -366,7 +370,7 @@ class OutputHead(nn.Module):
         self.early_cycle_threshold = ec_config.early_cycle_threshold
         self.drop_rate = ec_config.dropout
         self.n_heads = ec_config.n_heads
-        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
+        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num, bias=False))
         
     def forward(self, llm_out):
         '''
@@ -431,32 +435,29 @@ class Model(nn.Module):
         pca_components_ = self.pca_scaler.components_
         self.use_PCA = configs.use_PCA
 
-        if configs.use_PCA:
-            self.gate_pca = nn.Parameter(torch.from_numpy(pca_components_).float())
-            gate_input_dim = self.d_llm
-        else:
-            self.gate_pca = nn.Linear(self.d_llm, self.gate_d_ff)
-            gate_input_dim = self.gate_d_ff
 
-        self.cycle_information = nn.Embedding(self.early_cycle_threshold, gate_input_dim) # [early_cycle_threshold, d_model]
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff), nn.ReLU())
+        gate_input_dim = self.gate_d_ff
+        self.split_dim = self.d_model // self.num_views
+
         
         self.flatten = nn.Flatten(start_dim=2)
         self.flattenIntraCycleLayer = MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
                                                                     ),
-                                                    norm_layer=nn.RMSNorm(self.d_model),
+                                                    norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
                                                     ion_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.ion_experts)
                                                     ]),
-                                                    use_connection=False)
+                                                    use_connection=False, use_norm=False)
         
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts)
                                                     ]),
-                                                    norm_layer=nn.RMSNorm(self.d_model),
+                                                    norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
@@ -529,13 +530,10 @@ class Model(nn.Module):
 
 
         total_masks = [combined_masks]
-        if self.use_PCA:
-            DKP_embeddings = F.relu(DKP_embeddings @ self.gate_pca.T) # [B, pca_dim]
-        else:
-            DKP_embeddings = F.relu(self.gate_pca(DKP_embeddings)) # [B, gate_d_ff]
-        seen_cycle_numbers= torch.sum(curve_attn_mask, dim=1).long() - 1
-        cycle_info = self.cycle_information(seen_cycle_numbers) # [B, gate_d_ff]
-        DKP_embeddings = DKP_embeddings + cycle_info # [B, gate_d_ff]
+
+        DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
+        # logits = self.gate(DKP_embeddings)
+        # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
         logits_index = 0
 
