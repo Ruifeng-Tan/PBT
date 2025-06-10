@@ -177,7 +177,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
-        logits = logits * mask + self.eps # add eps to avoid all zeros in the active logits
+        logits = logits * mask # add eps to avoid all zeros in the active logits
 
         
         if self.top_k > 0:

@@ -195,6 +195,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
 
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
+
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
         total_outs = []
