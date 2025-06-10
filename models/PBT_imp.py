@@ -29,7 +29,7 @@ import torch.nn.functional as F
 from transformers import AwqConfig, AutoModelForCausalLM
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 import json
-from layers.MLPs import MLPBlockGELU
+from layers.MLPs import BatteryMoEMLP
 transformers.logging.set_verbosity_error() 
 
 class MultiViewLayer(nn.Module):
@@ -246,10 +246,8 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([BatteryMoEMLP(self.d_model, self.d_ff, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
-        # self.ln = nn.LayerNorm(self.d_model)
         self.eps = 1e-9
     
     def forward(self, cycle_curve_data, logits, moe_masks):
@@ -323,7 +321,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts 
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([BatteryMoEMLP(self.d_model, self.d_ff, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.eps = 1e-9
 
@@ -455,11 +453,10 @@ class Model(nn.Module):
         self.gate_d_ff = configs.gate_d_ff
 
         self.pca_scaler = pickle.load(open(configs.pca_path, 'rb'))
-        pca_components_ = self.pca_scaler.components_
         self.use_PCA = configs.use_PCA
 
 
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff), nn.BatchNorm1d(self.gate_d_ff),
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff),
                                   nn.ReLU())
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
@@ -483,10 +480,10 @@ class Model(nn.Module):
                                                     ]),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
+                                                        BatteryMoEMLP(self.d_model, self.d_ff, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
                                                     ion_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.ion_experts)
+                                                        BatteryMoEMLP(self.d_model, self.d_ff, self.activation) for _ in range(self.ion_experts)
                                                     ]),
                                                     use_connection=True) for _ in range(self.e_layers)])
         
@@ -495,10 +492,10 @@ class Model(nn.Module):
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
                                                     ]), 
                                                     general_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
+                                                        BatteryMoEMLP(self.d_model, self.d_ff, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
                                                     ion_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.ion_experts)
+                                                        BatteryMoEMLP(self.d_model, self.d_ff, self.activation) for _ in range(self.ion_experts)
                                                     ]),
                                                     drop_rate=self.drop_rate
                                                     )
