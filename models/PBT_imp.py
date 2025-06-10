@@ -459,7 +459,7 @@ class Model(nn.Module):
         self.use_PCA = configs.use_PCA
 
 
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff), nn.LayerNorm(self.gate_d_ff),
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff), nn.BatchNorm1d(self.gate_d_ff),
                                   nn.ReLU())
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
