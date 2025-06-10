@@ -461,12 +461,12 @@ for ii in range(args.itr):
                 if epoch < args.cl_epoches:
                     cl_model_optim.zero_grad()
                     accelerator.backward(final_loss)
-                    # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                    nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
                     cl_model_optim.step()
                 else:
                     model_optim.zero_grad()
                     accelerator.backward(final_loss)
-                    # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                    nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
                     model_optim.step()
                 
 
