@@ -15,11 +15,18 @@ class BatteryMoEMLP(nn.Module):
         return self.down_proj(self.act_fn(self.gate_proj(hidden_state)) * self.up_proj(hidden_state))
 
 class MLPBlockGELU(nn.Module):
-    def __init__(self, in_dim, hidden_dim, drop_rate, activation):
+    def __init__(self, in_dim, hidden_dim, drop_rate, activation='gelu'):
         super(MLPBlockGELU, self).__init__()
         self.dropout = nn.Dropout(drop_rate)
         self.act_linear = nn.Linear(in_dim, hidden_dim, bias=False)
-        self.act = nn.GELU()
+        if activation == 'gelu':
+            self.act = nn.GELU()
+        elif activation == 'relu':
+            self.act = nn.ReLU()
+        elif activation == 'swish' or activation == 'silu':
+            self.act = nn.SiLU()
+        else:
+            raise ValueError(f"Unsupported activation function: {activation}")
         self.out_linear = nn.Linear(hidden_dim, in_dim)
     
     def forward(self, x):

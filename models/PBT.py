@@ -182,7 +182,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
-        # logits = logits * mask
+        logits = logits * mask
 
         
         if self.top_k > 0:
@@ -258,7 +258,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
-        # logits = logits * mask
+        logits = logits * mask
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
@@ -333,7 +333,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
-        # logits = logits * mask
+        logits = logits * mask
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
