@@ -391,7 +391,7 @@ class OutputHead(nn.Module):
         self.early_cycle_threshold = ec_config.early_cycle_threshold
         self.drop_rate = ec_config.dropout
         self.n_heads = ec_config.n_heads
-        self.projection = nn.Sequential(nn.RMSNorm(self.d_model), nn.Linear(self.d_model, ec_config.output_num, bias=False))
+        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num, bias=False))
         
     def forward(self, llm_out):
         '''
@@ -500,6 +500,8 @@ class Model(nn.Module):
                                                     drop_rate=self.drop_rate
                                                     )
                                              for _ in range(self.d_layers)])
+        
+        self.norm = nn.RMSNorm(self.d_model) 
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
@@ -594,6 +596,7 @@ class Model(nn.Module):
         idx = idx.unsqueeze(1)
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
+        out = self.norm(out)
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
         preds = preds.float()
