@@ -5,7 +5,7 @@ import torch
 import copy
 import pickle
 import torch.nn as nn
-from torch.nn import MultiheadAttention, LayerNorm
+from torch.nn import MultiheadAttention, RMSNorm
 import transformers
 from scipy import signal
 from math import sqrt
@@ -36,8 +36,9 @@ class MultiViewLayer(nn.Module):
     def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, ion_experts, use_connection, use_norm=True):
         super(MultiViewLayer, self).__init__()
         self.num_views = len(view_experts)
+        self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
-        self.distribution_fit = nn.Linear(gate_input_dim, num_experts)
+        self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -55,15 +56,17 @@ class MultiViewLayer(nn.Module):
         '''
         B = x.shape[0]
         total_guide_loss = 0
+        total_LB_loss = 0
         final_out = 0
-        total_logits = self.distribution_fit(gate_input) # [B, num_experts]
+        total_logits = self.expert_gate(gate_input) # [B, num_experts]
 
         x = self.norm(x) if self.use_norm else x # pre norm
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
-                out, guide_loss = view_expert(x, total_logits, total_masks[i])
+                out, guide_loss, LB_loss = view_expert(x, total_logits, total_masks[i])
                 final_out = final_out + out
                 total_guide_loss += guide_loss
+                total_LB_loss += LB_loss
 
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
@@ -84,7 +87,7 @@ class MultiViewLayer(nn.Module):
 
         if self.use_connection:
             final_out = final_out + x # residual connection
-        return final_out, total_guide_loss / self.num_views
+        return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 
 
@@ -92,8 +95,9 @@ class MultiViewTransformerLayer(nn.Module):
     def __init__(self, gate_input_dim, num_experts, d_model, n_heads, view_experts, general_experts, ion_experts, drop_rate):
         super(MultiViewTransformerLayer, self).__init__()
         self.num_views = len(view_experts)
+        self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
-        self.distribution_fit = nn.Linear(gate_input_dim, num_experts)
+        self.expert_gate = nn.Linear(gate_input_dim, num_experts)
 
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
                             output_attention=False), d_model, n_heads)
@@ -101,8 +105,8 @@ class MultiViewTransformerLayer(nn.Module):
         self.view_experts = view_experts
         self.general_experts = general_experts
 
-        self.norm1 = nn.LayerNorm(d_model)
-        self.norm2 = nn.LayerNorm(d_model)
+        self.norm1 = nn.RMSNorm(d_model)
+        self.norm2 = nn.RMSNorm(d_model)
 
     def forward(self, x, gate_input, total_masks, attn_mask, ion_type_masks, use_view_experts):
         '''
@@ -124,14 +128,15 @@ class MultiViewTransformerLayer(nn.Module):
 
         # MoE FFN
         total_guide_loss = 0
+        total_LB_loss = 0
         final_out = 0
-        total_logits = self.distribution_fit(gate_input) # [B, num_experts]
+        total_logits = self.expert_gate(gate_input) # [B, num_experts]
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
-                out, guide_loss = view_expert(x, total_logits, total_masks[i])
+                out, guide_loss, LB_loss = view_expert(x, total_logits, total_masks[i])
                 final_out = final_out + out
                 total_guide_loss += guide_loss
-
+                total_LB_loss += LB_loss
 
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
@@ -152,7 +157,7 @@ class MultiViewTransformerLayer(nn.Module):
 
         final_out = self.dropout(final_out) + x # residual connection
 
-        return final_out, total_guide_loss / self.num_views
+        return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
@@ -214,6 +219,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         #     final_out = self.general_experts[i](cycle_curve_data) + final_out
 
         guide_loss = 0 # guide the model to give larger weight to the correct cathode expert
+        LB_loss = 0
         if self.training:
             # Guidance loss
             # masked_raw_logits = raw_logits * mask
@@ -225,7 +231,13 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             inactive_logits = raw_logits * (1-mask)
             guide_loss = -torch.mean(torch.log(torch.sum(active_logits, dim=1).exp() / torch.sum(inactive_logits, dim=1).exp()))
 
-        return final_out, guide_loss
+            # Compute the load balancing loss
+            entropy = - logits * torch.log(logits + self.eps) # [B, num_experts]
+            entropy = entropy * moe_masks # mask the inactive logits
+            entropy_loss = torch.sum(entropy, dim=1) # [B]. The entropy of the logits
+            LB_loss = - torch.mean(entropy_loss) # [1]
+        
+        return final_out, guide_loss, LB_loss
 
 class BatteryMoEIntraCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
@@ -241,8 +253,6 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.activation = configs.activation
         self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
-        # self.general_experts = nn.ModuleList([MLPBlockGELU(in_dim, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)])
-        # self.ln = nn.LayerNorm(self.d_model)
         self.eps = 1e-9
     
     def forward(self, cycle_curve_data, logits, moe_masks):
@@ -290,6 +300,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         # final_out = self.ln(final_out + cycle_curve_data) # add & norm
 
         guide_loss = 0
+        LB_loss = 0
         if self.training:
             # Guidance loss
             # masked_raw_logits = raw_logits * mask
@@ -300,8 +311,14 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             active_logits = raw_logits * mask
             inactive_logits = raw_logits * (1-mask)
             guide_loss = -torch.mean(torch.log(torch.sum(active_logits, dim=1).exp() / torch.sum(inactive_logits, dim=1).exp()))
+            
+            # Compute the load balancing loss
+            entropy = - logits * torch.log(logits + self.eps) # [B, num_experts]
+            entropy = entropy * moe_masks # mask the inactive logits
+            entropy_loss = torch.sum(entropy, dim=1) # [B]. The entropy of the logits
+            LB_loss = - torch.mean(entropy_loss) # [1]
 
-        return final_out, guide_loss
+        return final_out, guide_loss, LB_loss
   
 class BatteryMoEInterCycleMoELayer(nn.Module):
     def __init__(self, configs, num_experts):
@@ -360,7 +377,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
         final_out = total_outs
 
-        aug_loss = 0
+        LB_loss = 0
         guide_loss = 0
         if self.training:
             # Guidance loss
@@ -373,8 +390,13 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
             inactive_logits = raw_logits * (1-mask)
             guide_loss = -torch.mean(torch.log(torch.sum(active_logits, dim=1).exp() / torch.sum(inactive_logits, dim=1).exp()))
 
+            # Compute the load balancing loss
+            entropy = - logits * torch.log(logits + self.eps) # [B, num_experts]
+            entropy = entropy * moe_masks # mask the inactive logits
+            entropy_loss = torch.sum(entropy, dim=1) # [B]. The entropy of the logits
+            LB_loss = - torch.mean(entropy_loss) # [1]
 
-        return final_out, guide_loss
+        return final_out, guide_loss, LB_loss
     
 class OutputHead(nn.Module):
     def __init__(self, ec_config):
@@ -448,11 +470,11 @@ class Model(nn.Module):
         self.gate_d_ff = configs.gate_d_ff
 
         self.pca_scaler = pickle.load(open(configs.pca_path, 'rb'))
-        pca_components_ = self.pca_scaler.components_
         self.use_PCA = configs.use_PCA
 
-
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff), nn.ReLU())
+        self.cycle_embedding = nn.Embedding(self.early_cycle_threshold, self.d_llm)
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff),
+                                  nn.LeakyReLU())
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
 
@@ -461,7 +483,7 @@ class Model(nn.Module):
         self.flattenIntraCycleLayer = MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
                                                                     ),
-                                                    norm_layer=nn.LayerNorm(self.d_model),
+                                                    norm_layer=nn.RMSNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
@@ -473,7 +495,7 @@ class Model(nn.Module):
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts)
                                                     ]),
-                                                    norm_layer=nn.LayerNorm(self.d_model),
+                                                    norm_layer=nn.RMSNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
@@ -495,6 +517,8 @@ class Model(nn.Module):
                                                     drop_rate=self.drop_rate
                                                     )
                                              for _ in range(self.d_layers)])
+        
+        self.norm = nn.RMSNorm(self.d_model) 
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
@@ -547,6 +571,9 @@ class Model(nn.Module):
 
         total_masks = [combined_masks]
 
+        cycle_index = torch.sum(curve_attn_mask, dim=1).int() - 1
+        cycle_info = self.cycle_embedding(cycle_index)
+        DKP_embeddings = DKP_embeddings + cycle_info
         DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
         # logits = self.gate(DKP_embeddings)
         # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
@@ -555,18 +582,21 @@ class Model(nn.Module):
 
         total_aug_loss = 0
         total_guide_loss = 0
+        total_LB_loss = 0
         total_aug_count = 0
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
         cycle_curve_data = self.flatten(cycle_curve_data)
-        out, guide_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+        out, guide_loss, LB_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
         total_guide_loss += guide_loss
+        total_LB_loss += LB_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss = intra_MoELayer(out, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss, LB_loss = intra_MoELayer(out, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
+            total_LB_loss += LB_loss
             total_aug_count += 1
             logits_index += 1
 
@@ -578,8 +608,9 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss = inter_MoELayer(out, DKP_embeddings, total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss, LB_loss = inter_MoELayer(out, DKP_embeddings, total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
+            total_LB_loss += LB_loss
             total_aug_count += 1
             logits_index += 1
 
@@ -589,11 +620,12 @@ class Model(nn.Module):
         idx = idx.unsqueeze(1)
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
+        out = self.norm(out)
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
         preds = preds.float()
         embeddings = embeddings.float()
-        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, None , total_guide_loss / total_aug_count
+        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, total_LB_loss / total_aug_count , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''
