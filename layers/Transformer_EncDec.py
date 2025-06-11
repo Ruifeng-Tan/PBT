@@ -222,7 +222,7 @@ class MoEEncoderLayer(nn.Module):
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / (B*L) # [num_experts]
-            aug_loss = torch.mean(expert_logits * expert_sample_count) # [1]
+            aug_loss = torch.sum(expert_logits * expert_sample_count) # [1]
 
         return out, attn, aug_loss
 

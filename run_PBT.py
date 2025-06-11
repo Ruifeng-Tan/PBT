@@ -129,7 +129,7 @@ parser.add_argument('--learning_rate', type=float, default=0.0001, help='optimiz
 parser.add_argument('--meta_learning_rate', type=float, default=0.0001, help='optimizer learning rate')
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--des', type=str, default='test', help='exp description')
-parser.add_argument('--loss', type=str, default='MSE', help='loss function')
+parser.add_argument('--loss', type=str, default='MSE', help='loss function', choices=['MSE', 'Huber'])
 parser.add_argument('--lradj', type=str, default='constant', help='adjust learning rate')
 parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learning rate decay factor')
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
@@ -290,7 +290,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_Llama2",
+        project="PBT_Llama3",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -348,7 +348,8 @@ for ii in range(args.itr):
 
     # scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(model_optim, mode='min', factor=0.5, patience=2, verbose=False, min_lr=1e-6)
-    criterion = nn.MSELoss(reduction='none') 
+
+    criterion = nn.MSELoss(reduction='none') if args.loss == 'MSE' else nn.HuberLoss(reduction='none', delta=2.0)
     rnc_criterion = AverageRnCLoss(temperature=args.temperature)
 
     # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
@@ -407,7 +408,7 @@ for ii in range(args.itr):
                 iter_count += 1
 
                 # encoder - decoder
-                outputs, _, embeddings, _, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
+                outputs, _, embeddings, _, _, alpha_exponent, LB_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
                 DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
                 anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=args.use_aug)
                 
@@ -415,11 +416,9 @@ for ii in range(args.itr):
                 #     labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
                 #     weights = labels.repeat(int(outputs.shape[0] / weights.shape[0]), 1)
 
-                if args.loss == 'MSE':
-                    loss = criterion(outputs, labels)
-                    loss = torch.mean(loss * weights)
-                else:
-                    raise Exception('Not implemented!')
+
+                loss = criterion(outputs, labels)
+                loss = torch.mean(loss * weights)
                 
                 if epoch < args.cl_epoches:
                     if args.use_aug:
@@ -428,8 +427,8 @@ for ii in range(args.itr):
                         final_loss = rnc_loss
                 else:
                     final_loss = loss
-                    if args.num_experts > 1 and args.use_LB:
-                        importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
+                    if args.use_LB:
+                        importance_loss = args.importance_weight * LB_loss.float()
                         print_LB_loss = importance_loss.detach().float()
                         final_loss = final_loss + importance_loss
 
@@ -521,7 +520,7 @@ for ii in range(args.itr):
         total_LB_loss = total_LB_loss / len(train_loader)
         total_label_loss = total_label_loss / len(train_loader)
         accelerator.print(
-            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
+            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali RMSE: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
             f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
         if accelerator.is_local_main_process:
             wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 

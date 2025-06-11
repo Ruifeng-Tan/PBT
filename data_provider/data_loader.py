@@ -845,7 +845,6 @@ class Dataset_BatteryLifeLLM_original(Dataset):
             total_combined_expert_masks += [combined_expert_mask for _ in range(len(labels))]
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
-            unique_labels.append(eol)
             if self.flag == 'test':
                 seen_unseen_id = self.unseen_seen_record[file_name]
                 if seen_unseen_id == 'unseen':

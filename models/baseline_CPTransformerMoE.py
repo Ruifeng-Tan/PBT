@@ -156,7 +156,7 @@ class FlattenIntraCycleMoELayer(nn.Module):
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / (B*L) # [num_experts]
-            LB_loss = torch.mean(expert_logits * expert_sample_count) # [1]
+            LB_loss = torch.sum(expert_logits * expert_sample_count) # [1]
 
           
 
@@ -237,7 +237,7 @@ class IntraCycleMoELayer(nn.Module):
             # Compute the auxiliary loss
             expert_logits = torch.mean(raw_logits, dim=0) # [num_experts]
             expert_sample_count = torch.count_nonzero(logits, dim=0) / (B*L) # [num_experts]. The number of tokens dispatched to each expert
-            LB_loss = torch.mean(expert_logits * expert_sample_count) # [1]
+            LB_loss = torch.sum(expert_logits * expert_sample_count) # [1]
 
         return final_out, LB_loss
     
@@ -392,7 +392,7 @@ class Model(BatteryLifeLLM):
 
         preds = preds.float()
 
-        return preds[:B], None, out[B:], None, None, None, total_LB_loss / total_LB_count, 0
+        return preds[:B], None, out[B:], None, None, None, total_LB_loss / total_LB_count * self.num_experts, 0
 
     def create_causal_mask(self, B, seq_len):
         '''
