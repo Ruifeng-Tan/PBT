@@ -39,7 +39,6 @@ class MultiViewLayer(nn.Module):
         self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
-        self.general_gate = nn.Sequential(nn.Linear(gate_input_dim, self.num_general_experts, bias=False), nn.Sigmoid())
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -67,10 +66,8 @@ class MultiViewLayer(nn.Module):
                 final_out = final_out + out
                 total_guide_loss += guide_loss
 
-        general_weights = self.general_gate(gate_input) # [B, num_general_experts]
         for i in range(len(self.general_experts)):
-            general_weight = general_weights[:, i].unsqueeze(-1).unsqueeze(1) # [B, 1, 1]
-            final_out = self.general_experts[i](x) * general_weight + final_out # add the general experts
+            final_out = self.general_experts[i](x) + final_out # add the general experts
 
         if len(self.ion_experts) != 0:
             total_ion_outs = [] # each element is [B, 1, *, D]
@@ -99,7 +96,6 @@ class MultiViewTransformerLayer(nn.Module):
         self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts)
-        self.general_gate = nn.Sequential(nn.Linear(gate_input_dim, self.num_general_experts, bias=False), nn.Sigmoid())
 
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
                             output_attention=False), d_model, n_heads)
@@ -138,10 +134,8 @@ class MultiViewTransformerLayer(nn.Module):
                 final_out = final_out + out
                 total_guide_loss += guide_loss
 
-        general_weights = self.general_gate(gate_input) # [B, num_general_experts]
         for i in range(len(self.general_experts)):
-            general_weight = general_weights[:, i].unsqueeze(-1).unsqueeze(1) # [B, 1, 1]
-            final_out = self.general_experts[i](x) * general_weight + final_out # add the general experts
+            final_out = self.general_experts[i](x) + final_out # add the general experts
 
         if len(self.ion_experts) != 0:
             total_ion_outs = [] # each element is [B, 1, *, D]
@@ -188,7 +182,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
-        logits = logits * mask
+        # logits = logits * mask
 
         
         if self.top_k > 0:
@@ -264,7 +258,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
-        logits = logits * mask
+        # logits = logits * mask
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
@@ -339,7 +333,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
-        logits = logits * mask
+        # logits = logits * mask
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
@@ -457,7 +451,7 @@ class Model(nn.Module):
 
 
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff),
-                                  nn.ReLU())
+                                  nn.LeakyReLU())
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
 
