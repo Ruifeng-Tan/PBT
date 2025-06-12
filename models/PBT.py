@@ -5,7 +5,7 @@ import torch
 import copy
 import pickle
 import torch.nn as nn
-from torch.nn import MultiheadAttention, RMSNorm
+from torch.nn import MultiheadAttention, LayerNorm
 import transformers
 from scipy import signal
 from math import sqrt
@@ -105,8 +105,8 @@ class MultiViewTransformerLayer(nn.Module):
         self.view_experts = view_experts
         self.general_experts = general_experts
 
-        self.norm1 = nn.RMSNorm(d_model)
-        self.norm2 = nn.RMSNorm(d_model)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
 
     def forward(self, x, gate_input, total_masks, attn_mask, ion_type_masks, use_view_experts):
         '''
@@ -408,7 +408,7 @@ class OutputHead(nn.Module):
         self.early_cycle_threshold = ec_config.early_cycle_threshold
         self.drop_rate = ec_config.dropout
         self.n_heads = ec_config.n_heads
-        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num, bias=False))
+        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
         
     def forward(self, llm_out):
         '''
@@ -482,7 +482,7 @@ class Model(nn.Module):
         self.flattenIntraCycleLayer = MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
                                                                     ),
-                                                    norm_layer=nn.RMSNorm(self.d_model),
+                                                    norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
@@ -494,7 +494,7 @@ class Model(nn.Module):
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts, self.d_ff_scale_factor)
                                                     ]),
-                                                    norm_layer=nn.RMSNorm(self.d_model),
+                                                    norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
@@ -517,7 +517,7 @@ class Model(nn.Module):
                                                     )
                                              for _ in range(self.d_layers)])
         
-        self.norm = nn.RMSNorm(self.d_model) 
+        self.norm = nn.LayerNorm(self.d_model) 
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
