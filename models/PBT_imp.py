@@ -518,7 +518,7 @@ class Model(nn.Module):
                                              for _ in range(self.d_layers)])
         
         self.norm = nn.LayerNorm(self.d_model) 
-        self.aging_condition_mask = nn.Sequential(nn.Linear(self.gate_d_ff, self.d_model), nn.ReLU())
+        self.aging_condition_mask = nn.Sequential(nn.Linear(self.gate_d_ff, self.d_model), nn.Sigmoid())
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
