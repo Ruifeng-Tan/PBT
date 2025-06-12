@@ -90,6 +90,7 @@ parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='su
 
 # model define
 parser.add_argument('--d_llm', type=int, default=4096, help='the features of llm')
+parser.add_argument('--d_ff_scale_factor', type=list, default=[1], help='redundant for manual definition')
 parser.add_argument('--enc_in', type=int, default=1, help='encoder input size')
 parser.add_argument('--dec_in', type=int, default=1, help='decoder input size')
 parser.add_argument('--c_out', type=int, default=1, help='output size')
@@ -200,7 +201,24 @@ if args.Pretrained_model_path:
     pretrained = True
 else:
     pretrained = False
-    
+
+if not 'MIX_all' in args.dataset:
+    temperature2mask = gate_masker.MIX_large_temperature2mask
+    format2mask = gate_masker.MIX_large_format2mask
+    cathodes2mask = gate_masker.MIX_large_cathodes2mask
+    anode2mask = gate_masker.MIX_large_anode2mask
+    ion2mask = None
+    d_ff_scale_factor = gate_masker.MIX_large_scale_factors
+else:
+    temperature2mask = gate_masker.MIX_all_temperature2mask
+    format2mask = gate_masker.MIX_all_format2mask
+    cathodes2mask = gate_masker.MIX_all_cathode2mask
+    anode2mask = gate_masker.MIX_all_anode2mask
+    ion2mask = gate_masker.MIX_all_ion2mask
+
+args.d_ff_scale_factor = d_ff_scale_factor
+args.__dict__['d_ff_scale_factor'] = d_ff_scale_factor
+
 for ii in range(args.itr):
     # setting record of experiments
     setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ce{}_seed{}'.format(
@@ -254,19 +272,6 @@ for ii in range(args.itr):
     path = os.path.join(args.checkpoints,
                         setting + '-' + args.model_comment)  # unique checkpoint saving path
     
-    if not 'MIX_all' in args.dataset:
-        temperature2mask = gate_masker.MIX_large_temperature2mask
-        format2mask = gate_masker.MIX_large_format2mask
-        cathodes2mask = gate_masker.MIX_large_cathodes2mask
-        anode2mask = gate_masker.MIX_large_anode2mask
-        ion2mask = None
-    else:
-        temperature2mask = gate_masker.MIX_all_temperature2mask
-        format2mask = gate_masker.MIX_all_format2mask
-        cathodes2mask = gate_masker.MIX_all_cathode2mask
-        anode2mask = gate_masker.MIX_all_anode2mask
-        ion2mask = gate_masker.MIX_all_ion2mask
-
     train_data, train_loader = data_provider_func(args, 'train', tokenizer, temperature2mask=temperature2mask, 
                                                   format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, use_domainSampler=args.use_domainSampler)
     label_scaler = train_data.return_label_scaler()

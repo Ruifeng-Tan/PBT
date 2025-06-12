@@ -240,7 +240,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         return final_out, guide_loss, LB_loss
 
 class BatteryMoEIntraCycleMoELayer(nn.Module):
-    def __init__(self, configs, num_experts):
+    def __init__(self, configs, num_experts, d_ff_scale_factor):
         super(BatteryMoEIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
@@ -251,7 +251,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.eps = 1e-9
     
@@ -321,7 +321,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         return final_out, guide_loss, LB_loss
   
 class BatteryMoEInterCycleMoELayer(nn.Module):
-    def __init__(self, configs, num_experts):
+    def __init__(self, configs, num_experts, d_ff_scale_factor):
         super(BatteryMoEInterCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
@@ -333,7 +333,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts 
         self.activation = configs.activation
-        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.eps = 1e-9
 
@@ -476,7 +476,7 @@ class Model(nn.Module):
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=False))
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
-
+        self.d_ff_scale_factor = configs.d_ff_scale_factor
         
         self.flatten = nn.Flatten(start_dim=2)
         self.flattenIntraCycleLayer = MultiViewLayer(gate_input_dim, self.num_experts,
@@ -492,7 +492,7 @@ class Model(nn.Module):
                                                     use_connection=False, use_norm=False)
         
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(gate_input_dim, self.num_experts,
-                                                     nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts)
+                                                     nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts, self.d_ff_scale_factor)
                                                     ]),
                                                     norm_layer=nn.RMSNorm(self.d_model),
                                                     general_experts=nn.ModuleList([
@@ -505,7 +505,7 @@ class Model(nn.Module):
         
         self.pe = PositionalEmbedding(self.d_model)
         self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(gate_input_dim, self.num_experts,self.d_model, self.n_heads,
-                                                     nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts),
+                                                     nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts, self.d_ff_scale_factor),
                                                     ]), 
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
