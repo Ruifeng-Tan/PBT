@@ -517,7 +517,8 @@ class Model(nn.Module):
                                                     )
                                              for _ in range(self.d_layers)])
         
-        self.norm = nn.LayerNorm(self.d_model, elementwise_affine=False, bias=False) 
+        self.norm = nn.LayerNorm(self.d_model) 
+        self.aging_condition_mask = nn.Sequential(nn.Linear(self.gate_d_ff, self.d_model), nn.ReLU())
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
@@ -570,7 +571,7 @@ class Model(nn.Module):
 
         total_masks = [combined_masks]
 
-        DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
+        project_DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
         # logits = self.gate(DKP_embeddings)
         # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
@@ -583,14 +584,14 @@ class Model(nn.Module):
 
         # cycle_curve_data = self.view_linear(cycle_curve_data) # flatten & linear
         cycle_curve_data = self.flatten(cycle_curve_data)
-        out, guide_loss, LB_loss = self.flattenIntraCycleLayer(cycle_curve_data, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+        out, guide_loss, LB_loss = self.flattenIntraCycleLayer(cycle_curve_data, project_DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
         total_guide_loss += guide_loss
         total_LB_loss += LB_loss
         total_aug_count += 1
         logits_index += 1
 
         for i, intra_MoELayer in enumerate(self.intra_MoE_layers):
-            out, guide_loss, LB_loss = intra_MoELayer(out, DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss, LB_loss = intra_MoELayer(out, project_DKP_embeddings, total_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_LB_loss += LB_loss
             total_aug_count += 1
@@ -604,7 +605,7 @@ class Model(nn.Module):
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
-            out, guide_loss, LB_loss = inter_MoELayer(out, DKP_embeddings, total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
+            out, guide_loss, LB_loss = inter_MoELayer(out, project_DKP_embeddings, total_masks, attn_mask=attn_mask, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts) # [B, L, d_model]
             total_guide_loss += guide_loss
             total_LB_loss += LB_loss
             total_aug_count += 1
@@ -617,6 +618,8 @@ class Model(nn.Module):
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
         out = self.norm(out)
+        out = self.aging_condition_mask(project_DKP_embeddings) * out
+
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
         preds = preds.float()
