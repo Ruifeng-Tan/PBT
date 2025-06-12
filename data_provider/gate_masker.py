@@ -2,13 +2,13 @@ class gate_masker:
     # Original
     '''
     -5.0: 0,
-    15.0: 0,
-    20.0: 0,
-    23.0: 0,
-    25.0: 1,
-    30.0: 2,
-    35.0: 0,
-    45.0: 3
+    15.0: 1,
+    20.0: 2,
+    23.0: 3,
+    25.0: 4,
+    30.0: 5,6,7,
+    35.0: 8,
+    45.0: 9
     '''
     # MIX_large_temperature2mask = {
     #     -5.0: [0,1,2],
@@ -22,13 +22,13 @@ class gate_masker:
     # }
     MIX_large_temperature2mask = {
         -5.0: [0],
-        15.0: [0],
-        20.0: [0],
-        23.0: [0],
-        25.0: [1],
-        30.0: [2],
-        35.0: [0],
-        45.0: [3],
+        15.0: [1,2],
+        20.0: [1,2,3,4],
+        23.0: [2,3,4],
+        25.0: [2,3,4,5,6,7],
+        30.0: [4,5,6,7,8],
+        35.0: [5,6,7,8],
+        45.0: [9],
     }
 
     # MIX_large_format2mask = {
@@ -39,26 +39,25 @@ class gate_masker:
     # } 
 
     MIX_large_format2mask = {
-        'prismatic_': [0],
-        'cylindrical_18650': [1],
-        'pouch_': [2],
-        'pouch_502030': [3]
+        'prismatic': [0],
+        'cylindrical': [1,2,3],
+        'pouch': [4,5]
     } 
 
     MIX_large_cathodes2mask = {
-        'LFP': [0],
-        'NCA': [1],
-        'NCM': [2],
-        'LCO': [3],
-        'NCA_NCM': [1,2],
-        'NCM_NCA': [1,2],
-        'LCO_NCM': [2,3],
-        'NCM_LCO': [2,3]
+        'LFP': [0, 1],
+        'NCA': [2],
+        'NCM': [3,4,5],
+        'LCO': [6],
+        'NCA_NCM': [2,3,4,5],
+        'NCM_NCA': [2,3,4,5],
+        'LCO_NCM': [3,4,5,6],
+        'NCM_LCO': [3,4,5,6]
     }
 
     MIX_large_anode2mask = {
-        'graphite': [0],
-        'graphite/Si': [1]
+        'graphite': [0,1,2,3,4],
+        'graphite/Si': [5]
     }
     
 

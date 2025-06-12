@@ -473,8 +473,7 @@ class Model(nn.Module):
         self.use_PCA = configs.use_PCA
 
 
-        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff),
-                                  nn.LeakyReLU())
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=False))
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
 
