@@ -1,18 +1,32 @@
 import torch
 from torch import nn
+class FlattenLinear(nn.Module):
+    def __init__(self, gate_d_ff, input_dim, output_dim):
+        super(FlattenLinear, self).__init__()
+
+        self.linear = nn.Linear(input_dim, output_dim)
+        self.DKP_linear = nn.Sequential(nn.Linear(gate_d_ff, output_dim), nn.Sigmoid())
+    
+    def forward(self, x, DKP_embeddings):
+        out = self.linear(x) * self.DKP_linear(DKP_embeddings).unsqueeze(1)
+        return out
 
 class BatteryMoEMLP(nn.Module):
-    def __init__(self, hidden_size: int, intermediate_size: int, hidden_act: str):
-        super().__init__()
-        self.hidden_size = hidden_size
-        self.intermediate_size = intermediate_size
-        self.gate_proj = nn.Linear(self.hidden_size, self.intermediate_size, bias=False)
-        self.up_proj = nn.Linear(self.hidden_size, self.intermediate_size, bias=False)
-        self.down_proj = nn.Linear(self.intermediate_size, self.hidden_size, bias=False)
-        self.act_fn = nn.GELU() if hidden_act == 'gelu' else nn.SiLU()
-
-    def forward(self, hidden_state):
-        return self.down_proj(self.act_fn(self.gate_proj(hidden_state)) * self.up_proj(hidden_state))
+    def __init__(self, gate_d_ff, in_dim, hidden_dim, drop_rate, activation='gelu'):
+        super(BatteryMoEMLP, self).__init__()
+        self.dropout = nn.Dropout(drop_rate)
+        self.act_linear = nn.Linear(in_dim, hidden_dim)
+        self.DKP_linear = nn.Sequential(nn.Linear(gate_d_ff, hidden_dim), nn.Sigmoid())
+        self.out_linear = nn.Linear(hidden_dim, in_dim)
+    
+    def forward(self, x, DKP_embeddings):
+        '''
+        x: [B, *, in_dim]
+        '''
+        out = self.act_linear(x) * self.DKP_linear(DKP_embeddings).unsqueeze(1)
+        out = self.dropout(out)
+        out = self.out_linear(out)
+        return out
 
 class MLPBlockGELU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation='gelu'):
