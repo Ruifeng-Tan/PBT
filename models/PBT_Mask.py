@@ -473,7 +473,7 @@ class Model(nn.Module):
         self.pca_scaler = pickle.load(open(configs.pca_path, 'rb'))
         self.use_PCA = configs.use_PCA
 
-        assert self.gate_d_ff > self.specification_num_experts
+        assert self.gate_d_ff >= self.specification_num_experts
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=False))
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
