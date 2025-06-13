@@ -399,9 +399,16 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         return final_out, guide_loss, LB_loss
     
 class OutputHead(nn.Module):
-    def __init__(self, input_dim, outpu_num):
+    def __init__(self, ec_config):
         super(OutputHead, self).__init__()
-        self.projection = nn.Sequential(nn.Linear(input_dim, outpu_num))
+        ec_config = ec_config.get_configs()
+        self.d_llm = ec_config.d_llm
+        self.d_ff = ec_config.d_ff
+        self.d_model = ec_config.d_model
+        self.early_cycle_threshold = ec_config.early_cycle_threshold
+        self.drop_rate = ec_config.dropout
+        self.n_heads = ec_config.n_heads
+        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
         
     def forward(self, llm_out):
         '''
@@ -466,7 +473,7 @@ class Model(nn.Module):
         self.pca_scaler = pickle.load(open(configs.pca_path, 'rb'))
         self.use_PCA = configs.use_PCA
 
-
+        assert self.gate_d_ff > self.specification_num_experts
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=False))
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
@@ -511,9 +518,8 @@ class Model(nn.Module):
                                                     )
                                              for _ in range(self.d_layers)])
         
-        self.norm = nn.LayerNorm(self.d_model)
-        self.expert_proj1 = nn.Linear(self.d_model, self.d_model + self.specification_num_experts, bias=False)
-        self.regression_head = OutputHead(self.d_model + self.specification_num_experts, configs.output_numg)
+        self.norm = nn.LayerNorm(self.d_model) 
+        self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
     def forward(self, cycle_curve_data, curve_attn_mask, 
@@ -529,8 +535,7 @@ class Model(nn.Module):
                 CE_trajectory: Optional[torch.Tensor] = None,
                 use_aug: bool = False,
                 return_embedding: bool=False,
-                use_view_experts: bool=True,
-                use_specification_awareness: bool=True
+                use_view_experts: bool=True
                 ):
         '''
         params:
@@ -567,6 +572,9 @@ class Model(nn.Module):
         total_masks = [combined_masks]
 
         DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
+        DKP_mask = torch.ones_like(DKP_embeddings[:, self.specification_num_experts:])
+        DKP_mask = torch.cat([DKP_mask, combined_masks[:, :self.specification_num_experts]], dim=1)
+        DKP_embeddings = DKP_embeddings * DKP_mask
         # logits = self.gate(DKP_embeddings)
         # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
@@ -613,10 +621,6 @@ class Model(nn.Module):
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
         out = self.norm(out)
-        out = self.expert_proj1(out) # [B, D + self.specification_num_experts]
-        out_mask = torch.ones_like(out[:,self.specification_num_experts:])
-        specification_mask = combined_masks[:, :self.specification_num_experts]
-
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
         preds = preds.float()
