@@ -21,7 +21,7 @@ class gate_masker:
     #     45.0: [6,7,8,9,10,11,12,13],
     # }
 
-    # combined_expert_mask = cathode_mask + temperature_mask + format_mask + anode_mask
+    # combined_expert_mask = cathode_mask + anode_mask + format_mask + temperature_mask 
     MIX_large_temperature_scale_factor = [0.05, 0.05, 0.15, 0.02, 1.08, 1.06, 1.06, 1.06, 0.15, 0.47]
     MIX_large_temperature2mask = {
         -5.0: [0],
@@ -60,7 +60,7 @@ class gate_masker:
         'graphite/Si': [5]
     }
 
-    MIX_large_scale_factors = MIX_large_cathode_scale_factor + MIX_large_temperature_scale_factor + MIX_large_format_scale_factor + MIX_large_anode_scale_factor
+    MIX_large_scale_factors = MIX_large_cathode_scale_factor + MIX_large_anode_scale_factor + MIX_large_format_scale_factor  + MIX_large_temperature_scale_factor 
     
 
 

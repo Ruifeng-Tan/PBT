@@ -184,19 +184,22 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         B = cycle_curve_data.shape[0]
 
         mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
-        logits = torch.ones_like(logits)
-        # logits = F.softmax(logits, dim=1) # [B, num_experts]
+        logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
-        # logits.masked_fill_(mask==0, 0) # [B, num_experts]
         logits = logits * mask
 
-        # if self.top_k > 0:
-        #     _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
-        #     # Create a mask where only the top-K values will be kept
-        #     top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
-        #     # Scatter the mask at the indices of the top-K values
-        #     top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
-        #     logits = logits * top_K_mask
+        
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
+
+
+        de_norm = torch.sum(logits, dim=1) + self.eps
+        logits = logits / de_norm.unsqueeze(-1)
 
         dispatcher = MOEDispatcher(self.num_experts, logits)
         MOE_indicies = dispatcher.dispatch()
@@ -263,19 +266,18 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
 
 
         mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
-        logits = torch.ones_like(logits)
-        # logits = F.softmax(logits, dim=1) # [B, num_experts]
+        logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
         logits = logits * mask
 
-        # if self.top_k > 0:
-        #     _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
-        #     # Create a mask where only the top-K values will be kept
-        #     top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
-        #     # Scatter the mask at the indices of the top-K values
-        #     top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
-        #     logits = logits * top_K_mask
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
             
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -346,19 +348,18 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         B = cycle_curve_data.shape[0]
 
         mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
-        logits = torch.ones_like(logits)
-        # logits = F.softmax(logits, dim=1) # [B, num_experts]
+        logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
         logits = logits * mask
 
-        # if self.top_k > 0:
-        #     _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
-        #     # Create a mask where only the top-K values will be kept
-        #     top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
-        #     # Scatter the mask at the indices of the top-K values
-        #     top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
-        #     logits = logits * top_K_mask
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
             
         de_norm = torch.sum(logits, dim=1) + self.eps
         logits = logits / de_norm.unsqueeze(-1)
@@ -398,16 +399,9 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         return final_out, guide_loss, LB_loss
     
 class OutputHead(nn.Module):
-    def __init__(self, ec_config):
+    def __init__(self, input_dim, outpu_num):
         super(OutputHead, self).__init__()
-        ec_config = ec_config.get_configs()
-        self.d_llm = ec_config.d_llm
-        self.d_ff = ec_config.d_ff
-        self.d_model = ec_config.d_model
-        self.early_cycle_threshold = ec_config.early_cycle_threshold
-        self.drop_rate = ec_config.dropout
-        self.n_heads = ec_config.n_heads
-        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
+        self.projection = nn.Sequential(nn.Linear(input_dim, outpu_num))
         
     def forward(self, llm_out):
         '''
@@ -465,6 +459,7 @@ class Model(nn.Module):
 
         self.cathode_split = self.cathode_experts
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
+        self.specification_num_experts = self.cathode_experts + self.temperature_experts + self.format_experts
 
         self.gate_d_ff = configs.gate_d_ff
 
@@ -516,8 +511,9 @@ class Model(nn.Module):
                                                     )
                                              for _ in range(self.d_layers)])
         
-        self.norm = nn.LayerNorm(self.d_model) 
-        self.regression_head = OutputHead(battery_life_config.ec_config)
+        self.norm = nn.LayerNorm(self.d_model)
+        self.expert_proj1 = nn.Linear(self.d_model, self.d_model + self.specification_num_experts, bias=False)
+        self.regression_head = OutputHead(self.d_model + self.specification_num_experts, configs.output_numg)
 
 
     def forward(self, cycle_curve_data, curve_attn_mask, 
@@ -533,7 +529,8 @@ class Model(nn.Module):
                 CE_trajectory: Optional[torch.Tensor] = None,
                 use_aug: bool = False,
                 return_embedding: bool=False,
-                use_view_experts: bool=True
+                use_view_experts: bool=True,
+                use_specification_awareness: bool=True
                 ):
         '''
         params:
@@ -616,6 +613,10 @@ class Model(nn.Module):
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
         out = self.norm(out)
+        out = self.expert_proj1(out) # [B, D + self.specification_num_experts]
+        out_mask = torch.ones_like(out[:,self.specification_num_experts:])
+        specification_mask = combined_masks[:, :self.specification_num_experts]
+
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
         preds = preds.float()
