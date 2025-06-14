@@ -39,7 +39,6 @@ class MultiViewLayer(nn.Module):
         self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
-        self.shared_expert_gate = nn.Sequential(nn.Linear(gate_input_dim, self.num_general_experts, bias=False), nn.Sigmoid())
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -69,9 +68,8 @@ class MultiViewLayer(nn.Module):
                 total_guide_loss += guide_loss
                 total_LB_loss += LB_loss
 
-        shared_total_logits = self.shared_expert_gate(gate_input)
         for i in range(len(self.general_experts)):
-            final_out = self.general_experts[i](x) * shared_total_logits[:, i].unsqueeze(1).unsqueeze(1) + final_out # add the general experts
+            final_out = self.general_experts[i](x) + final_out # add the general experts
 
         if len(self.ion_experts) != 0:
             total_ion_outs = [] # each element is [B, 1, *, D]
@@ -100,7 +98,6 @@ class MultiViewTransformerLayer(nn.Module):
         self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts)
-        self.shared_expert_gate = nn.Sequential(nn.Linear(gate_input_dim, self.num_general_experts, bias=False), nn.Sigmoid())
 
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
                             output_attention=False), d_model, n_heads)
@@ -141,9 +138,8 @@ class MultiViewTransformerLayer(nn.Module):
                 total_guide_loss += guide_loss
                 total_LB_loss += LB_loss
 
-        shared_total_logits = self.shared_expert_gate(gate_input)
         for i in range(len(self.general_experts)):
-            final_out = self.general_experts[i](x) * shared_total_logits[:, i].unsqueeze(1).unsqueeze(1) + final_out # add the general experts
+            final_out = self.general_experts[i](x) + final_out # add the general experts
 
         if len(self.ion_experts) != 0:
             total_ion_outs = [] # each element is [B, 1, *, D]
@@ -576,10 +572,10 @@ class Model(nn.Module):
 
         DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
         DKP_mask = torch.ones_like(DKP_embeddings[:, self.num_experts:])
-        DKP_mask = torch.cat([DKP_mask, combined_masks[:, :self.num_experts]], dim=1)
-        DKP_embeddings = DKP_embeddings * DKP_mask
-        # logits = self.gate(DKP_embeddings)
-        # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
+        DKP_mask = torch.cat([combined_masks, DKP_mask], dim=1)
+        DKP_embeddings = DKP_embeddings * DKP_mask # aging-condition-informed ReLU
+        if self.gate_d_ff > self.num_experts:
+            DKP_embeddings[:, self.num_experts:] = F.relu(DKP_embeddings[:, self.num_experts:]) 
   
         logits_index = 0
 
