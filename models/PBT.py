@@ -572,10 +572,12 @@ class Model(nn.Module):
 
         DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
         DKP_mask = torch.ones_like(DKP_embeddings[:, self.num_experts:])
-        DKP_mask = torch.cat([combined_masks, DKP_mask], dim=1)
-        DKP_embeddings = DKP_embeddings * DKP_mask # aging-condition-informed ReLU
+        DKP_mask = torch.cat([DKP_mask, combined_masks], dim=1)
+        DKP_embeddings = DKP_embeddings * DKP_mask
         if self.gate_d_ff > self.num_experts:
-            DKP_embeddings[:, self.num_experts:] = F.relu(DKP_embeddings[:, self.num_experts:]) 
+            DKP_embeddings[:, :self.gate_d_ff-self.num_experts] = F.relu(DKP_embeddings[:, :self.gate_d_ff-self.num_experts])
+        # logits = self.gate(DKP_embeddings)
+        # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
         logits_index = 0
 
