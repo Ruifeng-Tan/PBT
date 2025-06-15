@@ -113,6 +113,7 @@ parser.add_argument('--patch_len', type=int, default=10, help='patch length')
 parser.add_argument('--stride', type=int, default=10, help='stride')
 parser.add_argument('--output_num', type=int, default=1, help='The number of prediction targets')
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
+parser.add_argument('--use_dff_scale', action='store_true', default=False, help='use scaled d_ff for experts')
 
 # optimization
 parser.add_argument('--down_sample_ratio', type=float, default=0.75, help='the down sampling ratio for data augmentation')
@@ -221,7 +222,7 @@ args.__dict__['d_ff_scale_factor'] = d_ff_scale_factor
 
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ce{}_seed{}'.format(
+    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
         args.model,
         args.seq_len,
         args.batch_size,
@@ -233,7 +234,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
         args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.cl_epoches, args.seed)
+        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -295,7 +296,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_maskGate",
+        project="PBT_maskGate_noScale",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
