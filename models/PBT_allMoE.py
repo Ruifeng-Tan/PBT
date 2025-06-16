@@ -250,12 +250,8 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
-        self.use_dff_scale = configs.use_dff_scale
         self.activation = configs.activation
-        if self.use_dff_scale:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
-        else:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for i in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.eps = 1e-9
     
@@ -337,11 +333,85 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts 
         self.activation = configs.activation
-        self.use_dff_scale = configs.use_dff_scale
-        if self.use_dff_scale:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
-        else:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for i in range(self.num_experts)])
+        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
+        self.num_general_experts = configs.num_general_experts
+        self.eps = 1e-9
+
+    
+    def forward(self, cycle_curve_data, logits, moe_masks):
+        '''
+        params:
+            cycle_curve_data: [B, L, d_model]
+            logits: [B, num_experts]
+            moe_masks: [B, num_experts]
+        '''
+        B = cycle_curve_data.shape[0]
+
+        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        logits = F.softmax(logits, dim=1) # [B, num_experts]
+        raw_logits = logits.clone()
+        # logits.masked_fill_(mask==0, 0) # [B, num_experts]
+        logits = logits * mask
+
+        if self.top_k > 0:
+            _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
+            # Create a mask where only the top-K values will be kept
+            top_K_mask = torch.zeros_like(logits, dtype=torch.bool)
+            # Scatter the mask at the indices of the top-K values
+            top_K_mask.scatter_(1, indices, 1) # 0 indicates mask
+            logits = logits * top_K_mask
+            
+        de_norm = torch.sum(logits, dim=1) + self.eps
+        logits = logits / de_norm.unsqueeze(-1)
+
+        dispatcher = MOEDispatcher(self.num_experts, logits)
+        MOE_indicies = dispatcher.dispatch()
+        total_outs = []
+        total_expert_outs = []
+        for i, expert in enumerate(self.experts):
+            if len(MOE_indicies[i])>=1:
+                out = expert(cycle_curve_data[MOE_indicies[i]]) # [expert_batch_size, d_llm]
+                total_outs.append(out)
+                total_expert_outs.append(out)
+
+        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+        final_out = total_outs
+
+        LB_loss = 0
+        guide_loss = 0
+        if self.training:
+            # Guidance loss
+            # masked_raw_logits = raw_logits * mask
+            # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
+            # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
+
+            # new Guidance loss
+            active_logits = raw_logits * mask
+            inactive_logits = raw_logits * (1-mask)
+            guide_loss = -torch.mean(torch.log(torch.sum(active_logits, dim=1).exp() / torch.sum(inactive_logits, dim=1).exp()))
+
+            # Compute the load balancing loss
+            entropy = - logits * torch.log(logits + self.eps) # [B, num_experts]
+            entropy = entropy * moe_masks # mask the inactive logits
+            entropy_loss = torch.sum(entropy, dim=1) # [B]. The entropy of the logits
+            LB_loss = - torch.mean(entropy_loss) # [1]
+
+        return final_out, guide_loss, LB_loss
+
+class BatteryMoEInterCycleAttnMoELayer(nn.Module):
+    def __init__(self, configs, num_experts, d_ff_scale_factor):
+        super(BatteryMoEInterCycleAttnMoELayer, self).__init__()
+        self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
+        self.drop_rate = configs.dropout
+        self.n_heads = configs.n_heads
+
+        self.d_ff = configs.d_ff
+        self.d_llm = configs.d_llm
+        self.top_k = configs.topK
+        self.d_model = configs.d_model  
+        self.num_experts = num_experts 
+        self.activation = configs.activation
+        self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
         self.eps = 1e-9
 
@@ -476,12 +546,11 @@ class Model(nn.Module):
         self.num_experts = self.cathode_experts + self.temperature_experts + self.format_experts + self.anode_experts
 
         self.gate_d_ff = configs.gate_d_ff
-        self.dk_factor = configs.dk_factor
-        self.gate_domain_knowledge_neurons = self.num_experts * configs.dk_factor
 
         self.pca_scaler = pickle.load(open(configs.pca_path, 'rb'))
+        self.use_PCA = configs.use_PCA
 
-        assert self.gate_d_ff >= self.gate_domain_knowledge_neurons, Exception('The gate neurons should be no less than the domain-knowledge neurons')
+        assert self.gate_d_ff >= self.num_experts
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=False))
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
@@ -580,12 +649,9 @@ class Model(nn.Module):
         total_masks = [combined_masks]
 
         DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
-        DKP_mask = torch.ones_like(DKP_embeddings[:, self.gate_domain_knowledge_neurons:])
-        domain_knowledge_ReLU_mask = combined_masks.repeat_interleave(dim=1, repeats=self.dk_factor)
-        DKP_mask = torch.cat([DKP_mask, domain_knowledge_ReLU_mask], dim=1)
+        DKP_mask = torch.ones_like(DKP_embeddings[:, self.num_experts:])
+        DKP_mask = torch.cat([DKP_mask, combined_masks[:, :self.num_experts]], dim=1)
         DKP_embeddings = DKP_embeddings * DKP_mask
-        if self.gate_d_ff > self.gate_domain_knowledge_neurons:
-            DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons] = F.relu(DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons])
         # logits = self.gate(DKP_embeddings)
         # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   

@@ -544,23 +544,23 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
         val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
         test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
-        if args.use_PCA:
-            self.pca_scaler = pickle.load(open(args.pca_path, 'rb'))
-            tmp_train_part = {}
-            tmp_val_part = {}
-            tmp_test_part = {}
+        # if args.use_PCA:
+        #     self.pca_scaler = pickle.load(open(args.pca_path, 'rb'))
+        #     tmp_train_part = {}
+        #     tmp_val_part = {}
+        #     tmp_test_part = {}
 
-            for name, value in train_part.items():
-                tmp_train_part[name] = self.pca_scaler.transform(value)
-            train_part = tmp_train_part
+        #     for name, value in train_part.items():
+        #         tmp_train_part[name] = self.pca_scaler.transform(value)
+        #     train_part = tmp_train_part
 
-            for name, value in val_part.items():
-                tmp_val_part[name] = self.pca_scaler.transform(value)
-            val_part = tmp_val_part
+        #     for name, value in val_part.items():
+        #         tmp_val_part[name] = self.pca_scaler.transform(value)
+        #     val_part = tmp_val_part
 
-            for name, value in test_part.items():
-                tmp_test_part[name] = self.pca_scaler.transform(value)
-            test_part = tmp_test_part
+        #     for name, value in test_part.items():
+        #         tmp_test_part[name] = self.pca_scaler.transform(value)
+        #     test_part = tmp_test_part
 
         self.cellName_prompt = train_part | val_part | test_part
         if flag == 'train':

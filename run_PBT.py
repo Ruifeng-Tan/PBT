@@ -97,7 +97,7 @@ parser.add_argument('--c_out', type=int, default=1, help='output size')
 parser.add_argument('--d_model', type=int, default=16, help='dimension of model')
 parser.add_argument('--n_heads', type=int, default=4, help='num of heads')
 parser.add_argument('--noDKP_layers', type=int, default=1, help='the number of no DKP layers in the inter-cycle encoder')
-parser.add_argument('--bottleneck_factor', type=int, default=16, help='the scale down factor of the bottleneck layer')
+parser.add_argument('--dk_factor', type=int, default=1, help='the scale factor of domain-knowledege neurons in the gate')
 parser.add_argument('--e_layers', type=int, default=2, help='num of encoder layers')
 parser.add_argument('--d_layers', type=int, default=1, help='num of decoder layers')
 parser.add_argument('--d_ff', type=int, default=32, help='dimension of fcn')
@@ -164,7 +164,7 @@ parser.add_argument('--topK', type=int, default=2, help='The number of the exper
 parser.add_argument('--cycle_topK', type=int, default=2, help='The number of the experts used in CycleMoE layer')
 parser.add_argument('--importance_weight', type=float, default=0.0, help='The loss weight for balancing expert utilization')
 parser.add_argument('--use_ReMoE', action='store_true', default=False, help='Set True to use relu router')
-parser.add_argument('--use_PCA', action='store_true', default=False, help='Set True to use prompt embeddings processed by PCA')
+# parser.add_argument('--use_PCA', action='store_true', default=False, help='Set True to use prompt embeddings processed by PCA')
 
 # Pretrain
 parser.add_argument('--Pretrained_model_path', type=str, default='', help='The path to the saved pretrained model parameters')
@@ -189,14 +189,14 @@ ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
 accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], gradient_accumulation_steps=args.accumulation_steps)
 accelerator.print(args.__dict__)
 
-if args.use_PCA:
-    # Automatically find d_llm dimension
-    pca_scaler = pickle.load(open(args.pca_path, 'rb'))
-    tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all.pkl', 'rb'))
+# if args.use_PCA:
+#     # Automatically find d_llm dimension
+#     pca_scaler = pickle.load(open(args.pca_path, 'rb'))
+#     tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all.pkl', 'rb'))
 
-    new_d_llm = pca_scaler.transform(list(tmp.values())[0]).shape[1]
-    args.d_llm = new_d_llm
-    args.__dict__['d_llm'] = new_d_llm
+#     new_d_llm = pca_scaler.transform(list(tmp.values())[0]).shape[1]
+#     args.d_llm = new_d_llm
+#     args.__dict__['d_llm'] = new_d_llm
 
 if args.Pretrained_model_path:
     pretrained = True
@@ -222,8 +222,10 @@ args.__dict__['d_ff_scale_factor'] = d_ff_scale_factor
 
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
+    setting = '{}_{}_{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
         args.model,
+        args.dk_factor,
+        args.llm_choice,
         args.seq_len,
         args.batch_size,
         args.learning_rate,
@@ -234,7 +236,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
         args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, args.seed)
+        args.topK, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, args.seed)
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
