@@ -251,8 +251,9 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.top_k = configs.topK
         self.use_dff_scale = configs.use_dff_scale
         self.activation = configs.activation
+        self.min_d_ff = configs.min_d_ff
         if self.use_dff_scale:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, math.ceil(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
+            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, max([math.ceil(self.d_ff * d_ff_scale_factor[i]), self.min_d_ff]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         else:
             self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -336,9 +337,10 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts 
         self.activation = configs.activation
+        self.min_d_ff = configs.min_d_ff
         self.use_dff_scale = configs.use_dff_scale
         if self.use_dff_scale:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, math.ceil(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
+            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, max([math.ceil(self.d_ff * d_ff_scale_factor[i]), self.min_d_ff]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         else:
             self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
