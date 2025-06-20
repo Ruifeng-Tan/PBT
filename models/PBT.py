@@ -3,12 +3,12 @@
 '''
 import torch
 import copy
+import math
 import pickle
 import torch.nn as nn
 from torch.nn import MultiheadAttention, LayerNorm
 import transformers
 from scipy import signal
-from math import sqrt
 from transformers import LlamaConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from transformers import GPT2Config, GPT2Tokenizer, GPT2Model, AutoTokenizer, AutoModel, AutoConfig, Phi3Config
 from transformers import PreTrainedModel, BitsAndBytesConfig
@@ -160,18 +160,19 @@ class MultiViewTransformerLayer(nn.Module):
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
-    def __init__(self, configs, num_experts):
+    def __init__(self, configs, num_experts, d_ff_scale_factor):
         super(BatteryMoEFlattenIntraCycleMoELayer, self).__init__()
         self.charge_discharge_length = configs.charge_discharge_length # There two summary tokens
         self.drop_rate = configs.dropout
         self.n_heads = configs.n_heads
-
+        self.min_d_ff = configs.min_d_ff
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
         self.d_model = configs.d_model  
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
-        self.experts = nn.ModuleList([nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_experts)])
+        self.experts = nn.ModuleList([nn.Sequential(nn.Linear(self.charge_discharge_length*3, max([math.ceil(self.d_ff * d_ff_scale_factor[i]), self.min_d_ff])),
+                                                    nn.Linear(max([math.ceil(self.d_ff * d_ff_scale_factor[i]), self.min_d_ff]), self.d_model)) for i in range(self.num_experts)])
         self.eps = 1e-9
     
     def forward(self, cycle_curve_data, logits, moe_masks):
@@ -247,13 +248,14 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         self.n_heads = configs.n_heads
         self.d_ff = configs.d_ff
         self.d_llm = configs.d_llm
+        self.min_d_ff = configs.min_d_ff
         self.d_model = configs.d_model  
         self.num_experts = num_experts # 4 types of cathodes in the training data
         self.top_k = configs.topK
         self.use_dff_scale = configs.use_dff_scale
         self.activation = configs.activation
         if self.use_dff_scale:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
+            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, max([math.ceil(self.d_ff * d_ff_scale_factor[i]), self.min_d_ff]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         else:
             self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -337,9 +339,10 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         self.d_model = configs.d_model  
         self.num_experts = num_experts 
         self.activation = configs.activation
+        self.min_d_ff = configs.min_d_ff
         self.use_dff_scale = configs.use_dff_scale
         if self.use_dff_scale:
-            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, int(self.d_ff * d_ff_scale_factor[i]), self.drop_rate, self.activation) for i in range(self.num_experts)])
+            self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, max([math.ceil(self.d_ff * d_ff_scale_factor[i]), self.min_d_ff]), self.drop_rate, self.activation) for i in range(self.num_experts)])
         else:
             self.experts = nn.ModuleList([MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for i in range(self.num_experts)])
         self.num_general_experts = configs.num_general_experts
@@ -489,7 +492,7 @@ class Model(nn.Module):
         
         self.flatten = nn.Flatten(start_dim=2)
         self.flattenIntraCycleLayer = MultiViewLayer(gate_input_dim, self.num_experts,
-                                                     nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts)]
+                                                     nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts, self.d_ff_scale_factor)]
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
                                                     general_experts=nn.ModuleList([

@@ -300,7 +300,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_maskGate_noScale",
+        project="PBT_fix",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
