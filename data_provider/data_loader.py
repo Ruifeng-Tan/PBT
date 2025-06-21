@@ -818,8 +818,7 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 ion_type_mask = []
             ion_type_mask = list(ion_type_mask)
             
-            # combined_expert_mask = cathode_mask + anode_mask + format_mask  + temperature_mask 
-            combined_expert_mask = cathode_mask + anode_mask
+            combined_expert_mask = cathode_mask + anode_mask + format_mask  + temperature_mask 
 
             cell_name = file_name.split('.pkl')[0]
             if self.flag == 'train':

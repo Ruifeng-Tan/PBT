@@ -477,7 +477,7 @@ class Model(nn.Module):
         self.down_sample_ratio = configs.down_sample_ratio
 
         self.cathode_split = self.cathode_experts
-        self.num_experts = self.cathode_experts + self.anode_experts
+        self.num_experts = self.cathode_experts + self.anode_experts + self.temperature_experts + self.format_experts
 
         self.gate_d_ff = configs.gate_d_ff
         self.dk_factor = configs.dk_factor
