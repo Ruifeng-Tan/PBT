@@ -73,7 +73,7 @@ class FlattenLinear(nn.Module):
 class MLPBlockGELU(nn.Module):
     def __init__(self, in_dim, hidden_dim, drop_rate, activation='gelu'):
         super(MLPBlockGELU, self).__init__()
-        # self.dropout = nn.Dropout(drop_rate)
+        self.dropout = nn.Dropout(drop_rate)
         self.act_linear = nn.Linear(in_dim, hidden_dim, bias=False)
         if activation == 'gelu':
             self.act = nn.GELU()
@@ -90,7 +90,7 @@ class MLPBlockGELU(nn.Module):
         x: [B, *, in_dim]
         '''
         out = self.act(self.act_linear(x))
-        # out = self.dropout(out)
+        out = self.dropout(out)
         out = self.out_linear(out)
         return out
     
