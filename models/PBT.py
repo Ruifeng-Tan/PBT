@@ -33,12 +33,13 @@ from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error() 
 
 class MultiViewLayer(nn.Module):
-    def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, ion_experts, use_connection, use_norm=True):
+    def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, ion_experts, use_connection, drop_rate, use_norm=True):
         super(MultiViewLayer, self).__init__()
         self.num_views = len(view_experts)
         self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
+        self.dropout = nn.Dropout(drop_rate)
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -86,7 +87,7 @@ class MultiViewLayer(nn.Module):
             final_out = final_out + total_ion_outs
 
         if self.use_connection:
-            final_out = final_out + x # residual connection
+            final_out = self.dropout(final_out) + x # residual connection
         
         # final_out = self.norm(final_out) if self.use_norm else final_out # pre norm
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
