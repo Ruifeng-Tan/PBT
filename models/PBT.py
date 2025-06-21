@@ -502,6 +502,7 @@ class Model(nn.Module):
                                                     ion_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.ion_experts)
                                                     ]),
+                                                    drop_rate=self.drop_rate,
                                                     use_connection=False, use_norm=False)
         
         self.intra_MoE_layers = nn.ModuleList([MultiViewLayer(gate_input_dim, self.num_experts,
@@ -514,6 +515,7 @@ class Model(nn.Module):
                                                     ion_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.ion_experts)
                                                     ]),
+                                                    drop_rate=self.drop_rate,
                                                     use_connection=True) for _ in range(self.e_layers)])
         
         self.pe = PositionalEmbedding(self.d_model)
