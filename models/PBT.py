@@ -102,7 +102,7 @@ class MultiViewTransformerLayer(nn.Module):
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts)
 
-        self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=drop_rate,
+        self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=0.0,
                             output_attention=False), d_model, n_heads)
         self.dropout = nn.Dropout(drop_rate)
         self.view_experts = view_experts
