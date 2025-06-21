@@ -25,16 +25,16 @@ class gate_masker:
     }
 
 
-    MIX_large_cathode_scale_factor = [1.033, 1.033, 0.693, 0.943, 0.943, 0.943, 0.943, 0.12]
+    MIX_large_cathode_scale_factor = [1.033 for _ in range(6)] + [1.04 for _ in range(2)] + [1.029 for _ in range(11)] + [0.36]
     MIX_large_cathodes2mask = {
-        'LFP': [0,1],
-        'NCA': [2],
-        'NCM': [3,4,5,6],
-        'LCO': [7],
-        'NCA_NCM': [2,3,4,5,6],
-        'NCM_NCA': [2,3,4,5,6],
-        'LCO_NCM': [3,4,5,6,7],
-        'NCM_LCO': [3,4,5,6,7]
+        'LFP': [0,1,2,3,4,5],
+        'NCA': [6,7],
+        'NCM': [8,9,10,11,12,13,14,15,16,17,18],
+        'LCO': [19],
+        'NCA_NCM': [6,7,8,9,10,11,12,13,14,15,16,17,18],
+        'NCM_NCA': [6,7,8,9,10,11,12,13,14,15,16,17,18],
+        'LCO_NCM': [8,9,10,11,12,13,14,15,16,17,18,19],
+        'NCM_LCO': [8,9,10,11,12,13,14,15,16,17,18,19]
     }
 
     MIX_large_format_scale_factor = [0.12, 1.0, 1.0, 1.0, 1.0, 0.911, 0.911, 0.911]
@@ -44,14 +44,14 @@ class gate_masker:
         'pouch': [5,6,7]
     } 
 
-    MIX_large_anode_scale_factor = [1.013, 1.013, 1.013, 1.013, 1.013, 1.013, 0.786]
+    MIX_large_anode_scale_factor = [1.18, 1.18] + [1.013 for _ in range(18)]
     MIX_large_anode2mask = {
-        'graphite': [0,1,2,3,4,5],
-        'graphite/Si': [6]
+        'graphite/Si': [0,1],
+        'graphite': [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
     }
 
-    MIX_large_scale_factors = MIX_large_cathode_scale_factor + MIX_large_anode_scale_factor + MIX_large_format_scale_factor  + MIX_large_temperature_scale_factor 
-    
+    # MIX_large_scale_factors = MIX_large_cathode_scale_factor + MIX_large_anode_scale_factor + MIX_large_format_scale_factor  + MIX_large_temperature_scale_factor 
+    MIX_large_scale_factors = MIX_large_cathode_scale_factor + MIX_large_anode_scale_factor
 
 
     # MIX_all
