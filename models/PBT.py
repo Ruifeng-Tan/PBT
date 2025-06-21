@@ -157,6 +157,7 @@ class MultiViewTransformerLayer(nn.Module):
             total_ion_outs = torch.sum(total_ion_outs * ion_type_masks, dim=1)
             final_out = final_out + total_ion_outs
 
+        final_out = self.dropout(final_out) + x # residual connection 
         # final_out = self.norm2(self.dropout(final_out) + x) # add & norm
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
