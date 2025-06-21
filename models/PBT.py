@@ -585,9 +585,9 @@ class Model(nn.Module):
         DKP_mask = torch.ones_like(DKP_embeddings[:, self.gate_domain_knowledge_neurons:])
         domain_knowledge_ReLU_mask = combined_masks.repeat_interleave(dim=1, repeats=self.dk_factor)
         DKP_mask = torch.cat([DKP_mask, domain_knowledge_ReLU_mask], dim=1)
-        DKP_embeddings = DKP_embeddings * DKP_mask
-        if self.gate_d_ff > self.gate_domain_knowledge_neurons:
-            DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons] = F.relu(DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons])
+        DKP_embeddings = F.relu(DKP_embeddings * DKP_mask)
+        # if self.gate_d_ff > self.gate_domain_knowledge_neurons:
+        #     DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons] = F.relu(DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons])
         # logits = self.gate(DKP_embeddings)
         # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   

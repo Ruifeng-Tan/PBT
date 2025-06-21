@@ -25,16 +25,16 @@ class gate_masker:
     }
 
 
-    MIX_large_cathode_scale_factor = [1.033, 0.693, 0.943, 0.943, 0.943, 0.943, 0.12]
+    MIX_large_cathode_scale_factor = [1.033, 1.033, 0.693, 0.943, 0.943, 0.943, 0.943, 0.12]
     MIX_large_cathodes2mask = {
-        'LFP': [1,2],
-        'NCA': [3],
-        'NCM': [4,5,6,7],
-        'LCO': [8],
-        'NCA_NCM': [3,4,5,6,7],
-        'NCM_NCA': [3,4,5,6,7],
-        'LCO_NCM': [4,5,6,7,8],
-        'NCM_LCO': [4,5,6,7,8]
+        'LFP': [0,1],
+        'NCA': [2],
+        'NCM': [3,4,5,6],
+        'LCO': [7],
+        'NCA_NCM': [2,3,4,5,6],
+        'NCM_NCA': [2,3,4,5,6],
+        'LCO_NCM': [3,4,5,6,7],
+        'NCM_LCO': [3,4,5,6,7]
     }
 
     MIX_large_format_scale_factor = [0.12, 1.0, 1.0, 1.0, 1.0, 0.911, 0.911, 0.911]
