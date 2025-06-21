@@ -54,12 +54,13 @@ class MultiViewLayer(nn.Module):
         total_masks: [num_view, num_experts for each view expert]
         ion_type_masks: [B, ion_expert_num]. 1 indicates activated
         '''
+        x = self.norm(x) if self.use_norm else x # pre norm
         B = x.shape[0]
         total_guide_loss = 0
         total_LB_loss = 0
         final_out = 0
         total_logits = self.expert_gate(gate_input) # [B, num_experts]
-
+       
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
                 out, guide_loss, LB_loss = view_expert(x, total_logits, total_masks[i])
@@ -87,7 +88,7 @@ class MultiViewLayer(nn.Module):
         if self.use_connection:
             final_out = final_out + x # residual connection
         
-        final_out = self.norm(final_out) if self.use_norm else final_out # pre norm
+        # final_out = self.norm(final_out) if self.use_norm else final_out # pre norm
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 
@@ -117,6 +118,7 @@ class MultiViewTransformerLayer(nn.Module):
         attn_mask: [B, 1, L, L]
         '''
         B = x.shape[0]
+        x = self.norm1(x)
         # casual masked self-attention
         new_x, _ = self.attention(
             x, x, x,
@@ -124,7 +126,7 @@ class MultiViewTransformerLayer(nn.Module):
             tau=None, delta=None
         )
         x = x + self.dropout(new_x) # residual connection 
-        x = self.norm1(x)
+        x = self.norm2(x)
 
         # MoE FFN
         total_guide_loss = 0
@@ -155,7 +157,7 @@ class MultiViewTransformerLayer(nn.Module):
             total_ion_outs = torch.sum(total_ion_outs * ion_type_masks, dim=1)
             final_out = final_out + total_ion_outs
 
-        final_out = self.norm2(self.dropout(final_out) + x) # add & norm
+        # final_out = self.norm2(self.dropout(final_out) + x) # add & norm
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
@@ -526,7 +528,7 @@ class Model(nn.Module):
                                                     )
                                              for _ in range(self.d_layers)])
         
-        # self.norm = nn.LayerNorm(self.d_model) 
+        self.norm = nn.LayerNorm(self.d_model) 
         self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
@@ -631,7 +633,7 @@ class Model(nn.Module):
         idx = idx.unsqueeze(1)
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
-        # out = self.norm(out)
+        out = self.norm(out)
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
         preds = preds.float()
