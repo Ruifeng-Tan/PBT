@@ -102,7 +102,7 @@ class MultiViewTransformerLayer(nn.Module):
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts)
 
-        self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=0.0,
+        self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=0.05,
                             output_attention=False), d_model, n_heads)
         self.dropout = nn.Dropout(drop_rate)
         self.view_experts = view_experts
@@ -622,6 +622,9 @@ class Model(nn.Module):
         out = out + self.pe(out) # add positional encoding
         attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L]
         attn_mask = torch.repeat_interleave(attn_mask, attn_mask.shape[-1], dim=1) # [B, L, L]
+        casual_mask = self.create_causal_mask(B, L) if not use_aug else self.create_causal_mask(3*B, L)
+        casual_mask = casual_mask.to(attn_mask.device)
+        attn_mask = torch.where(casual_mask==1, attn_mask, torch.zeros_like(attn_mask)) # form casual mask
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
