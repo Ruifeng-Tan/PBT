@@ -411,9 +411,16 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         return final_out, guide_loss, LB_loss
     
 class OutputHead(nn.Module):
-    def __init__(self, input_dim, output_num):
+    def __init__(self, ec_config):
         super(OutputHead, self).__init__()
-        self.projection = nn.Sequential(nn.Linear(input_dim, output_num))
+        ec_config = ec_config.get_configs()
+        self.d_llm = ec_config.d_llm
+        self.d_ff = ec_config.d_ff
+        self.d_model = ec_config.d_model
+        self.early_cycle_threshold = ec_config.early_cycle_threshold
+        self.drop_rate = ec_config.dropout
+        self.n_heads = ec_config.n_heads
+        self.projection = nn.Sequential(nn.Linear(self.d_model, ec_config.output_num))
         
     def forward(self, llm_out):
         '''
@@ -525,9 +532,8 @@ class Model(nn.Module):
                                                     )
                                              for _ in range(self.d_layers)])
         
-        self.up_proj = nn.Linear(self.d_model, self.d_model*4)
-        self.norm = nn.LayerNorm(self.d_model*4) 
-        self.regression_head = OutputHead(self.d_model, configs.output_num)
+        self.norm = nn.LayerNorm(self.d_model) 
+        self.regression_head = OutputHead(battery_life_config.ec_config)
 
 
     def forward(self, cycle_curve_data, curve_attn_mask, 
@@ -616,6 +622,9 @@ class Model(nn.Module):
         out = out + self.pe(out) # add positional encoding
         attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L]
         attn_mask = torch.repeat_interleave(attn_mask, attn_mask.shape[-1], dim=1) # [B, L, L]
+        casual_mask = self.create_causal_mask(B, L) if not use_aug else self.create_causal_mask(3*B, L)
+        casual_mask = casual_mask.to(attn_mask.device)
+        attn_mask = torch.where(casual_mask==1, attn_mask, torch.zeros_like(attn_mask)) # form casual mask
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
         for i, inter_MoELayer in enumerate(self.inter_MoE_layers):
@@ -630,7 +639,7 @@ class Model(nn.Module):
             len(lengths), out.size(2))
         idx = idx.unsqueeze(1)
         out = out.gather(1, idx).squeeze(1) # [B, D]
-        out = self.up_proj(out)
+
         out = self.norm(out)
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
