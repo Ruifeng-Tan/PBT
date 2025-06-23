@@ -154,12 +154,11 @@ class AverageRnCLoss(nn.Module):
             pos_logits = logits[:, k]
             pos_label_diffs = label_diffs[:, k]
             neg_mask = (label_diffs > pos_label_diffs.view(-1, 1)).float()
-            neg_weights = torch.ones_like(neg_mask) / (torch.sum(neg_mask, dim=1, keepdim=True)+self.eps)
-            neg_weights = neg_weights * neg_mask
+            # neg_weights = torch.ones_like(neg_mask) / (torch.sum(neg_mask, dim=1, keepdim=True)+self.eps)
+            # neg_weights = neg_weights * neg_mask
 
             zero_neg_mask = (neg_mask.sum(dim=-1) == 0)
-            sum_neg_mask = (neg_weights * exp_logits).sum(dim=-1)
-            
+            sum_neg_mask = (neg_mask * exp_logits).sum(dim=-1)
             pos_log_probs = torch.zeros_like(pos_logits)
             if (~zero_neg_mask).any():
                 pos_log_probs[~zero_neg_mask] = pos_logits[~zero_neg_mask] - torch.log(sum_neg_mask[~zero_neg_mask])

@@ -432,26 +432,26 @@ for ii in range(args.itr):
                 
                 if epoch < args.cl_epoches:
                     if args.use_aug:
-                        rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
+                        rnc_loss = rnc_criterion(embeddings, labels)
                         print_alignment_loss = rnc_loss.detach().float()
-                        final_loss = rnc_loss
+                        final_loss = args.aug_w * rnc_loss
                 else:
                     final_loss = loss
                     if args.use_LB:
-                        importance_loss = args.importance_weight * LB_loss.float()
+                        importance_loss = LB_loss.float()
                         print_LB_loss = importance_loss.detach().float()
-                        final_loss = final_loss + importance_loss
+                        final_loss = final_loss + args.importance_weight * importance_loss
 
                     if args.use_guide:
                         # contrastive learning
-                        guide_loss = args.gamma * guide_loss
+                        guide_loss = guide_loss
                         print_guidance_loss = guide_loss.detach().float()
-                        final_loss = final_loss + guide_loss
+                        final_loss = final_loss + args.gamma * guide_loss
 
                     if args.use_aug:
-                        rnc_loss = args.aug_w * rnc_criterion(embeddings, labels)
+                        rnc_loss = rnc_criterion(embeddings, labels)
                         print_alignment_loss = rnc_loss.detach().float()
-                        final_loss = final_loss + rnc_loss
+                        final_loss = final_loss + args.aug_w * rnc_loss
 
 
                 print_label_loss = loss.item()

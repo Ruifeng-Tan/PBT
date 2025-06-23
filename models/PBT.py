@@ -704,11 +704,11 @@ class Model(nn.Module):
         out = out.gather(1, idx).squeeze(1) # [B, D]
 
         out = self.norm(out)
-        preds, embeddings, feature_llm_out = self.regression_head(out)
+        preds, embeddings, _ = self.regression_head(out)
 
         preds = preds.float()
         embeddings = embeddings.float()
-        return preds[:B], None, embeddings[B:], feature_llm_out, None, None, total_LB_loss / total_aug_count , total_guide_loss / total_aug_count
+        return preds[:B], None, embeddings[B:], None, None, None, total_LB_loss / total_aug_count , total_guide_loss / total_aug_count
 
     def create_causal_mask(self, B, seq_len):
         '''
