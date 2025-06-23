@@ -428,9 +428,9 @@ class Dataset_BatteryLifeLLM_original(Dataset):
         self.aug_helper = BatchAugmentation_battery_revised()
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
-            self.train_files = split_recorder.HUST_train_files[:2]
-            self.val_files = split_recorder.Tongji_val_files[:2]
-            self.test_files =  split_recorder.Tongji_test_files[:2]
+            self.train_files = split_recorder.HUST_train_files + split_recorder.Stanford_train_files
+            self.val_files = split_recorder.HUST_val_files + split_recorder.Stanford_val_files
+            self.test_files =  split_recorder.HUST_test_files + split_recorder.Stanford_test_files
         elif self.dataset == 'Tongji':
             self.train_files = split_recorder.Tongji_train_files
             self.val_files = split_recorder.Tongji_val_files
@@ -1138,9 +1138,12 @@ class Dataset_BatteryLifeLLM_original(Dataset):
                 current_records = np.concatenate([charge_currents, discharge_currents], axis=0)
                 capacity_in_battery = np.concatenate([charge_capacities, discharge_capacities], axis=0)
                 
-                voltage_records = voltage_records.reshape(1, self.charge_discharge_len) / max(voltage_records) # normalize using the cutoff voltage
+                # voltage_records = voltage_records.reshape(1, self.charge_discharge_len) / max(voltage_records) # normalize using the cutoff voltage
+                # current_records = current_records.reshape(1, self.charge_discharge_len) / nominal_capacity # normalize the current to C rate
+                # capacity_in_battery = capacity_in_battery.reshape(1, self.charge_discharge_len) / nominal_capacity # normalize the capacity
+                voltage_records = voltage_records.reshape(1, self.charge_discharge_len)
                 current_records = current_records.reshape(1, self.charge_discharge_len) / nominal_capacity # normalize the current to C rate
-                capacity_in_battery = capacity_in_battery.reshape(1, self.charge_discharge_len) / nominal_capacity # normalize the capacity
+                capacity_in_battery = capacity_in_battery.reshape(1, self.charge_discharge_len)
                 
                 curve_data = np.concatenate([voltage_records, current_records, capacity_in_battery], axis=0)
                 # curve_data = np.concatenate([voltage_records, current_records], axis=0)
