@@ -38,7 +38,7 @@ class MultiViewLayer(nn.Module):
         self.num_views = len(view_experts)
         self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
-        self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
+        self.expert_gate = nn.Linear(gate_input_dim, num_experts)
         self.dropout = nn.Dropout(drop_rate)
         
         self.view_experts = view_experts
@@ -480,6 +480,7 @@ class Model(nn.Module):
 
         assert self.gate_d_ff >= self.gate_domain_knowledge_neurons, Exception('The gate neurons should be no less than the domain-knowledge neurons')
         self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=False))
+
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
         self.d_ff_scale_factor = configs.d_ff_scale_factor
@@ -512,6 +513,9 @@ class Model(nn.Module):
                                                     use_connection=True) for _ in range(self.e_layers)])
         
         self.pe = PositionalEmbedding(self.d_model)
+        self.DKP_transform = nn.Sequential(nn.Linear(self.gate_d_ff, self.d_ff),
+                                           nn.ReLU(), nn.Linear(self.d_ff, self.d_model))
+        
         self.inter_MoE_layers = nn.ModuleList([MultiViewTransformerLayer(gate_input_dim, self.num_experts,self.d_model, self.n_heads,
                                                      nn.ModuleList([BatteryMoEInterCycleMoELayer(configs, self.num_experts, self.d_ff_scale_factor),
                                                     ]), 
@@ -525,9 +529,8 @@ class Model(nn.Module):
                                                     )
                                              for _ in range(self.d_layers)])
         
-        self.up_proj = nn.Linear(self.d_model, self.d_model*4)
-        self.norm = nn.LayerNorm(self.d_model*4) 
-        self.regression_head = OutputHead(self.d_model*4, configs.output_num)
+        self.norm = nn.LayerNorm(self.d_model) 
+        self.regression_head = OutputHead(self.d_model, configs.output_num)
 
 
     def forward(self, cycle_curve_data, curve_attn_mask, 
@@ -583,7 +586,7 @@ class Model(nn.Module):
         DKP_mask = torch.ones_like(DKP_embeddings[:, self.gate_domain_knowledge_neurons:])
         domain_knowledge_ReLU_mask = combined_masks.repeat_interleave(dim=1, repeats=self.dk_factor)
         DKP_mask = torch.cat([DKP_mask, domain_knowledge_ReLU_mask], dim=1)
-        DKP_embeddings = F.relu(DKP_embeddings * DKP_mask)
+        DKP_embeddings = DKP_embeddings * DKP_mask
         # if self.gate_d_ff > self.gate_domain_knowledge_neurons:
         #     DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons] = F.relu(DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons])
         # logits = self.gate(DKP_embeddings)
@@ -614,7 +617,10 @@ class Model(nn.Module):
 
         # Inter-cycle modelling using Transformer with MoE FFN
         out = out + self.pe(out) # add positional encoding
+        reg_token = out[:, 0] + self.DKP_transform(DKP_embeddings) 
+        out = torch.cat([reg_token.unsqueeze(1), out], dim=1)
         attn_mask = curve_attn_mask.unsqueeze(1) # [B, 1, L]
+        attn_mask = torch.cat([torch.ones_like(attn_mask[:, :, :1]), attn_mask], dim=-1) # add the reg token into the attn mask
         attn_mask = torch.repeat_interleave(attn_mask, attn_mask.shape[-1], dim=1) # [B, L, L]
         attn_mask = attn_mask.unsqueeze(1) # [B, 1, L, L]
         attn_mask = attn_mask==0 # set True to mask
@@ -625,12 +631,13 @@ class Model(nn.Module):
             total_aug_count += 1
             logits_index += 1
 
-        lengths = torch.sum(curve_attn_mask, dim=1).cpu() # [N]
-        idx = (torch.as_tensor(lengths, device=out.device, dtype=torch.long) - 1).view(-1, 1).expand(
-            len(lengths), out.size(2))
-        idx = idx.unsqueeze(1)
-        out = out.gather(1, idx).squeeze(1) # [B, D]
-        out = self.up_proj(out)
+        # lengths = torch.sum(curve_attn_mask, dim=1).cpu() # [N]
+        # idx = (torch.as_tensor(lengths, device=out.device, dtype=torch.long) - 1).view(-1, 1).expand(
+        #     len(lengths), out.size(2))
+        # idx = idx.unsqueeze(1)
+        # out = out.gather(1, idx).squeeze(1) # [B, D]
+
+        out = out[:,0]
         out = self.norm(out)
         preds, embeddings, feature_llm_out = self.regression_head(out)
 
