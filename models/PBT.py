@@ -527,7 +527,7 @@ class Model(nn.Module):
         
         self.up_proj = nn.Linear(self.d_model, self.d_model*4)
         self.norm = nn.LayerNorm(self.d_model*4) 
-        self.regression_head = OutputHead(self.d_mode*4, configs.output_num)
+        self.regression_head = OutputHead(self.d_model*4, configs.output_num)
 
 
     def forward(self, cycle_curve_data, curve_attn_mask, 
