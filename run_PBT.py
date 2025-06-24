@@ -150,7 +150,6 @@ parser.add_argument('--use_aug', action='store_true', help='use data augmentatio
 parser.add_argument('--aug_w', type=float, default=1.0, help='The loss weight for domain-knowledge guidance')
 
 # MoE definition
-parser.add_argument('--num_condition_experts', type=int, default=2, help="The very specialized experts for one aging condition")
 parser.add_argument('--num_hyper_experts', type=int, default=2, help="The number of the hyper experts")
 parser.add_argument('--num_views', type=int, default=4, help="The number of the views")
 parser.add_argument('--num_general_experts', type=int, default=2, help="The number of the general experts")
@@ -223,11 +222,12 @@ args.__dict__['d_ff_scale_factor'] = d_ff_scale_factor
 
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_{}_{}_{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
+    setting = '{}_{}_{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
         args.model,
         args.dk_factor,
         args.llm_choice,
         args.seq_len,
+        args.least_epochs,
         args.batch_size,
         args.learning_rate,
         args.d_model,
@@ -237,7 +237,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.min_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
-        args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
+        args.num_experts, args.num_general_experts,
         args.topK, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, args.seed)
 
     data_provider_func = data_provider_LLMv2
