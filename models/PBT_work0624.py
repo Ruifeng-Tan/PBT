@@ -39,6 +39,7 @@ class BatteryMoEMLPLayer(nn.Module):
         self.num_general_experts = len(general_experts)
         self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
+        self.dropout = nn.Dropout(drop_rate)
         
         self.view_experts = view_experts
         self.general_experts = general_experts
@@ -86,7 +87,7 @@ class BatteryMoEMLPLayer(nn.Module):
             final_out = final_out + total_ion_outs
 
         if self.use_connection:
-            final_out = final_out + x # residual connection
+            final_out = self.dropout(final_out) + x # residual connection
         
         # final_out = self.norm(final_out) if self.use_norm else final_out # pre norm
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
@@ -103,7 +104,7 @@ class BatteryMoETransformerLayer(nn.Module):
 
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=0.05,
                             output_attention=False), d_model, n_heads)
-
+        self.dropout = nn.Dropout(drop_rate)
         self.view_experts = view_experts
         self.general_experts = general_experts
 
@@ -125,7 +126,7 @@ class BatteryMoETransformerLayer(nn.Module):
             attn_mask=attn_mask,
             tau=None, delta=None
         )
-        x = x + new_x # residual connection 
+        x = x + self.dropout(new_x) # residual connection 
         x = self.norm2(x)
 
         # MoE FFN
@@ -157,7 +158,8 @@ class BatteryMoETransformerLayer(nn.Module):
             total_ion_outs = torch.sum(total_ion_outs * ion_type_masks, dim=1)
             final_out = final_out + total_ion_outs
 
-        final_out = final_out + x # residual connection 
+        final_out = self.dropout(final_out) + x # residual connection 
+        # final_out = self.norm2(self.dropout(final_out) + x) # add & norm
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
