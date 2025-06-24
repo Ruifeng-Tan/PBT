@@ -33,11 +33,10 @@ from layers.MLPs import MLPBlockGELU
 transformers.logging.set_verbosity_error() 
 
 class BatteryMoEMLPLayer(nn.Module):
-    def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, ion_experts, use_connection, drop_rate, use_norm=True):
+    def __init__(self, gate_input_dim, num_experts, view_experts, norm_layer, general_experts, use_connection, drop_rate, use_norm=True):
         super(BatteryMoEMLPLayer, self).__init__()
         self.num_views = len(view_experts)
         self.num_general_experts = len(general_experts)
-        self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
         
         self.view_experts = view_experts
@@ -71,20 +70,6 @@ class BatteryMoEMLPLayer(nn.Module):
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
 
-        if len(self.ion_experts) != 0:
-            total_ion_outs = [] # each element is [B, 1, *, D]
-            for i in range(len(self.ion_experts)):
-                ion_out = self.ion_experts[i](x)
-                total_ion_outs.append(ion_out.unsqueeze(1))
-
-            total_ion_outs = torch.cat(total_ion_outs, dim=1) # [B, ion_expert_num, *, D]
-            if total_ion_outs.dim() == 4:
-                ion_type_masks = ion_type_masks.reshape(B, ion_type_masks.shape[1], 1, 1)
-            else:
-                ion_type_masks = ion_type_masks.reshape(B, ion_type_masks.shape[1], 1)
-            total_ion_outs = torch.sum(total_ion_outs * ion_type_masks, dim=1)
-            final_out = final_out + total_ion_outs
-
         if self.use_connection:
             final_out = final_out + x # residual connection
         
@@ -94,11 +79,10 @@ class BatteryMoEMLPLayer(nn.Module):
 
 
 class BatteryMoETransformerLayer(nn.Module):
-    def __init__(self, gate_input_dim, num_experts, d_model, n_heads, view_experts, general_experts, ion_experts, drop_rate):
+    def __init__(self, gate_input_dim, num_experts, d_model, n_heads, view_experts, general_experts, drop_rate):
         super(BatteryMoETransformerLayer, self).__init__()
         self.num_views = len(view_experts)
         self.num_general_experts = len(general_experts)
-        self.ion_experts = ion_experts # when multiple ion types are available in the training set, we have ion experts for different ion type
         self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
 
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=0.05,
@@ -142,20 +126,6 @@ class BatteryMoETransformerLayer(nn.Module):
 
         for i in range(len(self.general_experts)):
             final_out = self.general_experts[i](x) + final_out # add the general experts
-
-        if len(self.ion_experts) != 0:
-            total_ion_outs = [] # each element is [B, 1, *, D]
-            for i in range(len(self.ion_experts)):
-                ion_out = self.ion_experts[i](x)
-                total_ion_outs.append(ion_out.unsqueeze(1))
-
-            total_ion_outs = torch.cat(total_ion_outs, dim=1) # [B, ion_expert_num, *, D]
-            if total_ion_outs.dim() == 4:
-                ion_type_masks = ion_type_masks.reshape(B, ion_type_masks.shape[1], 1, 1)
-            else:
-                ion_type_masks = ion_type_masks.reshape(B, ion_type_masks.shape[1], 1)
-            total_ion_outs = torch.sum(total_ion_outs * ion_type_masks, dim=1)
-            final_out = final_out + total_ion_outs
 
         final_out = final_out + x # residual connection 
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
@@ -531,7 +501,6 @@ class Model(nn.Module):
         self.format_experts = configs.format_experts
         self.anode_experts = configs.anode_experts
         self.num_general_experts = configs.num_general_experts
-        self.ion_experts = configs.ion_experts
         self.num_views = configs.num_views
         self.down_sample_ratio = configs.down_sample_ratio
 
@@ -559,9 +528,6 @@ class Model(nn.Module):
                                                     general_experts=nn.ModuleList([
                                                         nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.num_general_experts)
                                                     ]),
-                                                    ion_experts=nn.ModuleList([
-                                                        nn.Sequential(nn.Linear(self.charge_discharge_length*3, self.d_model)) for _ in range(self.ion_experts)
-                                                    ]),
                                                     drop_rate=self.drop_rate,
                                                     use_connection=False, use_norm=False)
         
@@ -572,9 +538,6 @@ class Model(nn.Module):
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
                                                     ]),
-                                                    ion_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.ion_experts)
-                                                    ]),
                                                     drop_rate=self.drop_rate,
                                                     use_connection=True) for _ in range(self.e_layers)])
         
@@ -584,9 +547,6 @@ class Model(nn.Module):
                                                     ]), 
                                                     general_experts=nn.ModuleList([
                                                         MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.num_general_experts)
-                                                    ]),
-                                                    ion_experts=nn.ModuleList([
-                                                        MLPBlockGELU(self.d_model, self.d_ff, self.drop_rate, self.activation) for _ in range(self.ion_experts)
                                                     ]),
                                                     drop_rate=self.drop_rate
                                                     )
