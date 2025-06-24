@@ -300,7 +300,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_loader",
+        project="PBT_publish",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
