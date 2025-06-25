@@ -189,11 +189,12 @@ args_json['batch_size'] = batch_size
 args.__dict__ = args_json
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_{}_{}_{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
+    setting = '{}_{}_{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
         args.model,
         args.dk_factor,
         args.llm_choice,
         args.seq_len,
+        args.least_epochs,
         args.batch_size,
         args.learning_rate,
         args.d_model,
@@ -203,7 +204,7 @@ for ii in range(args.itr):
         args.d_ff,
         args.min_d_ff,
         args.lradj, trained_dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
-        args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
+        args.num_experts, args.num_general_experts,
         args.topK, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, args.seed)
 
 
