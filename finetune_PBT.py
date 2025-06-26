@@ -9,7 +9,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper_CropAugIMPR2, PBNet, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -214,40 +214,15 @@ args_json['train_epochs'] = args.train_epochs
 args_json['finetune_method'] = args.finetune_method
 args.__dict__ = args_json
 
-if args.use_PCA:
-    # Automatically find d_llm dimension
-    if args.seed == 2021:
-        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all_pca.pkl', 'rb'))
-    elif args.seed == 2024:
-        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all2024_pca.pkl', 'rb'))
-    elif args.seed == 42:
-        tmp = pickle.load(open(f'{args.root_path}/training_DKP_embed_all42_pca.pkl', 'rb'))
-    else:
-        raise Exception('add the prompt emebeddings for the seed here')
-
-    args.d_llm = list(tmp.values())[0].shape[1]
-    args.__dict__['d_llm'] = list(tmp.values())[0].shape[1]
-
-if args.Pretrained_model_path:
-    pretrained = True
-else:
-    pretrained = False
     
 for ii in range(args.itr):
     # setting record of experiments
-    # setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_llmLayers{}_Lora{}_lradj{}_dataset{}_align{}_DG{}_loss{}_wd{}_wl{}_woDKPr{}_pretrained{}_tl{}'.format(
-    #     args.model,
-    #     args.seq_len,
-    #     args.learning_rate,
-    #     args.d_model,
-    #     args.n_heads,
-    #     args.e_layers,
-    #     args.d_layers,
-    #     args.d_ff,
-    #     args.llm_layers, args.use_LoRA, args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.wo_DKPrompt, pretrained, args.tune_layers)
-    setting = '{}_sl{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_E{}_GE{}_IE{}_HE{}_CE{}_K{}_PCA{}_domain{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_ST{}_{}_seed{}'.format(
+    setting = '{}_{}_{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_{}_{}_seed{}'.format(
         args.model,
+        args.dk_factor,
+        args.llm_choice,
         args.seq_len,
+        args.least_epochs,
         args.batch_size,
         args.learning_rate,
         args.d_model,
@@ -255,9 +230,11 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, 
-        args.num_experts, args.num_general_experts, args.ion_experts, args.num_hyper_experts, args.num_condition_experts, 
-        args.topK, args.use_PCA, args.num_domains, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, trained_dataset, finetune_method, args.seed)
+        args.min_d_ff,
+        args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
+        args.num_experts, args.num_general_experts,
+        args.topK, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, trained_dataset, finetune_method, args.seed)
+
 
     data_provider_func = data_provider_LLMv2
     if args.model == 'baseline_CPTransformerMoE':
@@ -265,11 +242,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'PBNet':
+    elif args.model == 'PBT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBNet.Model(model_config)
+        model = PBT.Model(model_config)
     elif args.model == 'BatteryMoE_Hyper_CropAugIMPR2':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -339,7 +316,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBNet_final_FT2",
+        project="PBT_FT",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
