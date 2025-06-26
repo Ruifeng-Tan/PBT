@@ -381,7 +381,7 @@ def my_collate_fn(samples):
     return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids
 
 # BatterLifeLLM dataloader
-class Dataset_BatteryLifeLLM_original(Dataset):
+class Dataset_PBT(Dataset):
     def __init__(self, args, flag='train', label_scaler=None, tokenizer=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, 

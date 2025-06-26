@@ -1,9 +1,9 @@
-from data_provider.data_loader import Dataset_BatteryLifeLLM_original, DomainBatchSampler, Dataset_BatteryLife
+from data_provider.data_loader import Dataset_PBT, DomainBatchSampler, Dataset_BatteryLife
 from data_provider.data_loader import my_collate_fn, my_collate_fn_withId, my_collate_fn_baseline_BL, my_collate_fn_withId_BL
 from torch.utils.data import DataLoader, RandomSampler, Dataset
 
 data_dict = {
-    'Dataset_BatteryLifeLLM_original': Dataset_BatteryLifeLLM_original,
+    'Dataset_BatteryLifeLLM_original': Dataset_PBT,
     'Dataset_original': Dataset_BatteryLife
 }
 
