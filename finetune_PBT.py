@@ -10,7 +10,7 @@ from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLos
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
-import pickle
+from layers.Adapters import PBTtLayerWithAdapter
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
 import time
@@ -23,6 +23,35 @@ import joblib
 from data_provider.gate_masker import gate_masker
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, root_mean_squared_error
 import json
+
+def add_adapters_to_PBT(args, model, adapter_size=64):
+    # original_layer = model.flattenIntraCycleLayer
+    # model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
+    #     original_layer, 
+    #     adapter_size=adapter_size
+    # )
+
+    for i in range(len(model.intra_MoE_layers)):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
+
 def list_of_ints(arg):
 	return list(map(int, arg.split(',')))
 # os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -90,6 +119,7 @@ parser.add_argument('--enc_in', type=int, default=1, help='encoder input size')
 parser.add_argument('--dec_in', type=int, default=1, help='decoder input size')
 parser.add_argument('--c_out', type=int, default=1, help='output size')
 parser.add_argument('--d_model', type=int, default=16, help='dimension of model')
+parser.add_argument('--adapter_size', type=int, default=16, help='dimension of Adapter for adpater tuning')
 parser.add_argument('--n_heads', type=int, default=4, help='num of heads')
 parser.add_argument('--noDKP_layers', type=int, default=1, help='the number of no DKP layers in the inter-cycle encoder')
 parser.add_argument('--bottleneck_factor', type=int, default=16, help='the scale down factor of the bottleneck layer')
@@ -172,7 +202,7 @@ parser.add_argument('--alpha1', type=float, default=0.15, help='the alpha for al
 parser.add_argument('--alpha2', type=float, default=0.1, help='the alpha for alpha-accuracy')
 
 # finetune 
-parser.add_argument('--finetune_method', type=str, default='FT', help='the fine-tuning method. [FT, EFT]')
+parser.add_argument('--finetune_method', type=str, default='FT', help='the fine-tuning method. [FT, EFT, AT]')
 parser.add_argument('--finetune_dataset', type=str, help='the target dataset for model finetuning')
 parser.add_argument('--args_path', type=str, help='the path to the pretrained model parameters')
 
@@ -212,16 +242,18 @@ args_json['lradj'] = args.lradj
 args_json['patience'] = args.patience
 args_json['train_epochs'] = args.train_epochs
 args_json['finetune_method'] = args.finetune_method
+args_json['adapter_size'] = args.adapter_size
 args.__dict__ = args_json
 
     
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_{}_{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_{}_{}_seed{}'.format(
+    setting = '{}_{}_{}_{}_as{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_{}_{}_seed{}'.format(
         args.model,
         args.dk_factor,
         args.llm_choice,
         args.seq_len,
+        args.adapter_size,
         args.least_epochs,
         args.batch_size,
         args.learning_rate,
@@ -354,10 +386,19 @@ for ii in range(args.itr):
         for name, p in model.named_parameters():
             if 'general_experts' in name:
                 continue
-
             if p.requires_grad is True:
                 trained_parameters_names.append(name)
                 trained_parameters.append(p)
+    elif finetune_method == 'AT':
+        # adapter tuning
+        model = add_adapters_to_PBT(args, model, args.adapter_size)
+        for name, p in model.named_parameters():
+            # only tune the adapters + gate
+            if 'adapter' in name or 'gate' in name or 'regression_head' in name or 'flattenIntraCycleLayer' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+
     else:
         raise Exception(f'{finetune_method} is not implemented!')
 
