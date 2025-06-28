@@ -10,7 +10,7 @@ from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLos
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
-from layers.Adapters import PBTtLayerWithAdapter
+from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
 import time
@@ -30,6 +30,35 @@ def add_adapters_to_PBT(args, model, adapter_size=64):
     #     original_layer, 
     #     adapter_size=adapter_size
     # )
+
+    for i in range(len(model.intra_MoE_layers)):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
+
+def add_adapters_to_PBT_withCP(args, model, adapter_size=64):
+    original_layer = model.flattenIntraCycleLayer
+    model.flattenIntraCycleLayer = PBTCPLayerWithAdapter(
+        args,
+        original_layer, 
+        adapter_size=adapter_size
+    )
 
     for i in range(len(model.intra_MoE_layers)):
         # add adapters to intra-cycle encoder layers
@@ -393,12 +422,20 @@ for ii in range(args.itr):
         # adapter tuning
         model = add_adapters_to_PBT(args, model, args.adapter_size)
         for name, p in model.named_parameters():
-            # only tune the adapters + gate
+            # only tune the adapters + gate + head + flattenIntraCycleLayer
             if 'adapter' in name or 'gate' in name or 'regression_head' in name or 'flattenIntraCycleLayer' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
-
+    elif finetune_method == 'AT_cp':
+        # adapter tuning
+        model = add_adapters_to_PBT_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            # only tune the adapters + gate + head
+            if 'adapter' in name or 'gate' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
     else:
         raise Exception(f'{finetune_method} is not implemented!')
 
