@@ -258,6 +258,7 @@ args_json['least_epochs'] = args.least_epochs
 args_json['dataset'] = dataset
 args_json['batch_size'] = batch_size
 args_json['dropout'] = args.dropout
+args_json['wd'] = args.wd
 args_json['learning_rate'] = learning_rate
 args_json['alpha1'] = args.alpha1
 args_json['alpha2'] = args.alpha2
