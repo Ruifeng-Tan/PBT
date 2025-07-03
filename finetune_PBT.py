@@ -273,6 +273,7 @@ args_json['patience'] = args.patience
 args_json['train_epochs'] = args.train_epochs
 args_json['finetune_method'] = args.finetune_method
 args_json['adapter_size'] = args.adapter_size
+args_json['loss'] = args.loss
 args.__dict__ = args_json
 
     
@@ -448,7 +449,7 @@ for ii in range(args.itr):
 
 
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
-    criterion = nn.MSELoss(reduction='none') 
+    criterion = nn.MSELoss(reduction='none') if args.loss == 'MSE' else nn.HuberLoss(reduction='none', delta=2.0)
     rnc_criterion = WeightedRnCLoss(temperature=args.temperature) if args.weighted_CLDG else AverageRnCLoss(temperature=args.temperature)
     
     load_checkpoint_in_model(model, args_path) # load the pretrained parameters into model
