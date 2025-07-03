@@ -521,11 +521,8 @@ for ii in range(args.itr):
                 #     labels = labels.repeat(int(outputs.shape[0] / labels.shape[0]), 1)
                 #     weights = labels.repeat(int(outputs.shape[0] / weights.shape[0]), 1)
 
-                if args.loss == 'MSE':
-                    loss = criterion(outputs, labels)
-                    loss = torch.mean(loss * weights)
-                else:
-                    raise Exception('Not implemented!')
+                loss = criterion(outputs, labels)
+                loss = torch.mean(loss * weights)
                 
                 final_loss = loss
                 if args.num_experts > 1 and args.use_LB:
