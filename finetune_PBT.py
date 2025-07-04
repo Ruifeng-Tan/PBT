@@ -25,12 +25,6 @@ from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error,
 import json
 
 def add_adapters_to_PBT(args, model, adapter_size=64):
-    # original_layer = model.flattenIntraCycleLayer
-    # model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
-    #     original_layer, 
-    #     adapter_size=adapter_size
-    # )
-
     for i in range(len(model.intra_MoE_layers)):
         # add adapters to intra-cycle encoder layers
         original_layer = model.intra_MoE_layers[i]
@@ -59,6 +53,35 @@ def add_adapters_to_PBT_withCP(args, model, adapter_size=64):
         original_layer, 
         adapter_size=adapter_size
     )
+
+    for i in range(len(model.intra_MoE_layers)):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
+
+def add_adapters_to_PBT_withCP_no_bottom(args, model, adapter_size=64):
+    original_layer = model.flattenIntraCycleLayer
+    model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
+        args,
+        original_layer, 
+        adapter_size=adapter_size
+        )
 
     for i in range(len(model.intra_MoE_layers)):
         # add adapters to intra-cycle encoder layers
@@ -435,6 +458,15 @@ for ii in range(args.itr):
         for name, p in model.named_parameters():
             # only tune the adapters + gate + head
             if 'adapter' in name or 'gate' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'AT_nB':
+        # adapter tuning
+        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            # only tune the adapters + gate + head
+            if 'adapter' in name or 'regression_head' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
