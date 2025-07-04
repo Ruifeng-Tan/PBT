@@ -470,6 +470,15 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
+    elif finetune_method == 'AT_B':
+        # adapter tuning
+        model = add_adapters_to_PBT_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            # only tune the adapters + gate + head
+            if 'adapter' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
     else:
         raise Exception(f'{finetune_method} is not implemented!')
 
