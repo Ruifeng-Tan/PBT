@@ -298,7 +298,7 @@ args_json['finetune_method'] = args.finetune_method
 args_json['adapter_size'] = args.adapter_size
 args_json['loss'] = args.loss
 pretrain_warm_up_epoches = args_json['warm_up_epoches']
-args_json['loss'] = args.warm_up_epoches
+args_json['warm_up_epoches'] = args.warm_up_epoches
 args.__dict__ = args_json
 
     
