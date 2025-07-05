@@ -297,12 +297,14 @@ args_json['train_epochs'] = args.train_epochs
 args_json['finetune_method'] = args.finetune_method
 args_json['adapter_size'] = args.adapter_size
 args_json['loss'] = args.loss
+pretrain_warm_up_epoches = args_json['warm_up_epoches']
+args_json['loss'] = args.warm_up_epoches
 args.__dict__ = args_json
 
     
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_{}_{}_{}_as{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_{}_{}_seed{}'.format(
+    setting = '{}_{}_{}_{}_as{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_{}_ffs{}_{}_{}_seed{}'.format(
         args.model,
         args.dk_factor,
         args.llm_choice,
@@ -319,7 +321,7 @@ for ii in range(args.itr):
         args.min_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
         args.num_experts, args.num_general_experts,
-        args.topK, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, trained_dataset, finetune_method, args.seed)
+        args.topK, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, pretrain_warm_up_epoches, args.warm_up_epoches, args.use_dff_scale, trained_dataset, finetune_method, args.seed)
 
 
     data_provider_func = data_provider_LLMv2
