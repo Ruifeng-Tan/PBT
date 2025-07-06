@@ -29,6 +29,36 @@ import joblib
 from utils.tools import del_files, EarlyStopping, domain_average, vali_batteryLifeLLM
 parser = argparse.ArgumentParser(description='Time-LLM')
 
+def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha1, alpha2, model, dataset, seed, trained_dataset, start=1, end=100):
+    number_MAPE = {}
+    number_alphaAcc1 = {}
+    number_alphaAcc2 = {}
+    for number in range(start, end+1):
+        preds = total_preds[total_seen_number_of_cycles==number]
+        references = total_references[total_seen_number_of_cycles==number]
+
+        mape = mean_absolute_percentage_error(references, preds)
+        relative_error = abs(preds - references) / references
+        hit_num = sum(relative_error<=alpha)
+        alpha_acc = hit_num / len(references) * 100
+
+        relative_error = abs(preds - references) / references
+        hit_num = sum(relative_error<=alpha2)
+        alpha_acc2 = hit_num / len(references) * 100
+
+        number_MAPE[number] = float(mape)
+        number_alphaAcc1[number] = float(alpha_acc)
+        number_alphaAcc2[number] = float(alpha_acc2)
+    
+    output_path = './output_path/'
+    os.makedirs(output_path, exist_ok=True)
+    with open(f'{output_path}number_MAPE_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
+        json.dump(number_MAPE, f)
+    with open(f'{output_path}number_alphaAcc1_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
+        json.dump(number_alphaAcc1, f)
+    with open(f'{output_path}number_alphaAcc2_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
+        json.dump(number_alphaAcc2, f)
+
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
@@ -167,6 +197,7 @@ batch_size = args.batch_size
 if eval_cycle_min < 0 or eval_cycle_max <0:
     eval_cycle_min = None
     eval_cycle_max = None
+
 nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 set_seed(args.seed)
 # ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
@@ -187,6 +218,7 @@ args_json['dataset'] = dataset
 args_json['batch_size'] = batch_size
 
 args.__dict__ = args_json
+
 for ii in range(args.itr):
     # setting record of experiments
     setting = '{}_{}_{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
@@ -297,6 +329,7 @@ for ii in range(args.itr):
     total_dataset_ids = []
     total_domain_ids = []
     total_seen_unseen_ids = []
+    total_seen_number_of_cycles = []
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
         for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in tqdm(enumerate(test_loader)):
@@ -313,6 +346,7 @@ for ii in range(args.itr):
             # labels = labels.float()
             # weights = weights.float()
 
+            seen_number_of_cycles = torch.sum(curve_attn_mask, dim=1) # [B]
             # encoder - decoder
             outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
             DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
@@ -320,13 +354,14 @@ for ii in range(args.itr):
             # self.accelerator.wait_for_everyone()
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
-            all_predictions, all_targets, dataset_ids, seen_unseen_ids, domain_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, dataset_ids, seen_unseen_ids, domain_ids))
+            all_predictions, all_targets, dataset_ids, seen_unseen_ids, domain_ids, seen_number_of_cycles = accelerator.gather_for_metrics((transformed_preds, transformed_labels, dataset_ids, seen_unseen_ids, domain_ids, seen_number_of_cycles))
             
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
             total_domain_ids = total_domain_ids + domain_ids.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
             total_dataset_ids = total_dataset_ids + dataset_ids.detach().cpu().numpy().reshape(-1).tolist()
             total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
+            total_seen_number_of_cycles = total_seen_number_of_cycles + seen_number_of_cycles.detach().cpu().numpy().reshape(-1).tolist()
 
     res_path='./results'
     save_res = {}
@@ -339,6 +374,7 @@ for ii in range(args.itr):
         total_domain_ids = np.array(total_domain_ids)
         total_references = np.array(total_references)
         total_seen_unseen_ids = np.array(total_seen_unseen_ids)
+        total_seen_number_of_cycles = np.array(total_seen_number_of_cycles)
         total_preds = np.array(total_preds)
 
 
@@ -418,6 +454,7 @@ for ii in range(args.itr):
             accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen {alpha2}-accuracy: {seen_alpha_acc2}% | Unseen {alpha2}-accuracy: {unseen_alpha_acc2}%')
 
 
-
+        if eval_cycle_min is None or eval_cycle_max is None:
+            calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha, alpha2, args.model, dataset, trained_dataset=trained_dataset, start=args.seq_len, end=args.early_cycle_threshold, seed=args.seed)
 
             
