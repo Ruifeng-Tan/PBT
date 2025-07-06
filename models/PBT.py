@@ -181,10 +181,11 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
                 total_outs.append(out)
                 total_expert_outs.append(out)
 
+        final_out = 0
+        if total_outs:
+            total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+            final_out = total_outs
 
-        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
-
-        final_out = total_outs
         # for i in range(self.num_general_experts):
         #     final_out = self.general_experts[i](cycle_curve_data) + final_out
 
@@ -268,8 +269,10 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
                 total_expert_outs.append(out)
 
 
-        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
-        final_out = total_outs
+        final_out = 0
+        if total_outs:
+            total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+            final_out = total_outs
         # for i in range(self.num_general_experts):
         #     final_out = self.general_experts[i](cycle_curve_data) + final_out
         # final_out = self.ln(final_out + cycle_curve_data) # add & norm
@@ -354,8 +357,10 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
                 total_outs.append(out)
                 total_expert_outs.append(out)
 
-        total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
-        final_out = total_outs
+        final_out = 0
+        if total_outs:
+            total_outs = dispatcher.combine(total_outs).to(torch.bfloat16) # [B, L, d_model]
+            final_out = total_outs
 
         LB_loss = 0
         guide_loss = 0

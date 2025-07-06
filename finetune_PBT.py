@@ -299,6 +299,7 @@ args_json['adapter_size'] = args.adapter_size
 args_json['loss'] = args.loss
 pretrain_warm_up_epoches = args_json['warm_up_epoches']
 args_json['warm_up_epoches'] = args.warm_up_epoches
+args_json['model_comment'] = args.model_comment
 args.__dict__ = args_json
 
     
