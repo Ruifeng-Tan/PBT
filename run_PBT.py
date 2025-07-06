@@ -222,11 +222,9 @@ args.__dict__['d_ff_scale_factor'] = d_ff_scale_factor
 
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_{}_{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
+    setting = '{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
         args.model,
-        args.dk_factor,
         args.llm_choice,
-        args.seq_len,
         args.least_epochs,
         args.batch_size,
         args.learning_rate,
