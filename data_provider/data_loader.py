@@ -683,9 +683,10 @@ class Dataset_PBT(Dataset):
             if file_name in self.cathode_json:
                 cathodes = self.cathode_json[file_name]
                 cathodes = '_'.join(cathodes)
-                cathode_index = self.cathodes2mask[cathodes] if cathodes in self.cathodes2mask else np.arange(self.cathode_experts) # if no domain knowledge, the model learns the gating
                 cathode_mask = np.zeros(self.cathode_experts) # 1 indicates activated
-                cathode_mask[cathode_index] = 1
+                if cathodes in self.cathodes2mask:
+                    cathode_index = self.cathodes2mask[cathodes]
+                    cathode_mask[cathode_index] = 1
             else:
                 raise Exception(f'The {file_name} is not shown in the cathodes.json. We suggest the user to set the cathode in the cathodes.json and manually assign the expert'
                 'using the cathodes2mask based on domain knowledge. When it is not possible to know the cathode or to manually assign the cathode, you can consider commenting this Exception and then BatteryMoE will assign'
@@ -697,16 +698,10 @@ class Dataset_PBT(Dataset):
 
             if file_name in self.temperature_json:
                 temperatures = self.temperature_json[file_name]
-                # if file_name.startswith('NA-ion'):
-                #     temperatures = 'Na'
-                # elif file_name.startswith('ZN-ion'):
-                #     temperatures = 'Zn'
-                # else:
-                #     temperatures = 'Li_' + str(temperatures)
-                
-                temperature_index = self.temperature2mask[temperatures] if temperatures in self.temperature2mask else np.arange(self.temperature_experts)
                 temperature_mask = np.zeros(self.temperature_experts)
-                temperature_mask[temperature_index] = 1
+                if temperatures in self.temperature2mask:
+                    temperature_index = self.temperature2mask[temperatures]
+                    temperature_mask[temperature_index] = 1
             else:
                 raise Exception(f'The {file_name} is not shown in the temperatures.json. We suggest the user to set the temperature in the temperatures.json and manually assign the expert'
                 'using the temperature2mask based on domain knowledge. When it is not possible to know the temperature or to manually assign the temperature, you can consider commenting this Exception and then BatteryMoE will assign'
@@ -719,11 +714,10 @@ class Dataset_PBT(Dataset):
             if file_name in self.format_json:
                 # format = '_'.join(self.format_json[file_name])
                 format = self.format_json[file_name][0]
-                # if file_name.startswith('NA-ion'):
-                #     format = 'Na_cylindrical' # Na-ion cylindrical is not mixed with Li cylindrical
-                format_index = self.format2mask[format] if format in self.format2mask else np.arange(self.format_experts)
                 format_mask = np.zeros(self.format_experts)
-                format_mask[format_index] = 1
+                if format in self.format2mask:
+                    format_index = self.format2mask[format] 
+                    format_mask[format_index] = 1
             else:
                 raise Exception(f'The {file_name} is not shown in the formats.json. We suggest the user to set the format in the formats.json and manually assign the expert'
                 'using the format2mask based on domain knowledge. When it is not possible to know the format or to manually assign the format, you can consider commenting this Exception and then BatteryMoE will assign'
@@ -736,9 +730,11 @@ class Dataset_PBT(Dataset):
                 anode = self.anode_json[file_name][0]
                 if anode == 'graphite' or anode == 'artificial graphite' or anode == 'carbon':
                     anode = 'graphite' # we assume other anodes are graphite
-                anode_index = self.anode2mask[anode] if anode in self.anode2mask else np.arange(self.anode_experts)
                 anode_mask = np.zeros(self.anode_experts)
-                anode_mask[anode_index] = 1
+                if anode in self.anode2mask:
+                    # if the anode is known, we assign the expert according to the domain knowledge
+                    anode_index = self.anode2mask[anode]
+                    anode_mask[anode_index] = 1
             else:
                 raise Exception(f'The {file_name} is not shown in the formats.json. We suggest the user to set the format in the formats.json and manually assign the expert'
                 'using the format2mask based on domain knowledge. When it is not possible to know the format or to manually assign the format, you can consider commenting this Exception and then BatteryMoE will assign'
