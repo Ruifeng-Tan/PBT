@@ -46,7 +46,7 @@ def domain_average(total_domain_ids, MAPEs, return_IDs=False):
     else:
         return np.array(res)
 
-def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha1, alpha2, model, dataset, seed, finetune_dataset, start=1, end=100):
+def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha1, alpha2, model, dataset, seed, trained_dataset, start=1, end=100):
     number_MAPE = {}
     number_alphaAcc1 = {}
     number_alphaAcc2 = {}
@@ -69,11 +69,11 @@ def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_referenc
     
     output_path = './output_path/'
     os.makedirs(output_path, exist_ok=True)
-    with open(f'{output_path}number_MAPE_{model}_{dataset}_{finetune_dataset}_{seed}.json', 'w') as f:
+    with open(f'{output_path}number_MAPE_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
         json.dump(number_MAPE, f)
-    with open(f'{output_path}number_alphaAcc1_{model}_{dataset}_{finetune_dataset}_{seed}.json', 'w') as f:
+    with open(f'{output_path}number_alphaAcc1_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
         json.dump(number_alphaAcc1, f)
-    with open(f'{output_path}number_alphaAcc2_{model}_{dataset}_{finetune_dataset}_{seed}.json', 'w') as f:
+    with open(f'{output_path}number_alphaAcc2_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
         json.dump(number_alphaAcc2, f)
 
 def set_seed(seed):
@@ -322,6 +322,7 @@ for ii in range(args.itr):
         total_domain_ids = np.array(total_domain_ids)
         total_references = np.array(total_references)
         total_seen_unseen_ids = np.array(total_seen_unseen_ids)
+        total_seen_number_of_cycles = np.array(total_seen_number_of_cycles)
         total_preds = np.array(total_preds)
 
 
@@ -399,3 +400,6 @@ for ii in range(args.itr):
             unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
             accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Unseen MAPE: {unseen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc1}% | Unseen {alpha}-accuracy: {unseen_alpha_acc1}%')
             accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen {alpha2}-accuracy: {seen_alpha_acc2}% | Unseen {alpha2}-accuracy: {unseen_alpha_acc2}%')
+    
+        if eval_cycle_min is None or eval_cycle_max is None:
+            calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha, alpha2, args.model, dataset, trained_dataset=trained_dataset, start=args.seq_len, end=args.early_cycle_threshold, seed=args.seed)

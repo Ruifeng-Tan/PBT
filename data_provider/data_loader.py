@@ -1241,7 +1241,6 @@ class Dataset_BatteryLife(Dataset):
         :param flag:including train, val, test
         :param scaler:scaler or not
         '''
-        self.life_classes = json.load(open('data_provider/life_classes.json'))
         self.eval_cycle_max = eval_cycle_max
         self.eval_cycle_min = eval_cycle_min
         self.args = args
@@ -1256,7 +1255,7 @@ class Dataset_BatteryLife(Dataset):
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
         self.aug_helper = BatchAugmentation_battery_revised()
 
-        self.name2domainID = json.load(open(f'{self.root_path}/name2domainID.json'))
+        self.name2domainID = json.load(open(f'/data/trf/python_works/BatteryMoE/gate_data/name2domainID.json'))
 
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
@@ -1500,11 +1499,12 @@ class Dataset_BatteryLife(Dataset):
                 # This battery has not reached end of life
                 continue
             
-            for class_label, life_range in self.life_classes.items():
-                if eol >= life_range[0] and eol < life_range[1]:
-                    class_label = int(class_label)
-                    class_labels += [class_label for _ in range(len(charge_discharge_curves))]
-                    break
+            # for class_label, life_range in self.life_classes.items():
+            #     if eol >= life_range[0] and eol < life_range[1]:
+            #         class_label = int(class_label)
+            #         class_labels += [class_label for _ in range(len(charge_discharge_curves))]
+            #         break
+            class_labels += [0 for _ in range(len(charge_discharge_curves))]
             
 
             cell_name = file_name
