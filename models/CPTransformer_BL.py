@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer, ConvLayer
 from layers.SelfAttention_Family import FullAttention, AttentionLayer
-from layers.Embed import DataEmbedding, PositionalEmbedding
+from layers.Embed import DataEmbedding, PositionalEmbedding_BL
 class MLPBlock(nn.Module):
     def __init__(self, in_dim, hidden_dim, out_dim, drop_rate):
         super(MLPBlock, self).__init__()
@@ -38,7 +38,7 @@ class Model(nn.Module):
         self.intra_embed = nn.Linear(self.charge_discharge_length*3, self.d_model)
         self.intra_MLP = nn.ModuleList([MLPBlock(self.d_model, self.d_ff, self.d_model, self.drop_rate) for _ in range(configs.e_layers)])
 
-        self.pe = PositionalEmbedding(self.d_model)
+        self.pe = PositionalEmbedding_BL(self.d_model)
         self.inter_TransformerEncoder = Encoder(
             [
                 EncoderLayer(
