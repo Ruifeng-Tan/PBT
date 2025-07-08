@@ -103,3 +103,128 @@ class split_recorder():
     MIX_all_2024_train_files = MIX_large_train_files + ZN_2024_train_files + CALB_2024_train_files + NAion_2024_train_files
     MIX_all_2024_val_files = MIX_large_val_files + ZN_2024_val_files + CALB_2024_val_files + NAion_2024_val_files
     MIX_all_2024_test_files = MIX_large_test_files + ZN_2024_test_files + CALB_2024_test_files + NAion_2024_test_files
+
+    ## detailed split
+    # Anodes
+    MIX_large_anode_graphite_train_files = CALCE_train_files + MATR_train_files + HUST_train_files + HNEI_train_files + SNL_train_files + UL_PUR_train_files + MICH_train_files + XJTU_train_files + ISU_ILCC_train_files + ['Tongji3_CY25-05_1--2.pkl', 'Tongji3_CY25-05_1--3.pkl', 'Tongji3_CY25-05_2--1.pkl', 'Tongji3_CY25-05_2--2.pkl', 'Tongji3_CY25-05_2--3.pkl', 'Tongji3_CY25-05_4--1.pkl', 'Tongji3_CY25-05_4--1.pkl']
+    MIX_large_anode_graphite_test_files = CALCE_test_files + MATR_test_files + HUST_test_files + HNEI_test_files + SNL_test_files + UL_PUR_test_files + MICH_test_files + XJTU_test_files + ISU_ILCC_test_files
+    MIX_large_anode_graphite_val_files = CALCE_val_files + MATR_val_files + HUST_val_files + HNEI_val_files + SNL_val_files + UL_PUR_val_files + MICH_val_files + XJTU_val_files + ISU_ILCC_val_files + ['Tongji3_CY25-05_1--1.pkl', 'Tongji3_CY25-05_4--3.pkl']
+
+    MIX_large_anode_carbon_train_files = RWTH_train_files
+    MIX_large_anode_carbon_test_files = RWTH_test_files
+    MIX_large_anode_carbon_val_files = RWTH_val_files
+
+    MIX_large_anode_graphite_PVDF_train_files = MICH_EXP_train_files
+    MIX_large_anode_graphite_PVDF_test_files = MICH_EXP_test_files
+    MIX_large_anode_graphite_PVDF_val_files = MICH_EXP_val_files
+
+    MIX_large_anode_AG_train_files = Stanford_train_files
+    MIX_large_anode_AG_test_files = Stanford_test_files
+    MIX_large_anode_AG_val_files = Stanford_val_files
+
+    MIX_large_anode_graphite_si_train_files = ['Tongji1_CY25-025_1--5.pkl', 'Tongji1_CY25-025_1--3.pkl', 'Tongji1_CY25-025_1--2.pkl', 'Tongji1_CY25-05_1--2.pkl', 'Tongji1_CY25-05_1--17.pkl', 'Tongji1_CY25-05_1--4.pkl', 'Tongji1_CY25-05_1--12.pkl', 'Tongji1_CY25-05_1--16.pkl', 'Tongji1_CY25-05_1--13.pkl', 'Tongji1_CY25-05_1--15.pkl', 'Tongji1_CY25-05_1--5.pkl', 'Tongji1_CY25-05_1--14.pkl', 'Tongji1_CY25-05_1--18.pkl', 'Tongji1_CY25-1_1--5.pkl', 'Tongji1_CY25-1_1--9.pkl', 'Tongji1_CY25-1_1--6.pkl', 'Tongji1_CY25-1_1--4.pkl', 'Tongji1_CY35-05_1--2.pkl', 'Tongji1_CY35-05_1--1.pkl', 'Tongji1_CY45-05_1--21.pkl', 'Tongji1_CY45-05_1--28.pkl', 'Tongji1_CY45-05_1--19.pkl', 'Tongji1_CY45-05_1--5.pkl', 'Tongji1_CY45-05_1--13.pkl', 'Tongji1_CY45-05_1--11.pkl', 'Tongji1_CY45-05_1--17.pkl', 'Tongji1_CY45-05_1--27.pkl', 'Tongji1_CY45-05_1--18.pkl', 'Tongji1_CY45-05_1--20.pkl', 'Tongji1_CY45-05_1--1.pkl', 'Tongji1_CY45-05_1--7.pkl', 'Tongji1_CY45-05_1--6.pkl', 'Tongji1_CY45-05_1--23.pkl', 'Tongji1_CY45-05_1--12.pkl', 'Tongji1_CY45-05_1--26.pkl', 'Tongji1_CY45-05_1--22.pkl', 'Tongji1_CY45-05_1--9.pkl', 'Tongji1_CY45-05_1--24.pkl', 'Tongji1_CY45-05_1--15.pkl', 'Tongji2_CY25-05_1--13.pkl', 'Tongji2_CY25-05_1--5.pkl', 'Tongji2_CY25-05_1--17.pkl', 'Tongji2_CY25-05_1--12.pkl', 'Tongji2_CY25-05_1--15.pkl', 'Tongji2_CY35-05_1--4.pkl', 'Tongji2_CY35-05_1--3.pkl', 'Tongji2_CY45-05_1--11.pkl', 'Tongji2_CY45-05_1--22.pkl', 'Tongji2_CY45-05_1--27.pkl', 'Tongji2_CY45-05_1--9.pkl', 'Tongji2_CY45-05_1--23.pkl', 'Tongji2_CY45-05_1--25.pkl', 'Tongji2_CY45-05_1--16.pkl', 'Tongji2_CY45-05_1--7.pkl', 'Tongji2_CY45-05_1--20.pkl', 'Tongji2_CY45-05_1--15.pkl', 'Tongji2_CY45-05_1--24.pkl', 'Tongji2_CY45-05_1--26.pkl', 'Tongji2_CY45-05_1--14.pkl']
+    MIX_large_anode_graphite_si_test_files = ['Tongji1_CY25-025_1--4.pkl', 'Tongji1_CY25-025_1--1.pkl', 'Tongji1_CY25-05_1--3.pkl', 'Tongji1_CY25-05_1--10.pkl', 'Tongji1_CY25-05_1--11.pkl', 'Tongji1_CY25-05_1--7.pkl', 'Tongji1_CY25-1_1--3.pkl', 'Tongji1_CY25-1_1--8.pkl', 'Tongji1_CY45-05_1--10.pkl', 'Tongji1_CY45-05_1--14.pkl', 'Tongji1_CY45-05_1--8.pkl', 'Tongji1_CY45-05_1--16.pkl', 'Tongji2_CY25-05_1--8.pkl', 'Tongji2_CY25-05_1--16.pkl', 'Tongji2_CY25-05_1--10.pkl', 'Tongji2_CY45-05_1--21.pkl', 'Tongji2_CY45-05_1--8.pkl', 'Tongji2_CY45-05_1--18.pkl', 'Tongji2_CY45-05_1--10.pkl', 'Tongji2_CY45-05_1--1.pkl', 'Tongji2_CY45-05_1--12.pkl']
+    MIX_large_anode_graphite_si_val_files = ['Tongji1_CY25-025_1--7.pkl', 'Tongji1_CY25-025_1--6.pkl', 'Tongji1_CY25-05_1--19.pkl', 'Tongji1_CY25-05_1--1.pkl', 'Tongji1_CY25-05_1--6.pkl', 'Tongji1_CY25-1_1--1.pkl', 'Tongji1_CY25-1_1--2.pkl', 'Tongji1_CY25-1_1--7.pkl', 'Tongji1_CY45-05_1--2.pkl', 'Tongji1_CY45-05_1--25.pkl', 'Tongji2_CY25-05_1--9.pkl', 'Tongji2_CY25-05_1--2.pkl', 'Tongji2_CY35-05_1--2.pkl', 'Tongji2_CY35-05_1--1.pkl', 'Tongji2_CY45-05_1--17.pkl', 'Tongji2_CY45-05_1--19.pkl', 'Tongji2_CY45-05_1--13.pkl', 'Tongji2_CY45-05_1--2.pkl', 'Tongji2_CY45-05_1--28.pkl']
+
+    # Cathodes
+    MIX_large_cathode_LCO_train_files = CALCE_train_files
+    MIX_large_cathode_LCO_val_files = CALCE_val_files
+    MIX_large_cathode_LCO_test_files = CALCE_test_files
+
+    MIX_large_cathode_LFP_train_files = MATR_train_files + HUST_train_files + ['SNL_18650_LFP_25C_0-100_0.5-3C_c.pkl', 'SNL_18650_LFP_35C_0-100_0.5-1C_d.pkl', 'SNL_18650_LFP_35C_0-100_0.5-2C_b.pkl', 'SNL_18650_LFP_25C_0-100_0.5-3C_a.pkl', 'SNL_18650_LFP_25C_0-100_0.5-3C_d.pkl', 'SNL_18650_LFP_35C_0-100_0.5-1C_b.pkl']
+    MIX_large_carhode_LFP_val_files = MATR_val_files + HUST_val_files
+    MIX_large_cathode_LFP_test_files = MATR_test_files + HUST_test_files + ['SNL_18650_LFP_25C_0-100_0.5-3C_b.pkl', 'SNL_18650_LFP_35C_0-100_0.5-1C_c.pkl', 'SNL_18650_LFP_35C_0-100_0.5-2C_a.pkl']
+
+    MIX_large_cathode_NCM422_train_files = HNEI_train_files
+    MIX_large_cathode_NCM422_val_files = HNEI_val_files
+    MIX_large_cathode_NCM422_test_files = HNEI_test_files
+
+    MIX_large_cathode_NCM_train_files = RWTH_train_files + ISU_ILCC_train_files
+    MIX_large_cathode_NCM_val_files = RWTH_val_files + ISU_ILCC_val_files
+    MIX_large_cathode_NCM_test_files = RWTH_test_files + ISU_ILCC_test_files
+
+    MIX_large_cathode_NCA811405_train_files = ['SNL_18650_NCA_25C_0-100_0.5-0.5C_b.pkl', 'SNL_18650_NCA_35C_0-100_0.5-1C_b.pkl', 'SNL_18650_NCA_25C_0-100_0.5-2C_b.pkl', 'SNL_18650_NCA_35C_0-100_0.5-1C_a.pkl', 'SNL_18650_NCA_35C_0-100_0.5-1C_d.pkl', 'SNL_18650_NCA_15C_0-100_0.5-2C_a.pkl', 'SNL_18650_NCA_35C_0-100_0.5-1C_c.pkl', 'SNL_18650_NCA_15C_0-100_0.5-1C_b.pkl', 'SNL_18650_NCA_35C_0-100_0.5-2C_a.pkl', 'SNL_18650_NCA_15C_0-100_0.5-1C_a.pkl', 'SNL_18650_NCA_25C_20-80_0.5-0.5C_c.pkl']
+    MIX_large_cathode_NCA811405_val_files = ['SNL_18650_NCA_25C_20-80_0.5-0.5C_d.pkl', 'SNL_18650_NCA_35C_0-100_0.5-2C_b.pkl', 'SNL_18650_NCA_25C_0-100_0.5-1C_d.pkl', 'SNL_18650_NCA_25C_0-100_0.5-1C_a.pkl', 'SNL_18650_NCA_25C_0-100_0.5-1C_b.pkl', 'SNL_18650_NCA_25C_0-100_0.5-0.5C_a.pkl']
+    MIX_large_cathode_NCA811405_test_files = ['SNL_18650_NCA_25C_0-100_0.5-2C_a.pkl', 'SNL_18650_NCA_15C_0-100_0.5-2C_b.pkl', 'SNL_18650_NCA_25C_0-100_0.5-1C_c.pkl']
+
+    MIX_large_cathode_NCM840610_train_files = ['SNL_18650_NMC_35C_0-100_0.5-2C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-3C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-1C_a.pkl', 'SNL_18650_NMC_15C_0-100_0.5-2C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-1C_c.pkl', 'SNL_18650_NMC_25C_0-100_0.5-3C_a.pkl', 'SNL_18650_NMC_25C_0-100_0.5-1C_d.pkl', 'SNL_18650_NMC_25C_0-100_0.5-2C_a.pkl', 'SNL_18650_NMC_35C_0-100_0.5-2C_a.pkl', 'SNL_18650_NMC_15C_0-100_0.5-2C_a.pkl', 'SNL_18650_NMC_25C_0-100_0.5-2C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-0.5C_b.pkl', 'SNL_18650_NMC_35C_0-100_0.5-1C_a.pkl']
+    MIX_large_cathode_NCM840610_val_files = ['SNL_18650_NMC_25C_0-100_0.5-1C_b.pkl', 'SNL_18650_NMC_15C_0-100_0.5-1C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-3C_d.pkl', 'SNL_18650_NMC_35C_0-100_0.5-1C_d.pkl']
+    MIX_large_cathode_NCM840610_test_files = ['SNL_18650_NMC_15C_0-100_0.5-1C_a.pkl', 'SNL_18650_NMC_35C_0-100_0.5-1C_c.pkl', 'SNL_18650_NMC_25C_0-100_0.5-3C_c.pkl', 'SNL_18650_NMC_35C_0-100_0.5-1C_b.pkl']
+
+    MIX_large_cathode_NCA801505_train_files = UL_PUR_train_files
+    MIX_large_cathode_NCA801505_val_files = UL_PUR_val_files
+    MIX_large_cathode_NCA801505_test_files = UL_PUR_test_files
+
+    MIX_large_cathode_NCM111_train_files = MICH_train_files + MICH_EXP_train_files
+    MIX_large_cathode_NCM111_val_files = MICH_val_files + MICH_EXP_val_files
+    MIX_large_cathode_NCM111_test_files = MICH_test_files + MICH_EXP_test_files
+
+    MIX_large_cathode_NCM523_train_files = Stanford_train_files + XJTU_train_files
+    MIX_large_cathode_NCM523_val_files = Stanford_val_files + XJTU_val_files
+    MIX_large_cathode_NCM523_test_files = Stanford_test_files + XJTU_test_files
+
+    MIX_large_cathode_NCA861103_train_files = ['Tongji1_CY25-025_1--5.pkl', 'Tongji1_CY25-025_1--3.pkl', 'Tongji1_CY25-025_1--2.pkl', 'Tongji1_CY25-025_1--5.pkl', 'Tongji1_CY25-025_1--3.pkl', 'Tongji1_CY25-025_1--2.pkl', 'Tongji1_CY25-1_1--5.pkl', 'Tongji1_CY25-1_1--9.pkl', 'Tongji1_CY25-1_1--6.pkl', 'Tongji1_CY25-1_1--4.pkl', 'Tongji1_CY35-05_1--2.pkl', 'Tongji1_CY35-05_1--1.pkl', 'Tongji1_CY45-05_1--21.pkl', 'Tongji1_CY45-05_1--28.pkl', 'Tongji1_CY45-05_1--19.pkl', 'Tongji1_CY45-05_1--5.pkl', 'Tongji1_CY45-05_1--13.pkl', 'Tongji1_CY45-05_1--11.pkl', 'Tongji1_CY45-05_1--17.pkl', 'Tongji1_CY45-05_1--27.pkl', 'Tongji1_CY45-05_1--18.pkl', 'Tongji1_CY45-05_1--20.pkl', 'Tongji1_CY45-05_1--1.pkl', 'Tongji1_CY45-05_1--7.pkl', 'Tongji1_CY45-05_1--6.pkl', 'Tongji1_CY45-05_1--23.pkl', 'Tongji1_CY45-05_1--12.pkl', 'Tongji1_CY45-05_1--26.pkl', 'Tongji1_CY45-05_1--22.pkl', 'Tongji1_CY45-05_1--9.pkl', 'Tongji1_CY45-05_1--24.pkl', 'Tongji1_CY45-05_1--15.pkl']
+    MIX_large_cahtode_NCA861103_val_files = ['Tongji1_CY25-025_1--4.pkl', 'Tongji1_CY25-025_1--1.pkl', 'Tongji1_CY25-025_1--4.pkl', 'Tongji1_CY25-025_1--1.pkl', 'Tongji1_CY25-1_1--3.pkl', 'Tongji1_CY25-1_1--8.pkl', 'Tongji1_CY45-05_1--10.pkl', 'Tongji1_CY45-05_1--14.pkl', 'Tongji1_CY45-05_1--8.pkl', 'Tongji1_CY45-05_1--16.pkl']
+    MIX_large_cathode_NCA861103_test_files = ['Tongji1_CY25-025_1--7.pkl', 'Tongji1_CY25-025_1--6.pkl', 'Tongji1_CY25-025_1--7.pkl', 'Tongji1_CY25-025_1--6.pkl', 'Tongji1_CY25-1_1--1.pkl', 'Tongji1_CY25-1_1--2.pkl', 'Tongji1_CY25-1_1--7.pkl', 'Tongji1_CY45-05_1--2.pkl', 'Tongji1_CY45-05_1--25.pkl']
+
+    MIX_large_cathode_NCM831107_train_files = ['Tongji2_CY25-05_1--13.pkl', 'Tongji2_CY25-05_1--5.pkl', 'Tongji2_CY25-05_1--17.pkl', 'Tongji2_CY25-05_1--12.pkl', 'Tongji2_CY25-05_1--15.pkl', 'Tongji2_CY35-05_1--4.pkl', 'Tongji2_CY35-05_1--3.pkl', 'Tongji2_CY45-05_1--11.pkl', 'Tongji2_CY45-05_1--22.pkl', 'Tongji2_CY45-05_1--27.pkl', 'Tongji2_CY45-05_1--9.pkl', 'Tongji2_CY45-05_1--23.pkl', 'Tongji2_CY45-05_1--25.pkl', 'Tongji2_CY45-05_1--16.pkl', 'Tongji2_CY45-05_1--7.pkl', 'Tongji2_CY45-05_1--20.pkl', 'Tongji2_CY45-05_1--15.pkl', 'Tongji2_CY45-05_1--24.pkl', 'Tongji2_CY45-05_1--26.pkl', 'Tongji2_CY45-05_1--14.pkl']
+    MIX_large_cathode_NCM831107_val_files = ['Tongji2_CY25-05_1--8.pkl', 'Tongji2_CY25-05_1--16.pkl', 'Tongji2_CY25-05_1--10.pkl', 'Tongji2_CY45-05_1--21.pkl', 'Tongji2_CY45-05_1--8.pkl', 'Tongji2_CY45-05_1--18.pkl', 'Tongji2_CY45-05_1--10.pkl', 'Tongji2_CY45-05_1--1.pkl', 'Tongji2_CY45-05_1--12.pkl']
+    MIX_large_cathode_NCM831107_test_files = ['Tongji2_CY25-05_1--9.pkl', 'Tongji2_CY25-05_1--2.pkl', 'Tongji2_CY35-05_1--2.pkl', 'Tongji2_CY35-05_1--1.pkl', 'Tongji2_CY45-05_1--17.pkl', 'Tongji2_CY45-05_1--19.pkl', 'Tongji2_CY45-05_1--13.pkl', 'Tongji2_CY45-05_1--2.pkl', 'Tongji2_CY45-05_1--28.pkl']
+
+    MIX_large_cathode_NCM_NCA_train_files = ['Tongji3_CY25-05_1--2.pkl', 'Tongji3_CY25-05_1--3.pkl', 'Tongji3_CY25-05_2--1.pkl', 'Tongji3_CY25-05_2--2.pkl', 'Tongji3_CY25-05_2--3.pkl', 'Tongji3_CY25-05_4--1.pkl', 'Tongji3_CY25-05_4--2.pkl']
+    MIX_large_cathode_NCM_NCA_val_files = []
+    MIX_large_cathode_NCM_NCA_test_files = ['Tongji3_CY25-05_1--1.pkl', 'Tongji3_CY25-05_4--3.pkl']
+
+    # Formats
+    MIX_large_format_prismatic_train_files = CALCE_train_files
+    MIX_large_format_prismatic_val_files = CALCE_val_files
+    MIX_large_format_prismatic_test_files = CALCE_test_files
+
+    MIX_large_format_18650_train_files = MATR_train_files + HUST_train_files + HNEI_train_files + RWTH_train_files + SNL_train_files + UL_PUR_train_files + Tongji_train_files + XJTU_train_files
+    MIX_large_format_18650_val_files = MATR_val_files + HUST_val_files + HNEI_val_files + RWTH_val_files + SNL_val_files + UL_PUR_val_files + Tongji_val_files + XJTU_val_files
+    MIX_large_format_18650_test_files = MATR_test_files + HUST_test_files + HNEI_test_files + RWTH_test_files + SNL_test_files + UL_PUR_test_files + Tongji_test_files + XJTU_test_files
+
+    MIX_large_format_pouch_train_files = MICH_train_files + MICH_EXP_train_files
+    MIX_large_format_pouch_val_files = MICH_val_files + MICH_EXP_val_files
+    MIX_large_format_pouch_test_files = MICH_test_files + MICH_EXP_test_files
+
+    MIX_large_format_crysralline_train_files = Stanford_train_files
+    MIX_large_format_crysralline_val_files = Stanford_val_files
+    MIX_large_format_crysralline_test_files = Stanford_test_files
+
+    MIX_large_format_502030_pouch_train_files = ISU_ILCC_train_files
+    MIX_large_format_502030_pouch_val_files = ISU_ILCC_val_files
+    MIX_large_format_502030_pouch_test_files = ISU_ILCC_test_files
+
+    # Temperatures
+    MIX_large_temp_5_train_files = ['MICH_02C_pouch_NMC_-5C_0-100_0.2-0.2C.pkl', 'MICH_08C_pouch_NMC_-5C_0-100_2-2C.pkl', 'MICH_11C_pouch_NMC_-5C_0-100_0.2-1.5C.pkl', 'MICH_17C_pouch_NMC_-5C_50-100_0.2-1.5C.pkl']
+    MIX_large_temp_5_val_files = ['MICH_05C_pouch_NMC_-5C_0-100_1.5-1.5C.pkl', 'MICH_05C_pouch_NMC_-5C_0-100_1.5-1.5C.pkl']
+    MIX_large_temp_5_test_files = ['MICH_02C_pouch_NMC_-5C_0-100_0.2-0.2C.pkl']
+
+    MIX_large_temp_15_train_files = ['SNL_18650_NMC_15C_0-100_0.5-2C_b.pkl', 'SNL_18650_NCA_15C_0-100_0.5-2C_a.pkl', 'SNL_18650_NCA_15C_0-100_0.5-1C_b.pkl', 'SNL_18650_NCA_15C_0-100_0.5-1C_a.pkl', 'SNL_18650_NMC_15C_0-100_0.5-2C_a.pkl']
+    MIX_large_temp_15_val_files = ['SNL_18650_NMC_15C_0-100_0.5-1C_b.pkl']
+    MIX_large_temp_15_test_files = ['SNL_18650_NMC_15C_0-100_0.5-1C_a.pkl', 'SNL_18650_NCA_15C_0-100_0.5-2C_b.pkl']
+
+    MIX_large_temp_20_train_files = XJTU_train_files
+    MIX_large_temp_20_val_files = XJTU_val_files
+    MIX_large_temp_20_test_files = XJTU_test_files
+
+    MIX_large_temp_23_train_files = UL_PUR_train_files
+    MIX_large_temp_23_val_files = UL_PUR_val_files
+    MIX_large_temp_23_test_files = UL_PUR_test_files
+
+    MIX_large_temp_25_train_files = CALCE_train_files + HNEI_train_files + RWTH_train_files + ['SNL_18650_NCA_25C_0-100_0.5-0.5C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-3C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-1C_a.pkl', 'SNL_18650_LFP_25C_0-100_0.5-3C_c.pkl', 'SNL_18650_NCA_25C_0-100_0.5-2C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-1C_c.pkl', 'SNL_18650_NMC_25C_0-100_0.5-3C_a.pkl', 'SNL_18650_NMC_25C_0-100_0.5-1C_d.pkl', 'SNL_18650_LFP_25C_0-100_0.5-3C_a.pkl', 'SNL_18650_NMC_25C_0-100_0.5-2C_a.pkl', 'SNL_18650_LFP_25C_0-100_0.5-3C_d.pkl', 'SNL_18650_NCA_25C_20-80_0.5-0.5C_c.pkl', 'SNL_18650_NMC_25C_0-100_0.5-2C_b.pkl', 'SNL_18650_NMC_25C_0-100_0.5-0.5C_b.pkl'] + ['MICH_MCForm27_pouch_NMC_25C_0-100_1-1C_g.pkl', 'MICH_MCForm22_pouch_NMC_25C_0-100_1-1C_b.pkl', 'MICH_MCForm29_pouch_NMC_25C_0-100_1-1C_i.pkl', 'MICH_BLForm16_pouch_NMC_25C_0-100_1-1C_f.pkl', 'MICH_MCForm30_pouch_NMC_25C_0-100_1-1C_j.pkl', 'MICH_BLForm14_pouch_NMC_25C_0-100_1-1C_d.pkl', 'MICH_BLForm17_pouch_NMC_25C_0-100_1-1C_g.pkl', 'MICH_MCForm23_pouch_NMC_25C_0-100_1-1C_c.pkl', 'MICH_BLForm18_pouch_NMC_25C_0-100_1-1C_h.pkl', 'MICH_BLForm10_pouch_NMC_25C_0-100_1-1C_j.pkl', 'MICH_MCForm25_pouch_NMC_25C_0-100_1-1C_e.pkl', 'MICH_MCForm26_pouch_NMC_25C_0-100_1-1C_f.pkl', 'MICH_BLForm15_pouch_NMC_25C_0-100_1-1C_e.pkl'] + ['MICH_04R_pouch_NMC_25C_0-100_1.5-1.5C.pkl', 'MICH_10R_pouch_NMC_25C_0-100_0.2-1.5C.pkl', 'MICH_13R_pouch_NMC_25C_50-100_0.2-0.2C.pkl'] + Tongji_train_files
+    MIX_large_temp_25_val_files = CALCE_val_files + HNEI_val_files + RWTH_val_files + ['SNL_18650_NMC_25C_0-100_0.5-1C_b.pkl', 'SNL_18650_NCA_25C_20-80_0.5-0.5C_d.pkl', 'SNL_18650_NMC_25C_0-100_0.5-3C_d.pkl', 'SNL_18650_NCA_25C_0-100_0.5-1C_d.pkl', 'SNL_18650_NCA_25C_0-100_0.5-1C_a.pkl', 'SNL_18650_NCA_25C_0-100_0.5-1C_b.pkl', 'SNL_18650_NCA_25C_0-100_0.5-0.5C_a.pkl'] + ['MICH_MCForm24_pouch_NMC_25C_0-100_1-1C_d.pkl', 'MICH_BLForm12_pouch_NMC_25C_0-100_1-1C_b.pkl', 'MICH_BLForm13_pouch_NMC_25C_0-100_1-1C_c.pkl', 'MICH_BLForm19_pouch_NMC_25C_0-100_1-1C_i.pkl', 'MICH_BLForm11_pouch_NMC_25C_0-100_1-1C_a.pkl'] + ['MICH_07R_pouch_NMC_25C_0-100_2-2C.pkl'] + Tongji_val_files
+    MIX_large_temp_25_test_files = CALCE_test_files + HNEI_test_files + RWTH_test_files + ['SNL_18650_NMC_15C_0-100_0.5-1C_a.pkl', 'SNL_18650_NCA_15C_0-100_0.5-2C_b.pkl'] +  ['MICH_BLForm20_pouch_NMC_25C_0-100_1-1C_j.pkl', 'MICH_MCForm21_pouch_NMC_25C_0-100_1-1C_a.pkl', 'MICH_MCForm28_pouch_NMC_25C_0-100_1-1C_h.pkl'] + ['MICH_01R_pouch_NMC_25C_0-100_0.2-0.2C.pkl', 'MICH_16R_pouch_NMC_25C_50-100_0.2-1.5C.pkl'] + Tongji_test_files
+
+    MIX_large_temp_30_train_files = MATR_train_files + HUST_train_files + Stanford_train_files + ISU_ILCC_train_files
+    MIX_large_temp_30_val_files = MATR_val_files + HUST_val_files + Stanford_val_files + ISU_ILCC_val_files
+    MIX_large_temp_30_test_files = MATR_test_files + HUST_test_files + Stanford_test_files + ISU_ILCC_test_files
+
+    MIX_large_temp_35_train_files = ['SNL_18650_NCA_35C_0-100_0.5-1C_b.pkl', 'SNL_18650_NMC_35C_0-100_0.5-2C_b.pkl', 'SNL_18650_LFP_35C_0-100_0.5-1C_d.pkl', 'SNL_18650_NCA_35C_0-100_0.5-1C_a.pkl', 'SNL_18650_LFP_35C_0-100_0.5-2C_b.pkl', 'SNL_18650_NCA_35C_0-100_0.5-1C_d.pkl', 'SNL_18650_NCA_35C_0-100_0.5-1C_c.pkl', 'SNL_18650_NCA_35C_0-100_0.5-2C_a.pkl', 'SNL_18650_NMC_35C_0-100_0.5-2C_a.pkl', 'SNL_18650_NMC_35C_0-100_0.5-1C_a.pkl', 'SNL_18650_LFP_35C_0-100_0.5-1C_b.pkl']
+    MIX_large_temp_35_val_files = ['SNL_18650_NCA_35C_0-100_0.5-2C_b.pkl', 'SNL_18650_NMC_35C_0-100_0.5-1C_d.pkl']
+    MIX_large_temp_35_test_files = ['SNL_18650_NMC_35C_0-100_0.5-1C_c.pkl', 'SNL_18650_NMC_35C_0-100_0.5-1C_b.pkl', 'SNL_18650_LFP_35C_0-100_0.5-1C_c.pkl', 'SNL_18650_LFP_35C_0-100_0.5-2C_a.pkl']
+
+    MIX_large_temp_45_train_files = ['MICH_BLForm2_pouch_NMC_45C_0-100_1-1C_b.pkl', 'MICH_BLForm1_pouch_NMC_45C_0-100_1-1C_a.pkl', 'MICH_MCForm32_pouch_NMC_45C_0-100_1-1C_b.pkl', 'MICH_MCForm36_pouch_NMC_45C_0-100_1-1C_f.pkl', 'MICH_MCForm39_pouch_NMC_45C_0-100_1-1C_i.pkl', 'MICH_BLForm5_pouch_NMC_45C_0-100_1-1C_e.pkl', 'MICH_MCForm38_pouch_NMC_45C_0-100_1-1C_h.pkl', 'MICH_BLForm8_pouch_NMC_45C_0-100_1-1C_h.pkl', 'MICH_MCForm35_pouch_NMC_45C_0-100_1-1C_e.pkl', 'MICH_MCForm37_pouch_NMC_45C_0-100_1-1C_g.pkl', 'MICH_MCForm31_pouch_NMC_45C_0-100_1-1C_a.pkl'] + ['MICH_03H_pouch_NMC_45C_0-100_0.2-0.2C.pkl', 'MICH_12H_pouch_NMC_45C_0-100_0.2-1.5C.pkl', 'MICH_12H_pouch_NMC_45C_0-100_0.2-1.5C.pkl', 'MICH_15H_pouch_NMC_45C_50-100_0.2-0.2C.pkl']
+    MIX_large_temp_45_val_files = ['MICH_BLForm3_pouch_NMC_45C_0-100_1-1C_c.pkl', 'MICH_BLForm4_pouch_NMC_45C_0-100_1-1C_d.pkl', 'MICH_BLForm9_pouch_NMC_45C_0-100_1-1C_i.pkl'] + ['MICH_06H_pouch_NMC_45C_0-100_1.5-1.5C.pkl']
+    MIX_large_temp_45_test_files = ['MICH_MCForm34_pouch_NMC_45C_0-100_1-1C_d.pkl', 'MICH_BLForm6_pouch_NMC_45C_0-100_1-1C_f.pkl', 'MICH_MCForm40_pouch_NMC_45C_0-100_1-1C_j.pkl', 'MICH_BLForm7_pouch_NMC_45C_0-100_1-1C_g.pkl', 'MICH_MCForm33_pouch_NMC_45C_0-100_1-1C_c.pkl'] + ['MICH_09H_pouch_NMC_45C_0-100_2-2C.pkl']

@@ -26,7 +26,7 @@ class Tongji_protocol_prompt():
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
         3.0:  # Tongji1_CY25-1_1
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
-            f"Its positive electrode is Li0.86Ni0.86Co0.11Al0.03O2(NCA861103). "
+            f"Its positive electrode is Li0.86(Ni0.86Co0.11Al0.03)O2 (NCA861103). "
             f"Its negative electrode is graphite+2 wt.% Si. "
             f"The electrolyte formula is non-aqueous solution with lithium hexafluorophosphate (LiPF6). "
             f"The battery manufacturer is SAMSUNG. "
