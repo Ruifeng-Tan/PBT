@@ -199,13 +199,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2664 A to 3.96 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2664 A to 3.96 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         12.0:  # 200
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -218,13 +218,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2664 A to 3.96 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2664 A to 3.96 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         13.0:  # 201
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -237,13 +237,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2664 A to 3.96 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2664 A to 3.96 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         14.0:  # 202
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -256,13 +256,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.68 V and then charged at 0.18 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.68 V and then charged at 0.18 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         15.0:  # 203
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -275,13 +275,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.68 V and then charged at 0.18 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.68 V and then charged at 0.18 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         16.0:  # 204
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -294,13 +294,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.68 V and then charged at 0.18 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.68 V and then charged at 0.18 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         17.0:  # 205
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -313,13 +313,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 3.87 V and then charged at 0.72 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 3.87 V and then charged at 0.72 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         18.0:  # 206
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -332,13 +332,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 3.87 V and then charged at 0.72 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 3.87 V and then charged at 0.72 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         19.0:  # 207
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -351,13 +351,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 3.87 V and then charged at 0.72 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 3.87 V and then charged at 0.72 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         20.0:  # 208
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -370,13 +370,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.18 A to 3.89 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.18 A to 3.89 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         21.0:  # 209
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -389,13 +389,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.18 A to 3.89 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.18 A to 3.89 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         22.0:  # 210
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -408,13 +408,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.18 A to 3.89 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.18 A to 3.89 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         23.0:  # 211
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -427,13 +427,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.73 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.73 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         24.0:  # 212
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -446,13 +446,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.73 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.73 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         25.0:  # 213
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -465,13 +465,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.73 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.73 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         26.0:  # 214
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -484,13 +484,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2376 A to 4.04 V and then charged at 0.1512 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2376 A to 4.04 V and then charged at 0.1512 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         27.0:  # 215
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -503,13 +503,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2376 A to 4.04 V and then charged at 0.1512 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2376 A to 4.04 V and then charged at 0.1512 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         28.0:  # 216
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -522,13 +522,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2376 A to 4.04 V and then charged at 0.1512 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2376 A to 4.04 V and then charged at 0.1512 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         29.0:  # 217
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -541,13 +541,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2184 A to 3.82 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2184 A to 3.82 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         30.0:  # 219
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -560,13 +560,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.2184 A to 3.82 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.2184 A to 3.82 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         31.0:  # 220
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -579,12 +579,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.86 V and then charged at 0.2544 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.86 V and then charged at 0.2544 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         32.0: # 221
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -597,12 +597,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.86 V and then charged at 0.2544 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.86 V and then charged at 0.2544 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         33.0: # 222
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -615,12 +615,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.86 V and then charged at 0.2544 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.86 V and then charged at 0.2544 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         34.0: # 223
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -633,12 +633,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.036 A to 3.69 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.036 A to 3.69 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         35.0: # 224
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -651,12 +651,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.036 A to 3.69 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.036 A to 3.69 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         36.0: # 225
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -669,12 +669,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.036 A to 3.69 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.036 A to 3.69 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         37.0:  # 226
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -687,13 +687,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0744 A to 4.08 V and then charged at 0.0936 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0744 A to 4.08 V and then charged at 0.0936 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         38.0:  # 227
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -706,13 +706,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0744 A to 4.08 V and then charged at 0.0936 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0744 A to 4.08 V and then charged at 0.0936 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         39.0:  # 228
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -725,13 +725,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0744 A to 4.08 V and then charged at 0.0936 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0744 A to 4.08 V and then charged at 0.0936 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         40.0:  # 229
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -744,13 +744,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1128 A to 3.7 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1128 A to 3.7 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         41.0:  # 269
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -763,13 +763,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1128 A to 3.7 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1128 A to 3.7 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         42.0:  # 270
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -782,13 +782,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 4.03 V and then charged at 0.312 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 4.03 V and then charged at 0.312 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         43.0:  # 271
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -801,13 +801,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 4.03 V and then charged at 0.312 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 4.03 V and then charged at 0.312 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         44.0:  # 272
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -820,13 +820,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 4.03 V and then charged at 0.312 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 4.03 V and then charged at 0.312 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         45.0:  # 273
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -839,13 +839,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.95 V and then charged at 0.1368 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.95 V and then charged at 0.1368 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         46.0:  # 274
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -858,13 +858,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.95 V and then charged at 0.1368 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.95 V and then charged at 0.1368 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         47.0:  # 275
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -877,13 +877,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.95 V and then charged at 0.1368 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.95 V and then charged at 0.1368 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         48.0:  # 276
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -896,13 +896,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0936 A to 3.92 V and then charged at 0.2256 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0936 A to 3.92 V and then charged at 0.2256 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         49.0:  # 277
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -915,13 +915,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0936 A to 3.92 V and then charged at 0.2256 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0936 A to 3.92 V and then charged at 0.2256 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         50.0:  # 278
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -934,13 +934,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0936 A to 3.92 V and then charged at 0.2256 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0936 A to 3.92 V and then charged at 0.2256 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         51.0:  # 279
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -957,9 +957,9 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.0048 A to 3.94 V and then charged at 0.0048 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         52.0:  # 280
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -976,9 +976,9 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.0048 A to 3.94 V and then charged at 0.0048 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         53.0:  # 281
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -995,9 +995,9 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.0048 A to 3.94 V and then charged at 0.0048 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         54.0:  # 282
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1181,13 +1181,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.53 A to 4.1 V and then rested for 12 hours and then charged at 0.49 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.53 A to 4.1 V and then rested for 12 hours and then charged at 0.49 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         64.0:  # 292
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1200,13 +1200,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.53 A to 4.1 V and then rested for 12 hours and then charged at 0.49 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.53 A to 4.1 V and then rested for 12 hours and then charged at 0.49 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         65.0:  # 293
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1219,13 +1219,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.53 A to 4.1 V and then rested for 12 hours and then charged at 0.49 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.53 A to 4.1 V and then rested for 12 hours and then charged at 0.49 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         66.0:  # 294
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1238,13 +1238,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.4 A to 3.65 V and then rested for 12 hours and then charged at 0.27 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.4 A to 3.65 V and then rested for 12 hours and then charged at 0.27 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         67.0:  # 295
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1257,13 +1257,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.4 A to 3.65 V and then rested for 12 hours and then charged at 0.27 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.4 A to 3.65 V and then rested for 12 hours and then charged at 0.27 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         68.0:  # 296
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1276,13 +1276,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.4 A to 3.65 V and then rested for 12 hours and then charged at 0.27 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.4 A to 3.65 V and then rested for 12 hours and then charged at 0.27 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         69.0:  # 297
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1295,13 +1295,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.22 A to 3.83 V and then rested for 12 hours and then charged at 0.31 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.22 A to 3.83 V and then rested for 12 hours and then charged at 0.31 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         70.0:  # 299
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1314,13 +1314,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.22 A to 3.83 V and then rested for 12 hours and then charged at 0.31 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.22 A to 3.83 V and then rested for 12 hours and then charged at 0.31 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         71.0:  # 300
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1333,13 +1333,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.44 A to 4.05 V and then rested for 12 hours and then charged at 0.53 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.44 A to 4.05 V and then rested for 12 hours and then charged at 0.53 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         72.0:  # 301
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1352,13 +1352,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.44 A to 4.05 V and then rested for 12 hours and then charged at 0.53 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.44 A to 4.05 V and then rested for 12 hours and then charged at 0.53 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         73.0:  # 302
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1371,13 +1371,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.44 A to 4.05 V and then rested for 12 hours and then charged at 0.53 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.44 A to 4.05 V and then rested for 12 hours and then charged at 0.53 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         74.0:  # 303
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1390,13 +1390,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.66 A to 3.92 V and then rested for 12 hours and then charged at 0.57 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.66 A to 3.92 V and then rested for 12 hours and then charged at 0.57 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         75.0:  # 304
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1409,13 +1409,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.66 A to 3.92 V and then rested for 12 hours and then charged at 0.57 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.66 A to 3.92 V and then rested for 12 hours and then charged at 0.57 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         76.0:  # 305
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1428,13 +1428,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.66 A to 3.92 V and then rested for 12 hours and then charged at 0.57 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.66 A to 3.92 V and then rested for 12 hours and then charged at 0.57 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         77.0:  # 306
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1447,13 +1447,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.57 A to 3.78 V and then rested for 12 hours and then charged at 0.66 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.57 A to 3.78 V and then rested for 12 hours and then charged at 0.66 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         78.0:  # 307
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1466,13 +1466,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.57 A to 3.78 V and then rested for 12 hours and then charged at 0.66 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.57 A to 3.78 V and then rested for 12 hours and then charged at 0.66 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         79.0:  # 308
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1485,13 +1485,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.57 A to 3.78 V and then rested for 12 hours and then charged at 0.66 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.57 A to 3.78 V and then rested for 12 hours and then charged at 0.66 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         80.0:  # 309
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1504,13 +1504,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.62 A to 3.6 V and then rested for 12 hours and then charged at 0.44 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.62 A to 3.6 V and then rested for 12 hours and then charged at 0.44 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         81.0:  # 310
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1523,13 +1523,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.62 A to 3.6 V and then rested for 12 hours and then charged at 0.44 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.62 A to 3.6 V and then rested for 12 hours and then charged at 0.44 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         82.0: # 311
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1542,13 +1542,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.62 A to 3.6 V and then rested for 12 hours and then charged at 0.44 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.62 A to 3.6 V and then rested for 12 hours and then charged at 0.44 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         83.0: # 312
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1561,13 +1561,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.49 A to 4.01 V and then rested for 12 hours and then charged at 0.18 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.49 A to 4.01 V and then rested for 12 hours and then charged at 0.18 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         84.0: # 313
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1580,13 +1580,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.49 A to 4.01 V and then rested for 12 hours and then charged at 0.18 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.49 A to 4.01 V and then rested for 12 hours and then charged at 0.18 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         85.0: # 314
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1599,13 +1599,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.49 A to 4.01 V and then rested for 12 hours and then charged at 0.18 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.49 A to 4.01 V and then rested for 12 hours and then charged at 0.18 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         86.0: # 315
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1618,13 +1618,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.31 A to 3.69 V and then rested for 12 hours and then charged at 0.62 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.31 A to 3.69 V and then rested for 12 hours and then charged at 0.62 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         87.0:  # 316
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1637,13 +1637,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.31 A to 3.69 V and then rested for 12 hours and then charged at 0.62 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.31 A to 3.69 V and then rested for 12 hours and then charged at 0.62 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         88.0:  # 317
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1656,13 +1656,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.31 A to 3.69 V and then rested for 12 hours and then charged at 0.62 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.31 A to 3.69 V and then rested for 12 hours and then charged at 0.62 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         89.0:  # 318
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1675,13 +1675,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.27 A to 3.87 V and then rested for 12 hours and then charged at 0.22 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.27 A to 3.87 V and then rested for 12 hours and then charged at 0.22 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         90.0:  # 319
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1694,13 +1694,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.27 A to 3.87 V and then rested for 12 hours and then charged at 0.22 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.27 A to 3.87 V and then rested for 12 hours and then charged at 0.22 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         91.0:  # 320
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1713,13 +1713,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.27 A to 3.87 V and then rested for 12 hours and then charged at 0.22 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.27 A to 3.87 V and then rested for 12 hours and then charged at 0.22 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         92.0:  # 321
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1732,13 +1732,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.35 A to 3.96 V and then rested for 12 hours and then charged at 0.35 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.35 A to 3.96 V and then rested for 12 hours and then charged at 0.35 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         93.0:  # 322
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1751,13 +1751,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.35 A to 3.96 V and then rested for 12 hours and then charged at 0.35 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.35 A to 3.96 V and then rested for 12 hours and then charged at 0.35 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         94.0:  # 323
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1770,13 +1770,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.35 A to 3.96 V and then rested for 12 hours and then charged at 0.35 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.35 A to 3.96 V and then rested for 12 hours and then charged at 0.35 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 1 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         95.0:  # 324
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1789,12 +1789,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.012 A to 3.8 V and then charged at 0.012 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.012 A to 3.8 V and then charged at 0.012 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         96.0:  # 325
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1807,12 +1807,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.012 A to 3.8 V and then charged at 0.012 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.012 A to 3.8 V and then charged at 0.012 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         97.0:  # 326
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1825,12 +1825,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.012 A to 3.8 V and then charged at 0.012 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.012 A to 3.8 V and then charged at 0.012 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         98.0:  # 103
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1843,12 +1843,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 4.06 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 4.06 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         99.0:  # 104
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1861,12 +1861,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 4.06 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 4.06 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         100.0:  # 105
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1879,12 +1879,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 4.06 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 4.06 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         101.0:  # 106
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -1901,7 +1901,7 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.2952 A to 4.1 V and then charged at 0.2832 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. "
             f"Before cycling, the battery rested for 168 hours. ",
         102.0:  ## 107
@@ -1920,7 +1920,7 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.2952 A to 4.1 V and then charged at 0.2832 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. "
             f"Before cycling, the battery rested for 168 hours. ",
         103.0:  # 108
@@ -1939,7 +1939,7 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.2952 A to 4.1 V and then charged at 0.2832 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. "
             f"Before cycling, the battery rested for 168 hours. ",
         104.0:  # 109
@@ -2163,13 +2163,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.84 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.84 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         116.0:  # 122
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2182,13 +2182,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.84 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.84 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         117.0:  # 123
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2201,13 +2201,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.84 V and then charged at 0.0504 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.84 V and then charged at 0.0504 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         118.0:  # 124
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2220,13 +2220,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.432 A to 3.66 V and then charged at 0.036 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.432 A to 3.66 V and then charged at 0.036 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         119.0:  # 125
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2239,13 +2239,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.432 A to 3.66 V and then charged at 0.036 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.432 A to 3.66 V and then charged at 0.036 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         120.0:  # 126
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2258,13 +2258,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.432 A to 3.66 V and then charged at 0.036 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 25 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.432 A to 3.66 V and then charged at 0.036 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         121.0:  # 127
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2277,13 +2277,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0648 A to 3.76 V and then charged at 0.4296 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0648 A to 3.76 V and then charged at 0.4296 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         122.0:  # 128
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2296,13 +2296,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0648 A to 3.76 V and then charged at 0.4296 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0648 A to 3.76 V and then charged at 0.4296 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         123.0:  # 129
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2315,13 +2315,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0648 A to 3.76 V and then charged at 0.4296 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0648 A to 3.76 V and then charged at 0.4296 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         124.0:  # 130
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2334,13 +2334,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.3264 A to 3.75 V and then charged at 0.1944 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.3264 A to 3.75 V and then charged at 0.1944 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         125.0:  # 131
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2353,13 +2353,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.3264 A to 3.75 V and then charged at 0.1944 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.3264 A to 3.75 V and then charged at 0.1944 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         126.0:  # 134
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2372,13 +2372,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1608 A to 4.05 V and then charged at 0.0792 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1608 A to 4.05 V and then charged at 0.0792 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         127.0:  # 135
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2391,13 +2391,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1608 A to 4.05 V and then charged at 0.0792 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1608 A to 4.05 V and then charged at 0.0792 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         128.0:  # 136
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2410,13 +2410,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 3.8 V and then charged at 0.588 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 3.8 V and then charged at 0.588 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         129.0:  # 137
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2429,13 +2429,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 3.8 V and then charged at 0.588 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 3.8 V and then charged at 0.588 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         130.0:  # 138
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2448,13 +2448,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 3.8 V and then charged at 0.588 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 3.8 V and then charged at 0.588 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         131.0:  # 139
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2467,13 +2467,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.6 V and then charged at 0.3408 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.6 V and then charged at 0.3408 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         132.0: # 140
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2486,13 +2486,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.6 V and then charged at 0.3408 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.6 V and then charged at 0.3408 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         133.0: # 141
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2505,13 +2505,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.6 V and then charged at 0.3408 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.6 V and then charged at 0.3408 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         134.0: # 142
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2524,12 +2524,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.3552 A to 4 V and then charged at 0.384 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.3552 A to 4 V and then charged at 0.384 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         135.0: # 143
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2542,12 +2542,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.3552 A to 4 V and then charged at 0.384 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.3552 A to 4 V and then charged at 0.384 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         136.0: # 144
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2560,12 +2560,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.3552 A to 4 V and then charged at 0.384 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.3552 A to 4 V and then charged at 0.384 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         137.0:  # 145
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2578,13 +2578,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 4.08 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 4.08 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         138.0:  # 146
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2597,13 +2597,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 4.08 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 4.08 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         139.0:  # 147
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2616,13 +2616,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0456 A to 4.08 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0456 A to 4.08 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         140.0:  # 148
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2635,13 +2635,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0648 A to 4.07 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0648 A to 4.07 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         141.0:  # 149
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2654,13 +2654,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0648 A to 4.07 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0648 A to 4.07 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         142.0:  # 150
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2673,13 +2673,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0648 A to 4.07 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0648 A to 4.07 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         143.0:  # 151
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2692,13 +2692,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.64 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.64 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         144.0:  # 152
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2711,13 +2711,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.64 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.64 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         145.0:  # 154
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2730,13 +2730,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.65 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.65 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         146.0:  # 155
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2749,13 +2749,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.65 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.65 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         147.0:  # 156
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2768,13 +2768,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.65 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.65 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         148.0:  # 157
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2787,13 +2787,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.48 A to 3.83 V and then charged at 0.1224 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.48 A to 3.83 V and then charged at 0.1224 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         149.0:  # 158
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2806,13 +2806,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.48 A to 3.83 V and then charged at 0.1224 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.48 A to 3.83 V and then charged at 0.1224 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         150.0:  # 159
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2825,13 +2825,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.48 A to 3.83 V and then charged at 0.1224 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 35 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.48 A to 3.83 V and then charged at 0.1224 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         151.0:  # 160
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -2848,7 +2848,7 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.0048 A to 3.9 V and then charged at 0.036 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. "
             f"Before cycling, the battery rested for 0 hours. ",
         152.0:  ## 161
@@ -2867,7 +2867,7 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.0048 A to 3.9 V and then charged at 0.036 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. "
             f"Before cycling, the battery rested for 0 hours. ",
         153.0:  # 162
@@ -2886,7 +2886,7 @@ class Stanford_protocol_prompt():
             f"Then, it was charged at 0.0048 A to 3.9 V and then charged at 0.036 A to 4.4 V. "
             f"After that, a 1-hour constant voltage hold was applied at 4.4 V. "
             f"This was followed by a 0.048 A discharge to 3 V. "
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. "
             f"Before cycling, the battery rested for 0 hours. ",
         154.0:  # 163
@@ -3048,13 +3048,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0264 A to 3.98 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0264 A to 3.98 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         163.0:  # 173
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3067,13 +3067,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0264 A to 3.98 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0264 A to 3.98 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         164.0:  # 174
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3086,13 +3086,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0264 A to 3.98 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0264 A to 3.98 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         165.0:  # 175
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3105,13 +3105,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.61 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.61 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         166.0:  # 176
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3124,13 +3124,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.61 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.61 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         167.0:  # 177
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3143,13 +3143,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0048 A to 3.61 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0048 A to 3.61 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         168.0:  # 178
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3162,12 +3162,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.99 V and then charged at 0.5304 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.99 V and then charged at 0.5304 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         169.0:  # 179
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3180,12 +3180,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.99 V and then charged at 0.5304 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.99 V and then charged at 0.5304 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         170.0:  # 180
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3198,12 +3198,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.99 V and then charged at 0.5304 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.99 V and then charged at 0.5304 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 168 hours. ", # time of rest
+            f"Before cycling, the battery rested for 168 hours. ", 
         171.0:  # 181
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3216,12 +3216,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.93 V and then charged at 0.0648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.93 V and then charged at 0.0648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         172.0:  # 182
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3234,12 +3234,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.93 V and then charged at 0.0648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.93 V and then charged at 0.0648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         173.0:  # 183
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3252,12 +3252,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0168 A to 3.93 V and then charged at 0.0648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0168 A to 3.93 V and then charged at 0.0648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         174.0:  # 184
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3270,13 +3270,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.036 A to 4.02 V and then charged at 0.648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.036 A to 4.02 V and then charged at 0.648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         175.0:  # 185
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3289,13 +3289,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.036 A to 4.02 V and then charged at 0.648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.036 A to 4.02 V and then charged at 0.648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         176.0:  # 186
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3308,13 +3308,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.036 A to 4.02 V and then charged at 0.648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 40 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.036 A to 4.02 V and then charged at 0.648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 2 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 0 hours. ", # time of rest
+            f"Before cycling, the battery rested for 0 hours. ", 
         177.0:  # 187
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3327,12 +3327,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1992 A to 3.79 V and then charged at 0.0648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1992 A to 3.79 V and then charged at 0.0648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         178.0:  # 188
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3345,12 +3345,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1992 A to 3.79 V and then charged at 0.0648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1992 A to 3.79 V and then charged at 0.0648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         179.0:  # 189
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3363,12 +3363,12 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1992 A to 3.79 V and then charged at 0.0648 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1992 A to 3.79 V and then charged at 0.0648 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         180.0:  # 190
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3381,13 +3381,13 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.0264 A to 3.71 V and then charged at 0.0048 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.0264 A to 3.71 V and then charged at 0.0048 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
         181.0:  # 230
             f"Battery specifications: The data comes from a lithium-ion battery in a format of pouch battery. "
             f"Its positive electrode is Li(Ni0.5Co0.2Mn0.3)O2 (NCM523). "
@@ -3400,11 +3400,11 @@ class Stanford_protocol_prompt():
             f"The battery was charged at a constant current of 1 C until reaching 4.4 V followed by a constant voltage hold to 0.05C. "
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
-            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " # temperature may be different
-            f"Then, it was charged at 0.1128 A to 3.7 V and then charged at 0.0216 A to 4.4 V. " # currents and cutoff voltage may be different
+            f"During formation, at 55 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
+            f"Then, it was charged at 0.1128 A to 3.7 V and then charged at 0.0216 A to 4.4 V. " 
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
-            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " # n verification
+            f"After the first formation cycle, 5 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 
             f"Finally, the battery was held at 3 V for 1 hour before being degassed and resealed in an Ar glove box. " 
-            f"Before cycling, the battery rested for 72 hours. ", # time of rest
+            f"Before cycling, the battery rested for 72 hours. ", 
     }

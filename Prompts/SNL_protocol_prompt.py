@@ -1,6 +1,6 @@
 class SNL_protocol_prompt():
     Protocols_prompts = {
-        1.0:  # SNL_18650_LiFePO4_15C_0-100_0.5-2C_b
+        1.0:  # SNL_18650_LFP_15C_0-100_0.5-2C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -12,7 +12,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        2.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-0.5C_a
+        2.0:  # SNL_18650_LFP_25C_0-100_0.5-0.5C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -24,7 +24,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 0.5 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        3.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_a
+        3.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -36,7 +36,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        4.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_b
+        4.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -48,7 +48,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        5.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_c
+        5.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_c
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -60,7 +60,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        6.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-1C_d
+        6.0:  # SNL_18650_LFP_25C_0-100_0.5-1C_d
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -72,7 +72,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        7.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-2C_a
+        7.0:  # SNL_18650_LFP_25C_0-100_0.5-2C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -84,7 +84,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        8.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-2C_b
+        8.0:  # SNL_18650_LFP_25C_0-100_0.5-2C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -96,7 +96,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        9.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_a
+        9.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -108,7 +108,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        10.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_b
+        10.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -120,7 +120,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        11.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_c
+        11.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_c
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -132,7 +132,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        12.0:  # SNL_18650_LiFePO4_25C_0-100_0.5-3C_d
+        12.0:  # SNL_18650_LFP_25C_0-100_0.5-3C_d
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -144,7 +144,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 3 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        13.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_a
+        13.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -156,7 +156,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        14.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_b
+        14.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -168,7 +168,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        15.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_c
+        15.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_c
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -180,7 +180,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        16.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-1C_d
+        16.0:  # SNL_18650_LFP_35C_0-100_0.5-1C_d
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -192,7 +192,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 1 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        17.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-2C_a
+        17.0:  # SNL_18650_LFP_35C_0-100_0.5-2C_a
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
@@ -204,7 +204,7 @@ class SNL_protocol_prompt():
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 3.6 V, at which the battery was constant-voltage charged until the current dropped to 0.0455 C. "
             f"The battery was then discharged at a constant current of 2 C until reaching 2 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
-        18.0:  # SNL_18650_LiFePO4_35C_0-100_0.5-2C_b
+        18.0:  # SNL_18650_LFP_35C_0-100_0.5-2C_b
             f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
             f"Its positive electrode is LiFePO4. "
             f"Its negative electrode is graphite. "
