@@ -3382,7 +3382,7 @@ class Stanford_protocol_prompt():
             f"The battery was then discharged at a constant current of 0.75 C until reaching 3.0 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n"
             f"During formation, at 45 degrees Celsius, the battery was first charged at 0.2 C to 1.5 V and held for 24 hours. " 
-            f"Then, it was charged at 0.0264 A to 3.71 V and then charged at 0.0048 A to 4.4 V. " 
+            f"Then, it was charged at 0.0264 A to 3.71 V and then charged at 0.0048 A to 4.4 V. "
             f"After that, a 1-hour constant voltage (CV) hold was applied at 4.4 V. " 
             f"This was followed by a 0.048 A discharge to 3 V. " 
             f"After the first formation cycle, 3 additional ±0.048 A cycles were performed between 3 and 4.4 V without CV hold or rest periods. " 

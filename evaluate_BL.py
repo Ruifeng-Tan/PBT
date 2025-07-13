@@ -351,8 +351,8 @@ for ii in range(args.itr):
 
         mape = mean_absolute_percentage_error(total_references, total_preds)
 
-        accelerator.print(f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | MAPE: {mape} | {alpha}-accuracy: {alpha_acc}% | {alpha2}-accuracy: {alpha_acc2}%')
-        accelerator.print(f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Domain average MAPE: {domain_average_MAPE}')
+        accelerator.print(f'{dataset}-{args.seed} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | MAPE: {mape} | {alpha}-accuracy: {alpha_acc}% | {alpha2}-accuracy: {alpha_acc2}%')
+        accelerator.print(f'{dataset}-{args.seed} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Domain average MAPE: {domain_average_MAPE}')
         # calculate the model performance on the samples from the seen and unseen aging conditions
         seen_references = total_references[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([0])
         unseen_references = total_references[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([0])
