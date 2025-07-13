@@ -691,7 +691,7 @@ for file in tqdm(processed_files):
     elif 'Stanford' in file:
         if '100' in file or '101' in file or '102' in file:
             protocols[file] = 147
-        elif '191' in file or '192' in file:
+        elif '190' in file or '191' in file or '192' in file:
             protocols[file] = 148
         elif '193' in file or '194' in file or '195' in file:
             protocols[file] =149
@@ -813,8 +813,6 @@ for file in tqdm(processed_files):
             protocols[file] = 207
         elif '187' in file or '188' in file or '189' in file:
             protocols[file] = 208
-        elif '190' in file:
-            protocols[file] = 209
     elif 'XJTU' in file:
         if file.startswith('XJTU_2C'):
             protocols[file] = 210
