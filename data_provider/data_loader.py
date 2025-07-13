@@ -564,9 +564,9 @@ class Dataset_PBT(Dataset):
             self.val_files = split_recorder.MIX_large_carhode_LFP_val_files
             self.test_files = split_recorder.MIX_large_cathode_LFP_test_files
         elif self.dataset == 'MIX_cathode_NCM422':
-            self.train_files = split_recorder.MIX_large_cathode_NCM422_train_files
-            self.val_files = split_recorder.MIX_large_cathode_NCM422_val_files
-            self.test_files = split_recorder.MIX_large_cathode_NCM422_test_files
+            self.train_files = split_recorder.MIX_large_cathode_NCM422LCO_train_files
+            self.val_files = split_recorder.MIX_large_cathode_NCM422LCO_val_files
+            self.test_files = split_recorder.MIX_large_cathode_NCM422LCO_test_files
         elif self.dataset == 'MIX_cathode_NCM':
             self.train_files = split_recorder.MIX_large_cathode_NCM_train_files
             self.val_files = split_recorder.MIX_large_cathode_NCM_val_files
@@ -623,7 +623,7 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.MIX_large_format_502030_pouch_train_files
             self.val_files = split_recorder.MIX_large_format_502030_pouch_val_files
             self.test_files = split_recorder.MIX_large_format_502030_pouch_test_files
-        elif self.dataset == 'MIX_temp_5':
+        elif self.dataset == 'MIX_temp_neg5':
             self.train_files = split_recorder.MIX_large_temp_5_train_files
             self.val_files = split_recorder.MIX_large_temp_5_val_files
             self.test_files = split_recorder.MIX_large_temp_5_test_files
@@ -655,6 +655,30 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.MIX_large_temp_45_train_files
             self.val_files = split_recorder.MIX_large_temp_45_val_files
             self.test_files = split_recorder.MIX_large_temp_45_test_files
+        elif self.dataset == 'MIX_fig_cathode_NCM':
+            self.train_files = split_recorder.MIX_large_cathode_NCM_train_files + split_recorder.MIX_large_cathode_NCM840610_train_files + split_recorder.MIX_large_cathode_NCM111_train_files + split_recorder.MIX_large_cathode_NCM523_train_files + split_recorder.MIX_large_cathode_NCM831107_train_files
+            self.val_files = split_recorder.MIX_large_cathode_NCM_val_files + split_recorder.MIX_large_cathode_NCM840610_val_files + split_recorder.MIX_large_cathode_NCM111_val_files + split_recorder.MIX_large_cathode_NCM523_val_files + split_recorder.MIX_large_cathode_NCM831107_val_files
+            self.test_files = split_recorder.MIX_large_cathode_NCM_test_files + split_recorder.MIX_large_cathode_NCM840610_test_files + split_recorder.MIX_large_cathode_NCM111_test_files + split_recorder.MIX_large_cathode_NCM523_test_files + split_recorder.MIX_large_cathode_NCM831107_test_files
+        elif self.dataset == 'MIX_fig_cathode_NCA':
+            self.train_files = split_recorder.MIX_large_cathode_NCA811405_train_files + split_recorder.MIX_large_cathode_NCA801505_train_files + split_recorder.MIX_large_cathode_NCA861103_train_files
+            self.val_files = split_recorder.MIX_large_cathode_NCA811405_val_files + split_recorder.MIX_large_cathode_NCA801505_val_files + split_recorder.MIX_large_cahtode_NCA861103_val_files
+            self.test_files = split_recorder.MIX_large_cathode_NCA811405_test_files + split_recorder.MIX_large_cathode_NCA801505_test_files + split_recorder.MIX_large_cathode_NCA861103_test_files
+        elif self.dataset == 'MIX_fig_cathode_NCMNCA':
+            self.train_files = split_recorder.MIX_large_cathode_NCM_NCA_train_files
+            self.val_files = split_recorder.MIX_large_cathode_NCM_NCA_val_files
+            self.test_files = split_recorder.MIX_large_cathode_NCM_NCA_test_files
+        elif self.dataset == 'MIX_fig_cathode_NCMLCO':
+            self.train_files = split_recorder.MIX_large_cathode_NCM422LCO_train_files
+            self.val_files = split_recorder.MIX_large_cathode_NCM422LCO_val_files
+            self.test_files = split_recorder.MIX_large_cathode_NCM422LCO_test_files
+        elif self.dataset == 'MIX_fig_cathode_LCO':
+            self.train_files = split_recorder.MIX_large_cathode_LCO_train_files
+            self.val_files = split_recorder.MIX_large_cathode_LCO_val_files
+            self.test_files = split_recorder.MIX_large_cathode_LCO_test_files
+        elif self.dataset == 'MIX_fig_cathode_LFP':
+            self.train_files = split_recorder.MIX_large_cathode_LFP_train_files
+            self.val_files = split_recorder.MIX_large_carhode_LFP_val_files
+            self.test_files = split_recorder.MIX_large_cathode_LFP_test_files
         else:
             raise Exception(f'{self.dataset} is not supported!')
 

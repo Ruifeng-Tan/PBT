@@ -139,9 +139,9 @@ class split_recorder():
     MIX_large_carhode_LFP_val_files = MATR_val_files + HUST_val_files
     MIX_large_cathode_LFP_test_files = MATR_test_files + HUST_test_files + ['SNL_18650_LFP_25C_0-100_0.5-3C_b.pkl', 'SNL_18650_LFP_35C_0-100_0.5-1C_c.pkl', 'SNL_18650_LFP_35C_0-100_0.5-2C_a.pkl']
 
-    MIX_large_cathode_NCM422_train_files = HNEI_train_files
-    MIX_large_cathode_NCM422_val_files = HNEI_val_files
-    MIX_large_cathode_NCM422_test_files = HNEI_test_files
+    MIX_large_cathode_NCM422LCO_train_files = HNEI_train_files
+    MIX_large_cathode_NCM422LCO_val_files = HNEI_val_files
+    MIX_large_cathode_NCM422LCO_test_files = HNEI_test_files
 
     MIX_large_cathode_NCM_train_files = RWTH_train_files + ISU_ILCC_train_files
     MIX_large_cathode_NCM_val_files = RWTH_val_files + ISU_ILCC_val_files
