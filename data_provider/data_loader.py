@@ -145,188 +145,6 @@ class DomainBatchSampler(Sampler):
             retunred_indices = random.sample(fresh_domain_to_indices[domain], k=self.s_per_batch)
         return retunred_indices
 
-    
-# class DomainBatchSampler(Sampler):
-#     def __init__(self, domain_ids, num_domains, batch_size, shuffle=True):
-#         self.domain_ids = domain_ids
-#         self.num_domains = num_domains
-#         self.batch_size = batch_size
-#         self.shuffle = shuffle
-
-#         assert len(np.unique(domain_ids)) >= num_domains
-#         # Group indices by domain_id
-#         self.domain_to_indices_original = {}
-#         for idx, domain_id in enumerate(domain_ids):
-#             if domain_id not in self.domain_to_indices_original:
-#                 self.domain_to_indices_original[domain_id] = []
-#             self.domain_to_indices_original[domain_id].append(idx)
-        
-#         self.domain_ids_unique = list(self.domain_to_indices_original.keys())
-
-#         # Calculate total samples and batches
-#         self.total_samples = len(domain_ids)
-#         self.total_batches = self.total_samples // self.batch_size
-
-#         # Precompute sample sizes for each domain in a batch
-#         self.domain_sample_sizes = [self.batch_size // self.num_domains] * self.num_domains
-#         for i in range(self.batch_size % self.num_domains):
-#             self.domain_sample_sizes[i] += 1
-
-#     def __iter__(self):
-#         # Refresh domain_to_indices to original state
-#         domain_to_indices = {domain_id: indices[:] for domain_id, indices in self.domain_to_indices_original.items()}
-
-#         # Shuffle indices within each domain if shuffling is enabled
-#         if self.shuffle:
-#             for indices in domain_to_indices.values():
-#                 random.shuffle(indices)
-#             random.shuffle(self.domain_ids_unique)
-
-#         batch_count = 0
-#         while batch_count < self.total_batches:
-#             batch = []
-#             available_domains = [d for d in self.domain_ids_unique if len(domain_to_indices[d]) >= max(self.domain_sample_sizes)]
-
-#             if len(available_domains) < self.num_domains and batch_count==0:
-#                 raise Exception(f'Your dataset cannot provide so many samples from {self.num_domains} domains.')
-#             if len(available_domains) < self.num_domains:
-#                 break  # Not enough domains to form a batch
-
-
-#             selected_domains = random.sample(available_domains, k=self.num_domains)
-#             for domain_id in selected_domains:
-#                 indices = domain_to_indices[domain_id]
-#                 sample_size = self.domain_sample_sizes[selected_domains.index(domain_id)]
-#                 # Directly extend batch with samples
-#                 batch.extend(indices[:sample_size])
-                
-#                 # Update domain indices by slicing once
-#                 domain_to_indices[domain_id] = indices[sample_size:]
-
-#             if len(batch) == self.batch_size:
-#                 yield batch
-#                 batch_count += 1
-
-
-#     def __len__(self):
-#         # Total number of complete batches that can be formed
-#         return self.total_batches
-
-    
-# Temperature assignment
-# Only Li-ion
-# temperature2mask = {
-#     -5.0: [0],
-#     15.0: [1],
-#     20.0: [2],
-#     23.0: [3],
-#     25.0: [4,5],
-#     30.0: [6,7,8,9,10,11],
-#     35.0: [12],
-#     45.0: [13],
-#     55.0: [14]
-# }
-
-# Li-ion, Na-ion, Zn-ion, CALB
-# temperature2mask = {
-#     -5.0: [0],
-#     0.0: [1],
-#     15.0: [2],
-#     20.0: [3],
-#     23.0: [4],
-#     25.0: [5,6,7,8],
-#     30.0: [9,10,11,12,13,14],
-#     35.0: [15],
-#     45.0: [16],
-#     55.0: [17]
-# }
-
-# We assign each temperature to the three neighboring temperatures
-# Only Li-ion
-# temperature2mask = {
-#     -5.0: [0,1,2],
-#     15.0: [0,1,2],
-#     20.0: [1,2,3],
-#     23.0: [2,3,4,5],
-#     25.0: [3,4,5,6,7,8,9,10,11],
-#     30.0: [4,5,6,7,8,9,10,11,12],
-#     35.0: [6,7,8,9,10,11,12,13],
-#     45.0: [12,13,14],
-#     55.0: [12,13,14]
-# }
-# Li-ion, Na-ion, Zn-ion, CALB
-# temperature2mask = {
-#     -5.0: [0,1,2],
-#     0.0: [0,1,2],
-#     15.0: [1,2,3],
-#     20.0: [2,3,4],
-#     23.0: [3,4,5,6,7,8],
-#     25.0: [4,5,6,7,8,9,10,11,12,13,14],
-#     30.0: [5,6,7,8,9,10,11,12,13,14,15],
-#     35.0: [9,10,11,12,13,14,15,16],
-#     45.0: [15,16,17],
-#     55.0: [15,16,17]
-# }
-
-# assign experts according to formats
-# only Li-ion
-# format2mask = {
-#     'prismatic': [0],
-#     'cylindrical': [1,2,3,4,5,6],
-#     'polymer': [7,8,9],
-#     'pouch': [10]
-# } 
-
-# Li-ion, Na-ion, Zn-ion, CALB
-# format2mask = {
-#     'prismatic': [0],
-#     'cylindrical': [1,2,3,4,5,6],
-#     'polymer': [7,8,9],
-#     'pouch': [10],
-#     'coin': [11]
-# } 
-
-# only Li-ion
-# cathodes2mask = {
-#     'LFP': [0,1,2],
-#     'NCA': [3],
-#     'NCM': [4,5,6,7,8,9],
-#     'LCO': [10],
-#     'NCA_NCM': [3,4,5,6,7,8,9],
-#     'NCM_NCA': [3,4,5,6,7,8,9],
-#     'LCO_NCM': [4,5,6,7,8,9,10],
-#     'NCM_LCO': [4,5,6,7,8,9,10]
-# }
-
-# Li-ion, Na-ion, Zn-ion, CALB
-# cathodes2mask = {
-#     'LFP': [0,1,2],
-#     'NCA': [3],
-#     'NCM': [4,5,6,7,8,9],
-#     'LCO': [10],
-#     'NCA_NCM': [3,4,5,6,7,8,9],
-#     'NCM_NCA': [3,4,5,6,7,8,9],
-#     'LCO_NCM': [4,5,6,7,8,9,10],
-#     'NCM_LCO': [4,5,6,7,8,9,10],
-#     'MnO2': [11],
-#     'Unknown': [12]
-# }
-
-# Anode
-# Only Li-ion
-# anode2mask = {
-#     'graphite': [0,1,2,3,4,5,6,7,8,9],
-#     'graphite/Si': [10]
-# }
-
-# Li-ion, Na-ion, Zn-ion, CALB
-# anode2mask = {
-#     'graphite': [0,1,2,3,4,5,6,7,8,9],
-#     'graphite/Si': [10],
-#     'zinc metal': [11],
-#     'Unknown': [12]
-# }
-
 def my_collate_fn_withId(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
     # cj_aug_cycle_curve_data = torch.vstack([i['cj_cycle_curve_data'].unsqueeze(0) for i in samples])
@@ -354,6 +172,10 @@ def my_collate_fn_withId(samples):
     dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
     domain_ids = torch.Tensor([i['domain_ids'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
+
+    tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
+    cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
+    
     return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids
 
 def my_collate_fn(samples):
@@ -377,6 +199,9 @@ def my_collate_fn(samples):
     DKP_embeddings = torch.vstack([i['DKP_embedding'] for i in samples])
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
     domain_ids = torch.Tensor([i['domain_ids'] for i in samples])
+
+    tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
+    cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
     return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids
 
@@ -535,6 +360,10 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.MIX_all_2024_train_files
             self.val_files = split_recorder.MIX_all_2024_val_files
             self.test_files = split_recorder.MIX_all_2024_test_files
+        elif self.dataset == 'MIX_fig_cathode_LFP':
+            self.train_files = split_recorder.MIX_large_cathode_LFP_train_files
+            self.val_files = split_recorder.MIX_large_carhode_LFP_val_files
+            self.test_files = split_recorder.MIX_large_cathode_LFP_test_files
         elif self.dataset == 'MIX_fig_cathode_NCM':
             self.train_files = split_recorder.MIX_large_cathode_NCM_train_files + split_recorder.MIX_large_cathode_NCM840610_train_files + split_recorder.MIX_large_cathode_NCM111_train_files + split_recorder.MIX_large_cathode_NCM523_train_files + split_recorder.MIX_large_cathode_NCM831107_train_files
             self.val_files = split_recorder.MIX_large_cathode_NCM_val_files + split_recorder.MIX_large_cathode_NCM840610_val_files + split_recorder.MIX_large_cathode_NCM111_val_files + split_recorder.MIX_large_cathode_NCM523_val_files + split_recorder.MIX_large_cathode_NCM831107_val_files
@@ -555,10 +384,6 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.MIX_large_cathode_LCO_train_files
             self.val_files = split_recorder.MIX_large_cathode_LCO_val_files
             self.test_files = split_recorder.MIX_large_cathode_LCO_test_files
-        elif self.dataset == 'MIX_fig_cathode_LFP':
-            self.train_files = split_recorder.MIX_large_cathode_LFP_train_files
-            self.val_files = split_recorder.MIX_large_carhode_LFP_val_files
-            self.test_files = split_recorder.MIX_large_cathode_LFP_test_files
         elif self.dataset == 'MIX_fig_anode_graphite':
             self.train_files = split_recorder.MIX_large_anode_graphite_train_files + split_recorder.MIX_large_anode_carbon_train_files + split_recorder.MIX_large_anode_graphite_PVDF_train_files + split_recorder.MIX_large_anode_AG_train_files
             self.val_files = split_recorder.MIX_large_anode_graphite_val_files + split_recorder.MIX_large_anode_carbon_val_files + split_recorder.MIX_large_anode_graphite_PVDF_val_files + split_recorder.MIX_large_anode_AG_val_files

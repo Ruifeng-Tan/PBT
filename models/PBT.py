@@ -608,8 +608,8 @@ class Model(nn.Module):
             ion_type_masks = ion_type_masks.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
 
 
-        tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
-        cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
+        # tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
+        # cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
 
 
         total_masks = [combined_masks]
