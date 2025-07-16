@@ -351,6 +351,13 @@ val_files = MIX_large_val_files + ZNcoin_val_files + CALB_val_files + NAion_2021
 test_files = MIX_large_test_files + ZNcoin_test_files + CALB_test_files + NAion_2021_test_files
 all_files = train_files + val_files + test_files
 
+def relabel_dict_values(d):
+    unique_values = sorted(set(d.values()))
+    value_mapping = {old_value: new_index + 1 for new_index, old_value in enumerate(unique_values)}
+    new_d = {k: value_mapping[v] for k, v in d.items()}
+
+    return new_d
+
 label_path = '/data/trf/python_works/BatteryLife/dataset/Life labels'
 label_files_path = os.listdir(label_path)
 label_json_files = [i for i in label_files_path if i.endswith('.json')]
@@ -365,19 +372,13 @@ for file in label_json_files:
         filename = key.split('.pkl')[0]
         label_names.append(filename)
 
-
-
 processed_files = []
 for file in all_files:
     filename = file.split('.pkl')[0]
     if filename.startswith('Tongji'):
         filename = filename.replace('--', '-#')
-    elif filename.startswith('UL-PUR'):
-        print(file)
     if filename in label_names:
         processed_files.append(file)
-
-print([i for i in processed_files if i.startswith('UL-PUR')])
 
 protocols = {}
 for file in tqdm(processed_files):
@@ -1414,7 +1415,7 @@ for file in tqdm(processed_files):
 
         protocols[file] = max_value + 1
 
-
+new_d = relabel_dict_values(protocols)
 
 with open("./gate_data/name2agingConditionID.json", "w") as json_file:
-    json.dump(protocols, json_file, indent=4)
+    json.dump(new_d, json_file, indent=4)
