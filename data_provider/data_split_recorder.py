@@ -201,9 +201,9 @@ class split_recorder():
     MIX_large_format_502030_pouch_test_files = ISU_ILCC_test_files
 
     # Temperatures
-    MIX_large_temp_5_train_files = ['MICH_02C_pouch_NMC_-5C_0-100_0.2-0.2C.pkl', 'MICH_08C_pouch_NMC_-5C_0-100_2-2C.pkl', 'MICH_11C_pouch_NMC_-5C_0-100_0.2-1.5C.pkl', 'MICH_17C_pouch_NMC_-5C_50-100_0.2-1.5C.pkl']
-    MIX_large_temp_5_val_files = ['MICH_05C_pouch_NMC_-5C_0-100_1.5-1.5C.pkl', 'MICH_05C_pouch_NMC_-5C_0-100_1.5-1.5C.pkl']
-    MIX_large_temp_5_test_files = ['MICH_02C_pouch_NMC_-5C_0-100_0.2-0.2C.pkl']
+    MIX_large_temp_5_train_files = ['MICH_02C_pouch_NMC_-5C_0-100_0.2-0.2C.pkl', 'MICH_08C_pouch_NMC_-5C_0-100_2-2C.pkl', 'MICH_11C_pouch_NMC_-5C_0-100_0.2-1.5C.pkl', 'MICH_14C_pouch_NMC_-5C_50-100_0.2-0.2C.pkl', 'MICH_17C_pouch_NMC_-5C_50-100_0.2-1.5C.pkl']
+    MIX_large_temp_5_val_files = ['MICH_05C_pouch_NMC_-5C_0-100_1.5-1.5C.pkl']
+    MIX_large_temp_5_test_files = []
 
     MIX_large_temp_15_train_files = ['SNL_18650_NMC_15C_0-100_0.5-2C_b.pkl', 'SNL_18650_NCA_15C_0-100_0.5-2C_a.pkl', 'SNL_18650_NCA_15C_0-100_0.5-1C_b.pkl', 'SNL_18650_NCA_15C_0-100_0.5-1C_a.pkl', 'SNL_18650_NMC_15C_0-100_0.5-2C_a.pkl']
     MIX_large_temp_15_val_files = ['SNL_18650_NMC_15C_0-100_0.5-1C_b.pkl']
