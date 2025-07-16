@@ -365,13 +365,19 @@ for file in label_json_files:
         filename = key.split('.pkl')[0]
         label_names.append(filename)
 
+
+
 processed_files = []
 for file in all_files:
     filename = file.split('.pkl')[0]
     if filename.startswith('Tongji'):
         filename = filename.replace('--', '-#')
+    elif filename.startswith('UL-PUR'):
+        print(file)
     if filename in label_names:
         processed_files.append(file)
+
+print([i for i in processed_files if i.startswith('UL-PUR')])
 
 protocols = {}
 for file in tqdm(processed_files):
@@ -379,7 +385,7 @@ for file in tqdm(processed_files):
         max_value = 0
     else:
         max_value = max(protocols.values())
-    # 2
+
     if 'CALCE' in file:
         if 'CS' in file:
             if '33' in file or '34' in file:
@@ -391,13 +397,11 @@ for file in tqdm(processed_files):
                 protocols[file] = 3
             else:
                 protocols[file] = 4
-    # 4
     elif 'HNEI' in file:
         if 'HNEI_18650_NMC_LCO_25C_0-100_0.5-1.5C_a' in file:
             protocols[file] = 5
         else:
             protocols[file] = 6
-    # 85
     elif 'MATR' in file:
         if 'b4c0.' in file or 'b4c1.' in file or 'b4c7.' in file or 'b4c17.' in file or 'b4c39.' in file:
             protocols[file] = 7
@@ -561,10 +565,8 @@ for file in tqdm(processed_files):
             protocols[file] = 86
         elif 'b3c22.' in file or 'b3c31.' in file:
             protocols[file] = 87
-    # 86
     elif 'UL-PUR' in file:
-        protocols[file] =88
-    # 109
+        protocols[file] = 88
     elif 'SNL' in file:
         if 'SNL_18650_LFP_25C_0-100_0.5-3C_a' in file or 'SNL_18650_LFP_25C_0-100_0.5-3C_b' in file or 'SNL_18650_LFP_25C_0-100_0.5-3C_c' in file or 'SNL_18650_LFP_25C_0-100_0.5-3C_d' in file:
             protocols[file] = 89
@@ -663,8 +665,6 @@ for file in tqdm(processed_files):
                 protocols[file] = 134
     elif 'RWTH' in file:
         protocols[file] = 135
-    elif 'HUST' in file:
-        protocols[file] = max_value + 1
     elif 'Tongji' in file:
         if file.startswith('Tongji1_CY25-025_1'):
             protocols[file] = 136
@@ -818,7 +818,7 @@ for file in tqdm(processed_files):
             protocols[file] = 210
         elif file.startswith('XJTU_3C'):
             protocols[file] = 211
-    elif 'ISU-ILCC':
+    elif 'ISU-ILCC' in file:
         if 'G1C1' in file:
             protocols[file] = 212
         elif 'G1C2' in file:
@@ -1215,47 +1215,205 @@ for file in tqdm(processed_files):
             protocols[file] = 408
         elif 'G64C' in file:
             protocols[file] = 409
-
-    if 'ZN-coin' in file:
-        protocols[file] = max_value + 1
     elif 'CALB' in file:
         if 'CALB_0' in file:
-            protocols[file] = 410
+            protocols[file] = 535
         elif 'CALB_25' in file:
-            protocols[file] = 411
+            protocols[file] = 536
         elif 'CALB_35' in file:
-            protocols[file] = 412
+            protocols[file] = 537
         elif 'CALB_45' in file:
-            protocols[file] = 413
+            protocols[file] = 538
     elif 'NA-ion' in file:
         if 'NA-ion_270040-1-1-64' in file or 'NA-ion_270040-4-8-41' in file or 'NA-ion_270040-6-5-27' in file or 'NA-ion_270040-8-3-18' in file:
-            protocols[file] = 414
+            protocols[file] = 539
         elif 'NA-ion_270040-1-2-63' in file or 'NA-ion_270040-1-5-60' in file or 'NA-ion_270040-5-7-33' in file:
-            protocols[file] = 415
+            protocols[file] = 540
         elif 'NA-ion_270040-1-3-62' in file or 'NA-ion_270040-3-7-50' in file:
-            protocols[file] = 416
+            protocols[file] = 541
         elif 'NA-ion_270040-1-4-61' in file or 'NA-ion_270040-1-8-57' in file or 'NA-ion_270040-4-3-46' in file or 'NA-ion_270040-4-3-46' in file:
-            protocols[file] = 417
+            protocols[file] = 542
         elif 'NA-ion_270040-1-6-59' in file or 'NA-ion_270040-4-4-45' in file or 'NA-ion_270040-5-5-35' in file or 'NA-ion_270040-5-5-35' in file or 'NA-ion_270040-6-8-24' in file:
-            protocols[file] = 418
+            protocols[file] = 543
         elif 'NA-ion_270040-1-7-58' in file or 'NA-ion_270040-3-3-54' in file or 'NA-ion_270040-3-4-54' in file:
-            protocols[file] = 419
+            protocols[file] = 544
         elif file.startswith('NA-ion_270040-2'):
-            protocols[file] = 420
+            protocols[file] = 545
         elif 'NA-ion_270040-3-1-56' in file:
-            protocols[file] = 421
+            protocols[file] = 546
         elif 'NA-ion_270040-3-2-55' in file or 'NA-ion_270040-5-1-39' in file or 'NA-ion_270040-5-2-38' in file or 'NA-ion_270040-5-3-37' in file or 'NA-ion_270040-5-6-34':
-            protocols[file] = 422
+            protocols[file] = 547
         elif 'NA-ion_270040-3-5-52' in file or 'NA-ion_270040-3-5-52' in file or 'NA-ion_270040-3-8-49' in file or 'NA-ion_270040-4-1-48' in file or 'NA-ion_270040-4-5-44' in file or 'NA-ion_270040-4-7-42' in file or 'NA-ion_270040-6-1-31' in file or 'NA-ion_270040-6-3-29' in file or ' NA-ion_270040-6-4-28' in file or 'NA-ion_270040-6-7-25' in file or 'NA-ion_270040-7-3-21' in file or 'NA-ion_270040-8-1-20' in file or 'NA-ion_270040-8-2-19' in file or 'NA-ion_270040-8-4-17' in file or 'NA-ion_270040-8-6-15' in file or 'NA-ion_270040-8-7-14' in file or 'NA-ion_270040-8-7-14' in file:
-            protocols[file] = 423
+            protocols[file] = 548
         elif 'NA-ion_270040-4-2-47' in file:
-            protocols[file] = 424
+            protocols[file] = 549
         elif 'NA-ion_270040-4-6-43' in file or 'NA-ion_270040-5-8-32' in file:
-            protocols[file] = 425
+            protocols[file] = 550
         elif 'NA-ion_270040-5-4-36' in file:
-            protocols[file] = 426
+            protocols[file] = 551
         elif 'NA-ion_270040-6-2-30' in file or 'NA-ion_270040-7-2-22' in file:
-            protocols[file] = 427
+            protocols[file] = 552
+    elif 'HUST' in file:
+        if '1-1' in file:
+            protocols[file] = 553
+        elif '1-2' in file:
+            protocols[file] = 554
+        elif '1-3' in file:
+            protocols[file] = 555
+        elif '1-4' in file:
+            protocols[file] = 556
+        elif '1-5' in file:
+            protocols[file] = 557
+        elif '1-6' in file:
+            protocols[file] = 558
+        elif '1-7' in file:
+            protocols[file] = 559
+        elif '1-8' in file:
+            protocols[file] = 560
+        elif '2-2' in file:
+            protocols[file] = 561
+        elif '2-3' in file:
+            protocols[file] = 562
+        elif '2-4' in file:
+            protocols[file] = 563
+        elif '2-5' in file:
+            protocols[file] = 564
+        elif '2-6' in file:
+            protocols[file] = 565
+        elif '2-7' in file:
+            protocols[file] = 566
+        elif '2-8' in file:
+            protocols[file] = 567
+        elif '3-1' in file:
+            protocols[file] = 568
+        elif '3-2' in file:
+            protocols[file] = 569
+        elif '3-3' in file:
+            protocols[file] = 570
+        elif '3-4' in file:
+            protocols[file] = 571
+        elif '3-5' in file:
+            protocols[file] = 572
+        elif '3-6' in file:
+            protocols[file] = 573
+        elif '3-7' in file:
+            protocols[file] = 574
+        elif '3-8' in file:
+            protocols[file] = 575
+        elif '4-1' in file:
+            protocols[file] = 576
+        elif '4-2' in file:
+            protocols[file] = 577
+        elif '4-3' in file:
+            protocols[file] = 578
+        elif '4-4' in file:
+            protocols[file] = 579
+        elif '4-5' in file:
+            protocols[file] = 580
+        elif '4-6' in file:
+            protocols[file] = 581
+        elif '4-7' in file:
+            protocols[file] = 582
+        elif '4-8' in file:
+            protocols[file] = 583
+        elif '5-1' in file:
+            protocols[file] = 584
+        elif '5-2' in file:
+            protocols[file] = 585
+        elif '5-3' in file:
+            protocols[file] = 586
+        elif '5-4' in file:
+            protocols[file] = 587
+        elif '5-5' in file:
+            protocols[file] = 588
+        elif '5-6' in file:
+            protocols[file] = 589
+        elif '5-7' in file:
+            protocols[file] = 590
+        elif '6-1' in file:
+            protocols[file] = 591
+        elif '6-2' in file:
+            protocols[file] = 592
+        elif '6-3' in file:
+            protocols[file] = 593
+        elif '6-4' in file:
+            protocols[file] = 594
+        elif '6-5' in file:
+            protocols[file] = 595
+        elif '6-6' in file:
+            protocols[file] = 596
+        elif '6-8' in file:
+            protocols[file] = 597
+        elif '7-1' in file:
+            protocols[file] = 598
+        elif '7-2' in file:
+            protocols[file] = 599
+        elif '7-3' in file:
+            protocols[file] = 600
+        elif '7-4' in file:
+            protocols[file] = 601
+        elif '7-5' in file:
+            protocols[file] = 602
+        elif '7-6' in file:
+            protocols[file] = 603
+        elif '7-7' in file:
+            protocols[file] = 604
+        elif '7-8' in file:
+            protocols[file] = 605
+        elif '8-1' in file:
+            protocols[file] = 606
+        elif '8-2' in file:
+            protocols[file] = 607
+        elif '8-3' in file:
+            protocols[file] = 608
+        elif '8-4' in file:
+            protocols[file] = 609
+        elif '8-5' in file:
+            protocols[file] = 610
+        elif '8-6' in file:
+            protocols[file] = 611
+        elif '8-7' in file:
+            protocols[file] = 612
+        elif '8-8' in file:
+            protocols[file] = 613
+        elif '9-1' in file:
+            protocols[file] = 614
+        elif '9-2' in file:
+            protocols[file] = 615
+        elif '9-3' in file:
+            protocols[file] = 616
+        elif '9-4' in file:
+            protocols[file] = 617
+        elif '9-5' in file:
+            protocols[file] = 618
+        elif '9-6' in file:
+            protocols[file] = 619
+        elif '9-7' in file:
+            protocols[file] = 620
+        elif '9-8' in file:
+            protocols[file] = 621
+        elif '10-1' in file:
+            protocols[file] = 622
+        elif '10-2' in file:
+            protocols[file] = 623
+        elif '10-3' in file:
+            protocols[file] = 624
+        elif '10-4' in file:
+            protocols[file] = 625
+        elif '10-5' in file:
+            protocols[file] = 626
+        elif '10-6' in file:
+            protocols[file] = 627
+        elif '10-7' in file:
+            protocols[file] = 628
+        elif '10-8' in file:
+            protocols[file] = 629
+    elif 'ZN-coin' in file:
+        if file.startswith('ZN-coin_202_20231213213655_03_3'):
+            max_value = 629
+
+        protocols[file] = max_value + 1
+
 
 
 with open("./gate_data/name2agingConditionID.json", "w") as json_file:

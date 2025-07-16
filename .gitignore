@@ -57,6 +57,7 @@ rerun_PatchTST/
 HiP/
 output_path/
 rerun_HCM/
+check.py
 
 
 cal_for_test.json
