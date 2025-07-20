@@ -246,7 +246,7 @@ class Dataset_PBT(Dataset):
         self.anode2mask = anode2mask
         self.ion2mask = ion2mask
 
-        self.name2domainID = json.load(open(f'{self.root_path}/name2domainID.json'))
+        self.name2domainID = json.load(open(f'{self.root_path}/name2agingConditionID.json'))
 
         self.label_prompts_vectors = {}
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
@@ -1168,7 +1168,7 @@ class Dataset_BatteryLife(Dataset):
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
         self.aug_helper = BatchAugmentation_battery_revised()
 
-        self.name2domainID = json.load(open(f'/data/trf/python_works/BatteryMoE/gate_data/name2domainID.json'))
+        self.name2domainID = json.load(open(f'/data/trf/python_works/BatteryMoE/gate_data/name2agingConditionID.json'))
 
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
