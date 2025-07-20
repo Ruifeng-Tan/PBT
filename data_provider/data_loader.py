@@ -444,6 +444,10 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.MIX_large_temp_45_train_files
             self.val_files = split_recorder.MIX_large_temp_45_val_files
             self.test_files = split_recorder.MIX_large_temp_45_test_files
+        elif self.dataset == 'MIX_eval':
+            self.train_files = split_recorder.MIX_large_train_files
+            self.val_files = split_recorder.MIX_large_val_files
+            self.test_files = split_recorder.MIX_large_val_files
         else:
             raise Exception(f'{self.dataset} is not supported!')
 
@@ -1347,7 +1351,11 @@ class Dataset_BatteryLife(Dataset):
             self.train_files = split_recorder.MIX_large_temp_45_train_files
             self.val_files = split_recorder.MIX_large_temp_45_val_files
             self.test_files = split_recorder.MIX_large_temp_45_test_files
-            
+        elif self.dataset == 'MIX_eval':
+            self.train_files = split_recorder.MIX_large_train_files
+            self.val_files = split_recorder.MIX_large_val_files
+            self.test_files = split_recorder.MIX_large_val_files
+
         if flag == 'train':
             self.files = [i for i in self.train_files]
         elif flag == 'val':
@@ -1511,16 +1519,18 @@ class Dataset_BatteryLife(Dataset):
             total_dataset_ids += [dataset_id for _ in range(len(labels))]
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
-            if self.flag == 'test':
-                seen_unseen_id = self.unseen_seen_record[file_name]
-                if seen_unseen_id == 'unseen':
-                    total_seen_unseen_IDs += [0 for _ in range(len(labels))]
-                elif seen_unseen_id == 'seen':
-                    total_seen_unseen_IDs += [1 for _ in range(len(labels))]
-                else:
-                    raise Exception('Check the bug!')
-            else:
-                total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
+
+            total_seen_unseen_IDs += [1 for _ in range(len(labels))]
+            # if self.flag == 'test':
+            #     seen_unseen_id = self.unseen_seen_record[file_name]
+            #     if seen_unseen_id == 'unseen':
+            #         total_seen_unseen_IDs += [0 for _ in range(len(labels))]
+            #     elif seen_unseen_id == 'seen':
+            #         total_seen_unseen_IDs += [1 for _ in range(len(labels))]
+            #     else:
+            #         raise Exception('Check the bug!')
+            # else:
+            #     total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
         return total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, class_labels, total_dataset_ids, total_cj_aug_charge_discharge_curves, total_seen_unseen_IDs, total_domain_ids
 
