@@ -207,6 +207,7 @@ parser.add_argument('--meta_learning_rate', type=float, default=0.0001, help='op
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--des', type=str, default='test', help='exp description')
 parser.add_argument('--loss', type=str, default='MSE', help='loss function')
+parser.add_argument('--eval_metric', type=str, default='RMSE', help='metric for the evaluation', choices=['RMSE', 'MAPE'])
 parser.add_argument('--lradj', type=str, default='constant', help='adjust learning rate')
 parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learning rate decay factor')
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
@@ -274,6 +275,7 @@ dataset = args.finetune_dataset
 batch_size = args.batch_size
 learning_rate = args.learning_rate
 finetune_method = args.finetune_method
+eval_metric = args.eval_metric
 
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
@@ -290,6 +292,7 @@ args_json['model'] = args.model
 args_json['topK'] = args.topK
 args_json['use_aug'] = args.use_aug
 args_json['aug_w'] = args.aug_w
+args_json['eval_metric'] = args.eval_metric
 args_json['temperature'] = args.temperature
 args_json['lradj'] = args.lradj
 args_json['patience'] = args.patience
@@ -405,7 +408,7 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_FT",
+        project="PBT_FT_RMSE",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
@@ -624,7 +627,7 @@ for ii in range(args.itr):
 
         vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
         test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
-        vali_loss = vali_mape
+        vali_loss = vali_mape if eval_metric=='MAPE' else vali_rmse
         
         if vali_loss < best_vali_loss:
             best_vali_loss = vali_loss
