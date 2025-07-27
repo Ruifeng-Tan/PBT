@@ -304,7 +304,8 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_files
             self.test_files = split_recorder.ISU_ILCC_test_files
-        elif self.dataset == 'ISU_ILCC_delG49C1':
+        elif self.dataset == 'ISU_ILCC2':
+            # ISU_ILCC_delG49C1
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_delG49C1_files
             self.test_files = split_recorder.ISU_ILCC_test_files
@@ -1226,7 +1227,8 @@ class Dataset_BatteryLife(Dataset):
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_files
             self.test_files = split_recorder.ISU_ILCC_test_files
-        elif self.dataset == 'ISU_ILCC_delG49C1':
+        elif self.dataset == 'ISU_ILCC2':
+            #ISU_ILCC_delG49C1
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_delG49C1_files
             self.test_files = split_recorder.ISU_ILCC_test_files
