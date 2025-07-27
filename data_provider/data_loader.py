@@ -246,7 +246,7 @@ class Dataset_PBT(Dataset):
         self.anode2mask = anode2mask
         self.ion2mask = ion2mask
 
-        self.name2domainID = json.load(open(f'{self.root_path}/name2agingConditionID.json'))
+        self.name2domainID = json.load(open(f'/data/trf/python_works/BatteryMoE/gate_data/name2agingConditionID.json'))
 
         self.label_prompts_vectors = {}
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
@@ -303,6 +303,10 @@ class Dataset_PBT(Dataset):
         elif self.dataset == 'ISU_ILCC':
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_files
+            self.test_files = split_recorder.ISU_ILCC_test_files
+        elif self.dataset == 'ISU_ILCC_delG49C1':
+            self.train_files = split_recorder.ISU_ILCC_train_files
+            self.val_files = split_recorder.ISU_ILCC_val_delG49C1_files
             self.test_files = split_recorder.ISU_ILCC_test_files
         elif self.dataset == 'XJTU':
             self.train_files = split_recorder.XJTU_train_files
@@ -718,7 +722,7 @@ class Dataset_PBT(Dataset):
             else:
                 cluster_label = -1 # The cluster labels of validation or testing samples are unknown
             DKP_embedding = self.cellName_prompt[cell_name]
-            domain_id = self.name2domainID[cell_name]
+            domain_id = self.name2domainID[file_name]
 
 
             total_charge_discharge_curves += charge_discharge_curves
@@ -737,7 +741,7 @@ class Dataset_PBT(Dataset):
             total_combined_expert_masks += [combined_expert_mask for _ in range(len(labels))]
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
-            if self.flag == 'test':
+            if self.flag == 'test' and self.dataset != 'MIX_eval':
                 seen_unseen_id = self.unseen_seen_record[file_name]
                 if seen_unseen_id == 'unseen':
                     total_seen_unseen_IDs += [0 for _ in range(len(labels))]
@@ -975,7 +979,6 @@ class Dataset_PBT(Dataset):
                 cutoff_voltage_indices = np.nonzero(current_records_in_C<=-0.01) 
                 discharge_end_index = cutoff_voltage_indices[0][-1]
                 
-                # tmp_discharge_capacity_records = max(charge_capacity_records) - discharge_capacity_records
                 if prefix in ['RWTH', 'OX', 'ZN-coin', 'CALB_0', 'CALB_35', 'CALB_45']:
                     # Every cycle first discharge and then charge
                     #capacity_in_battery = np.where(charge_capacity_records==0, discharge_capacity_records, charge_capacity_records)
@@ -1223,6 +1226,10 @@ class Dataset_BatteryLife(Dataset):
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_files
             self.test_files = split_recorder.ISU_ILCC_test_files
+        elif self.dataset == 'ISU_ILCC_delG49C1':
+            self.train_files = split_recorder.ISU_ILCC_train_files
+            self.val_files = split_recorder.ISU_ILCC_val_delG49C1_files
+            self.test_files = split_recorder.ISU_ILCC_test_files
         elif self.dataset == 'XJTU':
             self.train_files = split_recorder.XJTU_train_files
             self.val_files = split_recorder.XJTU_val_files
@@ -1354,7 +1361,7 @@ class Dataset_BatteryLife(Dataset):
         elif self.dataset == 'MIX_eval':
             self.train_files = split_recorder.MIX_large_train_files
             self.val_files = split_recorder.MIX_large_val_files
-            self.test_files = split_recorder.MIX_large_val_files
+            self.test_files = split_recorder.MIX_large_val_files # used for testing model performance on the validation set
 
         if flag == 'train':
             self.files = [i for i in self.train_files]
@@ -1520,17 +1527,16 @@ class Dataset_BatteryLife(Dataset):
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
 
-            total_seen_unseen_IDs += [1 for _ in range(len(labels))]
-            # if self.flag == 'test':
-            #     seen_unseen_id = self.unseen_seen_record[file_name]
-            #     if seen_unseen_id == 'unseen':
-            #         total_seen_unseen_IDs += [0 for _ in range(len(labels))]
-            #     elif seen_unseen_id == 'seen':
-            #         total_seen_unseen_IDs += [1 for _ in range(len(labels))]
-            #     else:
-            #         raise Exception('Check the bug!')
-            # else:
-            #     total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
+            if self.flag == 'test' and self.dataset != 'MIX_eval':
+                seen_unseen_id = self.unseen_seen_record[file_name]
+                if seen_unseen_id == 'unseen':
+                    total_seen_unseen_IDs += [0 for _ in range(len(labels))]
+                elif seen_unseen_id == 'seen':
+                    total_seen_unseen_IDs += [1 for _ in range(len(labels))]
+                else:
+                    raise Exception('Check the bug!')
+            else:
+                total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
         return total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, class_labels, total_dataset_ids, total_cj_aug_charge_discharge_curves, total_seen_unseen_IDs, total_domain_ids
 
