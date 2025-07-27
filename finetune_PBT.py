@@ -207,7 +207,7 @@ parser.add_argument('--meta_learning_rate', type=float, default=0.0001, help='op
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--des', type=str, default='test', help='exp description')
 parser.add_argument('--loss', type=str, default='MSE', help='loss function')
-parser.add_argument('--eval_metric', type=str, default='RMSE', help='metric for the evaluation', choices=['RMSE', 'MAPE'])
+parser.add_argument('--eval_metric', type=str, default='MAPE', help='metric for the evaluation', choices=['RMSE', 'MAPE'])
 parser.add_argument('--lradj', type=str, default='constant', help='adjust learning rate')
 parser.add_argument('--lradj_factor', type=float, default=0.5, help='the learning rate decay factor')
 parser.add_argument('--pct_start', type=float, default=0.2, help='pct_start')
