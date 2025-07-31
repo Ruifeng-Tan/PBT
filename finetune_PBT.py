@@ -83,7 +83,11 @@ def add_adapters_to_PBT_withCP_no_bottom(args, model, adapter_size=64):
         adapter_size=adapter_size
         )
 
+    adapter_layer_num_for_encoder = len(model.intra_MoE_layers) if args.adapter_layers >= len(model.intra_MoE_layers) else args.adapter_layers
+    adapter_layer_num_for_decoder = args.adapter_layers - adapter_layer_num_for_encoder
     for i in range(len(model.intra_MoE_layers)):
+        if i >= adapter_layer_num_for_encoder:
+            break
         # add adapters to intra-cycle encoder layers
         original_layer = model.intra_MoE_layers[i]
         model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
@@ -93,6 +97,8 @@ def add_adapters_to_PBT_withCP_no_bottom(args, model, adapter_size=64):
         )
     
     for i in range(len(model.inter_MoE_layers)):
+        if i >= adapter_layer_num_for_decoder:
+            break
         # add adapters to inter-cycle encoder layers
         original_layer = model.inter_MoE_layers[i]
         model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
@@ -258,6 +264,7 @@ parser.add_argument('--alpha2', type=float, default=0.1, help='the alpha for alp
 parser.add_argument('--finetune_method', type=str, default='FT', help='the fine-tuning method. [FT, EFT, AT]')
 parser.add_argument('--finetune_dataset', type=str, help='the target dataset for model finetuning')
 parser.add_argument('--args_path', type=str, help='the path to the pretrained model parameters')
+parser.add_argument('--adapter_layers', type=int, default=2, help='num of adapter layers. set a number <=0 to insert adapters to all layers')
 
 args = parser.parse_args()
 
@@ -279,9 +286,15 @@ eval_metric = args.eval_metric
 
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
+adapter_layers = args.adapter_layers
+if adapter_layers <= 0:
+    adapter_layers = args_json['e_layers'] + args_json['d_layers']
+
+assert args.adapter_layers <= args_json['e_layers'] + args_json['d_layers'], 'The adapter layers should be less than or equal to the number of encoder and decoder layers in the pretrained model!'
 args_json['least_epochs'] = args.least_epochs
 args_json['dataset'] = dataset
 args_json['batch_size'] = batch_size
+args_json['adapter_layers'] = adapter_layers
 args_json['dropout'] = args.dropout
 args_json['wd'] = args.wd
 args_json['learning_rate'] = learning_rate
@@ -308,7 +321,7 @@ args.__dict__ = args_json
     
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_{}_{}_{}_as{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_{}_ffs{}_{}_{}_seed{}'.format(
+    setting = '{}_{}_{}_{}_as{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_dsr{}_we{}_{}_ffs{}_{}_{}_seed{}'.format(
         args.model,
         args.dk_factor,
         args.llm_choice,
@@ -325,7 +338,7 @@ for ii in range(args.itr):
         args.min_d_ff,
         args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
         args.num_experts, args.num_general_experts,
-        args.topK, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, pretrain_warm_up_epoches, args.warm_up_epoches, args.use_dff_scale, trained_dataset, finetune_method, args.seed)
+        args.topK, args.use_domainSampler, args.use_aug, args.down_sample_ratio, pretrain_warm_up_epoches, args.warm_up_epoches, args.use_dff_scale, trained_dataset, finetune_method, args.seed)
 
 
     data_provider_func = data_provider_LLMv2
@@ -455,15 +468,6 @@ for ii in range(args.itr):
         for name, p in model.named_parameters():
             # only tune the adapters + gate + head + flattenIntraCycleLayer
             if 'adapter' in name or 'gate' in name or 'regression_head' in name or 'flattenIntraCycleLayer' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'AT_cp':
-        # adapter tuning
-        model = add_adapters_to_PBT_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-        for name, p in model.named_parameters():
-            # only tune the adapters + gate + head
-            if 'adapter' in name or 'gate' in name or 'regression_head' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
