@@ -287,7 +287,7 @@ eval_metric = args.eval_metric
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
 adapter_layers = args.adapter_layers
-if adapter_layers <= 0:
+if adapter_layers < 0:
     adapter_layers = args_json['e_layers'] + args_json['d_layers']
 
 assert args.adapter_layers <= args_json['e_layers'] + args_json['d_layers'], 'The adapter layers should be less than or equal to the number of encoder and decoder layers in the pretrained model!'
