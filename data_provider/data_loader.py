@@ -453,6 +453,10 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.MIX_large_train_files
             self.val_files = split_recorder.MIX_large_val_files
             self.test_files = split_recorder.MIX_large_val_files
+        elif self.dataset == 'ISU_ILCC_eval_delG49C1':
+            self.train_files = split_recorder.ISU_ILCC_train_files
+            self.val_files = split_recorder.ISU_ILCC_val_delG49C1_files
+            self.test_files = split_recorder.ISU_ILCC_val_delG49C1_files
         else:
             raise Exception(f'{self.dataset} is not supported!')
 
@@ -742,7 +746,7 @@ class Dataset_PBT(Dataset):
             total_combined_expert_masks += [combined_expert_mask for _ in range(len(labels))]
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
-            if self.flag == 'test' and self.dataset != 'MIX_eval':
+            if self.flag == 'test' and self.dataset != 'MIX_eval' and self.dataset != 'ISU_ILCC_eval_delG49C1':
                 seen_unseen_id = self.unseen_seen_record[file_name]
                 if seen_unseen_id == 'unseen':
                     total_seen_unseen_IDs += [0 for _ in range(len(labels))]

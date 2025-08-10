@@ -480,9 +480,9 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
-    elif finetune_method == 'AT_nBH':
+    elif finetune_method == 'AT_nB_gH':
         # adapter tuning
-        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters and only tune the general experts in the output layer
         for name, p in model.named_parameters():
             # only tune the adapters + gate + head
             if 'adapter' in name or 'regression_head.general_experts' in name:
