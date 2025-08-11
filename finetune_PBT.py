@@ -43,6 +43,37 @@ def add_adapters_to_PBT(args, model, adapter_size=64):
             adapter_size=adapter_size
         )
 
+    return model
+
+def add_adapters_to_PBT_flex(args, model, adapter_size=64):
+    '''
+    Add adapters to the CyclePatch layer and hidden layers.
+    Users can control the number of adapter layers by setting args.adapter_layers.
+    '''
+    adapter_layer_num_for_encoder = len(model.intra_MoE_layers) if args.adapter_layers >= len(model.intra_MoE_layers) else args.adapter_layers
+    adapter_layer_num_for_decoder = args.adapter_layers - adapter_layer_num_for_encoder
+    for i in range(len(model.intra_MoE_layers)):
+        if i >= adapter_layer_num_for_encoder:
+            break
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        if i >= adapter_layer_num_for_decoder:
+            break
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
 
     return model
 
@@ -75,7 +106,11 @@ def add_adapters_to_PBT_withCP(args, model, adapter_size=64):
 
     return model
 
-def add_adapters_to_PBT_withCP_no_bottom(args, model, adapter_size=64):
+def add_adapters_to_PBT_withCP_flex(args, model, adapter_size=64):
+    '''
+    Add adapters to the CyclePatch layer and hidden layers.
+    Users can control the number of adapter layers by setting args.adapter_layers.
+    '''
     original_layer = model.flattenIntraCycleLayer
     model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
         args,
@@ -453,48 +488,19 @@ for ii in range(args.itr):
             if p.requires_grad is True:
                 trained_parameters_names.append(name)
                 trained_parameters.append(p)
-    elif finetune_method == 'EFT':
-        # use_view_experts = False
-        # tune only the shared experts, normalization and output layer
-        for name, p in model.named_parameters():
-            if 'general_experts' in name:
-                continue
-            if p.requires_grad is True:
-                trained_parameters_names.append(name)
-                trained_parameters.append(p)
     elif finetune_method == 'AT':
-        # adapter tuning
-        model = add_adapters_to_PBT(args, model, args.adapter_size)
+        # adapter tuning, legacy name: AT_nB
+        model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
         for name, p in model.named_parameters():
-            # only tune the adapters + gate + head + flattenIntraCycleLayer
-            if 'adapter' in name or 'gate' in name or 'regression_head' in name or 'flattenIntraCycleLayer' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'AT_nB':
-        # adapter tuning
-        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-        for name, p in model.named_parameters():
-            # only tune the adapters + gate + head
             if 'adapter' in name or 'regression_head' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
-    elif finetune_method == 'AT_nB_eH':
-        # adapter tuning
-        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters and only tune the general experts in the output layer
+    elif finetune_method == 'AT_nCP':
+        # adapter tuning without adapter before CyclePatch layer
+        model = add_adapters_to_PBT_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
         for name, p in model.named_parameters():
-            # only tune the adapters + gate + head
-            if 'adapter' in name or 'regression_head.view_experts' in name or 'regression_head.gate' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'AT_nBnH':
-        # adapter tuning
-        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-        for name, p in model.named_parameters():
-            # only tune the adapters + gate + head
-            if 'adapter' in name:
+            if 'adapter' in name or 'regression_head' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
