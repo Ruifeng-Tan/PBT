@@ -153,10 +153,12 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
         '''
         B = cycle_curve_data.shape[0]
 
-        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        # mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
-        logits = logits * mask
+        # logits.masked_fill_(mask==0, 0) # [B, num_experts]
+        # logits = logits * mask
+        logits = logits
 
         
         if self.top_k > 0:
@@ -198,13 +200,13 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
             # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
             # new Guidance loss
-            active_logits = raw_logits * mask
-            inactive_logits = raw_logits * (1-mask)
+            active_logits = raw_logits 
+            inactive_logits = raw_logits 
             guide_loss = -torch.mean(torch.log(torch.sum(active_logits, dim=1).exp() / torch.sum(inactive_logits, dim=1).exp()))
 
             # Compute the load balancing loss
             entropy = - logits * torch.log(logits + self.eps) # [B, num_experts]
-            entropy = entropy * moe_masks # mask the inactive logits
+            entropy = entropy # mask the inactive logits
             entropy_loss = torch.sum(entropy, dim=1) # [B]. The entropy of the logits
             LB_loss = - torch.mean(entropy_loss) # [1]
         
@@ -241,11 +243,12 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
         B = cycle_curve_data.shape[0]
 
 
-        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        # mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
-        logits = logits * mask
+        # logits = logits * mask
+        logits = logits
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
@@ -286,13 +289,13 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
             # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
             # new Guidance loss
-            active_logits = raw_logits * mask
-            inactive_logits = raw_logits * (1-mask)
+            active_logits = raw_logits
+            inactive_logits = raw_logits
             guide_loss = -torch.mean(torch.log(torch.sum(active_logits, dim=1).exp() / torch.sum(inactive_logits, dim=1).exp()))
             
             # Compute the load balancing loss
             entropy = - logits * torch.log(logits + self.eps) # [B, num_experts]
-            entropy = entropy * moe_masks # mask the inactive logits
+            entropy = entropy # mask the inactive logits
             entropy_loss = torch.sum(entropy, dim=1) # [B]. The entropy of the logits
             LB_loss = - torch.mean(entropy_loss) # [1]
 
@@ -330,11 +333,12 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
         '''
         B = cycle_curve_data.shape[0]
 
-        mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
+        # mask = torch.where(moe_masks==1, torch.ones_like(logits), torch.zeros_like(logits))
         logits = F.softmax(logits, dim=1) # [B, num_experts]
         raw_logits = logits.clone()
         # logits.masked_fill_(mask==0, 0) # [B, num_experts]
-        logits = logits * mask
+        # logits = logits * mask
+        logits = logits
 
         if self.top_k > 0:
             _, indices = torch.topk(logits, self.top_k, dim=1) # further keep only top-K
@@ -371,13 +375,13 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
             # guide_loss = (1-sum_masked_raw_logits)*(1-sum_masked_raw_logits)
 
             # new Guidance loss
-            active_logits = raw_logits * mask
-            inactive_logits = raw_logits * (1-mask)
+            active_logits = raw_logits
+            inactive_logits = raw_logits
             guide_loss = -torch.mean(torch.log(torch.sum(active_logits, dim=1).exp() / torch.sum(inactive_logits, dim=1).exp()))
 
             # Compute the load balancing loss
             entropy = - logits * torch.log(logits + self.eps) # [B, num_experts]
-            entropy = entropy * moe_masks # mask the inactive logits
+            entropy = entropy # mask the inactive logits
             entropy_loss = torch.sum(entropy, dim=1) # [B]. The entropy of the logits
             LB_loss = - torch.mean(entropy_loss) # [1]
 
