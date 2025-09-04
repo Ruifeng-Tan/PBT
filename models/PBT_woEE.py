@@ -1,5 +1,5 @@
 '''
-PBT without implicity encoding of domain knowledge
+最终版本的BatteryMoE without explicit encoding of domain knowledge
 '''
 import torch
 import copy
@@ -50,22 +50,19 @@ class BatteryMoEMLPLayer(nn.Module):
         '''
         x: [N, *, in_dim]
         gate_input: [B, gate_input_dim]
-        total_masks: [num_view, B, num_experts for each view expert]
+        total_masks: [num_view, num_experts for each view expert]
         ion_type_masks: [B, ion_expert_num]. 1 indicates activated
         '''
         x = self.norm(x) if self.use_norm else x # pre norm
-        B, L = x.shape[0], x.shape[1]
+        B = x.shape[0]
         total_guide_loss = 0
         total_LB_loss = 0
         final_out = 0
-
-        x = x.reshape(B*L, -1) # [B*L, num_var*fixed_len]
-        total_logits = self.expert_gate(x) # [B*L, num_experts]
+        total_logits = self.expert_gate(gate_input) # [B, num_experts]
        
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
-                mask = total_masks[i].unsqueeze(0).expand(L, -1, -1).reshape(B*L, -1) # [B*L, num of experts for this view]
-                out, guide_loss, LB_loss = view_expert(x, total_logits, mask)
+                out, guide_loss, LB_loss = view_expert(x, total_logits, total_masks[i])
                 final_out = final_out + out
                 total_guide_loss += guide_loss
                 total_LB_loss += LB_loss
@@ -77,7 +74,6 @@ class BatteryMoEMLPLayer(nn.Module):
             final_out = final_out + x # residual connection
         
         # final_out = self.norm(final_out) if self.use_norm else final_out # pre norm
-        final_out = final_out.reshape(B, L, -1) # [B, L, d_model]
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 
@@ -87,7 +83,7 @@ class BatteryMoETransformerLayer(nn.Module):
         super(BatteryMoETransformerLayer, self).__init__()
         self.num_views = len(view_experts)
         self.num_general_experts = len(general_experts)
-        self.expert_gate = nn.Linear(d_model, num_experts, bias=False)
+        self.expert_gate = nn.Linear(gate_input_dim, num_experts, bias=False)
 
         self.attention = AttentionLayer(FullAttention(True, 1, attention_dropout=0.05,
                             output_attention=False), d_model, n_heads)
@@ -105,7 +101,7 @@ class BatteryMoETransformerLayer(nn.Module):
         total_masks: [num_view, num_experts for each view expert]
         attn_mask: [B, 1, L, L]
         '''
-        B, L = x.shape[0], x.shape[1]
+        B = x.shape[0]
         x = self.norm1(x)
         # casual masked self-attention
         new_x, _ = self.attention(
@@ -120,13 +116,10 @@ class BatteryMoETransformerLayer(nn.Module):
         total_guide_loss = 0
         total_LB_loss = 0
         final_out = 0
-
-        x = x.reshape(B*L, -1) # [B*L, num_var*fixed_len]
-        total_logits = self.expert_gate(x) # [B*L, num_experts]
+        total_logits = self.expert_gate(gate_input) # [B, num_experts]
         if use_view_experts:
             for i, view_expert in enumerate(self.view_experts):
-                mask = total_masks[i].unsqueeze(0).expand(L, -1, -1).reshape(B*L, -1) # [B*L, num of experts for this view]
-                out, guide_loss, LB_loss = view_expert(x, total_logits, mask)
+                out, guide_loss, LB_loss = view_expert(x, total_logits, total_masks[i])
                 final_out = final_out + out
                 total_guide_loss += guide_loss
                 total_LB_loss += LB_loss
@@ -135,7 +128,6 @@ class BatteryMoETransformerLayer(nn.Module):
             final_out = self.general_experts[i](x) + final_out # add the general experts
 
         final_out = final_out + x # residual connection 
-        final_out = final_out.reshape(B, L, -1) # [B, L, d_model]
         return final_out, total_guide_loss / self.num_views, total_LB_loss / self.num_views
     
 class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
@@ -527,13 +519,14 @@ class Model(nn.Module):
         self.pca_scaler = pickle.load(open(configs.pca_path, 'rb'))
 
         assert self.gate_d_ff >= self.gate_domain_knowledge_neurons, Exception('The gate neurons should be no less than the domain-knowledge neurons')
+        self.gate = nn.Sequential(nn.Linear(self.d_llm, self.gate_d_ff, bias=True), nn.LeakyReLU())
 
         gate_input_dim = self.gate_d_ff
         self.split_dim = self.d_model // self.num_views
         self.d_ff_scale_factor = configs.d_ff_scale_factor
         
         self.flatten = nn.Flatten(start_dim=2)
-        self.flattenIntraCycleLayer = BatteryMoEMLPLayer(self.charge_discharge_length*3, self.num_experts,
+        self.flattenIntraCycleLayer = BatteryMoEMLPLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEFlattenIntraCycleMoELayer(configs, self.num_experts, self.d_ff_scale_factor)]
                                                                     ),
                                                     norm_layer=nn.LayerNorm(self.d_model),
@@ -543,7 +536,7 @@ class Model(nn.Module):
                                                     drop_rate=self.drop_rate,
                                                     use_connection=False, use_norm=False)
         
-        self.intra_MoE_layers = nn.ModuleList([BatteryMoEMLPLayer(self.d_model, self.num_experts,
+        self.intra_MoE_layers = nn.ModuleList([BatteryMoEMLPLayer(gate_input_dim, self.num_experts,
                                                      nn.ModuleList([BatteryMoEIntraCycleMoELayer(configs, self.num_experts, self.d_ff_scale_factor)
                                                     ]),
                                                     norm_layer=nn.LayerNorm(self.d_model),
@@ -620,6 +613,16 @@ class Model(nn.Module):
 
 
         total_masks = [combined_masks]
+
+        DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
+        # DKP_mask = torch.ones_like(DKP_embeddings[:, self.gate_domain_knowledge_neurons:])
+        # domain_knowledge_ReLU_mask = combined_masks.repeat_interleave(dim=1, repeats=self.dk_factor)
+        # DKP_mask = torch.cat([DKP_mask, domain_knowledge_ReLU_mask], dim=1)
+        # DKP_embeddings = DKP_embeddings * DKP_mask
+        # if self.gate_d_ff > self.gate_domain_knowledge_neurons:
+        #     DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons] = F.relu(DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons])
+        # logits = self.gate(DKP_embeddings)
+        # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
         logits_index = 0
 
