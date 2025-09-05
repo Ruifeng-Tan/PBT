@@ -45,6 +45,7 @@ def add_adapters_to_PBT(args, model, adapter_size=64):
 
     return model
 
+
 def add_adapters_to_PBT_flex(args, model, adapter_size=64):
     '''
     Add adapters to the CyclePatch layer and hidden layers.
