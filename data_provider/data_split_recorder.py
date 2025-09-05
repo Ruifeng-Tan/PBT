@@ -1,4 +1,5 @@
 import random
+import json
 class split_recorder():
     HUST_train_files = ['HUST_1-6.pkl', 'HUST_2-2.pkl', 'HUST_1-3.pkl', 'HUST_6-3.pkl', 'HUST_1-2.pkl', 'HUST_3-7.pkl', 'HUST_3-2.pkl', 'HUST_10-6.pkl', 'HUST_3-6.pkl', 'HUST_5-1.pkl', 'HUST_10-5.pkl', 'HUST_6-2.pkl', 'HUST_6-1.pkl', 'HUST_8-1.pkl', 'HUST_10-7.pkl', 'HUST_1-4.pkl', 'HUST_5-4.pkl', 'HUST_1-5.pkl', 'HUST_6-6.pkl', 'HUST_5-6.pkl', 'HUST_6-4.pkl', 'HUST_9-2.pkl', 'HUST_10-4.pkl', 'HUST_5-3.pkl', 'HUST_7-7.pkl', 'HUST_3-1.pkl', 'HUST_4-1.pkl', 'HUST_4-4.pkl', 'HUST_4-6.pkl', 'HUST_8-8.pkl', 'HUST_2-4.pkl', 'HUST_9-8.pkl', 'HUST_9-5.pkl', 'HUST_3-3.pkl', 'HUST_1-7.pkl', 'HUST_4-5.pkl', 'HUST_9-6.pkl', 'HUST_1-1.pkl', 'HUST_4-3.pkl', 'HUST_2-5.pkl', 'HUST_4-7.pkl', 'HUST_7-2.pkl', 'HUST_8-4.pkl', 'HUST_3-5.pkl', 'HUST_2-6.pkl', 'HUST_8-6.pkl', 'HUST_7-5.pkl']
     HUST_val_files =  ['HUST_6-8.pkl', 'HUST_3-8.pkl', 'HUST_2-3.pkl', 'HUST_9-1.pkl', 'HUST_10-8.pkl', 'HUST_7-4.pkl', 'HUST_2-8.pkl', 'HUST_8-3.pkl', 'HUST_5-2.pkl', 'HUST_10-1.pkl', 'HUST_5-5.pkl', 'HUST_5-7.pkl', 'HUST_7-8.pkl', 'HUST_7-6.pkl', 'HUST_1-8.pkl']
@@ -237,4 +238,6 @@ class split_recorder():
     MIX_large_temp_45_test_files = ['MICH_MCForm34_pouch_NMC_45C_0-100_1-1C_d.pkl', 'MICH_BLForm6_pouch_NMC_45C_0-100_1-1C_f.pkl', 'MICH_MCForm40_pouch_NMC_45C_0-100_1-1C_j.pkl', 'MICH_BLForm7_pouch_NMC_45C_0-100_1-1C_g.pkl', 'MICH_MCForm33_pouch_NMC_45C_0-100_1-1C_c.pkl'] + ['MICH_09H_pouch_NMC_45C_0-100_2-2C.pkl']
 
     # ablation study -- reduce the training data size
-    MIX_large_reduced_train_50p_files = random.sample(MIX_large_train_files, int(0.5*len(MIX_large_train_files)))
+    MIX_large_reduced_train_50p_files_2021 = json.load(open('./legacy/train_files_half_2021.json'))
+    MIX_large_reduced_train_50p_files_2024 = json.load(open('./legacy/train_files_half_2024.json'))
+    MIX_large_reduced_train_50p_files_42 = json.load(open('./legacy/train_files_half_42.json'))
