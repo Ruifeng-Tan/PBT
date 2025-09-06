@@ -612,7 +612,7 @@ class Mapping_helper():
             'Stanford_Nova_Regular_227': 38.0,
             'Stanford_Nova_Regular_228': 39.0,
             'Stanford_Nova_Regular_229': 40.0,
-            'Stanford_Nova_Regular_230': 181.0,
+            'Stanford_Nova_Regular_230':  .0,
             'Stanford_Nova_Regular_269': 41.0,
             'Stanford_Nova_Regular_270': 42.0,
             'Stanford_Nova_Regular_271': 43.0,
