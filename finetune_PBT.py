@@ -357,12 +357,13 @@ args.__dict__ = args_json
     
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_{}_{}_{}_as{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_dsr{}_we{}_{}_ffs{}_{}_{}_seed{}'.format(
+    setting = '{}_{}_{}_{}_as{}_al{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_dsr{}_we{}_{}_ffs{}_{}_{}_seed{}'.format(
         args.model,
         args.dk_factor,
         args.llm_choice,
         args.seq_len,
         args.adapter_size,
+        args.adapter_layers,
         args.least_epochs,
         args.batch_size,
         args.learning_rate,
