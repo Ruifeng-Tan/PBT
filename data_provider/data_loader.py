@@ -469,6 +469,18 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.MIX_large_reduced_train_50p_files_2024
             self.val_files = split_recorder.MIX_large_val_files 
             self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'Stanford_formation' and self.args.seed == 2021:
+            self.train_files = split_recorder.Stanford_formation_45_train_files_2021
+            self.val_files = split_recorder.Stanford_formation_45_val_files_2021
+            self.test_files = split_recorder.Stanford_formation_45_test_files_2021
+        elif self.dataset == 'Stanford_formation' and self.args.seed == 42:
+            self.train_files = split_recorder.Stanford_formation_45_train_files_42
+            self.val_files = split_recorder.Stanford_formation_45_val_files_42
+            self.test_files = split_recorder.Stanford_formation_45_test_files_42
+        elif self.dataset == 'Stanford_formation' and self.args.seed == 2024:
+            self.train_files = split_recorder.Stanford_formation_45_train_files_2024
+            self.val_files = split_recorder.Stanford_formation_45_val_files_2024
+            self.test_files = split_recorder.Stanford_formation_45_test_files_2024
         else:
             raise Exception(f'{self.dataset} is not supported!')
 
@@ -876,7 +888,10 @@ class Dataset_PBT(Dataset):
             
         df = pd.concat(total_cycle_dfs)
         # obtain the charge and discahrge curves
-        charge_discharge_curves = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
+        if self.dataset == 'Stanford_formation':
+            charge_discharge_curves = self.get_charge_discharge_curves_Stanford_formation(file_name, df, self.early_cycle_threshold, nominal_capacity)
+        else:
+            charge_discharge_curves = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
         return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity
       
     def generate_basic_prompt(self, cell_name):
@@ -1068,7 +1083,66 @@ class Dataset_PBT(Dataset):
         curves = np.concatenate(curves, axis=0) # [L, 3, fixed_len]
         return curves
 
-    def resample_charge_discharge_curves(self, voltages, currents, capacity_in_battery):
+    def get_charge_discharge_curves_Stanford_formation(self, file_name, df, early_cycle_threshold, nominal_capacity):
+        '''
+        Designed for Stanford formation dataset
+        Get the resampled charge and discharge curves from the dataframe
+        file_name: the file name
+        df: the dataframe for a cell
+        early_cycle_threshold: obtain the charge and discharge curves from the required early cycles
+        '''
+        curves = []
+
+        prefix = file_name.split('_')[0]
+        for cycle in range(1, early_cycle_threshold+1):
+            if cycle in df['cycle_number'].unique():
+                cycle_df = df.loc[df['cycle_number'] == cycle]
+                
+                voltage_records = cycle_df['voltage_in_V'].values
+                current_records = cycle_df['current_in_A'].values
+                current_records_in_C = current_records/nominal_capacity
+                charge_capacity_records = cycle_df['charge_capacity_in_Ah'].values
+                discharge_capacity_records = cycle_df['discharge_capacity_in_Ah'].values
+
+                cutoff_voltage_indices = np.nonzero(current_records_in_C>=-0.02) 
+                charge_end_index = cutoff_voltage_indices[0][-1] # after charge_end_index, there are rest after charge, discharge, and rest after discharge data
+
+                discharge_voltages = voltage_records[charge_end_index:]
+                discharge_capacities = discharge_capacity_records[charge_end_index:] # The discharge capacity originally indicates the remaining capacity in the battery and hence should be adjusted.
+                discharge_currents = current_records[charge_end_index:]
+                discharge_capacities = max(discharge_capacities) - discharge_capacities # adjust the discharge capacity to indicate the discharged capacity
+
+                charge_voltages = voltage_records[:charge_end_index]
+                charge_capacities = charge_capacity_records[:charge_end_index]
+                charge_currents = current_records[:charge_end_index]
+
+
+                discharge_voltages, discharge_currents, discharge_capacities = self.resample_charge_discharge_curves(discharge_voltages, discharge_currents, discharge_capacities)
+                charge_voltages, charge_currents, charge_capacities = self.resample_charge_discharge_curves(charge_voltages, charge_currents, charge_capacities)
+
+
+                
+                voltage_records = np.concatenate([charge_voltages, discharge_voltages], axis=0)
+                current_records = np.concatenate([charge_currents, discharge_currents], axis=0)
+                capacity_in_battery = np.concatenate([charge_capacities, discharge_capacities], axis=0)
+                
+               
+                voltage_records = voltage_records.reshape(1, self.charge_discharge_len)
+                current_records = current_records.reshape(1, self.charge_discharge_len) / nominal_capacity # normalize the current to C rate
+                capacity_in_battery = capacity_in_battery.reshape(1, self.charge_discharge_len)
+                
+                curve_data = np.concatenate([voltage_records, current_records, capacity_in_battery], axis=0)
+                # curve_data = np.concatenate([voltage_records, current_records], axis=0)
+            else:
+                # fill zeros when the cell doesn't have enough cycles
+                curve_data = np.zeros((3, self.charge_discharge_len))
+
+            curves.append(curve_data.reshape(1, curve_data.shape[0], self.charge_discharge_len))
+              
+        curves = np.concatenate(curves, axis=0) # [L, 3, fixed_len]
+        return curves
+    
+    def resample_charge_discharge_curves(self, voltages, currents, capacity_in_battery, new_length=None):
         '''
         resample the charge and discharge curves based on the natural records
         :param voltages:charge or dicharge voltages
@@ -1076,7 +1150,10 @@ class Dataset_PBT(Dataset):
         :param capacity_in_battery: remaining capacities in the battery
         :return:interploted records
         '''
-        charge_discharge_len = self.charge_discharge_len // 2
+        if new_length is not None:
+            charge_discharge_len = new_length
+        else:
+            charge_discharge_len = self.charge_discharge_len // 2
         raw_bases = np.arange(1, len(voltages)+1)
         interp_bases = np.linspace(1, len(voltages)+1, num=charge_discharge_len,
                                         endpoint=True)
