@@ -789,6 +789,7 @@ class Dataset_PBT(Dataset):
         The dataset is indicated by the prefix of the file_name
         '''
         prefix = file_name.split('_')[0]
+
         if prefix.startswith('MATR'):
             data =  pickle.load(open(f'{self.root_path}/MATR/{file_name}', 'rb'))
         elif prefix.startswith('HUST'):
@@ -814,7 +815,10 @@ class Dataset_PBT(Dataset):
         elif prefix.startswith('Tongji'):
             data =  pickle.load(open(f'{self.root_path}/Tongji/{file_name}', 'rb'))
         elif prefix.startswith('Stanford'):
-            data =  pickle.load(open(f'{self.root_path}/Stanford/{file_name}', 'rb'))
+            if self.dataset == 'Stanford_formation':
+                data =  pickle.load(open(f'{self.root_path}/Stanford_formation/{file_name}', 'rb')) # read the formation data
+            else:
+                data =  pickle.load(open(f'{self.root_path}/Stanford/{file_name}', 'rb'))
         elif prefix.startswith('ISU-ILCC'):
             data =  pickle.load(open(f'{self.root_path}/ISU_ILCC/{file_name}', 'rb'))
         elif prefix.startswith('XJTU'):
@@ -839,11 +843,13 @@ class Dataset_PBT(Dataset):
         else:
             with open(f'{self.root_path}/Life labels/{prefix}_labels.json') as f:
                 life_labels = json.load(f)
+
+        # file_name = file_name if self.dataset != 'Stanford_formation' else file_name.replace('Stanford_Formation_Nova_Formation-', 'Stanford_Nova_Regular_')
         if file_name in life_labels:
             eol = life_labels[file_name]
         else:
             eol = None
-
+        print(file_name,eol)
         return data, eol
     
     def read_cell_df(self, file_name):
@@ -889,6 +895,7 @@ class Dataset_PBT(Dataset):
         df = pd.concat(total_cycle_dfs)
         # obtain the charge and discahrge curves
         if self.dataset == 'Stanford_formation':
+            # nominal_capacity = 0.24
             charge_discharge_curves = self.get_charge_discharge_curves_Stanford_formation(file_name, df, self.early_cycle_threshold, nominal_capacity)
         else:
             charge_discharge_curves = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
@@ -912,6 +919,8 @@ class Dataset_PBT(Dataset):
                         f"The discharge capacity is calculated under the described operating condition. "
                         f"Please directly output the target of the battery based on the provided data. "
                         )
+        
+        # cell_name = cell_name if self.dataset != 'Stanford_formation' else cell_name.replace('Stanford_Formation_Nova_Formation-', 'Stanford_Nova_Regular_')
         helper = Mapping_helper(prompt_type='PROTOCOL', cell_name=cell_name)
         prompt = helper.do_mapping()
         if self.args.wo_DKPrompt:
@@ -947,6 +956,8 @@ class Dataset_PBT(Dataset):
             
             tmp_attn_mask = np.zeros(self.early_cycle_threshold)
             tmp_attn_mask[:i] = 1 # set 1 not to mask
+            if self.dataset == 'Stanford_formation':
+                tmp_attn_mask[7:] = 0 # mask the data after formation cycles
             
             if self.eval_cycle_max is not None and self.eval_cycle_min is not None:
                 if i >= self.eval_cycle_min and i <= self.eval_cycle_max:
@@ -1097,7 +1108,6 @@ class Dataset_PBT(Dataset):
         for cycle in range(1, early_cycle_threshold+1):
             if cycle in df['cycle_number'].unique():
                 cycle_df = df.loc[df['cycle_number'] == cycle]
-                
                 voltage_records = cycle_df['voltage_in_V'].values
                 current_records = cycle_df['current_in_A'].values
                 current_records_in_C = current_records/nominal_capacity
