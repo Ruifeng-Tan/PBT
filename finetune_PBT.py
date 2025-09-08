@@ -320,6 +320,7 @@ learning_rate = args.learning_rate
 finetune_method = args.finetune_method
 eval_metric = args.eval_metric
 early_cycle_threshold = args.early_cycle_threshold
+seq_len = args.seq_len
 
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
@@ -335,6 +336,7 @@ args_json['adapter_layers'] = adapter_layers
 args_json['dropout'] = args.dropout
 args_json['early_cycle_threshold'] = early_cycle_threshold
 args_json['wd'] = args.wd
+args_json['seq_len'] = seq_len
 args_json['learning_rate'] = learning_rate
 args_json['alpha1'] = args.alpha1
 args_json['alpha2'] = args.alpha2
