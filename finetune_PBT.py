@@ -494,6 +494,13 @@ for ii in range(args.itr):
             if p.requires_grad is True:
                 trained_parameters_names.append(name)
                 trained_parameters.append(p)
+    elif finetune_method == 'EFT':
+        # only fine-tune the expert models
+        for name, p in model.named_parameters():
+            if 'flattenIntraCycleLayer' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
     elif finetune_method == 'AT':
         # adapter tuning, legacy name: AT_nB
         model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra

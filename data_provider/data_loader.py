@@ -973,8 +973,9 @@ class Dataset_PBT(Dataset):
             tmp_attn_mask[:i] = 1 # set 1 not to mask
             if self.dataset == 'Stanford_formation':
                 # tmp_attn_mask[7:] = 0 # mask the data after formation cycles
-                tmp_attn_mask = (np.any(early_charge_discharge_curves_data != 0, axis=(-2, -1))).astype(int).reshape(-1) # mask the all zero curves
-            
+                padding_mask = (np.any(early_charge_discharge_curves_data != 0, axis=(-2, -1))).astype(int).reshape(-1) # mask the all zero curves, 0 indicates masked
+                tmp_attn_mask = np.where(padding_mask==0, np.zeros_like(tmp_attn_mask), tmp_attn_mask)
+
             if self.eval_cycle_max is not None and self.eval_cycle_min is not None:
                 if i >= self.eval_cycle_min and i <= self.eval_cycle_max:
                     # Only keep the val and test samples that satisfy the eval_cycle
