@@ -523,7 +523,6 @@ class Dataset_PBT(Dataset):
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record | self.zn_ion_unseen_seen_record | self.calb_unseen_seen_record
 
         self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.total_dataset_ids, self.total_center_vector_indices, self.total_file_names, self.total_cluster_labels, self.total_DKP_embeddings, self.total_seen_unseen_IDs, self.total_cathode_expert_masks, self.total_temperature_experts_masks, self.total_format_expert_masks, self.total_anode_expert_masks, self.total_ion_type_masks, self.total_combined_expert_masks, self.total_domain_ids = self.read_data()
-        
         self.weights = self.get_loss_weight()
         if np.any(np.isnan(self.total_charge_discharge_curves)):
             raise Exception('Nan in the data')
