@@ -491,7 +491,13 @@ class Dataset_PBT(Dataset):
         val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
         test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
 
-        self.cellName_prompt = train_part | val_part | test_part
+        Stanford_formation_prompt_embeddings = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_Llama_Stanford_formation.pkl', 'rb'))
+
+        if self.dataset != 'Stanford_formation':
+            self.cellName_prompt = train_part | val_part | test_part
+        else:
+            self.cellName_prompt = Stanford_formation_prompt_embeddings
+
         if flag == 'train':
             self.files = [i for i in self.train_files]
         elif flag == 'val':
@@ -771,13 +777,16 @@ class Dataset_PBT(Dataset):
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
             if self.flag == 'test' and self.dataset != 'MIX_eval' and self.dataset != 'ISU_ILCC_eval_delG49C1':
-                seen_unseen_id = self.unseen_seen_record[file_name]
-                if seen_unseen_id == 'unseen':
-                    total_seen_unseen_IDs += [0 for _ in range(len(labels))]
-                elif seen_unseen_id == 'seen':
-                    total_seen_unseen_IDs += [1 for _ in range(len(labels))]
+                if self.dataset == 'Stanford_formation':
+                    total_seen_unseen_IDs  += [0 for _ in range(len(labels))] # all formation protocols in the testing set are unseen
                 else:
-                    raise Exception('Check the bug!')
+                    seen_unseen_id = self.unseen_seen_record[file_name]
+                    if seen_unseen_id == 'unseen':
+                        total_seen_unseen_IDs += [0 for _ in range(len(labels))]
+                    elif seen_unseen_id == 'seen':
+                        total_seen_unseen_IDs += [1 for _ in range(len(labels))]
+                    else:
+                        raise Exception('Check the bug!')
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
@@ -840,6 +849,13 @@ class Dataset_PBT(Dataset):
             file_name = file_name.replace('--', '-#')
             with open(f'{self.root_path}/Life labels/Tongji_labels.json') as f:
                 life_labels = json.load(f)
+        elif prefix.startswith('Stanford'):
+            if self.dataset == 'Stanford_formation':
+                with open(f'{self.root_path}/Life labels/Stanford_2_labels.json') as f:
+                    life_labels = json.load(f)
+            else:
+                with open(f'{self.root_path}/Life labels/{prefix}_labels.json') as f:
+                    life_labels = json.load(f)
         else:
             with open(f'{self.root_path}/Life labels/{prefix}_labels.json') as f:
                 life_labels = json.load(f)
@@ -849,6 +865,7 @@ class Dataset_PBT(Dataset):
             eol = life_labels[file_name]
         else:
             eol = None
+        print(file_name, eol)
         return data, eol
     
     def read_cell_df(self, file_name):
