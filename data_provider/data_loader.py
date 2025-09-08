@@ -849,7 +849,6 @@ class Dataset_PBT(Dataset):
             eol = life_labels[file_name]
         else:
             eol = None
-        print(file_name,eol)
         return data, eol
     
     def read_cell_df(self, file_name):
@@ -1126,15 +1125,17 @@ class Dataset_PBT(Dataset):
                 charge_capacities = charge_capacity_records[:charge_end_index]
                 charge_currents = current_records[:charge_end_index]
 
-
-                discharge_voltages, discharge_currents, discharge_capacities = self.resample_charge_discharge_curves(discharge_voltages, discharge_currents, discharge_capacities)
-                charge_voltages, charge_currents, charge_capacities = self.resample_charge_discharge_curves(charge_voltages, charge_currents, charge_capacities)
-
-
-                
-                voltage_records = np.concatenate([charge_voltages, discharge_voltages], axis=0)
+                voltage_records = np.concatenate([charge_voltages, discharge_voltages], axis=0) # The formation data might contain no charge/discharge. To avoid errors, we resample the profile as a whole.
                 current_records = np.concatenate([charge_currents, discharge_currents], axis=0)
                 capacity_in_battery = np.concatenate([charge_capacities, discharge_capacities], axis=0)
+
+
+                voltage_records, current_records, capacity_in_battery = self.resample_charge_discharge_curves(voltage_records, current_records, capacity_in_battery, self.charge_discharge_len)
+
+                
+                # voltage_records = np.concatenate([charge_voltages, discharge_voltages], axis=0)
+                # current_records = np.concatenate([charge_currents, discharge_currents], axis=0)
+                # capacity_in_battery = np.concatenate([charge_capacities, discharge_capacities], axis=0)
                 
                
                 voltage_records = voltage_records.reshape(1, self.charge_discharge_len)
