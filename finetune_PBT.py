@@ -9,7 +9,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, BatteryMoE_Hyper_CropAugIMP, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, PBT_formation, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
 from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -398,11 +398,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = BatteryMoE_Hyper_CropAugIMPR2.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_CropAugIMP':
+    elif args.model == 'PBT_formation':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_CropAugIMP.Model(model_config)
+        model = PBT_formation.Model(model_config)
     elif args.model == 'baseline_CPMLPMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
@@ -495,12 +495,23 @@ for ii in range(args.itr):
                 trained_parameters_names.append(name)
                 trained_parameters.append(p)
     elif finetune_method == 'EFT':
-        # only fine-tune the expert models
+        # only fine-tune the flattenIntraCycle
         for name, p in model.named_parameters():
             if 'flattenIntraCycleLayer' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
+    elif finetune_method == 'EFT_V':
+        # only fine-tune the view experts in the flattenIntraCycle
+        for name, p in model.named_parameters():
+            if 'flattenIntraCycleLayer.view_experts' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'FT_B':
+        # adapter_layers is used here to indicate how many bottom layers are tunable
+        # Allow fine-tuning the bottom layers
+        pass
     elif finetune_method == 'AT':
         # adapter tuning, legacy name: AT_nB
         model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
