@@ -508,7 +508,7 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
-    elif finetune_method == 'FT_B':
+    elif finetune_method == 'FT_F':
         # adapter_layers is used here to indicate how many bottom layers are tunable
         # Allow fine-tuning the bottom layers
         pass
