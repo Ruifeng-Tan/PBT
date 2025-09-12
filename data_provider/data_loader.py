@@ -1510,7 +1510,57 @@ class Dataset_BatteryLife(Dataset):
             self.train_files = split_recorder.MIX_large_train_files
             self.val_files = split_recorder.MIX_large_val_files
             self.test_files = split_recorder.MIX_large_val_files # used for testing model performance on the validation set
-
+        elif self.dataset == 'MIX_large_ablation_75p' and self.args.seed == 2021:
+            self.train_files = split_recorder.MIX_large_reduced_train_75p_files_2021
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_75p' and self.args.seed == 42:
+            self.train_files = split_recorder.MIX_large_reduced_train_75p_files_42
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_75p' and self.args.seed == 2024:
+            self.train_files = split_recorder.MIX_large_reduced_train_75p_files_2024
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_50p' and self.args.seed == 2021:
+            self.train_files = split_recorder.MIX_large_reduced_train_50p_files_2021
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_50p' and self.args.seed == 42:
+            self.train_files = split_recorder.MIX_large_reduced_train_50p_files_42
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_50p' and self.args.seed == 2024:
+            self.train_files = split_recorder.MIX_large_reduced_train_50p_files_2024
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_25p' and self.args.seed == 2021:
+            self.train_files = split_recorder.MIX_large_reduced_train_25p_files_2021
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_25p' and self.args.seed == 42:
+            self.train_files = split_recorder.MIX_large_reduced_train_25p_files_42
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'MIX_large_ablation_25p' and self.args.seed == 2024:
+            self.train_files = split_recorder.MIX_large_reduced_train_25p_files_2024
+            self.val_files = split_recorder.MIX_large_val_files 
+            self.test_files = split_recorder.MIX_large_test_files
+        elif self.dataset == 'Stanford_formation' and self.args.seed == 2021:
+            self.train_files = split_recorder.Stanford_formation_45_train_files_2021
+            self.val_files = split_recorder.Stanford_formation_45_val_files_2021
+            self.test_files = split_recorder.Stanford_formation_45_test_files_2021
+        elif self.dataset == 'Stanford_formation' and self.args.seed == 42:
+            self.train_files = split_recorder.Stanford_formation_45_train_files_42
+            self.val_files = split_recorder.Stanford_formation_45_val_files_42
+            self.test_files = split_recorder.Stanford_formation_45_test_files_42
+        elif self.dataset == 'Stanford_formation' and self.args.seed == 2024:
+            self.train_files = split_recorder.Stanford_formation_45_train_files_2024
+            self.val_files = split_recorder.Stanford_formation_45_val_files_2024
+            self.test_files = split_recorder.Stanford_formation_45_test_files_2024
+        else:
+            raise Exception(f'{self.dataset} is not supported!')
+        
         if flag == 'train':
             self.files = [i for i in self.train_files]
         elif flag == 'val':

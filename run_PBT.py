@@ -10,7 +10,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPTransformer_ablation, PBT_woIE2, PBT_woEE
+from models import PBT, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPTransformer, PBT_woIE2, PBT_woEE
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -266,11 +266,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPMLPMoE.Model(model_config)
-    elif args.model == 'CPTransformer_ablation':
+    elif args.model == 'CPTransformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = CPTransformer_ablation.Model(model_config)
+        model = CPTransformer.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
