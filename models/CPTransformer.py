@@ -94,6 +94,6 @@ class Model(nn.Module):
         output = self.dropout(output)
         output = output.reshape(output.shape[0], -1)  # (batch_size, L * d_model)
         preds = self.projection(output)  # (batch_size, num_classes)
-        if return_embedding:
-            return preds, output
-        return preds
+        # if return_embedding:
+        #     return preds, output
+        return preds, None, None, None, None, None, None , None
