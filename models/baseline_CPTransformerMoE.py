@@ -275,7 +275,7 @@ class Model(BatteryLifeLLM):
         self.configs = configs
         self.task_name = configs.task_name
         self.d_ff = configs.d_ff
-        self.top_k = configs.topK
+        self.top_k = configs.topK if configs.topK > 0 else configs.num_experts
         self.patch_len = configs.patch_len
         self.stride = configs.stride
         self.n_heads = configs.n_heads

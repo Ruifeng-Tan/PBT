@@ -457,40 +457,31 @@ class Dataset_PBT(Dataset):
             self.train_files = split_recorder.ISU_ILCC_train_files
             self.val_files = split_recorder.ISU_ILCC_val_delG49C1_files
             self.test_files = split_recorder.ISU_ILCC_val_delG49C1_files
-        elif self.dataset == 'MIX_large_ablation_75p' and self.args.seed == 2021:
-            self.train_files = split_recorder.MIX_large_reduced_train_75p_files_2021
+        elif self.dataset == 'MIX_large_ablation_75p' or self.dataset == 'MIX_75p':
+            if self.args.seed == 42:
+                self.train_files = split_recorder.MIX_large_reduced_train_75p_files_42
+            elif self.args.seed == 2021:
+                self.train_files = split_recorder.MIX_large_reduced_train_75p_files_2021
+            elif self.args.seed == 2024:
+                self.train_files = split_recorder.MIX_large_reduced_train_75p_files_2024
             self.val_files = split_recorder.MIX_large_val_files 
             self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_75p' and self.args.seed == 42:
-            self.train_files = split_recorder.MIX_large_reduced_train_75p_files_42
+        elif self.dataset == 'MIX_large_ablation_50p' or self.dataset == 'MIX_50p':
+            if self.args.seed == 42:
+                self.train_files = split_recorder.MIX_large_reduced_train_50p_files_42
+            elif self.args.seed == 2021:
+                self.train_files = split_recorder.MIX_large_reduced_train_50p_files_2021
+            elif self.args.seed == 2024:
+                self.train_files = split_recorder.MIX_large_reduced_train_50p_files_2024
             self.val_files = split_recorder.MIX_large_val_files 
             self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_75p' and self.args.seed == 2024:
-            self.train_files = split_recorder.MIX_large_reduced_train_75p_files_2024
-            self.val_files = split_recorder.MIX_large_val_files 
-            self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_50p' and self.args.seed == 2021:
-            self.train_files = split_recorder.MIX_large_reduced_train_50p_files_2021
-            self.val_files = split_recorder.MIX_large_val_files 
-            self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_50p' and self.args.seed == 42:
-            self.train_files = split_recorder.MIX_large_reduced_train_50p_files_42
-            self.val_files = split_recorder.MIX_large_val_files 
-            self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_50p' and self.args.seed == 2024:
-            self.train_files = split_recorder.MIX_large_reduced_train_50p_files_2024
-            self.val_files = split_recorder.MIX_large_val_files 
-            self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_25p' and self.args.seed == 2021:
-            self.train_files = split_recorder.MIX_large_reduced_train_25p_files_2021
-            self.val_files = split_recorder.MIX_large_val_files 
-            self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_25p' and self.args.seed == 42:
-            self.train_files = split_recorder.MIX_large_reduced_train_25p_files_42
-            self.val_files = split_recorder.MIX_large_val_files 
-            self.test_files = split_recorder.MIX_large_test_files
-        elif self.dataset == 'MIX_large_ablation_25p' and self.args.seed == 2024:
-            self.train_files = split_recorder.MIX_large_reduced_train_25p_files_2024
+        elif self.dataset == 'MIX_large_ablation_25p' or self.dataset == 'MIX_25p':
+            if self.args.seed == 42:
+                self.train_files = split_recorder.MIX_large_reduced_train_25p_files_42
+            elif self.args.seed == 2024:
+                self.train_files = split_recorder.MIX_large_reduced_train_25p_files_2024
+            elif self.args.seed == 2021:
+                self.train_files = split_recorder.MIX_large_reduced_train_25p_files_2021
             self.val_files = split_recorder.MIX_large_val_files 
             self.test_files = split_recorder.MIX_large_test_files
         elif self.dataset == 'Stanford_formation' and self.args.seed == 2021:
