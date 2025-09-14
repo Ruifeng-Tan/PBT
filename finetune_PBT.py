@@ -508,10 +508,12 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
-    elif finetune_method == 'FT_F':
-        # adapter_layers is used here to indicate how many bottom layers are tunable
-        # Allow fine-tuning the bottom layers
-        pass
+    elif finetune_method == 'FT_Bias':
+        for name, p in model.named_parameters():
+            if 'bias' in name or 'expert_gate' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
     elif finetune_method == 'AT':
         # adapter tuning, legacy name: AT_nB
         model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
