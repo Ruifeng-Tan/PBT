@@ -514,6 +514,12 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
+    elif finetune_method == 'FT_G':
+        for name, p in model.named_parameters():
+            if 'general_experts' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
     elif finetune_method == 'AT':
         # adapter tuning, legacy name: AT_nB
         model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
