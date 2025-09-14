@@ -21,6 +21,7 @@ import numpy as np
 import os
 import json
 import datetime
+from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter
 # os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # os.environ['CURL_CA_BUNDLE'] = ''
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
@@ -28,6 +29,128 @@ import datetime
 import joblib
 from utils.tools import del_files, EarlyStopping, domain_average, vali_batteryLifeLLM
 parser = argparse.ArgumentParser(description='Time-LLM')
+
+def add_adapters_to_PBT(args, model, adapter_size=64):
+    for i in range(len(model.intra_MoE_layers)):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+    return model
+
+
+def add_adapters_to_PBT_flex(args, model, adapter_size=64):
+    '''
+    Add adapters to the CyclePatch layer and hidden layers.
+    Users can control the number of adapter layers by setting args.adapter_layers.
+    '''
+    adapter_layer_num_for_encoder = len(model.intra_MoE_layers) if args.adapter_layers >= len(model.intra_MoE_layers) else args.adapter_layers
+    adapter_layer_num_for_decoder = args.adapter_layers - adapter_layer_num_for_encoder
+    for i in range(len(model.intra_MoE_layers)):
+        if i >= adapter_layer_num_for_encoder:
+            break
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        if i >= adapter_layer_num_for_decoder:
+            break
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
+
+def add_adapters_to_PBT_withCP(args, model, adapter_size=64):
+    original_layer = model.flattenIntraCycleLayer
+    model.flattenIntraCycleLayer = PBTCPLayerWithAdapter(
+        args,
+        original_layer, 
+        adapter_size=adapter_size
+    )
+
+    for i in range(len(model.intra_MoE_layers)):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
+
+def add_adapters_to_PBT_withCP_flex(args, model, adapter_size=64):
+    '''
+    Add adapters to the CyclePatch layer and hidden layers.
+    Users can control the number of adapter layers by setting args.adapter_layers.
+    '''
+    original_layer = model.flattenIntraCycleLayer
+    model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
+        args,
+        original_layer, 
+        adapter_size=adapter_size
+        )
+
+    adapter_layer_num_for_encoder = len(model.intra_MoE_layers) if args.adapter_layers >= len(model.intra_MoE_layers) else args.adapter_layers
+    adapter_layer_num_for_decoder = args.adapter_layers - adapter_layer_num_for_encoder
+    for i in range(len(model.intra_MoE_layers)):
+        if i >= adapter_layer_num_for_encoder:
+            break
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        if i >= adapter_layer_num_for_decoder:
+            break
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
 
 def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha1, alpha2, model, dataset, seed, trained_dataset, start=1, end=100):
     number_MAPE = {}
@@ -264,6 +387,51 @@ for ii in range(args.itr):
     else:
         raise Exception('Not Implemented')
 
+    trained_parameters = []
+    trained_parameters_names = []
+    finetune_method = args.finetune_method
+    if finetune_method == 'FT':
+        # free the general experts and tune other parameters
+        for name, p in model.named_parameters():
+            if p.requires_grad is True:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
+    elif finetune_method == 'EFT':
+        # only fine-tune the flattenIntraCycle
+        for name, p in model.named_parameters():
+            if 'flattenIntraCycleLayer' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'EFT_bias':
+        # only fine-tune the view experts in the flattenIntraCycle
+        for name, p in model.named_parameters():
+            if ('flattenIntraCycleLayer' in name and 'bias' in name) or 'flattenIntraCycleLayer.expert_gate' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'FT_F':
+        # adapter_layers is used here to indicate how many bottom layers are tunable
+        # Allow fine-tuning the bottom layers
+        pass
+    elif finetune_method == 'AT':
+        # adapter tuning, legacy name: AT_nB
+        model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            if 'adapter' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'AT_nCP':
+        # adapter tuning without adapter before CyclePatch layer
+        model = add_adapters_to_PBT_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            if 'adapter' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    else:
+        raise Exception(f'{finetune_method} is not implemented!')
     
     path = args_path  # unique checkpoint saving path
     
