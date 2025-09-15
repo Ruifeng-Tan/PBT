@@ -312,13 +312,6 @@ for ii in range(args.itr):
     for name, module in model._modules.items():
         print (name," : ",module)
     
-    time_now = time.time()
-
-    criterion = nn.MSELoss()
-    accumulation_steps = args.accumulation_steps
-
-    load_checkpoint_in_model(model, args_path) # load the saved parameters into model
-    
     trained_parameters = []
     trained_parameters_names = []
     use_view_experts = True
@@ -340,9 +333,16 @@ for ii in range(args.itr):
                     trained_parameters.append(p)
     else:
         raise Exception(f'{finetune_method} is not implemented!')
-            
+    
     model_optim = optim.Adam(trained_parameters, lr=args.learning_rate)
+    
+    time_now = time.time()
 
+    criterion = nn.MSELoss()
+    accumulation_steps = args.accumulation_steps
+
+    load_checkpoint_in_model(model, args_path) # load the saved parameters into model
+            
     test_loader, model, model_optim = accelerator.prepare(test_loader, model, model_optim)
     accelerator.print(f'The model is {args.model}')
     accelerator.print(f'The sample size of testing set is {len(test_data)}')
