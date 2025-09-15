@@ -50,3 +50,52 @@ class PBTtLayerWithAdapter(nn.Module):
         out = self.adapter(out)
         return out, guide_loss, LB_loss 
 
+
+class CPLayerWithAdapter(nn.Module):
+    def __init__(self, configs, original_layer, adapter_size=32):
+        super(CPLayerWithAdapter, self).__init__()
+        # Copy all parameters and submodules from original layer
+        self.bottom_adapter = Adapter(configs.charge_discharge_length, adapter_size, use_norm=False)
+        self.original_layer = original_layer
+        self.top_adapter = Adapter(3*configs.charge_discharge_length, adapter_size)
+        
+    def forward(self, cycle_curve_data):
+        out = self.bottom_adapter(cycle_curve_data) # [B, L, 3*charge_discharge_length]
+        # Run original layer
+        out = self.original_layer(cycle_curve_data)
+        # Run the adapter
+        out = self.top_adapter(out)
+        return out 
+
+
+class tLayerWithAdapter(nn.Module):
+    def __init__(self, configs, original_layer, adapter_size=32):
+        super(tLayerWithAdapter, self).__init__()
+        # Copy all parameters and submodules from original layer
+        self.original_layer = original_layer
+        self.adapter = Adapter(configs.d_model, adapter_size)
+        self.model = configs.model
+        
+    def forward(self, *args, **kwargs):
+        # Run original layer
+        out = self.original_layer(*args, **kwargs)
+        
+        # Run the adapter
+        out = self.adapter(out)
+        return out 
+
+class CPTtLayerWithAdapter(nn.Module):
+    def __init__(self, configs, original_layer, adapter_size=32):
+        super(CPTtLayerWithAdapter, self).__init__()
+        # Copy all parameters and submodules from original layer
+        self.original_layer = original_layer
+        self.adapter = Adapter(configs.d_model, adapter_size)
+        
+    def forward(self, *args, **kwargs):
+        # Run original layer
+        out = self.original_layer(*args, **kwargs)
+        
+        # Run the adapter
+        out = self.adapter(out)
+        return out 
+

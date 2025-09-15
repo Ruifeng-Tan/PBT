@@ -23,6 +23,7 @@ import json
 import datetime
 import joblib
 from utils.tools import EarlyStopping
+from layers.Adapters import CPLayerWithAdapter, tLayerWithAdapter, CPTtLayerWithAdapter
 
 parser = argparse.ArgumentParser(description='Time-LLM')
 
@@ -85,6 +86,44 @@ def set_seed(seed):
     torch.backends.cudnn.enabled = False
     if torch.cuda.is_available() > 0:
         torch.cuda.manual_seed_all(seed)
+
+def add_adapters_withCP(args, model, adapter_size=64):
+    original_layer = model.intra_flatten
+    model.intra_flatten = CPLayerWithAdapter(
+        args,
+        original_layer, 
+        adapter_size=adapter_size
+    )
+
+    for i in range(model.e_layers):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MLP[i]
+        model.intra_MLP[i] = tLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+    if args.model == 'CPMLP':
+        for i in range(model.d_layers):
+            # add adapters to inter-cycle encoder layers
+            original_layer = model.inter_MLP[i]
+            model.inter_MLP[i] = tLayerWithAdapter(
+                args,
+                original_layer, 
+                adapter_size=adapter_size
+            )
+    elif args.model == 'CPTransformer':
+        for i in range(model.d_layers):
+            # add adapters to inter-cycle encoder layers
+            original_layer = model.inter_TransformerEncoder[i]
+            model.inter_TransformerEncoder[i] = CPTtLayerWithAdapter(
+                args,
+                original_layer, 
+                adapter_size=adapter_size
+            )
+
+    return model
 
 # basic config
 parser.add_argument('--task_name', type=str, required=False, default='long_term_forecast',
@@ -188,10 +227,16 @@ parser.add_argument('--eval_cycle_max', type=int, default=10, help='The upper bo
 parser.add_argument('--wd', type=float, default=0.0, help='weight decay')
 parser.add_argument('--weighted_loss', action='store_true', default=False, help='use weighted loss')
 
+# transfer learning: AT, FT
+parser.add_argument('--finetune_dataset', type=str, help='the target dataset for model finetuning')
+parser.add_argument('--finetune_method', type=str, default=None, help='the fine-tuning method. [FT, EFT, AT]')
+parser.add_argument('--adapter_size', type=int, default=32, help='the path to the pretrained model parameters')
+
 
 args = parser.parse_args()
 eval_cycle_min = args.eval_cycle_min
 eval_cycle_max = args.eval_cycle_max
+batch_size = args.batch_size
 if eval_cycle_min < 0 or eval_cycle_max <0:
     eval_cycle_min = None
     eval_cycle_max = None
@@ -206,17 +251,25 @@ alpha = args.alpha
 alpha2 = args.alpha2
 args_path = args.args_path
 dataset = args.eval_dataset
+finetune_method = args.finetune_method
+model = args.model
+adapter_size = args.adapter_size
 args_json = json.load(open(f'{args_path}args.json'))
-args_json['dataset'] = args.eval_dataset
-args_json['batch_size'] = args.batch_size
-args_json['model'] = args.model
+args_json['dataset'] = dataset
+args_json['batch_size'] = batch_size
+args_json['model'] = model
+args_json['alpha1'] = alpha
+args_json['alpha2'] = alpha2
+args_json['finetune_method'] = finetune_method
+args_json['adapter_size'] = adapter_size
 args.__dict__ = args_json
 finetune_dataset = args.finetune_dataset if 'finetune_dataset' in args_json else 'None'
 trained_dataset = args.dataset
 
 for ii in range(args.itr):
     # setting record of experiments
-    setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_loss{}_wd{}_wl{}'.format(
+    if finetune_method is not None:
+        setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_seed{}_dataset{}_loss{}_wd{}_wl{}_fm{}_as{}'.format(
         args.model,
         args.seq_len,
         args.learning_rate,
@@ -225,7 +278,18 @@ for ii in range(args.itr):
         args.e_layers,
         args.d_layers,
         args.d_ff,
-        args.lradj, trained_dataset, args.loss, args.wd, args.weighted_loss)
+        args.seed, finetune_dataset, args.loss, args.wd, args.weighted_loss, args.finetune_method, args.adapter_size)
+    else:
+        setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_loss{}_wd{}_wl{}'.format(
+            args.model,
+            args.seq_len,
+            args.learning_rate,
+            args.d_model,
+            args.n_heads,
+            args.e_layers,
+            args.d_layers,
+            args.d_ff,
+            args.lradj, trained_dataset, args.loss, args.wd, args.weighted_loss)
 
 
     data_provider_func = data_provider_evaluate_BL
@@ -236,23 +300,12 @@ for ii in range(args.itr):
         model = CPTransformer_BL.Model(args).float()
     else:
         raise Exception(f'The {args.model} is not an implemented baseline!')
-    
-    
-    tokenizer = AutoTokenizer.from_pretrained(
-            'deepset/sentence_bert',
-            trust_remote_code=True
-        ) # The ouput of the tokenizer won't be used. We just randomly assign a tokenizer here.
-    if tokenizer.eos_token:
-        tokenizer.pad_token = tokenizer.eos_token
-    else:
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-
 
     label_scaler = joblib.load(f'{args_path}/label_scaler')
     std, mean_value = np.sqrt(label_scaler.var_[-1]), label_scaler.mean_[-1]
     life_class_scaler = joblib.load(f'{args_path}/life_class_scaler')
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', tokenizer, label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max, life_class_scaler=life_class_scaler)
+    test_data, test_loader = data_provider_func(args, 'test', None, label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max, life_class_scaler=life_class_scaler)
 
     # load LoRA
     # print the module name
@@ -267,9 +320,26 @@ for ii in range(args.itr):
     load_checkpoint_in_model(model, args_path) # load the saved parameters into model
     
     trained_parameters = []
-    for p in model.parameters():
-        if p.requires_grad is True:
-            trained_parameters.append(p)
+    trained_parameters_names = []
+    use_view_experts = True
+
+    if finetune_method == 'FT':
+        # free the general experts and tune other parameters
+        for name, p in model.named_parameters():
+            if p.requires_grad is True:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
+    elif finetune_method == 'AT':
+        # adapter tuning
+        model = add_adapters_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            # only tune the adapters + gate + head
+            if 'adapter' in name or 'gate' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    else:
+        raise Exception(f'{finetune_method} is not implemented!')
             
     model_optim = optim.Adam(trained_parameters, lr=args.learning_rate)
 
