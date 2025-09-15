@@ -502,7 +502,6 @@ for ii in range(args.itr):
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
     elif finetune_method == 'EFT_bias':
-        # only fine-tune the view experts in the flattenIntraCycle
         for name, p in model.named_parameters():
             if ('flattenIntraCycleLayer' in name and 'bias' in name) or 'flattenIntraCycleLayer.expert_gate' in name:
                 if p.requires_grad is True:
@@ -517,6 +516,12 @@ for ii in range(args.itr):
     elif finetune_method == 'FT_G':
         for name, p in model.named_parameters():
             if 'general_experts' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'FT_V':
+        for name, p in model.named_parameters():
+            if 'view_experts' in name or 'expert_gate' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)

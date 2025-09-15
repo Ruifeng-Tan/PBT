@@ -265,28 +265,28 @@ trained_dataset = args.dataset
 
 for ii in range(args.itr):
     # setting record of experiments
-    if finetune_method is not None:
-        setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_seed{}_dataset{}_loss{}_wd{}_wl{}_fm{}_as{}'.format(
-        args.model,
-        args.seq_len,
-        args.learning_rate,
-        args.d_model,
-        args.n_heads,
-        args.e_layers,
-        args.d_layers,
-        args.d_ff,
-        args.seed, finetune_dataset, args.loss, args.wd, args.weighted_loss, args.finetune_method, args.adapter_size)
-    else:
-        setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_loss{}_wd{}_wl{}'.format(
-            args.model,
-            args.seq_len,
-            args.learning_rate,
-            args.d_model,
-            args.n_heads,
-            args.e_layers,
-            args.d_layers,
-            args.d_ff,
-            args.lradj, trained_dataset, args.loss, args.wd, args.weighted_loss)
+    # if finetune_method is not None:
+    #     setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_seed{}_dataset{}_loss{}_wd{}_wl{}_fm{}_as{}'.format(
+    #     args.model,
+    #     args.seq_len,
+    #     args.learning_rate,
+    #     args.d_model,
+    #     args.n_heads,
+    #     args.e_layers,
+    #     args.d_layers,
+    #     args.d_ff,
+    #     args.seed, finetune_dataset, args.loss, args.wd, args.weighted_loss, args.finetune_method, args.adapter_size)
+    # else:
+    #     setting = '{}_sl{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_lradj{}_dataset{}_loss{}_wd{}_wl{}'.format(
+    #         args.model,
+    #         args.seq_len,
+    #         args.learning_rate,
+    #         args.d_model,
+    #         args.n_heads,
+    #         args.e_layers,
+    #         args.d_layers,
+    #         args.d_ff,
+    #         args.lradj, trained_dataset, args.loss, args.wd, args.weighted_loss)
 
 
     data_provider_func = data_provider_evaluate_BL
@@ -312,7 +312,6 @@ for ii in range(args.itr):
     trained_parameters = []
     trained_parameters_names = []
     use_view_experts = True
-
     if finetune_method == 'FT':
         # free the general experts and tune other parameters
         for name, p in model.named_parameters():
@@ -321,7 +320,7 @@ for ii in range(args.itr):
                 trained_parameters.append(p)
     elif finetune_method == 'AT':
         # adapter tuning
-        model = add_adapters_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        model = add_adapters_withCP(args, model, adapter_size) # add adapters before and after that flattenIntra
         for name, p in model.named_parameters():
             # only tune the adapters + gate + head
             if 'adapter' in name or 'gate' in name or 'regression_head' in name:
