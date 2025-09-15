@@ -241,7 +241,6 @@ if eval_cycle_min < 0 or eval_cycle_max <0:
     eval_cycle_min = None
     eval_cycle_max = None
 nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-set_seed(args.seed)
 ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=True)
 deepspeed_plugin = DeepSpeedPlugin(hf_ds_config='./ds_config_zero2_baseline.json')
 accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], deepspeed_plugin=deepspeed_plugin)
@@ -252,6 +251,8 @@ alpha2 = args.alpha2
 args_path = args.args_path
 dataset = args.eval_dataset
 args_json = json.load(open(f'{args_path}args.json'))
+set_seed(args_json['seed'])
+seed = args_json['seed']
 args_json['dataset'] = dataset
 args_json['batch_size'] = batch_size
 args_json['alpha1'] = alpha
