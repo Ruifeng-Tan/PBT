@@ -34,6 +34,7 @@ class Model(nn.Module):
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
         self.e_layers = configs.e_layers
+        self.d_layers = configs.d_layers
         self.intra_flatten = nn.Flatten(start_dim=2)
         self.intra_embed = nn.Linear(self.charge_discharge_length*3, self.d_model)
         self.intra_MLP = nn.ModuleList([MLPBlock(self.d_model, self.d_ff, self.d_model, self.drop_rate) for _ in range(configs.e_layers)])

@@ -337,7 +337,8 @@ alpha = args.alpha1
 alpha2 = args.alpha2
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
-args_json['dataset'] = dataset
+dataset = dataset if 'finetune_method' not in args_json else args_json['dataset']
+args_json['dataset'] = dataset 
 args_json['batch_size'] = batch_size
 
 args.__dict__ = args_json

@@ -253,6 +253,7 @@ dataset = args.eval_dataset
 args_json = json.load(open(f'{args_path}args.json'))
 set_seed(args_json['seed'])
 seed = args_json['seed']
+dataset = dataset if 'finetune_method' not in args_json else args_json['dataset']
 args_json['dataset'] = dataset
 args_json['batch_size'] = batch_size
 args_json['alpha1'] = alpha
@@ -261,7 +262,6 @@ model = args_json['model']
 finetune_method = args_json['finetune_method']
 adapter_size = args_json['adapter_size']
 args.__dict__ = args_json
-finetune_dataset = args.finetune_dataset if 'finetune_dataset' in args_json else 'None'
 trained_dataset = args.dataset
 
 for ii in range(args.itr):
