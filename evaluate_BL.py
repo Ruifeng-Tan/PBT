@@ -406,6 +406,7 @@ for ii in range(args.itr):
 
         domain_average_MAPE = np.mean(domain_average(torch.tensor(total_domain_ids), torch.tensor(tmp_mapes)))
         save_res[dataset]['mapes'] = list(tmp_mapes)
+        save_res[dataset]['Useable_cycle_number'] = list(total_seen_number_of_cycles)
         save_res[dataset]['total_references'] = list(total_references)
         save_res[dataset]['total_preds'] = list(total_preds)
         save_res[dataset]['total_seen_unseen_ids'] = list(total_seen_unseen_ids)
