@@ -24,6 +24,35 @@ from data_provider.gate_masker import gate_masker
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, root_mean_squared_error
 import json
 
+def add_adapters_to_PBT_withCP_no_bottom(args, model, adapter_size=64):
+    original_layer = model.flattenIntraCycleLayer
+    model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
+        args,
+        original_layer, 
+        adapter_size=adapter_size
+        )
+
+    for i in range(len(model.intra_MoE_layers)):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
+
 def add_adapters_to_PBT(args, model, adapter_size=64):
     for i in range(len(model.intra_MoE_layers)):
         # add adapters to intra-cycle encoder layers

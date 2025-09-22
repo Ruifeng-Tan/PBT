@@ -30,6 +30,35 @@ import joblib
 from utils.tools import del_files, EarlyStopping, domain_average, vali_batteryLifeLLM
 parser = argparse.ArgumentParser(description='Time-LLM')
 
+def add_adapters_to_PBT_withCP_no_bottom(args, model, adapter_size=64):
+    original_layer = model.flattenIntraCycleLayer
+    model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
+        args,
+        original_layer, 
+        adapter_size=adapter_size
+        )
+
+    for i in range(len(model.intra_MoE_layers)):
+        # add adapters to intra-cycle encoder layers
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+    
+    for i in range(len(model.inter_MoE_layers)):
+        # add adapters to inter-cycle encoder layers
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer, 
+            adapter_size=adapter_size
+        )
+
+
+    return model
+
 def add_adapters_to_PBT(args, model, adapter_size=64):
     for i in range(len(model.intra_MoE_layers)):
         # add adapters to intra-cycle encoder layers
@@ -83,6 +112,7 @@ def add_adapters_to_PBT_flex(args, model, adapter_size=64):
 
 
     return model
+
 
 def add_adapters_to_PBT_withCP(args, model, adapter_size=64):
     original_layer = model.flattenIntraCycleLayer
@@ -390,7 +420,7 @@ for ii in range(args.itr):
 
     trained_parameters = []
     trained_parameters_names = []
-    finetune_method = args.finetune_method
+    finetune_method = args.finetune_method if 'finetune_method' in args_json else None
     if finetune_method == 'FT':
         # free the general experts and tune other parameters
         for name, p in model.named_parameters():
@@ -431,7 +461,26 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
+    elif finetune_method == 'AT_nB':
+        # adapter tuning
+        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            # only tune the adapters + gate + head
+            if 'adapter' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'AT_B':
+        # adapter tuning
+        model = add_adapters_to_PBT_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            # only tune the adapters + gate + head
+            if 'adapter' in name or 'regression_head' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
     else:
+        # This parameters are not finetuned
         pass
     
     path = args_path  # unique checkpoint saving path
