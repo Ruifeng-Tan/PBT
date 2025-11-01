@@ -570,6 +570,14 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
+    elif finetune_method == 'AT_nCP_nH':
+        # adapter tuning without adapter before CyclePatch layer
+        model = add_adapters_to_PBT_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+        for name, p in model.named_parameters():
+            if 'adapter' in name:
+                if p.requires_grad is True:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
     else:
         raise Exception(f'{finetune_method} is not implemented!')
 
