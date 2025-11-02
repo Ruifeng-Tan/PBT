@@ -10,6 +10,7 @@ from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLos
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, PBT_formation, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models.PBT import BatteryMoEOutputMoELayer, BatteryMoEOutputHead
 from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -174,6 +175,16 @@ def add_adapters_to_PBT_withCP_flex(args, model, adapter_size=64):
 
 
     return model
+
+def reinitialize_PBT_head(args, model):
+    regression_head = BatteryMoEOutputHead(model.d_model, args.num_experts,
+                                                    view_experts=nn.ModuleList([BatteryMoEOutputMoELayer(args, args.num_experts, model.d_ff_scale_factor)]),
+                                                    general_experts=nn.ModuleList([
+                                                        nn.Linear(model.d_model, args.output_num) for _ in range(1)
+                                                    ]))
+    model.regression_head = regression_head
+    return model
+
 
 def list_of_ints(arg):
 	return list(map(int, arg.split(',')))
@@ -523,16 +534,10 @@ for ii in range(args.itr):
             if p.requires_grad is True:
                 trained_parameters_names.append(name)
                 trained_parameters.append(p)
-    elif finetune_method == 'EFT':
-        # only fine-tune the flattenIntraCycle
+    elif finetune_method == 'FT_Head':
+        model = reinitialize_PBT_head(args, model)
         for name, p in model.named_parameters():
-            if 'flattenIntraCycleLayer' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'EFT_bias':
-        for name, p in model.named_parameters():
-            if ('flattenIntraCycleLayer' in name and 'bias' in name) or 'flattenIntraCycleLayer.expert_gate' in name:
+            if 'regression_head' in name:
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
