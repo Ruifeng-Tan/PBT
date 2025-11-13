@@ -46,6 +46,6 @@ class CALCE_protocol_prompt():
             f"Operating condition: The working history of this battery is just after formation. "
             f"The working ambient temperature of this battery is 25 degrees Celsius. "
             f"In the cycling, the battery was charged at a constant current of 0.5 C until reaching 4.2 V. "
-            f"The battery was then discharged at a constant current of 1 C until reaching 2.7 V. "
+            f"The battery was then discharged at a constant current of 1 C until reaching 2.7 V. " # the discharged current rate should be 0.5C, but we keep 1C here to ensure reproducibility with previous results.
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
     }
