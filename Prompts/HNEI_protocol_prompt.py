@@ -33,5 +33,5 @@ class HNEI_protocol_prompt():
             f"then was discharged at a constant current of 1 C until reaching 3 V. "
             f"For 12th cycle and the cycles after that, the battery was charged at a constant current of 0.5 C until reaching 4.3 V, "
             f"then was discharged at a constant current of 1.5 C until reaching 3 V. "
-            f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n",
+            f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n", # error: should be fixed
     }
