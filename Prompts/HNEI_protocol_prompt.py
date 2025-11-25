@@ -34,4 +34,22 @@ class HNEI_protocol_prompt():
             f"For 12th cycle and the cycles after that, the battery was charged at a constant current of 0.5 C until reaching 4.3 V, "
             f"then was discharged at a constant current of 1.5 C until reaching 3 V. "
             f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n", # error: should be fixed
+            # Below shows the correct one for HNEI_18650_NMC_LCO_25C_0-100_0.5-1.5C_b---HNEI_18650_NMC_LCO_25C_0-100_0.5-1.5C_t.
+            # The original prompt is kept for reproducibility.
+            # f"Battery specifications: The data comes from a lithium-ion battery in a format of 18650 cylindrical battery. "
+            # f"Its positive electrode is a mixture of LiCoO2 (LCO) and LiNi0.4Co0.4Mn0.2O2 (NCM442). "
+            # f"Its negative electrode is graphite. "
+            # f"The electrolyte formula is unknown. "
+            # f"The battery manufacturer is LG Chemical Limited. "
+            # f"The nominal capacity is 2.8 Ah. "
+            # f"Operating condition: The working history of this battery is just after formation. "
+            # f"The working ambient temperature of this battery is 25 degrees Celsius. "
+            # f"The cycling consists of three different strategies. "
+            # f"For 1st to 10th cycles, the battery was charged at a constant current of 0.5 C until reaching 4.3 V, "
+            # f"then was discharged at a constant current of 0.5 C until reaching 3 V."
+            # f"For 11th cycle, the battery was charged at a constant current of 1 C until reaching 4.3 V, "
+            # f"then was discharged at a constant current of 1 C until reaching 3 V. "
+            # f"For 12th cycle and the cycles after that, the battery was charged at a constant current of 0.5 C until reaching 4.3 V, "
+            # f"then was discharged at a constant current of 1.5 C until reaching 3 V. "
+            # f"The cycling state-of-charge of this battery ranges from 0% to 100%.\n", # error: should be fixed
     }
