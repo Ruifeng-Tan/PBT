@@ -9,7 +9,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import BatteryMoE_Hyper_CropAugIMPR2, PBT, baseline_CPTransformerMoE, PBT_formation, baseline_CPMLPMoE, CPMLP, CPTransformer_ablation
+from models import PBT, baseline_CPTransformerMoE, baseline_CPMLPMoE
 from models.PBT import BatteryMoEOutputMoELayer, BatteryMoEOutputHead
 from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter
 import wandb
@@ -433,26 +433,11 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = PBT.Model(model_config)
-    elif args.model == 'BatteryMoE_Hyper_CropAugIMPR2':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = BatteryMoE_Hyper_CropAugIMPR2.Model(model_config)
-    elif args.model == 'PBT_formation':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = PBT_formation.Model(model_config)
     elif args.model == 'baseline_CPMLPMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = baseline_CPMLPMoE.Model(model_config)
-    elif args.model == 'CPTransformer_ablation':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = CPTransformer_ablation.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
