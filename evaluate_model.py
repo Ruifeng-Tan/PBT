@@ -543,7 +543,6 @@ for ii in range(args.itr):
     load_checkpoint_in_model(model, path) # load the saved parameters into model
     test_loader, model, model_optim = accelerator.prepare(test_loader, model, model_optim)
     accelerator.print(f'The model is {args.model}')
-    accelerator.print(f'The sample size of testing set is {len(test_data)}')
     accelerator.print(f'load model from:\n {path}')
     # accelerator.load_checkpoint_in_model(model, path) # load the saved parameters into model
     accelerator.print(f'Model is loaded!')
