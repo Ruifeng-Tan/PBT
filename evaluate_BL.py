@@ -116,8 +116,8 @@ def add_adapters_withCP(args, model, adapter_size=64):
     elif args.model == 'CPTransformer':
         for i in range(model.d_layers):
             # add adapters to inter-cycle encoder layers
-            original_layer = model.inter_TransformerEncoder[i]
-            model.inter_TransformerEncoder[i] = CPTtLayerWithAdapter(
+            original_layer = model.inter_TransformerEncoder.attn_layers[i]
+            model.inter_TransformerEncoder.attn_layers[i] = CPTtLayerWithAdapter(
                 args,
                 original_layer, 
                 adapter_size=adapter_size

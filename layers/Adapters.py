@@ -93,9 +93,9 @@ class CPTtLayerWithAdapter(nn.Module):
         
     def forward(self, *args, **kwargs):
         # Run original layer
-        out = self.original_layer(*args, **kwargs)
+        out, attn = self.original_layer(*args, **kwargs)
         
         # Run the adapter
         out = self.adapter(out)
-        return out 
+        return out, attn
 
