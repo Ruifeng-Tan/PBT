@@ -8,6 +8,7 @@ plot_scripts/
 
 # Dataset and checkpoints
 legacy/
+results/
 
 play_scripts/
 dataset/
