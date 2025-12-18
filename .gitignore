@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.vscode/
+plot_scripts/
 
 
 # Dataset and checkpoints
