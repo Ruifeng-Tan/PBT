@@ -284,7 +284,7 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
             # encoder - decoder
             outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
                                                  , temperature_masks=temperature_masks, format_masks=format_masks, anode_masks=anode_masks,
-                                                 combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=False)
+                                                 combined_masks=combined_masks, ion_type_masks=ion_type_masks)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value
@@ -388,7 +388,6 @@ def domain_average(total_domain_ids, MAPEs, return_IDs=False):
     else:
         return np.array(res)
     
-def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
     model.eval()
     total_preds, total_references = [], []
     total_seen_unseen_ids = []

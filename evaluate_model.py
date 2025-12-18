@@ -10,7 +10,7 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, baseline_CPTransformerMoE, baseline_CPMLPMoE, CPTransformer_ablation, CPTransformer, CPMLP
+from models import PBT, CPTransformerDeepSeekMoE, CPTransformer, CPMLP
 import wandb
 from data_provider.gate_masker import gate_masker
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
@@ -395,57 +395,33 @@ for ii in range(args.itr):
 
 
     data_provider_func = data_provider_LLM_evaluate
-    if args.model == 'baseline_CPTransformerMoE':
+    if args.model == 'CPTransformerDeepSeekMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = baseline_CPTransformerMoE.Model(model_config)
-    elif args.model == 'baseline_CPMLPMoE':
-        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = baseline_CPMLPMoE.Model(model_config)
+        model = CPTransformerDeepSeekMoE.Model(model_config)
     elif args.model == 'PBT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = PBT.Model(model_config)
-    elif args.model == 'CPTransformer_ablation':
+    elif args.model == 'CPMLP':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-        model = CPTransformer_ablation.Model(model_config)
+        model = CPMLP.Model(model_config)
+    elif args.model == 'CPTransformer':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = CPTransformer.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
     trained_parameters = []
     trained_parameters_names = []
     finetune_method = args.finetune_method if 'finetune_method' in args_json else None
-    if finetune_method == 'FT':
-        # free the general experts and tune other parameters
-        for name, p in model.named_parameters():
-            if p.requires_grad is True:
-                trained_parameters_names.append(name)
-                trained_parameters.append(p)
-    elif finetune_method == 'EFT':
-        # only fine-tune the flattenIntraCycle
-        for name, p in model.named_parameters():
-            if 'flattenIntraCycleLayer' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'EFT_bias':
-        # only fine-tune the view experts in the flattenIntraCycle
-        for name, p in model.named_parameters():
-            if ('flattenIntraCycleLayer' in name and 'bias' in name) or 'flattenIntraCycleLayer.expert_gate' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'FT_F':
-        # adapter_layers is used here to indicate how many bottom layers are tunable
-        # Allow fine-tuning the bottom layers
-        pass
-    elif finetune_method == 'AT':
+    if finetune_method == 'AT':
         # adapter tuning, legacy name: AT_nB
         model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
         for name, p in model.named_parameters():
@@ -461,41 +437,12 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
-    elif finetune_method == 'AT_nB':
-        # adapter tuning
-        model = add_adapters_to_PBT_withCP_no_bottom(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-        for name, p in model.named_parameters():
-            # only tune the adapters + gate + head
-            if 'adapter' in name or 'regression_head' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'AT_B':
-        # adapter tuning
-        model = add_adapters_to_PBT_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-        for name, p in model.named_parameters():
-            # only tune the adapters + gate + head
-            if 'adapter' in name or 'regression_head' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-    elif finetune_method == 'AT_nCP_nH':
-        # adapter tuning without adapter before CyclePatch layer
-        model = add_adapters_to_PBT_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-        for name, p in model.named_parameters():
-            if 'adapter' in name:
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
     else:
         # This parameters are not finetuned
         pass
     
     path = args_path  # unique checkpoint saving path
     
-    tokenizer = None
-    if model.tokenizer:
-        tokenizer = model.tokenizer
 
     if not 'MIX_all' in trained_dataset:
         temperature2mask = gate_masker.MIX_large_temperature2mask
@@ -513,10 +460,8 @@ for ii in range(args.itr):
     label_scaler = joblib.load(f'{path}label_scaler')
     std, mean_value = np.sqrt(label_scaler.var_[-1]), label_scaler.mean_[-1]
     accelerator.print("Loading training samples......")
-    # accelerator.print("Loading vali samples......")
-    # vali_data, vali_loader = data_provider_func(args, 'val', tokenizer, label_scaler)
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', tokenizer, 
+    test_data, test_loader = data_provider_func(args, 'test', 
                                                 label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, 
                                                 eval_cycle_max=eval_cycle_max, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, trained_dataset=trained_dataset)
 
@@ -558,18 +503,7 @@ for ii in range(args.itr):
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
         for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in tqdm(enumerate(test_loader)):
-            # cycle_curve_data = cycle_curve_data.float() # [B, L, num_variables, fixed_length_of_curve]
 
-            # curve_attn_mask = curve_attn_mask.float() # [B, L]
-            # DKP_embeddings = DKP_embeddings.float()
-            # cathode_masks = cathode_masks.float()
-            # anode_masks = anode_masks.float()
-            # temperature_masks = temperature_masks.float()
-            # format_masks = format_masks.float()
-            # combined_masks = combined_masks.float()
-            # # cluster_labels = cluster_labels.long()
-            # labels = labels.float()
-            # weights = weights.float()
 
             seen_number_of_cycles = torch.sum(curve_attn_mask, dim=1) # [B]
             # encoder - decoder

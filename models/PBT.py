@@ -574,9 +574,6 @@ class Model(nn.Module):
                 anode_masks: Optional[torch.Tensor] = None,
                 ion_type_masks: Optional[torch.Tensor] = None,
                 combined_masks: Optional[torch.Tensor] = None,
-                SOH_trajectory: Optional[torch.Tensor] = None,
-                CE_trajectory: Optional[torch.Tensor] = None,
-                use_aug: bool = False,
                 return_embedding: bool=False,
                 use_view_experts: bool=True
                 ):
@@ -589,40 +586,10 @@ class Model(nn.Module):
         B, L, num_var, fixed_len = cycle_curve_data.shape[0], cycle_curve_data.shape[1], cycle_curve_data.shape[2], cycle_curve_data.shape[3]
         cycle_curve_data, curve_attn_mask = cycle_curve_data.to(torch.bfloat16), curve_attn_mask.to(torch.bfloat16)
         DKP_embeddings = DKP_embeddings.to(torch.bfloat16)
-        if use_aug:
-            random_point_num =  int(fixed_len*self.down_sample_ratio)
-
-            flatten_cycle_curve_data = cycle_curve_data.reshape(B, L*num_var, -1)
-            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [B, fixed_len, L*num_var]
-
-            flatten_cycle_curve_data = flatten_cycle_curve_data.expand(3, -1, -1, -1)  # [3, B, fixed_len, L*num_var]
-            flatten_cycle_curve_data = flatten_cycle_curve_data.reshape(3 * B, fixed_len, flatten_cycle_curve_data.shape[-1])  # [3*B, fixed_len, L*num_var]
-            flatten_cycle_curve_data[B:] = self.CD_Crop_augmentation(flatten_cycle_curve_data[B:], random_point_num) # add noise
-            flatten_cycle_curve_data = flatten_cycle_curve_data.transpose(1, 2) # [2*B, L*num_var, fixed_len]
-            cycle_curve_data = flatten_cycle_curve_data.reshape(3*B, L, num_var, fixed_len)
-
-            # cycle_curve_data = torch.cat([cycle_curve_data, aug_cycle_curve_data], dim=0)
-            curve_attn_mask = curve_attn_mask.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
-            DKP_embeddings = DKP_embeddings.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
-            combined_masks = combined_masks.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
-            ion_type_masks = ion_type_masks.unsqueeze(0).expand(3, -1, -1).reshape(3*B, -1)
-
-
-        # tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
-        # cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
-
 
         total_masks = [combined_masks]
 
         DKP_embeddings = self.gate(DKP_embeddings) # [B, gate_d_ff]
-        # DKP_mask = torch.ones_like(DKP_embeddings[:, self.gate_domain_knowledge_neurons:])
-        # domain_knowledge_ReLU_mask = combined_masks.repeat_interleave(dim=1, repeats=self.dk_factor)
-        # DKP_mask = torch.cat([DKP_mask, domain_knowledge_ReLU_mask], dim=1)
-        # DKP_embeddings = DKP_embeddings * DKP_mask
-        # if self.gate_d_ff > self.gate_domain_knowledge_neurons:
-        #     DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons] = F.relu(DKP_embeddings[:, :self.gate_d_ff-self.gate_domain_knowledge_neurons])
-        # logits = self.gate(DKP_embeddings)
-        # logits = logits.reshape(DKP_embeddings.shape[0], -1, self.num_experts)
   
         logits_index = 0
 
@@ -682,77 +649,3 @@ class Model(nn.Module):
         mask = torch.tril(torch.ones(seq_len, seq_len))  # (L, L)
         mask = mask.unsqueeze(0).expand(B, -1, -1)
         return mask
-
-    def CD_Crop_augmentation(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
-        """
-        Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
-        
-        Args:
-            X (torch.Tensor): Input tensor of shape [B, L, D].
-            random_point_num (int): Number of points to randomly select, must be at least 2.
-        
-        Returns:
-            torch.Tensor: Resampled tensor of shape [B, L, D].
-        """
-        B, L, D = X.shape
-        charge_X = X[:, :L//2]
-        discharge_X = X[:, L//2:]
-        aug_charge_X = self.Crop(charge_X, random_point_num=random_point_num//2)
-        aug_discharge_X = self.Crop(discharge_X, random_point_num=random_point_num//2)
-
-        X = torch.cat([aug_charge_X, aug_discharge_X], dim=1) # [B, random_point_num, D]
-        return X
-
-    def Crop(self, X: torch.Tensor, random_point_num: int) -> torch.Tensor:
-        """
-        Resamples the input tensor X by selecting random points (including start and end) and interpolating back to original length.
-        
-        Args:
-            X (torch.Tensor): Input tensor of shape [B, L, D].
-            random_point_num (int): Number of points to randomly select, must be at least 2.
-        
-        Returns:
-            torch.Tensor: Resampled tensor of shape [B, L, D].
-        """
-        B, L, D = X.shape
-        K = random_point_num
-
-        if K < 2:
-            raise ValueError("random_point_num must be at least 2")
-        if L < 2:
-            raise ValueError("L must be at least 2")
-
-        # Step 1: Generate indices including 0 and L-1, plus random middle points
-        middle = L - 2  # Possible middle indices count (1 to L-2)
-        k_middle = K - 2
-
-        if k_middle > 0:
-            if middle < k_middle:
-                raise ValueError(f"Cannot select {k_middle} middle points when middle={middle}")
-
-            # Generate random middle indices without replacement
-            rand_vals = torch.rand(B, middle, device=X.device)
-            middle_indices = rand_vals.argsort(dim=1)[:, :k_middle]  # [B, k_middle]
-            middle_indices += 1  # Shift to range 1 to L-2 (inclusive)
-        else:
-            raise Exception(f'random_point_num is {random_point_num}. You should set it larger than 2!')
-
-        # Combine with start and end indices
-        zeros = torch.zeros(B, 1, dtype=torch.long, device=X.device) # start indices
-        ends = (L - 1) * torch.ones(B, 1, dtype=torch.long, device=X.device) # end indices
-        indices = torch.cat([zeros, middle_indices, ends], dim=1)
-        indices, _ = torch.sort(indices, dim=1)  # Sort indices for each batch
-
-        # Step 2: Gather the selected points
-        selected_X = torch.gather(X, 1, indices.unsqueeze(-1).expand(-1, -1, D))
-        selected_X = selected_X.transpose(1, 2) # [B, D, random_point_num]
-
-        # Step 3: do the linear interpolation
-        interpolated = F.interpolate(
-                selected_X,
-                size=L,
-                mode='linear',
-                align_corners=True
-            )
-        
-        return interpolated.transpose(1, 2)

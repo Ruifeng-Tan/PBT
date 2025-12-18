@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from layers.Autoformer_EncDec import series_decomp
-from typing import Optional
+
 class MLPBlock(nn.Module):
     def __init__(self, in_dim, hidden_dim, out_dim, drop_rate):
         super(MLPBlock, self).__init__()
@@ -25,9 +25,9 @@ class MLPBlock(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, battery_life_config):
+    def __init__(self, configs):
         super(Model, self).__init__()
-        configs = battery_life_config.ec_config.get_configs()
+        configs = configs.ec_config.get_configs()
         self.d_ff = configs.d_ff
         self.d_model = configs.d_model
         self.charge_discharge_length = configs.charge_discharge_length
@@ -42,24 +42,11 @@ class Model(nn.Module):
         self.inter_flatten = nn.Sequential(nn.Flatten(start_dim=1), nn.Linear(self.early_cycle_threshold*self.d_model, self.d_model))
         self.inter_MLP = nn.ModuleList([MLPBlock(self.d_model, self.d_ff, self.d_model, self.drop_rate) for _ in range(configs.d_layers)])
         self.head_output = nn.Linear(self.d_model, 1)
-        # self.flatten_head = nn.Sequential(nn.Linear(self.early_cycle_threshold*self.d_model, self.d_ff), nn.ReLU(),
-        #                                  nn.Dropout(self.drop_rate), nn.Linear(self.d_ff, 1))
 
 
 
-    def forward(self, cycle_curve_data, curve_attn_mask, 
-                attention_mask: Optional[torch.Tensor] = None,
-                DKP_embeddings: Optional[torch.FloatTensor] = None,
-                cathode_masks: Optional[torch.Tensor] = None,
-                temperature_masks: Optional[torch.Tensor] = None,
-                format_masks: Optional[torch.Tensor] = None,
-                anode_masks: Optional[torch.Tensor] = None,
-                ion_type_masks: Optional[torch.Tensor] = None,
-                combined_masks: Optional[torch.Tensor] = None,
-                SOH_trajectory: Optional[torch.Tensor] = None,
-                CE_trajectory: Optional[torch.Tensor] = None,
-                use_aug: bool = False,
-                return_embedding: bool=False):
+    def forward(self, cycle_curve_data, curve_attn_mask, return_embedding=False, DKP_embeddings=None, cathode_masks=None,
+        temperature_masks=None, format_masks=None, anode_masks=None, combined_masks=None, ion_type_masks=None, use_view_experts=False):
         '''
         cycle_curve_data: [B, early_cycle, fixed_len, num_var]
         curve_attn_mask: [B, early_cycle]
@@ -77,7 +64,5 @@ class Model(nn.Module):
             cycle_curve_data = self.inter_MLP[i](cycle_curve_data) # [B, d_model]
 
         preds = self.head_output(F.relu(cycle_curve_data))
-        if return_embedding:
-            return preds, cycle_curve_data
-        else:
-            return preds
+
+        return preds, None, None, None, None, None, 0.0, 0.0

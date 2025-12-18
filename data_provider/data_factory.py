@@ -3,11 +3,12 @@ from data_provider.data_loader import my_collate_fn, my_collate_fn_withId, my_co
 from torch.utils.data import DataLoader, RandomSampler, Dataset
 
 data_dict = {
+    'Dataset_PBT': Dataset_PBT,
     'Dataset_BatteryLifeLLM_original': Dataset_PBT,
     'Dataset_original': Dataset_BatteryLife
 }
 
-def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
+def data_provider_baseline_DA(args, flag, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, target_dataset='None', use_domainSampler=False):
     Data = data_dict[args.data]
@@ -24,7 +25,6 @@ def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eva
     if flag == 'val' or flag == 'test':
         data_set = Data(args=args,
                 flag=flag,
-                tokenizer=tokenizer,
                 label_scaler=label_scaler,
                 eval_cycle_min=eval_cycle_min,
                 eval_cycle_max=eval_cycle_max,
@@ -42,7 +42,6 @@ def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eva
     else:
         data_set = Data(args=args,
                 flag=flag,
-                tokenizer=tokenizer,
                 label_scaler=label_scaler,
                 eval_cycle_min=eval_cycle_min,
                 eval_cycle_max=eval_cycle_max,
@@ -68,7 +67,6 @@ def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eva
     if target_dataset != 'None' and flag=='train':
         target_data_set = Data(args=args,
                 flag=flag,
-                tokenizer=tokenizer,
                 label_scaler=data_set.return_label_scaler(),
                 eval_cycle_min=eval_cycle_min,
                 eval_cycle_max=eval_cycle_max,
@@ -96,7 +94,7 @@ def data_provider_baseline_DA(args, flag, tokenizer=None, label_scaler=None, eva
     else:
         return data_set, data_loader
     
-def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
+def data_provider_LLMv2(args, flag, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, ion2mask=None, use_domainSampler=False):
     Data = data_dict[args.data]
@@ -112,7 +110,6 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
 
     data_set = Data(args=args,
             flag=flag,
-            tokenizer=tokenizer,
             label_scaler=label_scaler,
             eval_cycle_min=eval_cycle_min,
             eval_cycle_max=eval_cycle_max,
@@ -145,7 +142,7 @@ def data_provider_LLMv2(args, flag, tokenizer=None, label_scaler=None, eval_cycl
         
     return data_set, data_loader
 
-def data_provider_LLM_evaluate(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
+def data_provider_LLM_evaluate(args, flag, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, ion2mask=None,
                  trained_dataset=None):
@@ -162,7 +159,6 @@ def data_provider_LLM_evaluate(args, flag, tokenizer=None, label_scaler=None, ev
 
     data_set = Data(args=args,
             flag=flag,
-            tokenizer=tokenizer,
             label_scaler=label_scaler,
             eval_cycle_min=eval_cycle_min,
             eval_cycle_max=eval_cycle_max,
@@ -189,7 +185,7 @@ def data_provider_LLM_evaluate(args, flag, tokenizer=None, label_scaler=None, ev
                 collate_fn=my_collate_fn_withId)
     return data_set, data_loader
 
-def data_provider_evaluate_BL(args, flag, tokenizer=None, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
+def data_provider_evaluate_BL(args, flag, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, sample_weighted=False):
     Data = data_dict[args.data]
@@ -205,7 +201,6 @@ def data_provider_evaluate_BL(args, flag, tokenizer=None, label_scaler=None, eva
 
     data_set = Data(args=args,
             flag=flag,
-            tokenizer=tokenizer,
             label_scaler=label_scaler,
             eval_cycle_min=eval_cycle_min,
             eval_cycle_max=eval_cycle_max,

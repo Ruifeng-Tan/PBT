@@ -207,7 +207,7 @@ def my_collate_fn(samples):
 
 # BatterLifeLLM dataloader
 class Dataset_PBT(Dataset):
-    def __init__(self, args, flag='train', label_scaler=None, tokenizer=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
+    def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, 
                  anode2mask=None, ion2mask=None, trained_dataset=None, use_target_dataset=False):
@@ -220,7 +220,6 @@ class Dataset_PBT(Dataset):
         self.llm_choice = args.llm_choice
         self.eval_cycle_max = eval_cycle_max
         self.eval_cycle_min = eval_cycle_min
-        self.tokenizer = tokenizer
         self.args = args
         self.seed = args.seed
         self.root_path = args.root_path
@@ -1287,7 +1286,7 @@ def my_collate_fn_baseline_BL(samples):
 
 # BatterLife dataloader
 class Dataset_BatteryLife(Dataset):
-    def __init__(self, args, flag='train', label_scaler=None, tokenizer=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
+    def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, use_target_dataset=False):
         '''

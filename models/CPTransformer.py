@@ -3,8 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from layers.Transformer_EncDec import Decoder, DecoderLayer, Encoder, EncoderLayer, ConvLayer
 from layers.SelfAttention_Family import FullAttention, AttentionLayer
-from layers.Embed import DataEmbedding, PositionalEmbedding
-from typing import Optional
+from layers.Embed import DataEmbedding, PositionalEmbedding_BL
 class MLPBlock(nn.Module):
     def __init__(self, in_dim, hidden_dim, out_dim, drop_rate):
         super(MLPBlock, self).__init__()
@@ -27,21 +26,21 @@ class MLPBlock(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, battery_life_config):
+    def __init__(self, configs):
         super(Model, self).__init__()
-        configs = battery_life_config.ec_config.get_configs()
-        self.tokenizer = None
+        configs = configs.ec_config.get_configs()
         self.d_ff = configs.d_ff
         self.d_model = configs.d_model
         self.charge_discharge_length = configs.charge_discharge_length
         self.early_cycle_threshold = configs.early_cycle_threshold
         self.drop_rate = configs.dropout
         self.e_layers = configs.e_layers
+        self.d_layers = configs.d_layers
         self.intra_flatten = nn.Flatten(start_dim=2)
         self.intra_embed = nn.Linear(self.charge_discharge_length*3, self.d_model)
         self.intra_MLP = nn.ModuleList([MLPBlock(self.d_model, self.d_ff, self.d_model, self.drop_rate) for _ in range(configs.e_layers)])
 
-        self.pe = PositionalEmbedding(self.d_model)
+        self.pe = PositionalEmbedding_BL(self.d_model)
         self.inter_TransformerEncoder = Encoder(
             [
                 EncoderLayer(
@@ -59,19 +58,8 @@ class Model(nn.Module):
         self.inter_flatten = nn.Flatten(start_dim=1)
         self.projection = nn.Linear(configs.d_model * self.early_cycle_threshold, configs.output_num)
 
-    def forward(self, cycle_curve_data, curve_attn_mask, 
-                attention_mask: Optional[torch.Tensor] = None,
-                DKP_embeddings: Optional[torch.FloatTensor] = None,
-                cathode_masks: Optional[torch.Tensor] = None,
-                temperature_masks: Optional[torch.Tensor] = None,
-                format_masks: Optional[torch.Tensor] = None,
-                anode_masks: Optional[torch.Tensor] = None,
-                ion_type_masks: Optional[torch.Tensor] = None,
-                combined_masks: Optional[torch.Tensor] = None,
-                SOH_trajectory: Optional[torch.Tensor] = None,
-                CE_trajectory: Optional[torch.Tensor] = None,
-                use_aug: bool = False,
-                return_embedding: bool=False):
+    def forward(self, cycle_curve_data, curve_attn_mask, return_embedding=False, DKP_embeddings=None, cathode_masks=None,
+        temperature_masks=None, format_masks=None, anode_masks=None, combined_masks=None, ion_type_masks=None, use_view_experts=False):
         '''
         cycle_curve_data: [B, early_cycle, fixed_len, num_var]
         curve_attn_mask: [B, early_cycle]
@@ -94,6 +82,4 @@ class Model(nn.Module):
         output = self.dropout(output)
         output = output.reshape(output.shape[0], -1)  # (batch_size, L * d_model)
         preds = self.projection(output)  # (batch_size, num_classes)
-        # if return_embedding:
-        #     return preds, output
-        return preds, None, None, None, None, None, None , None
+        return preds, None, None, None, None, None, 0.0, 0.0
