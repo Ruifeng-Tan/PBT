@@ -826,16 +826,16 @@ class Dataset_PBT(Dataset):
             data =  pickle.load(open(f'{self.root_path}/HNEI/{file_name}', 'rb'))
         elif prefix.startswith('MICH'):
             data =  pickle.load(open(f'{self.root_path}/total_MICH/{file_name}', 'rb'))
-        elif prefix.startswith('OX'):
-            data =  pickle.load(open(f'{self.root_path}/OX/{file_name}', 'rb'))
+        # elif prefix.startswith('OX'):
+        #     data =  pickle.load(open(f'{self.root_path}/OX/{file_name}', 'rb'))
         elif prefix.startswith('RWTH'):
             data =  pickle.load(open(f'{self.root_path}/RWTH/{file_name}', 'rb'))  
         elif prefix.startswith('UL-PUR'):
             data =  pickle.load(open(f'{self.root_path}/UL_PUR/{file_name}', 'rb'))  
-        elif prefix.startswith('SMICH'):
-            data =  pickle.load(open(f'{self.root_path}/MICH_EXP/{file_name[1:]}', 'rb')) 
-        elif prefix.startswith('BIT2'):
-            data =  pickle.load(open(f'{self.root_path}/BIT2/{file_name}', 'rb')) 
+        # elif prefix.startswith('SMICH'):
+        #     data =  pickle.load(open(f'{self.root_path}/MICH_EXP/{file_name[1:]}', 'rb')) 
+        # elif prefix.startswith('BIT2'):
+        #     data =  pickle.load(open(f'{self.root_path}/BIT2/{file_name}', 'rb')) 
         elif prefix.startswith('Tongji'):
             data =  pickle.load(open(f'{self.root_path}/Tongji/{file_name}', 'rb'))
         elif prefix.startswith('Stanford'):
