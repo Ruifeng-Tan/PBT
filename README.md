@@ -61,4 +61,4 @@ sh scripts/evaluate_model.sh
 
 ## Acknowledgement
 This repo is constructed based on the following repo:
-- [BatteryLife project](https://github.com/Ruifeng-Tan/BatteryLife)
+- https://github.com/Ruifeng-Tan/BatteryLife
