@@ -7,4 +7,4 @@ run the following command to install the dependecies:
 pip install -r requirements.txt
 ```
 
-To be continued
+## Data preparation
