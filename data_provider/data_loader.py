@@ -499,19 +499,12 @@ class Dataset_PBT(Dataset):
             raise Exception(f'{self.dataset} is not supported!')
 
          
-        # load the prompt embedding
-        # The domain-knowledge prompt embeddings are only affected by the LLM and prompt
+        # # load the prompt embedding
+        # # The domain-knowledge prompt embeddings are only affected by the LLM and prompt
         train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
         val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
         test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
-
-        # Stanford_formation_prompt_embeddings = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_Llama_Stanford_formation.pkl', 'rb'))
-
-        if self.dataset != 'Stanford_formation':
-            self.cellName_prompt = train_part | val_part | test_part
-        else:
-            # self.cellName_prompt = Stanford_formation_prompt_embeddings
-            pass
+        self.cellName_prompt = train_part | val_part | test_part
 
         if flag == 'train':
             self.files = [i for i in self.train_files]

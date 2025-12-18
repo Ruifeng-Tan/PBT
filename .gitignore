@@ -15,7 +15,6 @@ dataset/
 Cycling_Data/
 
 baseline_checkpoints/
-scripts/
 wandb/
 outs/
 hugging_face_tutorial/

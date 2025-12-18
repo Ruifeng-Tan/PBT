@@ -1,0 +1,34 @@
+# Zn-ion
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as32_al12_le50_bs128_lr0.0001_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_ZN-coin42_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_FT_seed42-b
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as32_al12_le50_bs8_lr5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_ZN-coin_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_FT_seed2021-b
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as32_al12_le50_bs8_lr5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_ZN-coin2024_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_FT_seed2024-b
+
+# Na-ion
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as32_al12_le50_bs16_lr5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_NAion42_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.25_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_FT_seed42-b
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as32_al12_le50_bs8_lr5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_NAion_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_FT_seed2021-b
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as32_al12_le50_bs8_lr5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_NAion2024_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_FT_seed2024-b
+
+# CALB
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as16_al12_le50_bs128_lr5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_CALB42_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_AT_nCP_seed42-b
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as1_al12_le50_bs128_lr5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_CALB_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_AT_nCP_seed2021-b
+# /data/LLMs/checkpoints/PBT_10_Llama_1_as16_al12_le50_bs128_lr0.00025_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_CALB2024_guideFalse_LBFalse_lossMSE_wd0.0_wlFalse_dr0.0_gdff512_E5_GE5_K-1_SFalse_augFalse_dsr0.75_ffsTrue_MIX_large_AT_nCP_seed2024-b
+
+args_path=/data/LLMs/checkpoints/PBT_10_Llama_1_le80_bs128_lr2.5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_MIX_large_guideFalse_LBFalse_lossMSE_wd0.01_wlFalse_dr0.05_gdff512_E5_GE5_K-1_SFalse_augFalse_augW1.0_tem1.0_wDGFalse_dsr0.75_we0_ffsTrue_seed42-100/
+batch_size=128
+num_process=1
+master_port=24920
+eval_cycle_min=1 # set eval_cycle_min or eval_cycle_max smaller than 0 to evaluate all testing samples
+eval_cycle_max=100
+eval_dataset=MIX_large # ZN-coin, ZN-coin42, ZN-coin2024, NAion, CALB. Note: For transfer learning variants, the evaluation dataset is automatically set as the target dataset
+root_path=/data/trf/python_works/BatteryLife/dataset
+
+LLM_path=/data/LLMs/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659
+
+CUDA_VISIBLE_DEVICES=0 accelerate launch --mixed_precision bf16 --num_processes $num_process --main_process_port $master_port evaluate_model.py \
+  --args_path $args_path \
+  --batch_size $batch_size \
+  --eval_cycle_min $eval_cycle_min \
+  --eval_cycle_max $eval_cycle_max \
+  --eval_dataset $eval_dataset \
+  --LLM_path $LLM_path \
+  --root_path $root_path
