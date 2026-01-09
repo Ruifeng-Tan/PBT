@@ -237,19 +237,19 @@ class split_recorder():
     MIX_large_temp_45_val_files = ['MICH_BLForm3_pouch_NMC_45C_0-100_1-1C_c.pkl', 'MICH_BLForm4_pouch_NMC_45C_0-100_1-1C_d.pkl', 'MICH_BLForm9_pouch_NMC_45C_0-100_1-1C_i.pkl'] + ['MICH_06H_pouch_NMC_45C_0-100_1.5-1.5C.pkl']
     MIX_large_temp_45_test_files = ['MICH_MCForm34_pouch_NMC_45C_0-100_1-1C_d.pkl', 'MICH_BLForm6_pouch_NMC_45C_0-100_1-1C_f.pkl', 'MICH_MCForm40_pouch_NMC_45C_0-100_1-1C_j.pkl', 'MICH_BLForm7_pouch_NMC_45C_0-100_1-1C_g.pkl', 'MICH_MCForm33_pouch_NMC_45C_0-100_1-1C_c.pkl'] + ['MICH_09H_pouch_NMC_45C_0-100_2-2C.pkl']
 
-    # # ablation study -- reduce the training data size
-    # 75% pretraining data
-    MIX_large_reduced_train_75p_files_2021 = json.load(open('./legacy/train_files_75_2021.json'))
-    MIX_large_reduced_train_75p_files_2024 = json.load(open('./legacy/train_files_75_2024.json'))
-    MIX_large_reduced_train_75p_files_42 = json.load(open('./legacy/train_files_75_42.json'))
-    # 50% pretraining data
-    MIX_large_reduced_train_50p_files_2021 = json.load(open('./legacy/train_files_half_2021.json'))
-    MIX_large_reduced_train_50p_files_2024 = json.load(open('./legacy/train_files_half_2024.json'))
-    MIX_large_reduced_train_50p_files_42 = json.load(open('./legacy/train_files_half_42.json'))
-    # 25% pretraining data
-    MIX_large_reduced_train_25p_files_2021 = json.load(open('./legacy/train_files_25_2021.json'))
-    MIX_large_reduced_train_25p_files_2024 = json.load(open('./legacy/train_files_25_2024.json'))
-    MIX_large_reduced_train_25p_files_42 = json.load(open('./legacy/train_files_25_42.json'))
+    # # # ablation study -- reduce the training data size
+    # # 75% pretraining data
+    # MIX_large_reduced_train_75p_files_2021 = json.load(open('./legacy/train_files_75_2021.json'))
+    # MIX_large_reduced_train_75p_files_2024 = json.load(open('./legacy/train_files_75_2024.json'))
+    # MIX_large_reduced_train_75p_files_42 = json.load(open('./legacy/train_files_75_42.json'))
+    # # 50% pretraining data
+    # MIX_large_reduced_train_50p_files_2021 = json.load(open('./legacy/train_files_half_2021.json'))
+    # MIX_large_reduced_train_50p_files_2024 = json.load(open('./legacy/train_files_half_2024.json'))
+    # MIX_large_reduced_train_50p_files_42 = json.load(open('./legacy/train_files_half_42.json'))
+    # # 25% pretraining data
+    # MIX_large_reduced_train_25p_files_2021 = json.load(open('./legacy/train_files_25_2021.json'))
+    # MIX_large_reduced_train_25p_files_2024 = json.load(open('./legacy/train_files_25_2024.json'))
+    # MIX_large_reduced_train_25p_files_42 = json.load(open('./legacy/train_files_25_42.json'))
 
     # Stanford formation
     Stanford_formation_45_train_files_2021 = ['Stanford_Nova_Regular_142.pkl', 'Stanford_Nova_Regular_143.pkl', 'Stanford_Nova_Regular_144.pkl', 'Stanford_Nova_Regular_303.pkl', 'Stanford_Nova_Regular_304.pkl', 'Stanford_Nova_Regular_305.pkl', 'Stanford_Nova_Regular_273.pkl', 'Stanford_Nova_Regular_274.pkl', 'Stanford_Nova_Regular_275.pkl', 'Stanford_Nova_Regular_282.pkl', 'Stanford_Nova_Regular_283.pkl', 'Stanford_Nova_Regular_284.pkl', 'Stanford_Nova_Regular_181.pkl', 'Stanford_Nova_Regular_182.pkl', 'Stanford_Nova_Regular_183.pkl', 'Stanford_Nova_Regular_172.pkl', 'Stanford_Nova_Regular_173.pkl', 'Stanford_Nova_Regular_174.pkl', 'Stanford_Nova_Regular_312.pkl', 'Stanford_Nova_Regular_313.pkl', 'Stanford_Nova_Regular_314.pkl', 'Stanford_Nova_Regular_145.pkl', 'Stanford_Nova_Regular_146.pkl', 'Stanford_Nova_Regular_147.pkl', 'Stanford_Nova_Regular_166.pkl', 'Stanford_Nova_Regular_167.pkl', 'Stanford_Nova_Regular_168.pkl', 'Stanford_Nova_Regular_294.pkl', 'Stanford_Nova_Regular_295.pkl', 'Stanford_Nova_Regular_296.pkl', 'Stanford_Nova_Regular_127.pkl', 'Stanford_Nova_Regular_128.pkl', 'Stanford_Nova_Regular_129.pkl', 'Stanford_Nova_Regular_178.pkl', 'Stanford_Nova_Regular_179.pkl', 'Stanford_Nova_Regular_180.pkl', 'Stanford_Nova_Regular_324.pkl', 'Stanford_Nova_Regular_325.pkl', 'Stanford_Nova_Regular_326.pkl', 'Stanford_Nova_Regular_154.pkl', 'Stanford_Nova_Regular_155.pkl', 'Stanford_Nova_Regular_156.pkl', 'Stanford_Nova_Regular_160.pkl', 'Stanford_Nova_Regular_161.pkl', 'Stanford_Nova_Regular_162.pkl', 'Stanford_Nova_Regular_184.pkl', 'Stanford_Nova_Regular_185.pkl', 'Stanford_Nova_Regular_186.pkl', 'Stanford_Nova_Regular_151.pkl', 'Stanford_Nova_Regular_152.pkl', 'Stanford_Nova_Regular_136.pkl', 'Stanford_Nova_Regular_137.pkl', 'Stanford_Nova_Regular_138.pkl', 'Stanford_Nova_Regular_270.pkl', 'Stanford_Nova_Regular_271.pkl', 'Stanford_Nova_Regular_272.pkl', 'Stanford_Nova_Regular_318.pkl', 'Stanford_Nova_Regular_319.pkl', 'Stanford_Nova_Regular_320.pkl', 'Stanford_Nova_Regular_315.pkl', 'Stanford_Nova_Regular_316.pkl', 'Stanford_Nova_Regular_317.pkl', 'Stanford_Nova_Regular_297.pkl', 'Stanford_Nova_Regular_299.pkl', 'Stanford_Nova_Regular_228.pkl', 'Stanford_Nova_Regular_226.pkl', 'Stanford_Nova_Regular_227.pkl', 'Stanford_Nova_Regular_202.pkl', 'Stanford_Nova_Regular_204.pkl', 'Stanford_Nova_Regular_203.pkl', 'Stanford_Nova_Regular_215.pkl', 'Stanford_Nova_Regular_216.pkl', 'Stanford_Nova_Regular_214.pkl', 'Stanford_Nova_Regular_223.pkl', 'Stanford_Nova_Regular_225.pkl', 'Stanford_Nova_Regular_224.pkl', 'Stanford_Nova_Regular_222.pkl', 'Stanford_Nova_Regular_221.pkl', 'Stanford_Nova_Regular_220.pkl', 'Stanford_Nova_Regular_213.pkl', 'Stanford_Nova_Regular_211.pkl', 'Stanford_Nova_Regular_212.pkl', 'Stanford_Nova_Regular_219.pkl', 'Stanford_Nova_Regular_217.pkl', 'Stanford_Nova_Regular_269.pkl', 'Stanford_Nova_Regular_229.pkl', 'Stanford_Nova_Regular_230.pkl', 'Stanford_Nova_Regular_193.pkl', 'Stanford_Nova_Regular_194.pkl', 'Stanford_Nova_Regular_195.pkl', 'Stanford_Nova_Regular_200.pkl', 'Stanford_Nova_Regular_201.pkl', 'Stanford_Nova_Regular_199.pkl', 'Stanford_Nova_Regular_207.pkl', 'Stanford_Nova_Regular_205.pkl', 'Stanford_Nova_Regular_206.pkl', 'Stanford_Nova_Regular_198.pkl', 'Stanford_Nova_Regular_196.pkl', 'Stanford_Nova_Regular_100.pkl', 'Stanford_Nova_Regular_101.pkl', 'Stanford_Nova_Regular_102.pkl', 'Stanford_Nova_Regular_190.pkl', 'Stanford_Nova_Regular_192.pkl', 'Stanford_Nova_Regular_191.pkl', 'Stanford_Nova_Regular_209.pkl', 'Stanford_Nova_Regular_208.pkl', 'Stanford_Nova_Regular_210.pkl']

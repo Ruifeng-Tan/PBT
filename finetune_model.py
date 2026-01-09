@@ -415,6 +415,7 @@ finetune_method = args.finetune_method
 eval_metric = args.eval_metric
 early_cycle_threshold = args.early_cycle_threshold
 seq_len = args.seq_len
+root_path = args.root_path
 
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
@@ -423,6 +424,7 @@ if adapter_layers < 0:
     adapter_layers = args_json['e_layers'] + args_json['d_layers']
 
 assert args.adapter_layers <= args_json['e_layers'] + args_json['d_layers'], 'The adapter layers should be less than or equal to the number of encoder and decoder layers in the pretrained model!'
+args_json['root_path'] = root_path
 args_json['least_epochs'] = args.least_epochs
 args_json['dataset'] = dataset
 args_json['batch_size'] = batch_size

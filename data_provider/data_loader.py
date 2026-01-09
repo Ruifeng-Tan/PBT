@@ -250,6 +250,7 @@ class Dataset_PBT(Dataset):
         self.label_prompts_vectors = {}
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
         self.aug_helper = BatchAugmentation_battery_revised()
+        self.ZN_coin_charge_first_file_names = ['ZN-coin_402-1_20231209225636_01_1.pkl', 'ZN-coin_402-2_20231209225727_01_2.pkl', 'ZN-coin_402-3_20231209225844_01_3.pkl', 'ZN-coin_403-1_20231209225922_01_4.pkl', 'ZN-coin_428-1_20231212185048_01_2.pkl', 'ZN-coin_428-2_20231212185058_01_4.pkl', 'ZN-coin_429-1_20231212185129_01_5.pkl', 'ZN-coin_429-2_20231212185157_01_8.pkl', 'ZN-coin_430-1_20231212185250_02_6.pkl', 'ZN-coin_430-2_20231212185305_02_7.pkl', 'ZN-coin_430-3_20231212185323_03_2.pkl']
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
             self.train_files = split_recorder.HUST_train_files + split_recorder.Stanford_train_files
@@ -899,6 +900,7 @@ class Dataset_PBT(Dataset):
         SOC_interval = data['SOC_interval'] # get the charge and discharge soc interval
         SOC_interval = SOC_interval[1] - SOC_interval[0]
         cycle_data = data['cycle_data'] # list of cycle data dict
+        valid_cycle_number = len(cycle_data)
             
         total_cycle_dfs = []
         for correct_cycle_index, sub_cycle_data in enumerate(cycle_data):
@@ -922,7 +924,7 @@ class Dataset_PBT(Dataset):
             charge_discharge_curves = self.get_charge_discharge_curves_Stanford_formation(file_name, df, self.early_cycle_threshold, nominal_capacity)
         else:
             charge_discharge_curves = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
-        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity
+        return df, charge_discharge_curves, basic_prompt, eol, SOC_interval, nominal_capacity, valid_cycle_number
       
     def generate_basic_prompt(self, cell_name):
         '''
@@ -959,7 +961,7 @@ class Dataset_PBT(Dataset):
         :return: history_sohs, future_sohs, masks, cycles, prompts, charge_data, discharge_data and RPT_masks in each sample
         '''
 
-        df, charge_discharge_curves_data, basic_prompt, eol, SOC_interval, nominal_capacity = self.read_cell_df(file_name)
+        df, charge_discharge_curves_data, basic_prompt, eol, SOC_interval, nominal_capacity, valid_cycle_number = self.read_cell_df(file_name)
         if df is None or eol<=self.early_cycle_threshold:
             return None, None, None, None
 
@@ -977,6 +979,10 @@ class Dataset_PBT(Dataset):
                 # We should not include the eol cycle data
                 break
             
+            if i > valid_cycle_number:
+                # only effective for some CALB batteries that have only cycling data of 99 cycles available for modeling.
+                break
+
             tmp_attn_mask = np.zeros(self.early_cycle_threshold)
             tmp_attn_mask[:i] = 1 # set 1 not to mask
             if self.dataset == 'Stanford_formation':
@@ -1047,7 +1053,7 @@ class Dataset_PBT(Dataset):
                 cutoff_voltage_indices = np.nonzero(current_records_in_C<=-0.01) 
                 discharge_end_index = cutoff_voltage_indices[0][-1]
                 
-                if prefix in ['RWTH', 'OX', 'ZN-coin', 'CALB_0', 'CALB_35', 'CALB_45']:
+                if prefix in ['RWTH', 'CALB_0', 'CALB_25', 'CALB_45'] or (file_name not in self.ZN_coin_charge_first_file_names and prefix=='ZN-coin'):
                     # Every cycle first discharge and then charge
                     #capacity_in_battery = np.where(charge_capacity_records==0, discharge_capacity_records, charge_capacity_records)
                     discharge_voltages = voltage_records[:discharge_end_index]
@@ -1303,7 +1309,7 @@ class Dataset_BatteryLife(Dataset):
         self.aug_helper = BatchAugmentation_battery_revised()
 
         self.name2domainID = json.load(open(f'/data/trf/python_works/BatteryMoE/gate_data/name2agingConditionID.json'))
-
+        self.ZN_coin_charge_first_file_names = ['ZN-coin_402-1_20231209225636_01_1.pkl', 'ZN-coin_402-2_20231209225727_01_2.pkl', 'ZN-coin_402-3_20231209225844_01_3.pkl', 'ZN-coin_403-1_20231209225922_01_4.pkl', 'ZN-coin_428-1_20231212185048_01_2.pkl', 'ZN-coin_428-2_20231212185058_01_4.pkl', 'ZN-coin_429-1_20231212185129_01_5.pkl', 'ZN-coin_429-2_20231212185157_01_8.pkl', 'ZN-coin_430-1_20231212185250_02_6.pkl', 'ZN-coin_430-2_20231212185305_02_7.pkl', 'ZN-coin_430-3_20231212185323_03_2.pkl']
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
             self.train_files = split_recorder.Stanford_train_files[:3]
@@ -1805,7 +1811,8 @@ class Dataset_BatteryLife(Dataset):
             nominal_capacity = data['nominal_capacity_in_Ah']
             
         cycle_data = data['cycle_data'] # list of cycle data dict
-            
+        valid_cycle_number = len(cycle_data) 
+
         total_cycle_dfs = []
         for correct_cycle_index, sub_cycle_data in enumerate(cycle_data):
             cycle_df = pd.DataFrame()
@@ -1826,7 +1833,7 @@ class Dataset_BatteryLife(Dataset):
         charge_discharge_curves = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
         cj_aug_charge_discharge_curves, fm_aug_charge_discharge_curves  = self.aug_helper.batch_aug(charge_discharge_curves)
 
-        return df, charge_discharge_curves, eol, nominal_capacity, cj_aug_charge_discharge_curves
+        return df, charge_discharge_curves, eol, nominal_capacity, cj_aug_charge_discharge_curves, valid_cycle_number
     
         
     def read_samples_from_one_cell(self, file_name):
@@ -1836,7 +1843,7 @@ class Dataset_BatteryLife(Dataset):
         :return: history_sohs, future_sohs, masks, cycles, prompts, charge_data, discharge_data and RPT_masks in each sample
         '''
 
-        df, charge_discharge_curves_data, eol, nominal_capacity, cj_aug_charge_discharge_curves = self.read_cell_df(file_name)
+        df, charge_discharge_curves_data, eol, nominal_capacity, cj_aug_charge_discharge_curves, valid_cycle_number = self.read_cell_df(file_name)
         if df is None or eol<=self.early_cycle_threshold:
             return None, None, None, None, None
 
@@ -1854,6 +1861,10 @@ class Dataset_BatteryLife(Dataset):
             if i >= eol:
                 # If we encounter a battery whose cycle life is even smaller than early_cycle_threhold
                 # We should not include the eol cycle data
+                break
+
+            if i > valid_cycle_number:
+                # only effective for some CALB batteries that have only cycling data of 99 cycles available for modeling.
                 break
             
             tmp_attn_mask = np.zeros(self.early_cycle_threshold)
@@ -1907,7 +1918,7 @@ class Dataset_BatteryLife(Dataset):
                 discharge_end_index = cutoff_voltage_indices[0][-1]
                 
                 # tmp_discharge_capacity_records = max(charge_capacity_records) - discharge_capacity_records
-                if prefix in ['RWTH', 'OX', 'ZN-coin', 'CALB_0', 'CALB_35', 'CALB_45']:
+                if prefix in ['RWTH', 'CALB_0', 'CALB_25', 'CALB_45'] or (file_name not in self.ZN_coin_charge_first_file_names and prefix=='ZN-coin'):
                     # Every cycle first discharge and then charge
                     #capacity_in_battery = np.where(charge_capacity_records==0, discharge_capacity_records, charge_capacity_records)
                     discharge_voltages = voltage_records[:discharge_end_index]

@@ -3,12 +3,12 @@ topK=-1
 finetune_dataset=CALB42 # ZN-coin, ZN-coin42, ZN-coin2024, NAion
 batch_size=8
 args_path=/data/LLMs/checkpoints/PBT_10_Llama_1_le80_bs128_lr2.5e-05_dm128_nh8_el2_dl10_df128_mdf64_lradjconstant_MIX_large_guideFalse_LBFalse_lossMSE_wd0.01_wlFalse_dr0.05_gdff512_E5_GE5_K-1_SFalse_augFalse_augW1.0_tem1.0_wDGFalse_dsr0.75_we0_ffsTrue_seed42-100/
-master_port=25270
+master_port=25250
 train_epochs=300
 
 seq_len=1
 early_cycle_threshold=100
-learning_rate=0.000025
+learning_rate=0.00005
 warm_up_epoches=0
 adapter_size=16
 adapter_layers=-1
@@ -70,13 +70,13 @@ cycle_topK=2
 importance_weight=1.0
 checkpoints=/data/tmpf # the save path of checkpoints
 data=Dataset_BatteryLifeLLM_original
-root_path=/data/trf/python_works/BatteryLife/dataset
-comment='b' # Llama2
+root_path=/data/trf/python_works/PBT_BatteryLife/dataset
+comment='b2' # b for old loader; b2 for new loader (ZN-coin and CALB need this)
 
 
 # /data/LLMs/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659
 # --use_aug \
-CUDA_VISIBLE_DEVICES=7 accelerate launch --mixed_precision bf16 --num_processes $num_process --main_process_port $master_port finetune_PBT.py \
+CUDA_VISIBLE_DEVICES=7 accelerate launch --mixed_precision bf16 --num_processes $num_process --main_process_port $master_port finetune_model.py \
   --num_process $num_process \
   --lradj_factor $lradj_factor \
   --task_name battery_life_prediction \
