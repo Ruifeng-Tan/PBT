@@ -32,7 +32,7 @@ pip install -r requirements.txt
 ```
 
 ## Data preparation
-Please directly download the newest processed datasets from [BatteryLife project](https://github.com/Ruifeng-Tan/BatteryLife), and move them to a folder named "dataset".
+Please directly download the newest processed datasets from [BatteryLife project](https://github.com/Ruifeng-Tan/BatteryLife), and move them to a folder whose path will be used as `root_path` in a lot of scripts (e.g., `PBT.sh`) in this project.
 
 ## Pretrained checkpoints
 We have provided the pretrained parameters reported in the paper. Please download them from [Zenodo](https://zenodo.org/records/17972780).
