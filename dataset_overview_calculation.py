@@ -41,8 +41,8 @@ with open('./gate_data/name2agingConditionID.json') as file:
 
 print('PBT')
 print(get_agingCondition_battery_num(recorder_file_names, aging_conditions))
-# print('BatLiNet')
-# print(get_agingCondition_battery_num(BatLiNet_file_names, aging_conditions))
+print('BatLiNet')
+print(get_agingCondition_battery_num(BatLiNet_file_names, aging_conditions))
 
 
 
