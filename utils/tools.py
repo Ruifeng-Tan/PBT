@@ -261,6 +261,93 @@ def cal_accuracy(y_pred, y_true):
 def del_files(dir_path):
     shutil.rmtree(dir_path, ignore_errors=True)
 
+
+def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
+    total_preds, total_references = [], []
+    total_seen_unseen_ids = []
+    model.eval()
+    with torch.no_grad():
+        for i, (cycle_curve_data, curve_attn_mask,  labels, life_class, scaled_life_class, weights, seen_unseen_ids, domain_ids) in tqdm(enumerate(vali_loader)):
+            cycle_curve_data = cycle_curve_data.float().to(accelerator.device)# [B, S, N]
+            curve_attn_mask = curve_attn_mask.float().to(accelerator.device)
+            labels = labels.float().to(accelerator.device)
+
+            # encoder - decoder
+            outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask)
+            # self.accelerator.wait_for_everyone()
+            std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
+            transformed_preds = outputs * std + mean_value
+            transformed_labels = labels * std + mean_value
+
+            all_predictions, all_targets, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids))
+
+         
+            total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+            total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+            if compute_seen_unseen:
+                total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
+
+    total_preds = np.array(total_preds)
+    total_references = np.array(total_references)   
+    total_seen_unseen_ids = np.array(total_seen_unseen_ids)
+    rmse = root_mean_squared_error(total_references, total_preds)
+    mae = mean_absolute_error(total_references, total_preds)
+    mape = mean_absolute_percentage_error(total_references, total_preds)
+
+    relative_error = abs(total_preds - total_references) / total_references
+    hit_num = sum(relative_error<=args.alpha1)
+    alpha_acc1 = hit_num / len(total_references) * 100
+
+    relative_error = abs(total_preds - total_references) / total_references
+    hit_num = sum(relative_error<=args.alpha2)
+    alpha_acc2 = hit_num / len(total_references) * 100
+
+    if compute_seen_unseen:
+        # calculate the model performance on the samples from the seen and unseen aging conditions
+        seen_references = total_references[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([0])
+        unseen_references = total_references[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([0])
+        seen_preds = total_preds[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([1])
+        unseen_preds = total_preds[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([1])
+
+        # MAPE
+        seen_mape = mean_absolute_percentage_error(seen_references, seen_preds)
+        if len(unseen_preds) > 0:
+            unseen_mape = mean_absolute_percentage_error(unseen_references, unseen_preds)
+        else:
+            unseen_mape = -10000
+
+        # alpha-acc1 
+        relative_error = abs(seen_preds - seen_references) / seen_references
+        hit_num = sum(relative_error<=args.alpha1)
+        seen_alpha_acc1 = hit_num / len(seen_references) * 100
+
+        
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha1)
+            unseen_alpha_acc1 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc1 = -10000
+
+        # alpha-acc2
+        relative_error = abs(seen_preds - seen_references) / seen_references
+        hit_num = sum(relative_error<=args.alpha2)
+        seen_alpha_acc2 = hit_num / len(seen_references) * 100
+
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha2)
+            unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc2 = -10000
+
+        model.train()
+        return  rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape, seen_mape, unseen_alpha_acc1, seen_alpha_acc1, unseen_alpha_acc2, seen_alpha_acc2
+    
+    model.train()
+    return rmse, mae, mape, alpha_acc1, alpha_acc2
+
+
 def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
     model.eval()
     total_preds, total_references = [], []

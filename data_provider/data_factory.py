@@ -8,6 +8,42 @@ data_dict = {
     'Dataset_original': Dataset_BatteryLife
 }
 
+def data_provider_baseline_BL(args, flag, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
+                 total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
+                 class_labels=None, life_class_scaler=None, sample_weighted=False):
+    Data = data_dict[args.data]
+
+    if flag == 'test' or flag == 'val':
+        shuffle_flag = False
+        drop_last = False
+        batch_size = args.batch_size
+    else:
+        shuffle_flag = True
+        drop_last = True
+        batch_size = args.batch_size
+
+    data_set = Data(args=args,
+            flag=flag,
+            label_scaler=label_scaler,
+            eval_cycle_min=eval_cycle_min,
+            eval_cycle_max=eval_cycle_max,
+            total_prompts=total_prompts, 
+            total_charge_discharge_curves=total_charge_discharge_curves, 
+            total_curve_attn_masks=total_curve_attn_masks, total_labels=total_labels, unique_labels=unique_labels,
+            class_labels=class_labels,
+            life_class_scaler=life_class_scaler
+        )
+
+    data_loader = DataLoader(
+                data_set,
+                batch_size=batch_size,
+                shuffle=shuffle_flag,
+                num_workers=args.num_workers,
+                drop_last=drop_last,
+                collate_fn=my_collate_fn_baseline_BL)
+        
+    return data_set, data_loader
+
 def data_provider_baseline_DA(args, flag, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, sample_weighted=False, temperature2mask=None, format2mask=None, cathodes2mask=None, anode2mask=None, target_dataset='None', use_domainSampler=False):

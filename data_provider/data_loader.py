@@ -6,6 +6,7 @@ import pandas as pd
 from torch.utils.data import Dataset
 from collections import defaultdict
 from tqdm import tqdm
+from denseweight import DenseWeight
 import copy
 from torch.utils.data.sampler import Sampler, BatchSampler
 from sklearn.preprocessing import StandardScaler

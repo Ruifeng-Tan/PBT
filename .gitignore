@@ -10,6 +10,8 @@ plot_scripts/
 legacy/
 results/
 
+tl_scripts/
+
 play_scripts/
 dataset/
 Cycling_Data/
