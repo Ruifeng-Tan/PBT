@@ -1,8 +1,5 @@
 args_path=/home/hwx/python_project/test/BatteryLife/checkpoints/CPTransformer_sl1_lr5e-05_dm128_nh4_el6_dl0_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlTrue_bs32_s42-CPTransformer/ # the source checkpoints
 
-
-
-
 batch_size=32
 finetune_method=FT
 finetune_type=CPT2CPT
