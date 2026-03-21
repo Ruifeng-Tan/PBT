@@ -1,14 +1,6 @@
 args_path=/home/hwx/python_project/test/BatteryLife/checkpoints/CPTransformer_sl1_lr5e-05_dm128_nh4_el6_dl0_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlTrue_bs32_s42-CPTransformer/ # the source checkpoints
 
-# CPMLP
-# /home/hwx/python_project/test/BatteryLife/checkpoints/HiMLP_42/HiMLP_sl1_lr5e-05_dm128_nh8_el4_dl2_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlFalse_bs4-HiMLP/
-# /home/hwx/python_project/test/BatteryLife/checkpoints/HiMLP_2021/HiMLP_sl1_lr5e-05_dm128_nh8_el4_dl2_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlFalse_bs4-HiMLP/
-# /home/hwx/python_project/test/BatteryLife/checkpoints/HiMLP_2024/HiMLP_sl1_lr5e-05_dm128_nh8_el4_dl2_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlFalse_bs4-HiMLP/
 
-# CPTransformer
-# /home/hwx/python_project/test/BatteryLife/checkpoints/CPTransformer_sl1_lr5e-05_dm128_nh4_el6_dl0_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlTrue_bs32_s42-CPTransformer/
-# /home/hwx/python_project/test/BatteryLife/checkpoints/CPTransformer_sl1_lr5e-05_dm128_nh4_el12_dl0_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlTrue_bs16_s2021-CPTransformer/
-# /home/hwx/python_project/test/BatteryLife/checkpoints/CPTransformer_sl1_lr5e-05_dm128_nh4_el12_dl0_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlTrue_bs32_s2024-CPTransformer/
 
 
 batch_size=32
