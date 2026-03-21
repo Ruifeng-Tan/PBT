@@ -271,7 +271,7 @@ parser.add_argument('--is_training', type=int, required=False, default=1, help='
 parser.add_argument('--model_id', type=str, required=False, default='test', help='model id')
 parser.add_argument('--model_comment', type=str, required=False, default='none', help='prefix when saving test results')
 parser.add_argument('--model', type=str, required=False, default='Autoformer',
-                    help='model name, options: [Autoformer, DLinear]')
+                    help='model name, options: [CPMLP, CPTransformer]')
 parser.add_argument('--LLM_path', type=str, required=False, default='/home/trf/LLMs/llama2-hf-7b',
                     help='The path to the saved LLM checkpoints')
 parser.add_argument('--center_path', type=str, required=False, default='./Centenr_vectors',

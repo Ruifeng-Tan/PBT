@@ -72,7 +72,7 @@ importance_weight=0.1
 LLM_path=/data/LLMs/models--meta-llama--Llama-3.2-3B-Instruct/snapshots/0cb88a4f764b7a12671c53f0838cd831a0843b95 # /data/LLMs/Meta-Llama-3.1-8B-hf
 checkpoints=/data/tmpf # the save path of checkpoints
 data=Dataset_PBT
-root_path=/data/trf/python_works/BatteryLife/dataset
+root_path=/data/trf/python_works/PBT_BatteryLife/dataset
 comment='a' 
 
 

@@ -1,4 +1,4 @@
-args_path=/home/hwx/python_project/test/BatteryLife/checkpoints/HiMLP_42/HiMLP_sl1_lr5e-05_dm128_nh8_el4_dl2_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlFalse_bs4-HiMLP/ # the source checkpoints
+args_path=/home/hwx/python_project/test/BatteryLife/checkpoints/CPTransformer_sl1_lr5e-05_dm128_nh4_el6_dl0_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlTrue_bs32_s42-CPTransformer/ # the source checkpoints
 
 # CPMLP
 # /home/hwx/python_project/test/BatteryLife/checkpoints/HiMLP_42/HiMLP_sl1_lr5e-05_dm128_nh8_el4_dl2_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlFalse_bs4-HiMLP/
@@ -11,17 +11,16 @@ args_path=/home/hwx/python_project/test/BatteryLife/checkpoints/HiMLP_42/HiMLP_s
 # /home/hwx/python_project/test/BatteryLife/checkpoints/CPTransformer_sl1_lr5e-05_dm128_nh4_el12_dl0_df256_lradjconstant_datasetMIX_large_lossMSE_wd0.0_wlTrue_bs32_s2024-CPTransformer/
 
 
-batch_size=8
+batch_size=32
 finetune_method=FT
-finetune_type=CPMLP2CPMLP
-num_process=2
+finetune_type=CPT2CPT
+num_process=1
 master_port=24988
 finetune_dataset=CALB42 # the target dataset
-model_name=CPMLP
+model_name=CPTransformer
 train_epochs=100
 early_cycle_threshold=100
 learning_rate=0.00005
-num_process=2
 accumulation_steps=1
 lstm_layers=2
 d_model=64
@@ -38,14 +37,14 @@ lradj=constant
 n_heads=8
 seed=42
 
-checkpoints=/data/hwx/PBT_transfer # the save path of checkpoints
+checkpoints=/data/trf/finetune_AT_checkpoints # the save path of checkpoints
 data=Dataset_original
 root_path=/data/trf/python_works/PBT_BatteryLife/dataset
 comment='CPMLP' 
 task_name=classification
 
 
-CUDA_VISIBLE_DEVICES=2,3 accelerate launch  --multi_gpu --num_processes $num_process --main_process_port $master_port finetune_model.py \
+CUDA_VISIBLE_DEVICES=3 accelerate launch --num_processes $num_process --main_process_port $master_port finetune_model.py \
   --args_path $args_path \
   --batch_size $batch_size \
   --finetune_dataset $finetune_dataset \
