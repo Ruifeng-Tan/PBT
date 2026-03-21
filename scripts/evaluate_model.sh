@@ -27,7 +27,7 @@ num_process=1
 master_port=24920
 eval_cycle_min=1 # set eval_cycle_min or eval_cycle_max smaller than 0 to evaluate all testing samples
 eval_cycle_max=100
-eval_dataset=NAion42 # ZN-coin, ZN-coin42, ZN-coin2024, NAion, CALB. Note: For transfer learning variants, the evaluation dataset is automatically set as the target dataset
+eval_dataset=CALB42 # ZN-coin, ZN-coin42, ZN-coin2024, NAion, CALB. Note: For transfer learning variants, the evaluation dataset is automatically set as the target dataset
 root_path=/data/trf/python_works/PBT_BatteryLife/dataset
 
 LLM_path=/data/LLMs/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659

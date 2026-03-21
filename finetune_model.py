@@ -521,6 +521,13 @@ for ii in range(args.itr):
 
         time_now = time.time()
 
+        if accelerator.is_local_main_process:
+            wandb.init(
+                project="PBT_paper",
+                config=args.__dict__,
+                name=nowtime
+            )
+
         early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience)
 
         criterion = nn.MSELoss(reduction='none') 
@@ -686,6 +693,29 @@ for ii in range(args.itr):
             accelerator.print(
                 f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f}| Train cl loss: {total_cl_loss:.5f}| Train lc loss: {total_lc_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali RMSE: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
                 f"Test RMSE: {test_rmse:.7f}| Test MAE: {test_mae_loss:.7f} | Test MAPE: {test_mape:.7f}")
+            if accelerator.is_local_main_process:
+                wandb.log({
+                    "epoch": epoch + 1,
+                    "train_loss": float(train_loss),
+                    "train_cl_loss": float(total_cl_loss),
+                    "train_lc_loss": float(total_lc_loss),
+                    "train_RMSE": float(train_rmse),
+                    "train_MAPE": float(train_mape),
+                    "vali_RMSE": float(vali_rmse),
+                    "vali_MAE": float(vali_mae_loss),
+                    "vali_MAPE": float(vali_mape),
+                    "vali_acc1": float(vali_alpha_acc1),
+                    "vali_acc2": float(vali_alpha_acc2),
+                    "test_RMSE": float(test_rmse),
+                    "test_MAE": float(test_mae_loss),
+                    "test_MAPE": float(test_mape),
+                    "test_acc1": float(test_alpha_acc1),
+                    "test_acc2": float(test_alpha_acc2),
+                    "best_vali_loss": float(best_vali_loss),
+                    "best_test_RMSE": float(best_test_RMSE),
+                    "best_test_MAE": float(best_test_MAE),
+                    "best_test_MAPE": float(best_test_MAPE)
+                })
             
             early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
             if early_stopping.early_stop:
@@ -711,6 +741,27 @@ for ii in range(args.itr):
         accelerator.print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
         accelerator.print(path)
         accelerator.set_trigger()
+        if accelerator.is_local_main_process:
+            wandb.log({
+                "epoch": epoch + 1 if 'epoch' in locals() else 0,
+                "best_vali_RMSE": float(best_vali_RMSE),
+                "best_vali_MAE": float(best_vali_MAE),
+                "best_vali_MAPE": float(best_vali_MAPE),
+                "best_vali_acc1": float(best_vali_alpha_acc1),
+                "best_vali_acc2": float(best_vali_alpha_acc2),
+                "best_test_RMSE": float(best_test_RMSE),
+                "best_test_MAE": float(best_test_MAE),
+                "best_test_MAPE": float(best_test_MAPE),
+                "best_test_acc1": float(best_test_alpha_acc1),
+                "best_test_acc2": float(best_test_alpha_acc2),
+                "best_test_seen_MAPE": float(best_seen_test_MAPE),
+                "best_test_unseen_MAPE": float(best_unseen_test_MAPE),
+                "best_test_seen_acc1": float(best_seen_test_alpha_acc1),
+                "best_test_unseen_acc1": float(best_unseen_test_alpha_acc1),
+                "best_test_seen_acc2": float(best_seen_test_alpha_acc2),
+                "best_test_unseen_acc2": float(best_unseen_test_alpha_acc2)
+            })
+            wandb.finish()
 
     # transfer learning in PBT
     else:
