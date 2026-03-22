@@ -742,25 +742,8 @@ for ii in range(args.itr):
         accelerator.print(path)
         accelerator.set_trigger()
         if accelerator.is_local_main_process:
-            wandb.log({
-                "epoch": epoch + 1 if 'epoch' in locals() else 0,
-                "best_vali_RMSE": float(best_vali_RMSE),
-                "best_vali_MAE": float(best_vali_MAE),
-                "best_vali_MAPE": float(best_vali_MAPE),
-                "best_vali_acc1": float(best_vali_alpha_acc1),
-                "best_vali_acc2": float(best_vali_alpha_acc2),
-                "best_test_RMSE": float(best_test_RMSE),
-                "best_test_MAE": float(best_test_MAE),
-                "best_test_MAPE": float(best_test_MAPE),
-                "best_test_acc1": float(best_test_alpha_acc1),
-                "best_test_acc2": float(best_test_alpha_acc2),
-                "best_test_seen_MAPE": float(best_seen_test_MAPE),
-                "best_test_unseen_MAPE": float(best_unseen_test_MAPE),
-                "best_test_seen_acc1": float(best_seen_test_alpha_acc1),
-                "best_test_unseen_acc1": float(best_unseen_test_alpha_acc1),
-                "best_test_seen_acc2": float(best_seen_test_alpha_acc2),
-                "best_test_unseen_acc2": float(best_unseen_test_alpha_acc2)
-            })
+            wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
+                    "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
             wandb.finish()
 
     # transfer learning in PBT
