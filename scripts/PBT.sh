@@ -1,5 +1,5 @@
 model_name=PBT
-dataset=MIX_75p # MIX_all, MIX_all42, MIX_all2024
+dataset=MIX_large
 seed=2024 # 2021, 42, 2024
 train_epochs=100
 accumulation_steps=1
