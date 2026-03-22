@@ -5,17 +5,15 @@ import accelerate
 from accelerate import DistributedDataParallelKwargs, load_checkpoint_in_model, Accelerator, DeepSpeedPlugin
 from torch import nn, optim
 from tqdm import tqdm
-import evaluate
-from torch.optim import lr_scheduler
-from utils.tools import get_parameter_number, vali_baseline
+from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
 from models import PBT, CPTransformerDeepSeekMoE, CPMLP, CPTransformer
 from models.PBT import BatteryMoEOutputMoELayer, BatteryMoEOutputHead
-from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter, CPLayerWithAdapter, tLayerWithAdapter, CPTtLayerWithAdapter
+from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter, CPLayerWithAdapter, tLayerWithAdapter
 import wandb
-from data_provider.data_factory import data_provider_LLMv2, data_provider_baseline_BL
+from data_provider.data_factory import data_provider_LLMv2
 import time
 import random
 import torch.nn.functional as F
@@ -271,7 +269,7 @@ parser.add_argument('--is_training', type=int, required=False, default=1, help='
 parser.add_argument('--model_id', type=str, required=False, default='test', help='model id')
 parser.add_argument('--model_comment', type=str, required=False, default='none', help='prefix when saving test results')
 parser.add_argument('--model', type=str, required=False, default='Autoformer',
-                    help='model name, options: [CPMLP, CPTransformer]')
+                    help='model name, options: [Autoformer, DLinear]')
 parser.add_argument('--LLM_path', type=str, required=False, default='/home/trf/LLMs/llama2-hf-7b',
                     help='The path to the saved LLM checkpoints')
 parser.add_argument('--center_path', type=str, required=False, default='./Centenr_vectors',
@@ -327,7 +325,6 @@ parser.add_argument('--patch_len', type=int, default=10, help='patch length')
 parser.add_argument('--stride', type=int, default=10, help='stride')
 parser.add_argument('--output_num', type=int, default=1, help='The number of prediction targets')
 parser.add_argument('--class_num', type=int, default=8, help='The number of life classes')
-parser.add_argument('--lstm_layers', type=int, default=1, help='num of LSTM layers')
 
 # optimization
 parser.add_argument('--down_sample_ratio', type=float, default=0.75, help='the down sampling ratio for data augmentation')
@@ -395,7 +392,6 @@ parser.add_argument('--alpha2', type=float, default=0.1, help='the alpha for alp
 
 # finetune 
 parser.add_argument('--finetune_method', type=str, default='FT', help='the fine-tuning method. [FT, EFT, AT]')
-parser.add_argument('--finetune_type', type=str, default='PBT2PBT', help='the fine-tuning method. [CPMLP2CPMLP, CPT2CPT]')
 parser.add_argument('--finetune_dataset', type=str, help='the target dataset for model finetuning')
 parser.add_argument('--args_path', type=str, help='the path to the pretrained model parameters')
 parser.add_argument('--adapter_layers', type=int, default=2, help='num of adapter layers. set a number <=0 to insert adapters to all layers')
@@ -453,645 +449,358 @@ args_json['train_epochs'] = args.train_epochs
 args_json['finetune_method'] = args.finetune_method
 args_json['adapter_size'] = args.adapter_size
 args_json['loss'] = args.loss
-args_json['warm_up_epoches'] = args.warm_up_epoches
-args_json['finetune_type'] = args.finetune_type
-args_json['T0'] = args.T0
-args_json['model_comment'] = args.model_comment
 pretrain_warm_up_epoches = args_json['warm_up_epoches']
+args_json['warm_up_epoches'] = args.warm_up_epoches
+args_json['model_comment'] = args.model_comment
 args.__dict__ = args_json
 
     
 for ii in range(args.itr):
-    # transfer learning in previous Batterylife models, CPMLP and CPTransformer
-    if args.finetune_type == 'CPMLP2CPMLP' or args.finetune_type == 'CPT2CPT':
-        setting = '{}_as{}_al{}_bs{}_lr{}_dm{}_el{}_dl{}_df{}_{}_dr{}_{}_seed{}'.format(
-            args.model,
-            args.adapter_size,
-            args.adapter_layers,
-            args.batch_size,
-            args.learning_rate,
-            args.d_model,
-            args.e_layers,
-            args.d_layers,
-            args.d_ff,
-            args.dataset, args.dropout, finetune_method, args.seed)
+    # setting record of experiments
+    setting = '{}_{}_{}_{}_as{}_al{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_dsr{}_ffs{}_{}_{}_seed{}'.format(
+        args.model,
+        args.dk_factor,
+        args.llm_choice,
+        args.seq_len,
+        args.adapter_size,
+        args.adapter_layers,
+        args.least_epochs,
+        args.batch_size,
+        args.learning_rate,
+        args.d_model,
+        args.n_heads,
+        args.e_layers,
+        args.d_layers,
+        args.d_ff,
+        args.min_d_ff,
+        args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
+        args.num_experts, args.num_general_experts,
+        args.topK, args.use_domainSampler, args.use_aug, args.down_sample_ratio, args.use_dff_scale, trained_dataset, finetune_method, args.seed)
+
+
+    data_provider_func = data_provider_LLMv2
+    if args.model == 'CPTransformerDeepSeekMoE':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = CPTransformerDeepSeekMoE.Model(model_config)
+    elif args.model == 'PBT':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = PBT.Model(model_config)
+    elif args.model == 'CPMLP':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = CPMLP.Model(model_config)
+    elif args.model == 'CPTransformer':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = CPTransformer.Model(model_config)
+    else:
+        raise Exception('Not Implemented')
+
+    
+    
+    path = os.path.join(args.checkpoints,
+                        setting + '-' + args.model_comment)  # unique checkpoint saving path
+    
+    if not 'MIX_all' in args.dataset:
+        temperature2mask = gate_masker.MIX_large_temperature2mask
+        format2mask = gate_masker.MIX_large_format2mask
+        cathodes2mask = gate_masker.MIX_large_cathodes2mask
+        anode2mask = gate_masker.MIX_large_anode2mask
+        ion2mask = None
+    else:
+        temperature2mask = gate_masker.MIX_all_temperature2mask
+        format2mask = gate_masker.MIX_all_format2mask
+        cathodes2mask = gate_masker.MIX_all_cathode2mask
+        anode2mask = gate_masker.MIX_all_anode2mask
+        ion2mask = gate_masker.MIX_all_ion2mask
+
+    label_scaler = joblib.load(f'{args_path}label_scaler')
+    train_data, train_loader = data_provider_func(args, 'train', temperature2mask=temperature2mask, 
+                                                  format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, 
+                                                  use_domainSampler=args.use_domainSampler, label_scaler=label_scaler)
+    label_scaler = train_data.return_label_scaler()
+    
+    accelerator.print("Loading training samples......")
+    accelerator.print("Loading vali samples......")
+    vali_data, vali_loader = data_provider_func(args, 'val', label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
+    accelerator.print("Loading test samples......")
+    test_data, test_loader = data_provider_func(args, 'test', label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
+    
+    if accelerator.is_local_main_process and os.path.exists(path):
+        del_files(path)  # delete checkpoint files
+        accelerator.print(f'success delete {path}')
+    
+    os.makedirs(path, exist_ok=True)
+    accelerator.wait_for_everyone()
+    joblib.dump(label_scaler, f'{path}/label_scaler')
+
+    with open(path+'/args.json', 'w') as f:
+        json.dump(args.__dict__, f)
+    if accelerator.is_local_main_process:
+        wandb.init(
+        # set the wandb project where this run will be logged
+        project="PBT_paper",
         
+        # track hyperparameters and run metadata
+        config=args.__dict__,
+        name=nowtime
+        )
 
-        data_provider_func = data_provider_baseline_BL
-        if args.model == 'CPMLP':
-            model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-            model_config = BatteryLifeConfig(model_ec_config, model_text_config=None)
-            model = CPMLP.Model(model_config)
-        elif args.model == 'CPTransformer':
-            model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-            model_config = BatteryLifeConfig(model_ec_config, model_text_config=None)
-            model = CPTransformer.Model(model_config)
-        else:
-            print('The model is not an implemented baseline!')
 
-        label_scaler = joblib.load(f'{args_path}/label_scaler')
 
-        std, mean_value = np.sqrt(label_scaler.var_[-1]), label_scaler.mean_[-1]
-        life_class_scaler = joblib.load(f'{args_path}/life_class_scaler')
+    para_res = get_parameter_number(model)
+    accelerator.print(para_res)
 
-        path = os.path.join(args.save_path, setting + '-' + args.model_comment)  # unique checkpoint saving path
-        accelerator.print(args.save_path)
-        accelerator.print(path)
+    # Print layer names and parameter counts
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            accelerator.print(f"Layer: {name} | Number of parameters: {param.numel()}")
 
-        train_data, train_loader = data_provider_func(args, 'train', None, sample_weighted=args.weighted_sampling)
-        label_scaler = train_data.return_label_scaler()  
-        life_class_scaler = train_data.return_life_class_scaler()     
-        
-        accelerator.print("Loading training samples......")
-        accelerator.print("Loading vali samples......")
-        vali_data, vali_loader = data_provider_func(args, 'val', label_scaler, life_class_scaler=life_class_scaler, sample_weighted=args.weighted_sampling)
-        accelerator.print("Loading test samples......")
-        test_data, test_loader = data_provider_func(args, 'test', label_scaler, life_class_scaler=life_class_scaler, sample_weighted=args.weighted_sampling)
+    time_now = time.time()
 
-        if accelerator.is_local_main_process and os.path.exists(path):
-            del_files(path)  # delete checkpoint files
-            accelerator.print(f'success delete {path}')
+    train_steps = len(train_loader)
+    early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
 
-        os.makedirs(path, exist_ok=True)
-        accelerator.wait_for_everyone()
-        joblib.dump(label_scaler, f'{path}/label_scaler')
-        joblib.dump(life_class_scaler, f'{path}/life_class_scaler')
-        with open(path+'/args.json', 'w') as f:
-            json.dump(args.__dict__, f)
+    trained_parameters = []
+    trained_parameters_names = []
+    use_view_experts = True
 
-        time_now = time.time()
-
-        if accelerator.is_local_main_process:
-            wandb.init(
-                project="PBT_paper",
-                config=args.__dict__,
-                name=nowtime
-            )
-
-        early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience)
-
-        criterion = nn.MSELoss(reduction='none') 
-        accumulation_steps = args.accumulation_steps
-        load_checkpoint_in_model(model, args_path) # load the saved parameters into model
-        accelerator.print(f'The model is {args.model}')
-        accelerator.print(f'load model from:\n {args_path}')
-        accelerator.print(f'Model is loaded!')
-
-        trained_parameters = []
-        trained_parameters_names = []
-        use_view_experts = True
-
-        if finetune_method == 'FT':
-            # free the general experts and tune other parameters
-            for name, p in model.named_parameters():
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
+    if finetune_method == 'FT':
+        # free the general experts and tune other parameters
+        for name, p in model.named_parameters():
+            if p.requires_grad is True:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
+    else:
+        if args.model in ['CPMLP', 'CPTransformer']:
+            if finetune_method == 'AT':
+                # adapter tuning
+                model = add_adapters_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+                for name, p in model.named_parameters():
+                    # only tune the adapters + gate + head
+                    if 'adapter' in name or 'gate' in name or 'regression_head' in name:
+                        if p.requires_grad is True:
+                            trained_parameters_names.append(name)
+                            trained_parameters.append(p)
+            elif finetune_method == 'AT_nCP':
+                # adapter tuning
+                model = add_adapters_withoutCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+                for name, p in model.named_parameters():
+                    # only tune the adapters + gate + head
+                    if 'adapter' in name or 'gate' in name or 'regression_head' in name:
+                        if p.requires_grad is True:
+                            trained_parameters_names.append(name)
+                            trained_parameters.append(p)
         elif finetune_method == 'AT':
-            # adapter tuning
-            model = add_adapters_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+            # adapter tuning, legacy name: AT_nB
+            model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
             for name, p in model.named_parameters():
-                # only tune the adapters + gate + head
-                if 'adapter' in name or 'gate' in name or 'regression_head' in name:
+                if 'adapter' in name or 'regression_head' in name:
+                    if p.requires_grad is True:
+                        trained_parameters_names.append(name)
+                        trained_parameters.append(p)
+        elif finetune_method == 'AT_nCP':
+            # adapter tuning without adapter before CyclePatch layer
+            model = add_adapters_to_PBT_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+            for name, p in model.named_parameters():
+                if 'adapter' in name or 'regression_head' in name:
                     if p.requires_grad is True:
                         trained_parameters_names.append(name)
                         trained_parameters.append(p)
         else:
             raise Exception(f'{finetune_method} is not implemented!')
 
-        accelerator.print(model)
-
-        model_optim = optim.Adam(trained_parameters, lr=args.learning_rate)
-
-        train_steps = len(train_loader)
-        if args.lradj == 'COS':
-            scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(model_optim, T_max=20, eta_min=1e-8)
-        else:
-            scheduler = lr_scheduler.OneCycleLR(optimizer=model_optim,
-                                                steps_per_epoch=train_steps,
-                                                pct_start=args.pct_start,
-                                                epochs=args.train_epochs,
-                                                max_lr=args.learning_rate)
-
-        train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(train_loader, vali_loader, test_loader, model, model_optim, scheduler)
-        best_vali_loss = float('inf')
-        best_vali_MAE, best_test_MAE = 0, 0
-        best_vali_RMSE, best_test_RMSE = 0, 0
-        best_vali_alpha_acc1, best_test_alpha_acc1 = 0, 0 
-        best_vali_alpha_acc2, best_test_alpha_acc2 = 0, 0 
-
-        best_seen_vali_alpha_acc1, best_seen_test_alpha_acc1 = 0, 0
-        best_seen_vali_alpha_acc2, best_seen_test_alpha_acc2 = 0, 0
-        best_unseen_vali_alpha_acc1, best_unseen_test_alpha_acc1 = 0, 0
-        best_unseen_vali_alpha_acc2, best_unseen_test_alpha_acc2 = 0, 0
-
-        best_vali_MAPE, best_test_MAPE = 0, 0
-        best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
-        best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
-
-        for epoch in range(args.train_epochs):
-            mae_metric = evaluate.load('./utils/mae')
-            mape_metric = evaluate.load('./utils/mape')
-            iter_count = 0
-            total_loss = 0
-            total_cl_loss = 0
-            total_lc_loss = 0
-            
-            model.train()
-            epoch_time = time.time()
-            print_cl_loss = 0
-            print_life_class_loss = 0
-            std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
-            total_preds, total_references = [], []
-            for i, (cycle_curve_data, curve_attn_mask,  labels, life_class, scaled_life_class, weights, seen_unseen_ids, domain_ids) in enumerate(train_loader):
-                with accelerator.accumulate(model):
-                    model_optim.zero_grad()
-                    iter_count += 1
-                    
-                    life_class = life_class.to(accelerator.device)
-                    scaled_life_class = scaled_life_class.float().to(accelerator.device)
-                    cycle_curve_data = cycle_curve_data.float().to(accelerator.device)
-                    curve_attn_mask = curve_attn_mask.float().to(accelerator.device) # [B, L]
-                    labels = labels.float().to(accelerator.device)
-                    
-                    # encoder - decoder
-                    outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask)
-
-                    cut_off = labels.shape[0]
-                        
-                    if args.loss == 'MSE':
-                        loss = criterion(outputs[:cut_off], labels)
-                        loss = torch.mean(loss * weights)
-                    elif args.loss == 'MAPE':
-                        tmp_outputs = outputs[:cut_off] * std + mean_value
-                        tmp_labels = labels * std + mean_value
-                        loss = criterion(tmp_outputs/tmp_labels, tmp_labels/tmp_labels)
-                        loss = torch.mean(loss * weights)
-                        
-                    label_loss = loss.detach().float()
-                    
-                    print_loss = loss.detach().float()
-                    
-                    total_loss += loss.detach().float()
-                    total_cl_loss += print_cl_loss
-                    total_lc_loss += print_life_class_loss
-
-                    transformed_preds = outputs[:cut_off] * std + mean_value
-                    transformed_labels = labels[:cut_off]  * std + mean_value
-                    all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
-                    
-                    total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
-                    total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
-                    accelerator.backward(loss)
-                    model_optim.step()
-                    if args.lradj == 'TST':
-                        adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=False)
-                        scheduler.step()
-                    
-                    if (i + 1) % 5 == 0:
-                        accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {label_loss:.7f} | cl_loss: {print_cl_loss:.7f} | lc_loss: {print_life_class_loss:.7f}')
-                        speed = (time.time() - time_now) / iter_count
-                        left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
-                        accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
-                        iter_count = 0
-                        time_now = time.time()
-
-            train_rmse = root_mean_squared_error(total_references, total_preds)
-            train_mape = mean_absolute_percentage_error(total_references, total_preds)
-            accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
-
-            vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False)
-            test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_baseline(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
-            vali_loss = vali_mape
-
-            if vali_loss < best_vali_loss:
-                best_vali_loss = vali_loss
-                best_vali_MAE = vali_mae_loss
-                best_test_MAE = test_mae_loss
-                best_vali_RMSE = vali_rmse
-                best_test_RMSE = test_rmse
-                best_vali_MAPE = vali_mape
-                best_test_MAPE = test_mape
-
-                # alpha-accuracy
-                best_vali_alpha_acc1 = vali_alpha_acc1
-                best_vali_alpha_acc2 = vali_alpha_acc2
-                best_test_alpha_acc1 = test_alpha_acc1
-                best_test_alpha_acc2 = test_alpha_acc2
-
-                # seen, unseen
-                best_seen_test_MAPE = test_seen_mape
-                best_unseen_test_MAPE = test_unseen_mape
-                best_seen_test_alpha_acc1 = test_seen_alpha_acc1
-                best_unseen_test_alpha_acc1 = test_unseen_alpha_acc1
-                best_seen_test_alpha_acc2 = test_seen_alpha_acc2
-                best_unseen_test_alpha_acc2 = test_unseen_alpha_acc2
-                
-            train_loss = total_loss / len(train_loader)
-            total_cl_loss = total_cl_loss / len(train_loader)
-            total_lc_loss = total_lc_loss / len(train_loader)
-            accelerator.print(
-                f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f}| Train cl loss: {total_cl_loss:.5f}| Train lc loss: {total_lc_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali RMSE: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
-                f"Test RMSE: {test_rmse:.7f}| Test MAE: {test_mae_loss:.7f} | Test MAPE: {test_mape:.7f}")
-            if accelerator.is_local_main_process:
-                wandb.log({
-                    "epoch": epoch + 1,
-                    "train_loss": float(train_loss),
-                    "train_cl_loss": float(total_cl_loss),
-                    "train_lc_loss": float(total_lc_loss),
-                    "train_RMSE": float(train_rmse),
-                    "train_MAPE": float(train_mape),
-                    "vali_RMSE": float(vali_rmse),
-                    "vali_MAE": float(vali_mae_loss),
-                    "vali_MAPE": float(vali_mape),
-                    "vali_acc1": float(vali_alpha_acc1),
-                    "vali_acc2": float(vali_alpha_acc2),
-                    "test_RMSE": float(test_rmse),
-                    "test_MAE": float(test_mae_loss),
-                    "test_MAPE": float(test_mape),
-                    "test_acc1": float(test_alpha_acc1),
-                    "test_acc2": float(test_alpha_acc2),
-                    "best_vali_loss": float(best_vali_loss),
-                    "best_test_RMSE": float(best_test_RMSE),
-                    "best_test_MAE": float(best_test_MAE),
-                    "best_test_MAPE": float(best_test_MAPE)
-                })
-            
-            early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
-            if early_stopping.early_stop:
-                accelerator.print("Early stopping")
-                accelerator.set_trigger()
-                
-            if accelerator.check_trigger():
-                break
-
-            if args.lradj != 'TST':
-                if args.lradj == 'COS':
-                    scheduler.step()
-                    accelerator.print("lr = {:.10f}".format(model_optim.param_groups[0]['lr']))
-                else:
-                    adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
-
-            else:
-                accelerator.print('Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
-
-        accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
-        accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
-        accelerator.print(f'Best model performance: Test Seen 15%-accuracy: {best_seen_test_alpha_acc1:.4f} | Test Unseen 15%-accuracy: {best_unseen_test_alpha_acc1:.4f}')
-        accelerator.print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
-        accelerator.print(path)
-        accelerator.set_trigger()
-        if accelerator.is_local_main_process:
-            wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
-                    "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
-            wandb.finish()
-
-    # transfer learning in PBT
+    accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
+    if args.wd == 0:
+        model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
     else:
-        # setting record of experiments
-        setting = '{}_{}_{}_{}_as{}_al{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_dsr{}_ffs{}_{}_{}_seed{}'.format(
-            args.model,
-            args.dk_factor,
-            args.llm_choice,
-            args.seq_len,
-            args.adapter_size,
-            args.adapter_layers,
-            args.least_epochs,
-            args.batch_size,
-            args.learning_rate,
-            args.d_model,
-            args.n_heads,
-            args.e_layers,
-            args.d_layers,
-            args.d_ff,
-            args.min_d_ff,
-            args.lradj, args.dataset, args.use_guide, args.use_LB, args.loss, args.wd, args.weighted_loss, args.dropout, args.gate_d_ff, 
-            args.num_experts, args.num_general_experts,
-            args.topK, args.use_domainSampler, args.use_aug, args.down_sample_ratio, args.use_dff_scale, trained_dataset, finetune_method, args.seed)
-        
-        path = os.path.join(args.checkpoints,
-                        setting + '-' + args.model_comment)  # unique checkpoint saving path
+        model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
 
 
-        data_provider_func = data_provider_LLMv2
-        if args.model == 'CPTransformerDeepSeekMoE':
-            model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-            model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-            model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-            model = CPTransformerDeepSeekMoE.Model(model_config)
-        elif args.model == 'PBT':
-            model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-            model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-            model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-            model = PBT.Model(model_config)
-        elif args.model == 'CPMLP':
-            model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-            model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-            model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-            model = CPMLP.Model(model_config)
-        elif args.model == 'CPTransformer':
-            model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-            model_text_config = AutoConfig.from_pretrained(args.LLM_path)
-            model_config = BatteryLifeConfig(model_ec_config, model_text_config)
-            model = CPTransformer.Model(model_config)
-        else:
-            raise Exception('Not Implemented')
-        
-        
-        if not 'MIX_all' in args.dataset:
-            temperature2mask = gate_masker.MIX_large_temperature2mask
-            format2mask = gate_masker.MIX_large_format2mask
-            cathodes2mask = gate_masker.MIX_large_cathodes2mask
-            anode2mask = gate_masker.MIX_large_anode2mask
-            ion2mask = None
-        else:
-            temperature2mask = gate_masker.MIX_all_temperature2mask
-            format2mask = gate_masker.MIX_all_format2mask
-            cathodes2mask = gate_masker.MIX_all_cathode2mask
-            anode2mask = gate_masker.MIX_all_anode2mask
-            ion2mask = gate_masker.MIX_all_ion2mask
-
-        label_scaler = joblib.load(f'{args_path}label_scaler')
-        train_data, train_loader = data_provider_func(args, 'train', temperature2mask=temperature2mask, 
-                                                    format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, 
-                                                    use_domainSampler=args.use_domainSampler, label_scaler=label_scaler)
-        label_scaler = train_data.return_label_scaler()
-        
-        accelerator.print("Loading training samples......")
-        accelerator.print("Loading vali samples......")
-        vali_data, vali_loader = data_provider_func(args, 'val', label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
-        accelerator.print("Loading test samples......")
-        test_data, test_loader = data_provider_func(args, 'test', label_scaler, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
+    criterion = nn.MSELoss(reduction='none') if args.loss == 'MSE' else nn.HuberLoss(reduction='none', delta=2.0)
+    rnc_criterion = WeightedRnCLoss(temperature=args.temperature) if args.weighted_CLDG else AverageRnCLoss(temperature=args.temperature)
     
-        if accelerator.is_local_main_process and os.path.exists(path):
-            del_files(path)  # delete checkpoint files
-            accelerator.print(f'success delete {path}')
+    load_checkpoint_in_model(model, args_path) # load the pretrained parameters into model
+    accelerator.print(f'The model is {args.model}')
+    accelerator.print(f'load model from:\n {args_path}')
+    accelerator.print(f'Model is loaded!')
+
+    # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
+    train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(
+            train_loader, vali_loader, test_loader, model, model_optim, scheduler)
+
+    best_vali_loss = float('inf')
+    best_vali_MAE, best_test_MAE = 0, 0
+    best_vali_RMSE, best_test_RMSE = 0, 0
+    best_vali_alpha_acc1, best_test_alpha_acc1 = 0, 0 
+    best_vali_alpha_acc2, best_test_alpha_acc2 = 0, 0 
+
+    best_seen_vali_alpha_acc1, best_seen_test_alpha_acc1 = 0, 0
+    best_seen_vali_alpha_acc2, best_seen_test_alpha_acc2 = 0, 0
+    best_unseen_vali_alpha_acc1, best_unseen_test_alpha_acc1 = 0, 0
+    best_unseen_vali_alpha_acc2, best_unseen_test_alpha_acc2 = 0, 0
+
+    best_vali_MAPE, best_test_MAPE = 0, 0
+    best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
+    best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
+
+
+    for epoch in range(args.train_epochs):
+        iter_count = 0
+        total_loss = 0
+        total_guidance_loss = 0
+        total_alignment_loss = 0
+        total_LB_loss = 0
+        total_label_loss = 0
         
-        os.makedirs(path, exist_ok=True)
-        accelerator.wait_for_everyone()
-        joblib.dump(label_scaler, f'{path}/label_scaler')
-
-        with open(path+'/args.json', 'w') as f:
-            json.dump(args.__dict__, f)
-        if accelerator.is_local_main_process:
-            wandb.init(
-            # set the wandb project where this run will be logged
-            project="PBT_paper",
-            
-            # track hyperparameters and run metadata
-            config=args.__dict__,
-            name=nowtime
-            )
-
-
-
-        para_res = get_parameter_number(model)
-        accelerator.print(para_res)
-
-        # Print layer names and parameter counts
-        for name, param in model.named_parameters():
-            if param.requires_grad:
-                accelerator.print(f"Layer: {name} | Number of parameters: {param.numel()}")
-
-        time_now = time.time()
-
-        train_steps = len(train_loader)
-        early_stopping = EarlyStopping(args, accelerator=accelerator, patience=args.patience, least_epochs=args.least_epochs)
-
-        trained_parameters = []
-        trained_parameters_names = []
-        use_view_experts = True
-
-        if finetune_method == 'FT':
-            # free the general experts and tune other parameters
-            for name, p in model.named_parameters():
-                if p.requires_grad is True:
-                    trained_parameters_names.append(name)
-                    trained_parameters.append(p)
-        else:
-            if args.model in ['CPMLP', 'CPTransformer']:
-                if finetune_method == 'AT':
-                    # adapter tuning
-                    model = add_adapters_withCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-                    for name, p in model.named_parameters():
-                        # only tune the adapters + gate + head
-                        if 'adapter' in name or 'gate' in name or 'regression_head' in name:
-                            if p.requires_grad is True:
-                                trained_parameters_names.append(name)
-                                trained_parameters.append(p)
-                elif finetune_method == 'AT_nCP':
-                    # adapter tuning
-                    model = add_adapters_withoutCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-                    for name, p in model.named_parameters():
-                        # only tune the adapters + gate + head
-                        if 'adapter' in name or 'gate' in name or 'regression_head' in name:
-                            if p.requires_grad is True:
-                                trained_parameters_names.append(name)
-                                trained_parameters.append(p)
-            elif finetune_method == 'AT':
-                # adapter tuning, legacy name: AT_nB
-                model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-                for name, p in model.named_parameters():
-                    if 'adapter' in name or 'regression_head' in name:
-                        if p.requires_grad is True:
-                            trained_parameters_names.append(name)
-                            trained_parameters.append(p)
-            elif finetune_method == 'AT_nCP':
-                # adapter tuning without adapter before CyclePatch layer
-                model = add_adapters_to_PBT_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
-                for name, p in model.named_parameters():
-                    if 'adapter' in name or 'regression_head' in name:
-                        if p.requires_grad is True:
-                            trained_parameters_names.append(name)
-                            trained_parameters.append(p)
-            else:
-                raise Exception(f'{finetune_method} is not implemented!')
-
-        accelerator.print(f'Trainable parameters are: {trained_parameters_names}')
-        if args.wd == 0:
-            model_optim = optim.Adam(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
-        else:
-            model_optim = optim.AdamW(trained_parameters, lr=args.learning_rate, weight_decay=args.wd)
-
-
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(model_optim, T_0=args.T0, eta_min=0, T_mult=2, last_epoch=-1)
-        criterion = nn.MSELoss(reduction='none') if args.loss == 'MSE' else nn.HuberLoss(reduction='none', delta=2.0)
-        rnc_criterion = WeightedRnCLoss(temperature=args.temperature) if args.weighted_CLDG else AverageRnCLoss(temperature=args.temperature)
-        
-        load_checkpoint_in_model(model, args_path) # load the pretrained parameters into model
-        accelerator.print(f'The model is {args.model}')
-        accelerator.print(f'load model from:\n {args_path}')
-        accelerator.print(f'Model is loaded!')
-
-        # accelerator.state.select_deepspeed_plugin("BatteryLifeLLM")
-        train_loader, vali_loader, test_loader, model, model_optim, scheduler = accelerator.prepare(
-                train_loader, vali_loader, test_loader, model, model_optim, scheduler)
-
-        best_vali_loss = float('inf')
-        best_vali_MAE, best_test_MAE = 0, 0
-        best_vali_RMSE, best_test_RMSE = 0, 0
-        best_vali_alpha_acc1, best_test_alpha_acc1 = 0, 0 
-        best_vali_alpha_acc2, best_test_alpha_acc2 = 0, 0 
-
-        best_seen_vali_alpha_acc1, best_seen_test_alpha_acc1 = 0, 0
-        best_seen_vali_alpha_acc2, best_seen_test_alpha_acc2 = 0, 0
-        best_unseen_vali_alpha_acc1, best_unseen_test_alpha_acc1 = 0, 0
-        best_unseen_vali_alpha_acc2, best_unseen_test_alpha_acc2 = 0, 0
-
-        best_vali_MAPE, best_test_MAPE = 0, 0
-        best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
-        best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
-
-
-        for epoch in range(args.train_epochs):
-            iter_count = 0
-            total_loss = 0
-            total_guidance_loss = 0
-            total_alignment_loss = 0
-            total_LB_loss = 0
-            total_label_loss = 0
-            
-            model.train()
-            epoch_time = time.time()
-            print_guidance_loss = 0
-            print_alignment_loss = 0
-            print_LB_loss = 0
-            print_label_loss = 0
-            std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
-            total_preds, total_references = [], []
-            for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in enumerate(train_loader):
-                with accelerator.accumulate(model):
-                    # batch_x_mark is the total_masks
-                    # batch_y_mark is the total_used_cycles
-                    if epoch < args.warm_up_epoches:
-                        # adjust the learning rate
-                        warm_up_lr = args.learning_rate * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader))
-                        for param_group in model_optim.param_groups:
-                            param_group['lr'] = warm_up_lr
-
-                        if (i + 1) % 5 == 0:
-                            if accelerator is not None:
-                                accelerator.print(f'Warmup | Updating learning rate to {warm_up_lr}')
-                            else:
-                                print(f'Warmup | Updating learning rate to {warm_up_lr}')
-
-                    model_optim.zero_grad()
-                    iter_count += 1
-
-                    # encoder - decoder
-                    outputs, _, _, _, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
-                    DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts)
-                    
-
-                    loss = criterion(outputs, labels)
-                    loss = torch.mean(loss * weights)
-                    
-                    final_loss = loss
-                    if args.num_experts > 1 and args.use_LB:
-                        importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
-                        print_LB_loss = importance_loss.detach().float()
-                        final_loss = final_loss + importance_loss
-
-
-                    print_label_loss = loss.item()
-                    print_loss = final_loss.item()
-                    
-                    total_loss += final_loss.item()
-                    total_guidance_loss += print_guidance_loss
-                    total_alignment_loss += print_alignment_loss
-                    total_LB_loss += print_LB_loss
-                    total_label_loss += print_label_loss
-
-                    transformed_preds = outputs * std + mean_value
-                    transformed_labels = labels * std + mean_value
-                    all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
-
-                    accelerator.backward(final_loss)
-                    # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
-                    model_optim.step()
-                    
-
-                    total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
-                    total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
-
+        model.train()
+        epoch_time = time.time()
+        print_guidance_loss = 0
+        print_alignment_loss = 0
+        print_LB_loss = 0
+        print_label_loss = 0
+        std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
+        total_preds, total_references = [], []
+        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in enumerate(train_loader):
+            with accelerator.accumulate(model):
+                # batch_x_mark is the total_masks
+                # batch_y_mark is the total_used_cycles
+                if epoch < args.warm_up_epoches:
+                    # adjust the learning rate
+                    warm_up_lr = args.learning_rate * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader))
+                    for param_group in model_optim.param_groups:
+                        param_group['lr'] = warm_up_lr
 
                     if (i + 1) % 5 == 0:
-                        accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
-                        speed = (time.time() - time_now) / iter_count
-                        left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
-                        accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
-                        iter_count = 0
-                        time_now = time.time()
+                        if accelerator is not None:
+                            accelerator.print(f'Warmup | Updating learning rate to {warm_up_lr}')
+                        else:
+                            print(f'Warmup | Updating learning rate to {warm_up_lr}')
 
-                    
+                model_optim.zero_grad()
+                iter_count += 1
 
-            train_rmse = root_mean_squared_error(total_references, total_preds)
-            train_mape = mean_absolute_percentage_error(total_references, total_preds)
-            accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
-
-            vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
-            test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
-            vali_loss = vali_mape if eval_metric=='MAPE' else vali_rmse
-            
-            if vali_loss < best_vali_loss:
-                best_vali_loss = vali_loss
-                best_vali_MAE = vali_mae_loss
-                best_test_MAE = test_mae_loss
-                best_vali_RMSE = vali_rmse
-                best_test_RMSE = test_rmse
-                best_vali_MAPE = vali_mape
-                best_test_MAPE = test_mape
-
-                # alpha-accuracy
-                best_vali_alpha_acc1 = vali_alpha_acc1
-                best_vali_alpha_acc2 = vali_alpha_acc2
-                best_test_alpha_acc1 = test_alpha_acc1
-                best_test_alpha_acc2 = test_alpha_acc2
-
-                # seen, unseen
-                best_seen_test_MAPE = test_seen_mape
-                best_unseen_test_MAPE = test_unseen_mape
-                best_seen_test_alpha_acc1 = test_seen_alpha_acc1
-                best_unseen_test_alpha_acc1 = test_unseen_alpha_acc1
-                best_seen_test_alpha_acc2 = test_seen_alpha_acc2
-                best_unseen_test_alpha_acc2 = test_unseen_alpha_acc2
+                # encoder - decoder
+                outputs, _, _, _, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
+                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
+                anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_view_experts=use_view_experts)
                 
-            train_loss = total_loss / len(train_loader)
-            total_guidance_loss = total_guidance_loss / len(train_loader)
-            total_alignment_loss = total_alignment_loss / len(train_loader)
-            total_LB_loss = total_LB_loss / len(train_loader)
-            total_label_loss = total_label_loss / len(train_loader)
-            accelerator.print(
-                f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
-                f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
-            if accelerator.is_local_main_process:
-                wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
-                        "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
-            
-            early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
-            if early_stopping.early_stop:
-                accelerator.print("Early stopping")
-                accelerator.set_trigger()
-                
-            if accelerator.check_trigger():
-                break
-            
-            if accelerator.is_local_main_process:
-                if args.lradj != 'CosineAnnealingLR':
-                    adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
-                else:
-                    if epoch >= args.warm_up_epoches:
-                        scheduler.step()
-                        accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
 
-        accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
-        accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
-        accelerator.print(f'Best model performance: Test Seen 15%-accuracy: {best_seen_test_alpha_acc1:.4f} | Test Unseen 15%-accuracy: {best_unseen_test_alpha_acc1:.4f}')
-        accelerator.print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
-        accelerator.print(path)
-        accelerator.set_trigger()
-        if accelerator.check_trigger() and accelerator.is_local_main_process:
-            wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
-                    "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
-            wandb.finish()
+                loss = criterion(outputs, labels)
+                loss = torch.mean(loss * weights)
+                
+                final_loss = loss
+                if args.num_experts > 1 and args.use_LB:
+                    importance_loss = args.importance_weight * aug_loss.float() * args.num_experts
+                    print_LB_loss = importance_loss.detach().float()
+                    final_loss = final_loss + importance_loss
+
+
+                print_label_loss = loss.item()
+                print_loss = final_loss.item()
+                
+                total_loss += final_loss.item()
+                total_guidance_loss += print_guidance_loss
+                total_alignment_loss += print_alignment_loss
+                total_LB_loss += print_LB_loss
+                total_label_loss += print_label_loss
+
+                transformed_preds = outputs * std + mean_value
+                transformed_labels = labels * std + mean_value
+                all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
+
+                accelerator.backward(final_loss)
+                # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                model_optim.step()
+                
+
+                total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+                total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+
+
+                if (i + 1) % 5 == 0:
+                    accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
+                    speed = (time.time() - time_now) / iter_count
+                    left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
+                    accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
+                    iter_count = 0
+                    time_now = time.time()
+
+                
+
+        train_rmse = root_mean_squared_error(total_references, total_preds)
+        train_mape = mean_absolute_percentage_error(total_references, total_preds)
+        accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
+
+        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
+        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
+        vali_loss = vali_mape if eval_metric=='MAPE' else vali_rmse
+        
+        if vali_loss < best_vali_loss:
+            best_vali_loss = vali_loss
+            best_vali_MAE = vali_mae_loss
+            best_test_MAE = test_mae_loss
+            best_vali_RMSE = vali_rmse
+            best_test_RMSE = test_rmse
+            best_vali_MAPE = vali_mape
+            best_test_MAPE = test_mape
+
+            # alpha-accuracy
+            best_vali_alpha_acc1 = vali_alpha_acc1
+            best_vali_alpha_acc2 = vali_alpha_acc2
+            best_test_alpha_acc1 = test_alpha_acc1
+            best_test_alpha_acc2 = test_alpha_acc2
+
+            # seen, unseen
+            best_seen_test_MAPE = test_seen_mape
+            best_unseen_test_MAPE = test_unseen_mape
+            best_seen_test_alpha_acc1 = test_seen_alpha_acc1
+            best_unseen_test_alpha_acc1 = test_unseen_alpha_acc1
+            best_seen_test_alpha_acc2 = test_seen_alpha_acc2
+            best_unseen_test_alpha_acc2 = test_unseen_alpha_acc2
+            
+        train_loss = total_loss / len(train_loader)
+        total_guidance_loss = total_guidance_loss / len(train_loader)
+        total_alignment_loss = total_alignment_loss / len(train_loader)
+        total_LB_loss = total_LB_loss / len(train_loader)
+        total_label_loss = total_label_loss / len(train_loader)
+        accelerator.print(
+            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
+            f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
+        if accelerator.is_local_main_process:
+            wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
+                    "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
+        
+        early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
+        if early_stopping.early_stop:
+            accelerator.print("Early stopping")
+            accelerator.set_trigger()
+            
+        if accelerator.check_trigger():
+            break
+        
+        if accelerator.is_local_main_process:
+            if args.lradj != 'CosineAnnealingLR':
+                adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
+            else:
+                if epoch >= args.warm_up_epoches:
+                    scheduler.step()
+                    accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
+
+accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
+accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
+accelerator.print(f'Best model performance: Test Seen 15%-accuracy: {best_seen_test_alpha_acc1:.4f} | Test Unseen 15%-accuracy: {best_unseen_test_alpha_acc1:.4f}')
+accelerator.print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
+accelerator.print(path)
+accelerator.set_trigger()
+if accelerator.check_trigger() and accelerator.is_local_main_process:
+    wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
+            "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
+    wandb.finish()

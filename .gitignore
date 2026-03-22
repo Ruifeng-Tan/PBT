@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 .vscode/
 plot_scripts/
+finetune_model_legacy.py
+
 
 
 # Dataset and checkpoints
