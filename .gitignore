@@ -5,6 +5,7 @@ __pycache__/
 .vscode/
 plot_scripts/
 finetune_model_legacy.py
+evaluate_model_legacy.py
 
 
 
