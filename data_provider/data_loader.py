@@ -26,6 +26,7 @@ from utils.augmentation import BatchAugmentation_battery_revised
 from data_provider.data_split_recorder import split_recorder
 from data_provider.gate_masker import gate_masker
 import accelerate
+import shutil
 warnings.filterwarnings('ignore')
 datasetName2ids = {
     'CALCE':0,
@@ -208,9 +209,9 @@ def my_collate_fn(samples):
 
 # BatterLifeLLM dataloader
 class Dataset_PBT(Dataset):
-    def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
+    def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None,
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None, 
+                 class_labels=None, life_class_scaler=None, temperature2mask=None, format2mask=None, cathodes2mask=None,
                  anode2mask=None, ion2mask=None, trained_dataset=None, use_target_dataset=False):
         '''
         init the Dataset_BatteryFormer class
@@ -218,12 +219,34 @@ class Dataset_PBT(Dataset):
         :param flag:including train, val, test
         :param scaler:scaler or not
         '''
+        
         self.llm_choice = args.llm_choice
         self.eval_cycle_max = eval_cycle_max
         self.eval_cycle_min = eval_cycle_min
         self.args = args
         self.seed = args.seed
         self.root_path = args.root_path
+        
+        # Check if total_MICH folder exists, if not create it and copy files from MICH and MICH_EXP
+        total_mich_path = os.path.join(self.root_path, 'total_MICH')
+        if not os.path.exists(total_mich_path):
+            os.makedirs(total_mich_path)
+            mich_path = os.path.join(self.root_path, 'MICH')
+            mich_exp_path = os.path.join(self.root_path, 'MICH_EXP')
+            # Copy files from MICH folder
+            if os.path.exists(mich_path):
+                for item in os.listdir(mich_path):
+                    src_item = os.path.join(mich_path, item)
+                    dst_item = os.path.join(total_mich_path, item)
+                    if os.path.isfile(src_item):
+                        shutil.copy2(src_item, dst_item)
+            # Copy files from MICH_EXP folder
+            if os.path.exists(mich_exp_path):
+                for item in os.listdir(mich_exp_path):
+                    src_item = os.path.join(mich_exp_path, item)
+                    dst_item = os.path.join(total_mich_path, item)
+                    if os.path.isfile(src_item):
+                        shutil.copy2(src_item, dst_item)
         self.seq_len = args.seq_len
         self.charge_discharge_len = args.charge_discharge_length  # The resampled length for charge and discharge curves
         self.flag = flag
@@ -246,7 +269,7 @@ class Dataset_PBT(Dataset):
         self.anode2mask = anode2mask
         self.ion2mask = ion2mask
 
-        self.name2domainID = json.load(open(f'/data/trf/python_works/PBT/gate_data/name2agingConditionID.json'))
+        self.name2domainID = json.load(open(f'./gate_data/name2agingConditionID.json'))
 
         self.label_prompts_vectors = {}
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
@@ -1286,7 +1309,7 @@ def my_collate_fn_baseline_BL(samples):
 
 # BatterLife dataloader
 class Dataset_BatteryLife(Dataset):
-    def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None, 
+    def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None,
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
                  class_labels=None, life_class_scaler=None, use_target_dataset=False):
         '''
@@ -1299,6 +1322,27 @@ class Dataset_BatteryLife(Dataset):
         self.eval_cycle_min = eval_cycle_min
         self.args = args
         self.root_path = args.root_path.replace('Battery-LLM', 'BatteryLife')
+        
+        # Check if total_MICH folder exists, if not create it and copy files from MICH and MICH_EXP
+        total_mich_path = os.path.join(self.root_path, 'total_MICH')
+        if not os.path.exists(total_mich_path):
+            os.makedirs(total_mich_path)
+            mich_path = os.path.join(self.root_path, 'MICH')
+            mich_exp_path = os.path.join(self.root_path, 'MICH_EXP')
+            # Copy files from MICH folder
+            if os.path.exists(mich_path):
+                for item in os.listdir(mich_path):
+                    src_item = os.path.join(mich_path, item)
+                    dst_item = os.path.join(total_mich_path, item)
+                    if os.path.isfile(src_item):
+                        shutil.copy2(src_item, dst_item)
+            # Copy files from MICH_EXP folder
+            if os.path.exists(mich_exp_path):
+                for item in os.listdir(mich_exp_path):
+                    src_item = os.path.join(mich_exp_path, item)
+                    dst_item = os.path.join(total_mich_path, item)
+                    if os.path.isfile(src_item):
+                        shutil.copy2(src_item, dst_item)
         self.seq_len = args.seq_len
         self.charge_discharge_len = args.charge_discharge_length  # The resampled length for charge and discharge curves
         self.flag = flag
