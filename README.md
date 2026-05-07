@@ -1,12 +1,12 @@
 # README
-This is the official repo for the paper "[Pretrained battery transformer (PBT): A foundation model for universal battery life prediction](http://arxiv.org/abs/2512.16334)". This work presents the first widely transferable foundation model for early prediction of battery lifetime. It features the following utility:
+This is the official repo for the paper "Pretrained battery transformer (PBT): A foundation model for battery life prediction". This work presents the first widely transferable foundation model for early prediction of battery lifetime. It features the following utility:
 1. One model for diverse aging conditions: PBT is pretrained using 13 diverse lithium-ion battery (LIB) datasets. Through transfer learning, PBT adapts easily to predict the cycle life of batteries outside its pretraining distribution. PBT is validated on the largest and most diverse public battery life database available to date. It covers:
 - Almost all commercial Lithium-ion battery (LIB) chemistries.
 - Various formation, charge, and discharge protocols.
 - Diverse operation temperatures and stress factors.
 - Chemistries beyond LIBs (e.g., Zn-ion and Na-ion batteries).
-2. One model for a wide spectrum of early prediction settings: Unlike models requiring a fixed input length, PBT can predict cycle life using an arbitrary number of first N cycles (where N is any integer $\le$ 100).
-3. Leading model performance: PBT achieves state-of-the-art performance on the 15 datasets, often outperforming existing methods by a significant margin.
+1. One model for a wide spectrum of early prediction settings: Unlike models requiring a fixed input length, PBT can predict cycle life using an arbitrary number of first N cycles (where N is any integer $\le$ 100).
+2. Leading model performance: PBT achieves state-of-the-art performance on the 15 datasets, often outperforming existing methods by a significant margin.
 
 🙋 Please let us know if you find a mistake or have any suggestions!
 
