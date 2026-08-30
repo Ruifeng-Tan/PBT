@@ -455,6 +455,95 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
     model.train()
     return rmse, mae, mape, alpha_acc1, alpha_acc2
 
+def vali_baseline_with_BLN(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
+    total_preds, total_references = [], []
+    total_seen_unseen_ids = []
+    model.eval()
+    with torch.no_grad():
+        for i, (cycle_curve_data, curve_attn_mask, labels, life_class, scaled_life_class, weights, seen_unseen_ids, features, data_batch) in tqdm(enumerate(vali_loader)):
+            x, y, raw_x = data_batch.feature, data_batch.label, data_batch.raw_feature
+            sup_x, sup_y = get_support_set(raw_x, vali_data.total_features, vali_data.total_labels, args, training=True)
+            x = x.to(accelerator.device)
+            y = y.to(accelerator.device)
+            sup_x = sup_x.float().to(accelerator.device)
+            sup_y = sup_y.float().to(accelerator.device)
+
+
+            outputs, loss = model(x, y, sup_x, sup_y, training=False)
+
+            # self.accelerator.wait_for_everyone()
+            std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
+            transformed_preds = outputs * std + mean_value
+            transformed_labels = labels * std + mean_value
+
+            all_predictions, all_targets, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids))
+
+         
+            total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+            total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+            if compute_seen_unseen:
+                total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
+
+    total_preds = np.array(total_preds)
+    total_references = np.array(total_references)   
+    total_seen_unseen_ids = np.array(total_seen_unseen_ids)
+    rmse = root_mean_squared_error(total_references, total_preds)
+    mae = mean_absolute_error(total_references, total_preds)
+    mape = mean_absolute_percentage_error(total_references, total_preds)
+
+    relative_error = abs(total_preds - total_references) / total_references
+    hit_num = sum(relative_error<=args.alpha1)
+    alpha_acc1 = hit_num / len(total_references) * 100
+
+    relative_error = abs(total_preds - total_references) / total_references
+    hit_num = sum(relative_error<=args.alpha2)
+    alpha_acc2 = hit_num / len(total_references) * 100
+
+    if compute_seen_unseen:
+        # calculate the model performance on the samples from the seen and unseen aging conditions
+        seen_references = total_references[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([0])
+        unseen_references = total_references[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([0])
+        seen_preds = total_preds[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([1])
+        unseen_preds = total_preds[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([1])
+
+        # MAPE
+        seen_mape = mean_absolute_percentage_error(seen_references, seen_preds)
+        if len(unseen_preds) > 0:
+            unseen_mape = mean_absolute_percentage_error(unseen_references, unseen_preds)
+        else:
+            unseen_mape = -10000
+
+        # alpha-acc1 
+        relative_error = abs(seen_preds - seen_references) / seen_references
+        hit_num = sum(relative_error<=args.alpha1)
+        seen_alpha_acc1 = hit_num / len(seen_references) * 100
+
+        
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha1)
+            unseen_alpha_acc1 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc1 = -10000
+
+        # alpha-acc2
+        relative_error = abs(seen_preds - seen_references) / seen_references
+        hit_num = sum(relative_error<=args.alpha2)
+        seen_alpha_acc2 = hit_num / len(seen_references) * 100
+
+        if len(unseen_preds) > 0:
+            relative_error = abs(unseen_preds - unseen_references) / unseen_references
+            hit_num = sum(relative_error<=args.alpha2)
+            unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
+        else:
+            unseen_alpha_acc2 = -10000
+
+        model.train()
+        return  rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape, seen_mape, unseen_alpha_acc1, seen_alpha_acc1, unseen_alpha_acc2, seen_alpha_acc2
+    
+    model.train()
+    return rmse, mae, mape, alpha_acc1, alpha_acc2
+
 def domain_average(total_domain_ids, MAPEs, return_IDs=False):
     assert total_domain_ids.shape[0] == MAPEs.shape[0], "Inputs must have the same length"
     
@@ -580,3 +669,92 @@ def domain_average(total_domain_ids, MAPEs, return_IDs=False):
 
     model.train()
     return rmse, mae, mape, alpha_acc1, alpha_acc2
+
+def get_support_set(x, sup_feat, sup_label, args, training):
+    # if self.features_to_drop is not None:
+    #     mask = [i for i in range(sup_feat.size(1))
+    #             if i not in self.features_to_drop]
+    #     sup_feat = sup_feat[:, mask].contiguous()
+    # if self.cycles_to_drop is not None:
+    #     sup_feat[:, :, :, self.cycles_to_drop] = 0.
+
+    if training:
+        size = (len(x) * args.train_support_size,)
+    else:
+        size = (len(x) * args.test_support_size,)
+    indx = torch.randint(len(sup_feat), size, device=x.device)
+    B, C, H, W = x.size()
+    sup_feat_tensor = torch.stack([torch.from_numpy(arr) for arr in sup_feat])
+    sup_label_tensor = torch.stack([torch.from_numpy(arr) for arr in sup_label])
+
+    feature = x.unsqueeze(1) - sup_feat_tensor[indx].view(B, -1, C, H, W)
+    label = sup_label_tensor[indx].view(B, -1)
+    feature = _clean_feature(feature)
+    return feature, label
+
+def _clean_feature(feature):
+        num = 50
+        feature[..., :num] = smoothing(feature[..., :num])
+        feature[..., -num:] = smoothing(feature[..., -num:])
+        feature = remove_glitches(feature)
+        # Filter problematic cycles using Hampel filter
+        feature = _filter_cycles(feature)
+        return feature
+
+def smoothing(feature):
+    med = feature.median(-1)[0].unsqueeze(-1).expand(*feature.shape)
+    med_diff = (feature - med).abs()
+    med_diff_std = med_diff.std(-1, keepdim=True).expand(*feature.shape)
+    mask = med_diff > med_diff_std * 3
+    feature[mask] = 0.
+    return feature
+
+def _filter_cycles(feature):
+        feature = feature.clone()
+
+        # Filter the cycles with its max value too large
+        max_val = feature.abs().amax(-1)
+        max_val_med = max_val.median(-1, keepdim=True)[0]
+        max_val_diff = (max_val - max_val_med).abs()
+        mask = max_val_diff > max_val_diff.std(-1, keepdim=True) * 5
+
+        # Filter the cycles with its mean deviating from other cycles
+        mean_val = feature.mean(-1)
+        mean_val_med = mean_val.median(-1, keepdim=True)[0]
+        mean_val_diff = (mean_val - mean_val_med).abs()
+        mask |= mean_val_diff > mean_val_diff.std(-1, keepdim=True) * 5
+
+        # Fill with zero
+        feature[mask] = 0.
+
+        return feature
+
+def _remove_glitches(x, width, threshold):
+    left_element = torch.roll(x, shifts=1, dims=-1)
+    right_element = torch.roll(x, shifts=-1, dims=-1)
+    diff_with_left_element = (left_element - x).abs()
+    diff_with_right_element = (right_element - x).abs()
+
+    # diff_with_left_element[..., 0] = 0.
+    # diff_with_right_element[..., -1] = 0.
+
+    ths = diff_with_left_element.std(-1, keepdim=True) * threshold
+    non_smooth_on_left = diff_with_left_element > ths
+    ths = diff_with_right_element.std(-1, keepdim=True) * threshold
+    non_smooth_on_right = diff_with_right_element > ths
+    for _ in range(width):
+        non_smooth_on_left |= torch.roll(
+            non_smooth_on_left, shifts=1, dims=-1)
+        non_smooth_on_right |= torch.roll(
+            non_smooth_on_right, shifts=-1, dims=-1)
+    to_smooth = non_smooth_on_left & non_smooth_on_right
+    x[to_smooth] = 0.
+    return x
+
+def remove_glitches(data, width=25, threshold=3):
+    shape = data.shape
+    data = data.view(-1, *shape[-3:])
+    for i in range(len(data)):
+        data[i] = _remove_glitches(data[i], width, threshold)
+    data = data.view(shape)
+    return data

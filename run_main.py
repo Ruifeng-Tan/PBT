@@ -6,11 +6,11 @@ from accelerate import Accelerator, DeepSpeedPlugin
 from accelerate import DistributedDataParallelKwargs
 from torch import nn, optim
 from tqdm import tqdm
-from utils.tools import get_parameter_number
+from utils.tools import get_parameter_number, get_support_set, vali_baseline_with_BLN
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, CPTransformerDeepSeekMoE, CPMLP, CPTransformer
+from models import PBT, CPTransformerDeepSeekMoE, CPMLP, CPTransformer, BatLiNet
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -166,6 +166,18 @@ parser.add_argument('--importance_weight', type=float, default=0.0, help='The lo
 parser.add_argument('--use_ReMoE', action='store_true', default=False, help='Set True to use relu router')
 # parser.add_argument('--use_PCA', action='store_true', default=False, help='Set True to use prompt embeddings processed by PCA')
 
+# BatLiNet configs
+parser.add_argument('--train_support_size', type=int, default=2, help='')
+parser.add_argument('--test_support_size', type=int, default=32, help='')
+parser.add_argument('--in_channels', type=int, default=6, help='')
+parser.add_argument('--channels', type=int, default=32, help='')
+parser.add_argument('--input_height', type=int, default=100, help='')
+parser.add_argument('--input_width', type=int, default=1000, help='')
+parser.add_argument('--max_cycle_index', type=int, default=100, help='')
+parser.add_argument('--diff_base', type=int, default=10, help='')
+parser.add_argument('--alpha', type=float, default=0.5, help='')
+parser.add_argument('--target_dataset', type=str, default='CALCE', help='')
+
 # Pretrain
 parser.add_argument('--Pretrained_model_path', type=str, default='', help='The path to the saved pretrained model parameters')
 
@@ -261,6 +273,8 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = CPTransformer.Model(model_config)
+    elif args.model == 'BatLiNet':
+        model = BatLiNet.Model(args.in_channels, args.channels, args.input_height, args.input_width).float()
     else:
         raise Exception('Not Implemented')
 
@@ -374,80 +388,122 @@ for ii in range(args.itr):
         print_label_loss = 0
         std, mean_value = np.sqrt(train_data.label_scaler.var_[-1]), train_data.label_scaler.mean_[-1]
         total_preds, total_references = [], []
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in enumerate(train_loader):
-            with accelerator.accumulate(model):
-                if epoch < args.warm_up_epoches:
-                    # adjust the learning rate
-                    warm_up_lr = (args.learning_rate - 1e-6) * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader)) + 1e-6
-                    for param_group in model_optim.param_groups:
-                        param_group['lr'] = warm_up_lr
+
+        if args.model == 'BatLiNet':
+            for i, (cycle_curve_data, curve_attn_mask, labels, life_class, scaled_life_class, weights, seen_unseen_ids, features, data_batch) in enumerate(train_loader):
+                with accelerator.accumulate(model):
+                    model_optim.zero_grad()
+                    iter_count += 1
+
+                    x, y, raw_x = data_batch.feature, data_batch.label, data_batch.raw_feature
+                    sup_x, sup_y = get_support_set(raw_x, train_data.total_features, train_data.total_labels, args, training=True)
+                    x = x.to(accelerator.device)
+                    y = y.to(accelerator.device)
+                    sup_x = sup_x.float().to(accelerator.device)
+                    sup_y = sup_y.float().to(accelerator.device)
+
+
+                    outputs, loss = model(x, y, sup_x, sup_y, training=True)
+                    cut_off = labels.shape[0]            
+                        
+                    label_loss = loss.detach().float()
+                    print_loss = loss.detach().float()
+                    total_loss += loss.detach().float()
+
+                    transformed_preds = outputs[:cut_off] * std + mean_value
+                    transformed_labels = labels[:cut_off]  * std + mean_value
+                    all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
+                    
+                    total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+                    total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+                    accelerator.backward(loss)
+                    model_optim.step()
+                    if args.lradj == 'TST':
+                        adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=False)
+                        scheduler.step()
+                    
+                    if (i + 1) % 5 == 0:
+                        accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {label_loss:.7f}')
+                        speed = (time.time() - time_now) / iter_count
+                        left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
+                        accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
+                        iter_count = 0
+                        time_now = time.time()
+        else:
+            for i, (cycle_curve_data, curve_attn_mask, labels, weights, _, DKP_embeddings, _, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in enumerate(train_loader):
+                with accelerator.accumulate(model):
+                    if epoch < args.warm_up_epoches:
+                        # adjust the learning rate
+                        warm_up_lr = (args.learning_rate - 1e-6) * (len(train_loader)*epoch + i + 1) / (args.warm_up_epoches*len(train_loader)) + 1e-6
+                        for param_group in model_optim.param_groups:
+                            param_group['lr'] = warm_up_lr
+
+                        if (i + 1) % 5 == 0:
+                            if accelerator is not None:
+                                accelerator.print(f'Warmup | Updating learning rate to {warm_up_lr}')
+                            else:
+                                print(f'Warmup | Updating learning rate to {warm_up_lr}')
+
+                    
+                    iter_count += 1
+                    # encoder - decoder
+                    outputs, _, _, _, _, _, LB_loss, _ = model(cycle_curve_data, curve_attn_mask, 
+                    DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
+                    anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks)
+                    
+
+                    loss = criterion(outputs, labels)
+                    loss = torch.mean(loss * weights)
+                    
+
+                    final_loss = loss
+
+                    if args.use_LB:
+                        importance_loss = LB_loss.float()
+                        print_LB_loss = importance_loss.detach().float()
+                        final_loss = final_loss + args.importance_weight * importance_loss
+                    else:
+                        pass
+
+
+
+
+                    print_label_loss = loss.item()
+                    print_loss = final_loss.item()
+                    
+                    total_loss += final_loss.item()
+                    total_guidance_loss += print_guidance_loss
+                    total_alignment_loss += print_alignment_loss
+                    total_LB_loss += print_LB_loss
+                    total_label_loss += print_label_loss
+
+                    transformed_preds = outputs * std + mean_value
+                    transformed_labels = labels * std + mean_value
+                    all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
+
+                    if epoch < args.cl_epoches:
+                        cl_model_optim.zero_grad()
+                        accelerator.backward(final_loss)
+                        # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                        cl_model_optim.step()
+                    else:
+                        model_optim.zero_grad()
+                        accelerator.backward(final_loss)
+                        # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
+                        model_optim.step()
+                    
+
+                    total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
+                    total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
+
 
                     if (i + 1) % 5 == 0:
-                        if accelerator is not None:
-                            accelerator.print(f'Warmup | Updating learning rate to {warm_up_lr}')
-                        else:
-                            print(f'Warmup | Updating learning rate to {warm_up_lr}')
-
-                
-                iter_count += 1
-                # encoder - decoder
-                outputs, _, _, _, _, _, LB_loss, _ = model(cycle_curve_data, curve_attn_mask, 
-                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks)
-                
-
-                loss = criterion(outputs, labels)
-                loss = torch.mean(loss * weights)
-                
-
-                final_loss = loss
-
-                if args.use_LB:
-                    importance_loss = LB_loss.float()
-                    print_LB_loss = importance_loss.detach().float()
-                    final_loss = final_loss + args.importance_weight * importance_loss
-                else:
-                    pass
-
-
-
-
-                print_label_loss = loss.item()
-                print_loss = final_loss.item()
-                
-                total_loss += final_loss.item()
-                total_guidance_loss += print_guidance_loss
-                total_alignment_loss += print_alignment_loss
-                total_LB_loss += print_LB_loss
-                total_label_loss += print_label_loss
-
-                transformed_preds = outputs * std + mean_value
-                transformed_labels = labels * std + mean_value
-                all_predictions, all_targets = accelerator.gather_for_metrics((transformed_preds, transformed_labels))
-
-                if epoch < args.cl_epoches:
-                    cl_model_optim.zero_grad()
-                    accelerator.backward(final_loss)
-                    # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
-                    cl_model_optim.step()
-                else:
-                    model_optim.zero_grad()
-                    accelerator.backward(final_loss)
-                    # nn.utils.clip_grad_norm_(model.parameters(), max_norm=5) # gradient clipping
-                    model_optim.step()
-                
-
-                total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
-                total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
-
-
-                if (i + 1) % 5 == 0:
-                    accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
-                    speed = (time.time() - time_now) / iter_count
-                    left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
-                    accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
-                    iter_count = 0
-                    time_now = time.time()
+                        accelerator.print(f'\titeras: {i+1}, epoch: {epoch+1} | loss:{print_loss:.7f} | label_loss: {print_label_loss:.7f} | guidance_loss: {print_guidance_loss:.7f} | align_loss: {print_alignment_loss:.7f} | LB loss {print_LB_loss:.7f}')
+                        speed = (time.time() - time_now) / iter_count
+                        left_time = speed * ((args.train_epochs - epoch) * train_steps - i)
+                        accelerator.print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
+                        iter_count = 0
+                        time_now = time.time()
 
                 
 
@@ -455,8 +511,13 @@ for ii in range(args.itr):
         train_mape = mean_absolute_percentage_error(total_references, total_preds)
         accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
 
-        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
-        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
+        if args.model == 'BatLiNet':
+            vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_baseline_with_BLN(args, accelerator, model, vali_data, vali_loader, criterion)
+            test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_baseline_with_BLN(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
+        else:
+            vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
+            test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
+
         vali_loss = vali_mape
         
         if vali_loss < best_vali_loss:
