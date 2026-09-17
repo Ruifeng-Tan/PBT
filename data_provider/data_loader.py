@@ -1,4 +1,5 @@
 import os
+import abc
 import random
 import re
 import numpy as np
@@ -191,6 +192,22 @@ def my_collate_fn_withId(samples):
     cycle_curve_data[tmp_curve_attn_mask==0] = 0 # set the unseen data as zeros
     
     return cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids
+
+def my_collate_fn_batlinet(samples):
+    cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
+    curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
+    life_class = torch.Tensor([i['life_class'] for i in samples])
+    labels = torch.Tensor([i['labels'] for i in samples])
+    scaled_life_class = torch.Tensor([i['scaled_life_class'] for i in samples])
+    weights = torch.Tensor([i['weight'] for i in samples])
+    seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
+    features = torch.Tensor([i['total_features'] for i in samples])
+    diff_base = int([i['diff_base'] for i in samples][0])
+
+    dataset = build_cycle_diff_dataset(features, labels, diff_base)
+
+    return cycle_curve_data, curve_attn_mask,  labels, life_class, scaled_life_class, weights, seen_unseen_ids, features, dataset
+
 
 def my_collate_fn(samples):
     cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
@@ -1419,7 +1436,7 @@ def my_collate_fn_baseline_BL(samples):
 class Dataset_BatteryLife(Dataset):
     def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None,
                  total_charge_discharge_curves=None, total_curve_attn_masks=None, total_labels=None, unique_labels=None,
-                 class_labels=None, life_class_scaler=None, use_target_dataset=False):
+                 class_labels=None, life_class_scaler=None, use_target_dataset=False, total_features=None):
         '''
         init the Dataset_BatteryFormer class
         :param args:model parameters
@@ -1430,6 +1447,13 @@ class Dataset_BatteryLife(Dataset):
         self.eval_cycle_min = eval_cycle_min
         self.args = args
         self.root_path = args.root_path.replace('Battery-LLM', 'BatteryLife')
+
+        self.target_dataset = args.target_dataset # for BatLiNet
+        self.dataset = args.dataset if not use_target_dataset else args.target_dataset
+        self.early_cycle_threshold = args.early_cycle_threshold
+        self.max_cycle_index = args.max_cycle_index
+        self.target_dataset = args.target_dataset
+        self.diff_base=args.diff_base
         
         # Check if total_MICH folder exists, if not create it and copy files from MICH and MICH_EXP
         total_mich_path = os.path.join(self.root_path, 'total_MICH')
@@ -1701,6 +1725,142 @@ class Dataset_BatteryLife(Dataset):
             self.train_files = split_recorder.Stanford_formation_45_train_files_2024
             self.val_files = split_recorder.Stanford_formation_45_val_files_2024
             self.test_files = split_recorder.Stanford_formation_45_test_files_2024
+        elif self.dataset == 'LFP':
+            self.train_files = split_recorder.MIX_large_cathode_LFP_train_files
+            if self.target_dataset == 'CALCE':
+                self.val_files = split_recorder.CALCE_val_files
+                self.test_files = split_recorder.CALCE_test_files
+            elif self.target_dataset == 'HNEI':
+                self.val_files = split_recorder.HNEI_val_files
+                self.test_files = split_recorder.HNEI_test_files
+            elif self.target_dataset == 'HUST':
+                self.val_files = split_recorder.HUST_val_files
+                self.test_files = split_recorder.HUST_test_files
+            elif self.target_dataset == 'MATR':
+                self.val_files = split_recorder.MATR_val_files
+                self.test_files = split_recorder.MATR_test_files
+            elif self.target_dataset == 'SNL':
+                self.val_files = split_recorder.SNL_val_files
+                self.test_files = split_recorder.SNL_test_files
+            elif self.target_dataset == 'MICH':
+                self.val_files = split_recorder.MICH_val_files
+                self.test_files = split_recorder.MICH_test_files
+            elif self.target_dataset == 'MICH_EXP':
+                self.val_files = split_recorder.MICH_EXP_val_files
+                self.test_files = split_recorder.MICH_EXP_test_files
+            elif self.target_dataset == 'RWTH':
+                self.val_files = split_recorder.RWTH_val_files
+                self.test_files = split_recorder.RWTH_test_files
+            elif self.target_dataset == 'UL-PUR':
+                self.val_files = split_recorder.UL_PUR_val_files
+                self.test_files = split_recorder.UL_PUR_test_files
+            elif self.target_dataset == 'Stanford':
+                self.val_files = split_recorder.Stanford_val_files
+                self.test_files = split_recorder.Stanford_test_files
+            elif self.target_dataset == 'ISU_ILCC':
+                self.val_files = split_recorder.ISU_ILCC_val_files
+                self.test_files = split_recorder.ISU_ILCC_test_files
+            elif self.target_dataset == 'XJTU':
+                self.val_files = split_recorder.XJTU_val_files
+                self.test_files = split_recorder.XJTU_test_files
+            elif self.target_dataset == 'Tongji':
+                self.val_files = split_recorder.Tongji_val_files
+                self.test_files = split_recorder.Tongji_test_files
+            elif self.target_dataset == 'ZN-coin':
+                self.val_files = split_recorder.ZNcoin_val_files 
+                self.test_files = split_recorder.ZNcoin_test_files
+            elif self.target_dataset == 'ZN-coin42':
+                self.val_files = split_recorder.ZN_42_val_files
+                self.test_files = split_recorder.ZN_42_test_files
+            elif self.target_dataset == 'ZN-coin2024':
+                self.val_files = split_recorder.ZN_2024_val_files
+                self.test_files = split_recorder.ZN_2024_test_files
+            elif self.target_dataset == 'CALB':
+                self.val_files = split_recorder.CALB_val_files 
+                self.test_files = split_recorder.CALB_test_files
+            elif self.target_dataset == 'CALB42':
+                self.val_files = split_recorder.CALB_42_val_files
+                self.test_files = split_recorder.CALB_42_test_files
+            elif self.target_dataset == 'CALB2024':
+                self.val_files = split_recorder.CALB_2024_val_files
+                self.test_files = split_recorder.CALB_2024_test_files
+            elif self.target_dataset == 'NAion':
+                self.val_files = split_recorder.NAion_2021_val_files
+                self.test_files = split_recorder.NAion_2021_test_files
+            elif self.target_dataset == 'NAion42':
+                self.val_files = split_recorder.NAion_42_val_files
+                self.test_files = split_recorder.NAion_42_test_files
+            elif self.target_dataset == 'NAion2024':
+                self.val_files = split_recorder.NAion_2024_val_files
+                self.test_files = split_recorder.NAion_2024_test_files
+        elif self.dataset == 'MIX':
+            self.train_files = split_recorder.MIX_large_train_files
+            if self.target_dataset == 'CALCE':
+                self.val_files = split_recorder.CALCE_val_files
+                self.test_files = split_recorder.CALCE_test_files
+            elif self.target_dataset == 'HNEI':
+                self.val_files = split_recorder.HNEI_val_files
+                self.test_files = split_recorder.HNEI_test_files
+            elif self.target_dataset == 'HUST':
+                self.val_files = split_recorder.HUST_val_files
+                self.test_files = split_recorder.HUST_test_files
+            elif self.target_dataset == 'MATR':
+                self.val_files = split_recorder.MATR_val_files
+                self.test_files = split_recorder.MATR_test_files
+            elif self.target_dataset == 'SNL':
+                self.val_files = split_recorder.SNL_val_files
+                self.test_files = split_recorder.SNL_test_files
+            elif self.target_dataset == 'MICH':
+                self.val_files = split_recorder.MICH_val_files
+                self.test_files = split_recorder.MICH_test_files
+            elif self.target_dataset == 'MICH_EXP':
+                self.val_files = split_recorder.MICH_EXP_val_files
+                self.test_files = split_recorder.MICH_EXP_test_files
+            elif self.target_dataset == 'RWTH':
+                self.val_files = split_recorder.RWTH_val_files
+                self.test_files = split_recorder.RWTH_test_files
+            elif self.target_dataset == 'UL-PUR':
+                self.val_files = split_recorder.UL_PUR_val_files
+                self.test_files = split_recorder.UL_PUR_test_files
+            elif self.target_dataset == 'Stanford':
+                self.val_files = split_recorder.Stanford_val_files
+                self.test_files = split_recorder.Stanford_test_files
+            elif self.target_dataset == 'ISU_ILCC':
+                self.val_files = split_recorder.ISU_ILCC_val_files
+                self.test_files = split_recorder.ISU_ILCC_test_files
+            elif self.target_dataset == 'XJTU':
+                self.val_files = split_recorder.XJTU_val_files
+                self.test_files = split_recorder.XJTU_test_files
+            elif self.target_dataset == 'Tongji':
+                self.val_files = split_recorder.Tongji_val_files
+                self.test_files = split_recorder.Tongji_test_files
+            elif self.target_dataset == 'ZN-coin':
+                self.val_files = split_recorder.ZNcoin_val_files 
+                self.test_files = split_recorder.ZNcoin_test_files
+            elif self.target_dataset == 'ZN-coin42':
+                self.val_files = split_recorder.ZN_42_val_files
+                self.test_files = split_recorder.ZN_42_test_files
+            elif self.target_dataset == 'ZN-coin2024':
+                self.val_files = split_recorder.ZN_2024_val_files
+                self.test_files = split_recorder.ZN_2024_test_files
+            elif self.target_dataset == 'CALB':
+                self.val_files = split_recorder.CALB_val_files 
+                self.test_files = split_recorder.CALB_test_files
+            elif self.target_dataset == 'CALB42':
+                self.val_files = split_recorder.CALB_42_val_files
+                self.test_files = split_recorder.CALB_42_test_files
+            elif self.target_dataset == 'CALB2024':
+                self.val_files = split_recorder.CALB_2024_val_files
+                self.test_files = split_recorder.CALB_2024_test_files
+            elif self.target_dataset == 'NAion':
+                self.val_files = split_recorder.NAion_2021_val_files
+                self.test_files = split_recorder.NAion_2021_test_files
+            elif self.target_dataset == 'NAion42':
+                self.val_files = split_recorder.NAion_42_val_files
+                self.test_files = split_recorder.NAion_42_test_files
+            elif self.target_dataset == 'NAion2024':
+                self.val_files = split_recorder.NAion_2024_val_files
+                self.test_files = split_recorder.NAion_2024_test_files
         else:
             raise Exception(f'{self.dataset} is not supported!')
         
@@ -1722,12 +1882,46 @@ class Dataset_BatteryLife(Dataset):
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
             elif self.dataset == 'CALB2024':
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
+            elif self.dataset == 'LFP':
+                if self.target_dataset == 'CALB42':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
+                elif self.target_dataset == 'CALB2024':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
+                elif self.target_dataset == 'NAion':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
+                elif self.target_dataset == 'NAion42':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
+                elif self.target_dataset == 'NAion2024':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
+                elif self.target_dataset == 'ZN-coin42':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
+                elif self.target_dataset == 'ZN-coin2024':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
+                else:
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
+            elif self.dataset == 'MIX':
+                if self.target_dataset == 'CALB42':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
+                elif self.target_dataset == 'CALB2024':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
+                elif self.target_dataset == 'NAion':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
+                elif self.target_dataset == 'NAion42':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
+                elif self.target_dataset == 'NAion2024':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
+                elif self.target_dataset == 'ZN-coin42':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
+                elif self.target_dataset == 'ZN-coin2024':
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
+                else:
+                    self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
             else:
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
             # self.unseen_seen_record = json.load(open(f'{self.root_path}/cal_for_test.json'))
         
 
-        self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.class_labels, self.total_dataset_ids, self.total_cj_aug_charge_discharge_curves, self.total_seen_unseen_IDs, self.total_domain_ids = self.read_data()
+        self.total_charge_discharge_curves, self.total_curve_attn_masks, self.total_labels, self.unique_labels, self.class_labels, self.total_dataset_ids, self.total_cj_aug_charge_discharge_curves, self.total_seen_unseen_IDs, self.total_domain_ids, self.total_features = self.read_data()
 
         self.KDE_samples = copy.deepcopy(self.total_labels) if flag == 'train' else []
 
@@ -1832,6 +2026,7 @@ class Dataset_BatteryLife(Dataset):
         total_cj_aug_charge_discharge_curves = []
         total_seen_unseen_IDs = []
         total_domain_ids = []
+        total_features = []
 
         for file_name in tqdm(self.files):
             if file_name not in split_recorder.MICH_EXP_test_files and file_name not in split_recorder.MICH_EXP_train_files and file_name not in split_recorder.MICH_EXP_val_files:
@@ -1839,7 +2034,7 @@ class Dataset_BatteryLife(Dataset):
             else:
                 dataset_id = datasetName2ids['MICH_EXP']
 
-            charge_discharge_curves, attn_masks, labels, eol, cj_aug_charge_discharge_curves = self.read_samples_from_one_cell(
+            charge_discharge_curves, attn_masks, labels, eol, cj_aug_charge_discharge_curves, features = self.read_samples_from_one_cell(
                 file_name)
             if eol is None:
                 # This battery has not reached end of life
@@ -1862,6 +2057,7 @@ class Dataset_BatteryLife(Dataset):
             total_labels += labels 
             total_domain_ids += [domain_id for _ in range(len(labels))]
             total_dataset_ids += [dataset_id for _ in range(len(labels))]
+            total_features += features
             # total_center_vector_indices += [center_vector_index for _ in range(len(labels))]
             unique_labels.append(eol)
 
@@ -1876,7 +2072,7 @@ class Dataset_BatteryLife(Dataset):
             else:
                 total_seen_unseen_IDs += [1 for _ in range(len(labels))] # 1 indicates seen. This is not used on training or evaluation set
 
-        return total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, class_labels, total_dataset_ids, total_cj_aug_charge_discharge_curves, total_seen_unseen_IDs, total_domain_ids
+        return total_charge_discharge_curves, total_curve_attn_masks, np.array(total_labels), unique_labels, class_labels, total_dataset_ids, total_cj_aug_charge_discharge_curves, total_seen_unseen_IDs, total_domain_ids, total_features
 
     
     def read_cell_data_according_to_prefix(self, file_name):
@@ -1950,7 +2146,7 @@ class Dataset_BatteryLife(Dataset):
         data, eol = self.read_cell_data_according_to_prefix(file_name)
         if eol is None:
             # This battery has not reached the end of life
-            return None, None, None, None, None, None
+            return None, None, None, None, None, None, None
         cell_name = file_name.split('.pkl')[0]
         
         if file_name.startswith('RWTH'):
@@ -1983,7 +2179,14 @@ class Dataset_BatteryLife(Dataset):
         charge_discharge_curves = self.get_charge_discharge_curves(file_name, df, self.early_cycle_threshold, nominal_capacity)
         cj_aug_charge_discharge_curves, fm_aug_charge_discharge_curves  = self.aug_helper.batch_aug(charge_discharge_curves)
 
-        return df, charge_discharge_curves, eol, nominal_capacity, cj_aug_charge_discharge_curves, valid_cycle_number
+        if self.args.model == 'BatLiNet':
+            # Use BatLiNetFeatureExtractor to process the cell data
+            feature_extractor = BatLiNetFeatureExtractor(max_cycle_index=self.max_cycle_index)
+            features = feature_extractor.process_cell(df, data['nominal_capacity_in_Ah']).cpu().numpy()
+        else:
+            features = None
+
+        return df, charge_discharge_curves, eol, nominal_capacity, cj_aug_charge_discharge_curves, features, valid_cycle_number
     
         
     def read_samples_from_one_cell(self, file_name):
@@ -1993,15 +2196,16 @@ class Dataset_BatteryLife(Dataset):
         :return: history_sohs, future_sohs, masks, cycles, prompts, charge_data, discharge_data and RPT_masks in each sample
         '''
 
-        df, charge_discharge_curves_data, eol, nominal_capacity, cj_aug_charge_discharge_curves, valid_cycle_number = self.read_cell_df(file_name)
+        df, charge_discharge_curves_data, eol, nominal_capacity, cj_aug_charge_discharge_curves, features, valid_cycle_number = self.read_cell_df(file_name)
         if df is None or eol<=self.early_cycle_threshold:
-            return None, None, None, None, None
+            return None, None, None, None, None, None
 
         # the charge and discharge data
         charge_discharge_curves = []  # [N, seq_len, fix_charge_resample_len]
         total_cj_aug_charge_discharge_curves = []
         attn_masks = []
         labels = []
+        featuress = []
         # get the early-life data
         early_charge_discharge_curves_data = charge_discharge_curves_data[:self.early_cycle_threshold]
         early_cj_aug_charge_discharge_curves = cj_aug_charge_discharge_curves[:self.early_cycle_threshold]
@@ -2033,8 +2237,9 @@ class Dataset_BatteryLife(Dataset):
             charge_discharge_curves.append(early_charge_discharge_curves_data)
             total_cj_aug_charge_discharge_curves.append(early_cj_aug_charge_discharge_curves)
             attn_masks.append(tmp_attn_mask)
+            featuress.append(features)
 
-        return charge_discharge_curves, attn_masks, labels, eol, total_cj_aug_charge_discharge_curves
+        return charge_discharge_curves, attn_masks, labels, eol, total_cj_aug_charge_discharge_curves, featuress
 
     def get_charge_discharge_curves(self, file_name, df, early_cycle_threshold, nominal_capacity):
         '''
@@ -2164,7 +2369,9 @@ class Dataset_BatteryLife(Dataset):
                 'dataset_id': self.total_dataset_ids[index],
                 'cj_cycle_curve_data': self.total_cj_aug_charge_discharge_curves[index],
                 'seen_unseen_id': self.total_seen_unseen_IDs[index],
-                'domain_ids': self.total_domain_ids[index]
+                'domain_ids': self.total_domain_ids[index],
+                'total_features': self.total_features[index],
+                'diff_base':self.diff_base
             }
         return sample
     
@@ -2218,3 +2425,324 @@ class Dataset_BatteryLife(Dataset):
             shutil.copy(source_path1 + file, target_path)
         for file in source2_files:
             shutil.copy(source_path2 + file, target_path)
+
+
+# BatLiNet tools
+def interpolate(x, y, interp_dims, fill_type='', xs=0, xe=1.2):
+    if len(x) <= 2:
+        return np.zeros(interp_dims)
+    mask = (x >= xs) & (x <= xe)
+    x, y = x[mask], y[mask]
+    if fill_type == 'charge':
+        fill_values = (y.min(), y.max())
+    elif fill_type == 'discharge':
+        fill_values = (y.max(), y.min())
+    else:
+        fill_values = 0.
+    func = interp1d(
+        x, y,
+        kind='linear',
+        bounds_error=False,
+        fill_value=fill_values)
+    return func(np.linspace(xs, xe, interp_dims))
+
+def rollingOps1d(x, func, window_size=101):
+    processed = func(x.unfold(-1, window_size, 1))
+    L, l = x.size(-1), processed.size(-1)  # noqa
+    left = (L - l) // 2
+    right = L - l - left
+    res = torch.zeros_like(x)
+    res[..., left:-right] = processed
+    res[..., :left] = res[..., [left]]
+    res[..., -right:] = res[..., [-(right+1)]]
+
+    return res
+
+def med1d(x, window_size=100):
+    def med(x):
+        return x.median(-1)[0]
+    return rollingOps1d(x, med, window_size)
+
+def mad1d(x, window_size=100):
+    def mad(x):
+        med = x.median(-1)[0]
+        diff = (x - med.unsqueeze(-1)).abs()
+        return diff.median(-1)[0]
+    return rollingOps1d(x, mad, window_size)
+
+def _hampel_smooth(x, window_size):
+    med = med1d(x, window_size)
+    diff = (x - med).abs()
+    sigma = 1.4826 * mad1d(x, window_size) * 3
+
+    res = x.clone()
+    res[diff > sigma] = med[diff > sigma]
+
+    return res
+
+def hampel_smooth(x, window_size=201, device='cuda:0'):
+    # x size (*, L)
+    # NOTE: x should not be too large, as the unfold will expand the memory use
+    #       if x is very large (e.g. [B, N, K, L] with large B and N), you can
+    #       use torch.stack([x_single for x_single in x])
+
+    assert window_size % 2 == 1, 'Window size must be odd!'
+    is_array = False
+    if isinstance(x, np.ndarray):
+        x = torch.from_numpy(x)
+        is_array = True
+
+    original_device = x.device
+    x = x.to(device)
+    res = _hampel_smooth(x, window_size)
+    res = res.to(original_device)
+
+    if is_array:
+        res = res.cpu().numpy()
+
+    return res
+
+class DiffDataset(Dataset):
+    def __init__(self, cycle_diff_feature, raw_feature, label):
+        self.feature = cycle_diff_feature
+        self.raw_feature = raw_feature
+        self.label = label
+
+    def __getitem__(self, indx):
+        return {
+            'feature': self.feature[indx],
+            'label': self.label[indx],
+            'raw_feature': self.raw_feature[indx]
+        }
+
+class BaseFeatureExtractor(abc.ABC):
+    def __call__(self, cells):
+        pbar = tqdm(cells, desc='Extracting features')
+        # features = torch.stack([self.process_cell(cell) for cell in pbar])
+        features = []
+        for i, cell in enumerate(pbar):
+            features.append(self.process_cell(cell))
+        features = torch.stack(features)
+        return features.float()
+
+    @abc.abstractmethod
+    def process_cell(self, cell_data) -> torch.Tensor:
+        """Generate feature for a single cell.
+
+        Args:
+            cell_data (BatteryData): data for single cell.
+
+        Returns:
+            torch.Tensor: the processed feature.
+        """
+
+class BatLiNetFeatureExtractor(BaseFeatureExtractor):
+    def __init__(self,
+                 interp_dim: int = 1000,
+                 diff_base: int = None,
+                 feature_to_drop: list = None,
+                 cycle_to_drop: list = None,
+                 smooth_features: bool = False,
+                 smooth_window_size: int = 201,
+                 smooth_device: str = 'cuda:0',
+                 min_cycle_index: int = 1,
+                 max_cycle_index: int = 100,
+                 max_capacity: float = 1.2):
+        """Build multi-facted feature for deep battery degradation prediction.
+
+        Args:
+            interp_dim (int, optional): Interpolation dimensionality. Defaults
+                to 1000.
+            diff_base (int, optional): The index of the cycle to be subtracted.
+                Defaults to None.
+            feature_to_drop (list, optional): Drop some of the features
+                according to the index. Defaults to None.
+            cycle_to_drop (list, optional): Drop some of the cycles according
+                to the index. Defaults to None.
+            smooth_features (bool, optional): Whether to smooth the features
+                using Hampel filter. Defaults to True.
+            smooth_window_size (int, optional): The window size of Hampel
+                filter smoothing. Needs to be odd. Defaults to 201.
+            smooth_device (str, optional): The device to accelerate smoothing.
+                Defaults to cuda:0.
+            min_cycle_index (int, optional): The start cycle index (inclusive)
+                for feature extraction. Defaults to 0.
+            max_cycle_index (int, optional): The end cycle index (inclusive)
+                for feature extraction. Defaults to 99.
+        """
+        self.interp_dim = interp_dim
+        self.diff_base = diff_base
+        self.smooth_features = smooth_features
+        self.smooth_window = smooth_window_size
+        self.smooth_device = smooth_device
+        self.min_cycle_index = min_cycle_index
+        self.max_cycle_index = max_cycle_index
+        self.max_capacity = max_capacity
+
+        if isinstance(feature_to_drop, int):
+            feature_to_drop = [feature_to_drop]
+        self.feature_to_drop = feature_to_drop
+        if isinstance(cycle_to_drop, int):
+            cycle_to_drop = [cycle_to_drop]
+        self.cycle_to_drop = cycle_to_drop or []
+
+    def process_cell(self, cell_data, nominal_capacity_in_Ah) -> torch.Tensor:
+        eps = 1e-3
+        feature = []
+        cycle_number = sorted(set([i for i in cell_data['cycle_number']]))
+        for cycle_indx in cycle_number:
+            if np.isnan(cycle_indx):
+                continue
+            cycle_data = cell_data[cell_data['cycle_number'] == cycle_indx]
+            if cycle_indx < self.min_cycle_index:
+                continue
+            if cycle_indx > self.max_cycle_index:
+                break
+            if cycle_indx in self.cycle_to_drop:
+                feature.append(torch.zeros(6, self.interp_dim))
+                continue
+
+            I = np.array(cycle_data['current_in_A'])  # noqa
+            V = np.array(cycle_data['voltage_in_V'])
+            Qc = np.array(cycle_data['charge_capacity_in_Ah']) \
+                / nominal_capacity_in_Ah
+            Qd = np.array(cycle_data['discharge_capacity_in_Ah']) \
+                / nominal_capacity_in_Ah
+
+            charge_mask, discharge_mask = I > 0.1, I < -0.1
+            Qc, Qd = Qc[charge_mask], Qd[discharge_mask]
+            Ic, Id = I[charge_mask], I[discharge_mask]
+            Vc, Vd = V[charge_mask], V[discharge_mask]
+            # V(Qc), V(Qd), I(Qc), I(Qd)
+            cycle_feature = [
+                interpolate(
+                    Qc, Vc, self.interp_dim, 'charge', xe=self.max_capacity),
+                interpolate(
+                    Qd, Vd, self.interp_dim, 'discharge', xe=self.max_capacity),
+                interpolate(Qc, Ic, self.interp_dim, xe=self.max_capacity),
+                interpolate(Qd, Id, self.interp_dim, xe=self.max_capacity),
+            ]
+            # delta_V(Q)
+            cycle_feature.append(
+                cycle_feature[0] - cycle_feature[1][::-1]
+            )
+            # R(Q)
+            cycle_feature.append(
+                (cycle_feature[0] - cycle_feature[1][::-1])
+                / (cycle_feature[2] - cycle_feature[3][::-1] + eps)
+            )
+            feature.append(np.stack(cycle_feature))
+
+        feature = torch.from_numpy(np.stack(feature))
+
+        if self.diff_base is not None:
+            feature -= feature[[self.diff_base]]
+
+        if self.smooth_features:
+            feature = torch.stack([
+                hampel_smooth(cycle, self.smooth_window, self.smooth_device)
+                for cycle in feature
+            ])
+
+        if self.feature_to_drop is not None:
+            to_keep = [x for x in range(feature.shape[1])
+                       if x not in self.feature_to_drop]
+            feature = feature[:, to_keep]
+
+        feature = feature.transpose(1, 0)
+
+        # Drop NaN
+        feature[feature != feature] = 0.
+
+        # deal with the CALB dataset
+        num_cycles = feature.shape[1]
+        if num_cycles < self.max_cycle_index:
+            pad = torch.zeros(feature.shape[0], self.max_cycle_index - num_cycles, self.interp_dim)
+            feature = torch.cat([feature, pad], dim=1)
+
+        return feature
+
+
+def build_cycle_diff_dataset(features, labels, diff_base=10):
+        feature = features - features[:, :, [diff_base]]
+        raw_feature = features
+        # if self.features_to_drop is not None:
+        #     mask = [x for x in range(feature.size(1))
+        #             if x not in self.features_to_drop]
+        #     feature = feature[:, mask].contiguous()
+        #     raw_feature = raw_feature[:, mask].contiguous()
+        # if self.cycles_to_drop is not None:
+        #     feature[:, :, self.cycles_to_drop] = 0.
+        #     raw_feature[:, :, self.cycles_to_drop] = 0.
+        feature = _clean_feature(feature)
+        raw_feature = _filter_cycles(raw_feature)
+        return DiffDataset(feature, raw_feature, labels)
+
+def _clean_feature(feature):
+    num = 50
+    feature[..., :num] = smoothing(feature[..., :num])
+    feature[..., -num:] = smoothing(feature[..., -num:])
+    feature = remove_glitches(feature)
+    # Filter problematic cycles using Hampel filter
+    feature = _filter_cycles(feature)
+    return feature
+
+def _filter_cycles(feature):
+    # if not self.filter_cycles:
+    #     return feature
+    feature = feature.clone()
+
+    # Filter the cycles with its max value too large
+    max_val = feature.abs().amax(-1)
+    max_val_med = max_val.median(-1, keepdim=True)[0]
+    max_val_diff = (max_val - max_val_med).abs()
+    mask = max_val_diff > max_val_diff.std(-1, keepdim=True) * 5
+
+    # Filter the cycles with its mean deviating from other cycles
+    mean_val = feature.mean(-1)
+    mean_val_med = mean_val.median(-1, keepdim=True)[0]
+    mean_val_diff = (mean_val - mean_val_med).abs()
+    mask |= mean_val_diff > mean_val_diff.std(-1, keepdim=True) * 5
+
+    # Fill with zero
+    feature[mask] = 0.
+
+    return feature
+    
+def remove_glitches(data, width=25, threshold=3):
+    shape = data.shape
+    data = data.view(-1, *shape[-3:])
+    for i in range(len(data)):
+        data[i] = _remove_glitches(data[i], width, threshold)
+    data = data.view(shape)
+    return data
+
+def _remove_glitches(x, width, threshold):
+    left_element = torch.roll(x, shifts=1, dims=-1)
+    right_element = torch.roll(x, shifts=-1, dims=-1)
+    diff_with_left_element = (left_element - x).abs()
+    diff_with_right_element = (right_element - x).abs()
+
+    # diff_with_left_element[..., 0] = 0.
+    # diff_with_right_element[..., -1] = 0.
+
+    ths = diff_with_left_element.std(-1, keepdim=True) * threshold
+    non_smooth_on_left = diff_with_left_element > ths
+    ths = diff_with_right_element.std(-1, keepdim=True) * threshold
+    non_smooth_on_right = diff_with_right_element > ths
+    for _ in range(width):
+        non_smooth_on_left |= torch.roll(
+            non_smooth_on_left, shifts=1, dims=-1)
+        non_smooth_on_right |= torch.roll(
+            non_smooth_on_right, shifts=-1, dims=-1)
+    to_smooth = non_smooth_on_left & non_smooth_on_right
+    x[to_smooth] = 0.
+    return x
+
+def smoothing(feature):
+    med = feature.median(-1)[0].unsqueeze(-1).expand(*feature.shape)
+    med_diff = (feature - med).abs()
+    med_diff_std = med_diff.std(-1, keepdim=True).expand(*feature.shape)
+    mask = med_diff > med_diff_std * 3
+    feature[mask] = 0.
+    return feature
