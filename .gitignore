@@ -5,14 +5,23 @@ __pycache__/
 .vscode/
 plot_scripts/
 finetune_model_legacy.py
+finetune_model_wandb.py
+finetune_model_legacy_wandb.py
 evaluate_model_legacy.py
+evaluate_model_legacy_copy.py
+collect_figure3_data.py
+collect_figure4_figure5_data.py
+zero_shot_evaluation.py
 
 
 
+process_scripts/
 # Dataset and checkpoints
-legacy/
+legacy/*
+models/legacy/
+scripts/legacy/
+output_path/
 results/
-
 tl_scripts/
 
 play_scripts/

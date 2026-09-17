@@ -1,5 +1,6 @@
 import os
 import argparse
+import hashlib
 import torch
 import accelerate
 from accelerate import Accelerator, DeepSpeedPlugin
@@ -10,7 +11,7 @@ from utils.tools import get_parameter_number
 from utils.losses import DG_loss, Alignment_loss, AverageRnCLoss, WeightedRnCLoss
 from transformers import LlamaModel, LlamaTokenizer, LlamaForCausalLM, AutoConfig
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, CPTransformerDeepSeekMoE, CPMLP, CPTransformer
+from models import PBT, CPTransformerDeepSeekMoE, CPMLP, CPTransformer, CPTransformer_I
 import pickle
 import wandb
 from data_provider.data_factory import data_provider_LLMv2
@@ -46,6 +47,21 @@ def set_seed(seed):
     if torch.cuda.is_available() > 0:
         torch.cuda.manual_seed_all(seed)
 
+
+def checkpoint_directory_name(setting, model_comment, checkpoints_root):
+    """Keep readable checkpoint paths unless their final component is too long."""
+    original_name = f'{setting}-{model_comment}'
+    try:
+        name_max = os.pathconf(checkpoints_root, 'PC_NAME_MAX')
+    except (AttributeError, OSError, ValueError):
+        name_max = 255
+
+    if len(os.fsencode(original_name)) <= name_max:
+        return original_name, original_name
+
+    digest = hashlib.sha256(os.fsencode(original_name)).hexdigest()
+    return f'sha256-{digest}', original_name
+
 # basic config
 parser.add_argument('--task_name', type=str, required=False, default='long_term_forecast',
                     help='task name, options:[long_term_forecast, short_term_forecast, imputation, classification, anomaly_detection]')
@@ -53,15 +69,37 @@ parser.add_argument('--is_training', type=int, required=False, default=1, help='
 parser.add_argument('--model_id', type=str, required=False, default='test', help='model id')
 parser.add_argument('--model_comment', type=str, required=False, default='none', help='prefix when saving test results')
 parser.add_argument('--model', type=str, required=False, default='Autoformer',
-                    help='model name, options: [Autoformer, DLinear]')
+                    help='model name, including PBT, CPTransformerDeepSeekMoE, CPMLP, CPTransformer, and CPTransformer_I')
 parser.add_argument('--LLM_path', type=str, required=False, default='/home/trf/LLMs/llama2-hf-7b',
                     help='The path to the saved LLM checkpoints')
 parser.add_argument('--pca_path', type=str, required=False, default='/data/trf/python_works/BatteryLife/dataset/MIX_large_pca.pkl',
                     help='The path to the saved pca')
 parser.add_argument('--center_path', type=str, required=False, default='./Centenr_vectors',
                     help='The path to the preset cluster centers')
-parser.add_argument('--llm_choice', type=str, required=False, default='Llama', choices=['Llama', 'Qwen3_0.6B', 'Qwen3_8B'], help='The choice of the LLM embedding')
+parser.add_argument(
+    '--llm_choice',
+    type=str,
+    required=False,
+    default='Llama',
+    choices=[
+        'Llama', 'Qwen3_0.6B', 'Qwen3_4B', 'Qwen3_8B',
+        'Llama_full', 'Llama_specification', 'Llama_operating',
+        'Llama_section_swap', 'Llama_specification_reordered',
+        'Qwen3_0.6B_full', 'Qwen3_0.6B_specification', 'Qwen3_0.6B_operating',
+        'Qwen3_0.6B_section_swap', 'Qwen3_0.6B_specification_reordered',
+        'Qwen3_4B_full', 'Qwen3_4B_specification', 'Qwen3_4B_operating',
+        'Qwen3_4B_section_swap', 'Qwen3_4B_specification_reordered',
+        'Qwen3_8B_full', 'Qwen3_8B_specification', 'Qwen3_8B_operating',
+        'Qwen3_8B_section_swap', 'Qwen3_8B_specification_reordered',
+    ],
+    help='The choice of the LLM embedding and prompt ablation variant',
+)
 parser.add_argument('--seed', type=int, default=2021, help='random seed')
+parser.add_argument(
+    '--prompt_template', type=str, default='full',
+    choices=['full', 'specification', 'operating', 'section_swap', 'specification_reordered'],
+    help='Prompt template suffix used for precomputed DKP embeddings',
+)
 
 # data loader
 parser.add_argument('--num_domains', type=int, default=4, help='the number of domains in a training batch')
@@ -171,6 +209,14 @@ parser.add_argument('--Pretrained_model_path', type=str, default='', help='The p
 
 # Ablation Study
 parser.add_argument('--wo_DKPrompt', action='store_true', default=False, help='Set True to remove domain knowledge prompt')
+parser.add_argument('--lookup_cathode_vocab_size', type=int, default=32)
+parser.add_argument('--lookup_anode_vocab_size', type=int, default=32)
+parser.add_argument('--lookup_format_vocab_size', type=int, default=32)
+parser.add_argument('--lookup_cathode_dim', type=int, default=32)
+parser.add_argument('--lookup_anode_dim', type=int, default=32)
+parser.add_argument('--lookup_format_dim', type=int, default=16)
+parser.add_argument('--lookup_temperature_dim', type=int, default=16)
+parser.add_argument('--lookup_hidden_dim', type=int, default=128)
 
 # BatteryFormer
 parser.add_argument('--charge_discharge_length', type=int, default=100, help='The resampled length for charge and discharge curves')
@@ -220,6 +266,30 @@ else:
 args.d_ff_scale_factor = d_ff_scale_factor
 args.__dict__['d_ff_scale_factor'] = d_ff_scale_factor
 
+# Keep accepting the base LLM names for convenience and map them to the
+# corresponding prompt-template embedding before constructing the datasets.
+prompt_template_suffix = {
+    'full': '',
+    'specification': '_specification',
+    'operating': '_operating',
+    'section_swap': '_section_swap',
+    'specification_reordered': '_specification_reordered',
+}
+if args.llm_choice.endswith('_full'):
+    # Full prompts use the historical unsuffixed embedding filename.
+    args.llm_choice = args.llm_choice[:-5]
+    args.__dict__['llm_choice'] = args.llm_choice
+if args.prompt_template != 'full':
+    template_suffix = prompt_template_suffix[args.prompt_template]
+    base_llm_choices = {'Llama', 'Qwen3_0.6B', 'Qwen3_4B', 'Qwen3_8B'}
+    if args.llm_choice in base_llm_choices:
+        args.llm_choice = f'{args.llm_choice}{template_suffix}'
+        args.__dict__['llm_choice'] = args.llm_choice
+    elif not args.llm_choice.endswith(template_suffix):
+        raise ValueError(
+            f"prompt_template={args.prompt_template!r} requires llm_choice ending in "
+            f"{template_suffix!r}; received {args.llm_choice!r}."
+        )
 for ii in range(args.itr):
     # setting record of experiments
     setting = '{}_{}_{}_{}_le{}_bs{}_lr{}_dm{}_nh{}_el{}_dl{}_df{}_mdf{}_lradj{}_{}_guide{}_LB{}_loss{}_wd{}_wl{}_dr{}_gdff{}_E{}_GE{}_K{}_S{}_aug{}_augW{}_tem{}_wDG{}_dsr{}_we{}_ffs{}_seed{}'.format(
@@ -261,12 +331,29 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path)
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = CPTransformer.Model(model_config)
+    elif args.model == 'CPTransformer_I':
+        model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_config = BatteryLifeConfig(model_ec_config, model_text_config)
+        model = CPTransformer_I.Model(model_config)
     else:
         raise Exception('Not Implemented')
 
       
-    path = os.path.join(args.checkpoints,
-                        setting + '-' + args.model_comment)  # unique checkpoint saving path
+    checkpoint_dir_name, original_checkpoint_dir_name = checkpoint_directory_name(
+        setting, args.model_comment, args.checkpoints
+    )
+    args.checkpoint_dir_name = checkpoint_dir_name
+    args.original_checkpoint_dir_name = original_checkpoint_dir_name
+    args.__dict__['checkpoint_dir_name'] = checkpoint_dir_name
+    args.__dict__['original_checkpoint_dir_name'] = original_checkpoint_dir_name
+    if checkpoint_dir_name != original_checkpoint_dir_name:
+        accelerator.print(
+            'Checkpoint directory name exceeds the filesystem limit; '
+            f'using {checkpoint_dir_name} for {original_checkpoint_dir_name}'
+        )
+
+    path = os.path.join(args.checkpoints, checkpoint_dir_name)
     
     train_data, train_loader = data_provider_func(args, 'train', temperature2mask=temperature2mask, 
                                                   format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, use_domainSampler=args.use_domainSampler)
@@ -291,11 +378,11 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_paper", # the project name
+        project="PBT_revision",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
-        name=nowtime
+        name=args.model_comment
         )
 
 
@@ -356,6 +443,9 @@ for ii in range(args.itr):
     best_vali_MAPE, best_test_MAPE = 0, 0
     best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
     best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
+    best_vali_condition_mape, best_test_condition_mape = 0, 0
+    best_epoch = None
+    best_train_loss = None
 
 
     for epoch in range(args.train_epochs):
@@ -391,9 +481,17 @@ for ii in range(args.itr):
                 
                 iter_count += 1
                 # encoder - decoder
-                outputs, _, _, _, _, _, LB_loss, _ = model(cycle_curve_data, curve_attn_mask, 
-                DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-                anode_masks=anode_masks, combined_masks=combined_masks, ion_type_masks=ion_type_masks)
+                model_kwargs = {
+                    'DKP_embeddings': DKP_embeddings,
+                    'cathode_masks': cathode_masks,
+                    'temperature_masks': temperature_masks,
+                    'format_masks': format_masks,
+                    'anode_masks': anode_masks,
+                    'combined_masks': combined_masks,
+                    'ion_type_masks': ion_type_masks,
+                }
+                outputs, _, _, _, _, _, LB_loss, _ = model(
+                    cycle_curve_data, curve_attn_mask, **model_kwargs)
                 
 
                 loss = criterion(outputs, labels)
@@ -455,18 +553,28 @@ for ii in range(args.itr):
         train_mape = mean_absolute_percentage_error(total_references, total_preds)
         accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
 
-        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
-        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
-        vali_loss = vali_mape
+        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2, vali_condition_mape = vali_batteryLifeLLM(
+            args, accelerator, model, vali_data, vali_loader, criterion,
+            compute_condition_level=True,
+        )
+        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2, test_condition_mape = vali_batteryLifeLLM(
+            args, accelerator, model, test_data, test_loader, criterion,
+            compute_seen_unseen=True, compute_condition_level=True,
+        )
+        vali_loss = vali_condition_mape
         
         if vali_loss < best_vali_loss:
             best_vali_loss = vali_loss
+            best_epoch = epoch + 1
+            best_train_loss = total_loss / len(train_loader)
             best_vali_MAE = vali_mae_loss
             best_test_MAE = test_mae_loss
             best_vali_RMSE = vali_rmse
             best_test_RMSE = test_rmse
             best_vali_MAPE = vali_mape
             best_test_MAPE = test_mape
+            best_vali_condition_mape = vali_condition_mape
+            best_test_condition_mape = test_condition_mape
 
             # alpha-accuracy
             best_vali_alpha_acc1 = vali_alpha_acc1
@@ -488,11 +596,13 @@ for ii in range(args.itr):
         total_LB_loss = total_LB_loss / len(train_loader)
         total_label_loss = total_label_loss / len(train_loader)
         accelerator.print(
-            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali RMSE: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
-            f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
+            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali RMSE: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| Vali Condition-level MAPE: {vali_condition_mape:.7f}| "
+            f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f} | Test Condition-level MAPE: {test_condition_mape:.7f}")
         if accelerator.is_local_main_process:
-            wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
-                    "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
+            wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape,
+                    "vali_condition_MAPE": vali_condition_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2,
+                    "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_condition_MAPE": test_condition_mape,
+                    "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
         
         early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
         if early_stopping.early_stop:
@@ -507,16 +617,40 @@ for ii in range(args.itr):
                 adjust_learning_rate(accelerator, model_optim, scheduler, epoch + 1, args, printout=True)
             else:
                 if epoch >= args.warm_up_epoches:
-                    scheduler.step(vali_mape)
+                    scheduler.step(vali_loss)
                     accelerator.print('Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
 
-accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
+accelerator.print(f'Best model performance (epoch {best_epoch}, selected by validation condition-level MAPE): Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test Condition-level MAPE: {best_test_condition_mape:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val Condition-level MAPE: {best_vali_condition_mape:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
 accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
 accelerator.print(f'Best model performance: Test Seen 15%-accuracy: {best_seen_test_alpha_acc1:.4f} | Test Unseen 15%-accuracy: {best_unseen_test_alpha_acc1:.4f}')
 accelerator.print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
 accelerator.print(path)
 accelerator.set_trigger()
 if accelerator.check_trigger() and accelerator.is_local_main_process:
-    wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
-            "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
+    best_metrics = {
+        "epoch": best_epoch,
+        "selected_epoch": best_epoch,
+        "metric_snapshot": "best_validation_condition_mape",
+        "train_loss": best_train_loss,
+        "vali_MAE": best_vali_MAE,
+        "vali_RMSE": best_vali_RMSE,
+        "vali_MAPE": best_vali_MAPE,
+        "vali_condition_MAPE": best_vali_condition_mape,
+        "vali_acc1": best_vali_alpha_acc1,
+        "vali_acc2": best_vali_alpha_acc2,
+        "test_MAE": best_test_MAE,
+        "test_RMSE": best_test_RMSE,
+        "test_MAPE": best_test_MAPE,
+        "test_condition_MAPE": best_test_condition_mape,
+        "test_acc1": best_test_alpha_acc1,
+        "test_acc2": best_test_alpha_acc2,
+        "test_seen_MAPE": best_seen_test_MAPE,
+        "test_unseen_MAPE": best_unseen_test_MAPE,
+        "test_seen_acc1": best_seen_test_alpha_acc1,
+        "test_unseen_acc1": best_unseen_test_alpha_acc1,
+        "test_seen_acc2": best_seen_test_alpha_acc2,
+        "test_unseen_acc2": best_unseen_test_alpha_acc2,
+    }
+    wandb.log(best_metrics)
+    wandb.run.summary.update({f"best_{key}": value for key, value in best_metrics.items()})
     wandb.finish()

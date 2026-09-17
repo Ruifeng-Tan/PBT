@@ -1,4 +1,8 @@
 import json
+from process_scripts.resplit_naion_unseen_aging_conditions import generate_splits
+
+
+NAION_UNSEEN_AGING_SPLITS = generate_splits()
 
 class split_recorder():
     # data split
@@ -88,17 +92,17 @@ class split_recorder():
     CALB_2024_val_files = ['CALB_0_B190.pkl', 'CALB_35_B227.pkl', 'CALB_35_B173.pkl', 'CALB_35_B248.pkl', 'CALB_35_B229.pkl']
     CALB_2024_test_files = ['CALB_35_B224.pkl', 'CALB_0_B188.pkl', 'CALB_35_B250.pkl', 'CALB_25_T25-1.pkl', 'CALB_25_T25-2.pkl']
 
-    NAion_42_train_files = ['NA-ion_270040-1-2-63.pkl', 'NA-ion_270040-1-5-60.pkl', 'NA-ion_270040-2-2-12.pkl', 'NA-ion_270040-3-1-56.pkl', 'NA-ion_270040-3-2-55.pkl', 'NA-ion_270040-3-3-54.pkl', 'NA-ion_270040-3-4-53.pkl', 'NA-ion_270040-3-5-52.pkl', 'NA-ion_270040-4-3-46.pkl', 'NA-ion_270040-3-8-49.pkl', 'NA-ion_270040-4-1-48.pkl', 'NA-ion_270040-4-2-47.pkl', 'NA-ion_270040-4-6-43.pkl', 'NA-ion_270040-5-1-39.pkl', 'NA-ion_270040-5-2-38.pkl', 'NA-ion_270040-5-6-34.pkl', 'NA-ion_270040-5-7-33.pkl', 'NA-ion_270040-6-2-30.pkl', 'NA-ion_270040-6-8-24.pkl', 'NA-ion_270040-7-1-23.pkl']
-    NAion_42_val_files = ['NA-ion_270040-6-6-26.pkl', 'NA-ion_270040-1-8-57.pkl', 'NA-ion_270040-5-8-32.pkl', 'NA-ion_270040-5-3-37.pkl', 'NA-ion_270040-1-6-59.pkl', 'NA-ion_270040-5-5-35.pkl']
-    NAion_42_test_files = ['NA-ion_270040-2-5-12.pkl', 'NA-ion_270040-1-3-62.pkl', 'NA-ion_270040-3-7-50.pkl', 'NA-ion_270040-8-5-16.pkl', 'NA-ion_270040-1-7-58.pkl']
+    NAion_42_train_files = NAION_UNSEEN_AGING_SPLITS['42']['train_files']
+    NAion_42_val_files = NAION_UNSEEN_AGING_SPLITS['42']['val_files']
+    NAion_42_test_files = NAION_UNSEEN_AGING_SPLITS['42']['test_files']
 
-    NAion_2021_train_files = ['NA-ion_270040-1-2-63.pkl', 'NA-ion_270040-1-5-60.pkl', 'NA-ion_270040-1-7-58.pkl', 'NA-ion_270040-1-8-57.pkl', 'NA-ion_270040-2-2-12.pkl', 'NA-ion_270040-2-5-12.pkl', 'NA-ion_270040-3-1-56.pkl', 'NA-ion_270040-3-5-52.pkl', 'NA-ion_270040-5-2-38.pkl', 'NA-ion_270040-3-8-49.pkl', 'NA-ion_270040-5-1-39.pkl', 'NA-ion_270040-5-3-37.pkl', 'NA-ion_270040-5-6-34.pkl', 'NA-ion_270040-5-7-33.pkl', 'NA-ion_270040-6-2-30.pkl', 'NA-ion_270040-6-6-26.pkl', 'NA-ion_270040-7-1-23.pkl', 'NA-ion_270040-8-5-16.pkl', 'NA-ion_270040-3-3-54.pkl', 'NA-ion_270040-6-8-24.pkl']
-    NAion_2021_val_files = ['NA-ion_270040-4-2-47.pkl', 'NA-ion_270040-4-6-43.pkl', 'NA-ion_270040-5-5-35.pkl', 'NA-ion_270040-1-6-59.pkl', 'NA-ion_270040-3-4-53.pkl', 'NA-ion_270040-3-2-55.pkl']
-    NAion_2021_test_files = ['NA-ion_270040-5-8-32.pkl', 'NA-ion_270040-4-3-46.pkl', 'NA-ion_270040-4-1-48.pkl', 'NA-ion_270040-1-3-62.pkl', 'NA-ion_270040-3-7-50.pkl']
+    NAion_2021_train_files = NAION_UNSEEN_AGING_SPLITS['2021']['train_files']
+    NAion_2021_val_files = NAION_UNSEEN_AGING_SPLITS['2021']['val_files']
+    NAion_2021_test_files = NAION_UNSEEN_AGING_SPLITS['2021']['test_files']
 
-    NAion_2024_train_files = ['NA-ion_270040-1-2-63.pkl', 'NA-ion_270040-6-8-24.pkl', 'NA-ion_270040-1-5-60.pkl', 'NA-ion_270040-1-6-59.pkl', 'NA-ion_270040-1-7-58.pkl', 'NA-ion_270040-1-8-57.pkl', 'NA-ion_270040-2-5-12.pkl', 'NA-ion_270040-3-3-54.pkl', 'NA-ion_270040-3-5-52.pkl', 'NA-ion_270040-2-2-12.pkl', 'NA-ion_270040-3-8-49.pkl', 'NA-ion_270040-4-2-47.pkl', 'NA-ion_270040-4-3-46.pkl', 'NA-ion_270040-4-6-43.pkl', 'NA-ion_270040-5-3-37.pkl', 'NA-ion_270040-5-5-35.pkl', 'NA-ion_270040-5-7-33.pkl', 'NA-ion_270040-5-8-32.pkl', 'NA-ion_270040-6-6-26.pkl', 'NA-ion_270040-5-6-34.pkl']
-    NAion_2024_val_files = ['NA-ion_270040-4-1-48.pkl', 'NA-ion_270040-7-1-23.pkl', 'NA-ion_270040-6-2-30.pkl', 'NA-ion_270040-3-2-55.pkl', 'NA-ion_270040-5-2-38.pkl', 'NA-ion_270040-3-1-56.pkl']
-    NAion_2024_test_files = ['NA-ion_270040-8-5-16.pkl', 'NA-ion_270040-3-4-53.pkl', 'NA-ion_270040-5-1-39.pkl', 'NA-ion_270040-3-7-50.pkl', 'NA-ion_270040-1-3-62.pkl']
+    NAion_2024_train_files = NAION_UNSEEN_AGING_SPLITS['2024']['train_files']
+    NAion_2024_val_files = NAION_UNSEEN_AGING_SPLITS['2024']['val_files']
+    NAion_2024_test_files = NAION_UNSEEN_AGING_SPLITS['2024']['test_files']
 
 
 
@@ -169,4 +173,3 @@ for dataset in dataset_list:
     unseen_aging_conditions = [i for i in test_aging_conditions if i not in seen_aging_conditions]
 
     print('Seen conditions num:', len(set(seen_aging_conditions)), 'Unseen conditions num:', len(set(unseen_aging_conditions)))
-

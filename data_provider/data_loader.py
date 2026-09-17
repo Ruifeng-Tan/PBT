@@ -28,6 +28,18 @@ from data_provider.gate_masker import gate_masker
 import accelerate
 import shutil
 warnings.filterwarnings('ignore')
+AGING_CONDITION_MAP_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    'gate_data',
+    'name2agingConditionID.json',
+)
+PROMPT_TEMPLATE_SUFFIXES = {
+    'full': '',
+    'specification': '_specification',
+    'operating': '_operating',
+    'section_swap': '_section_swap',
+    'specification_reordered': '_specification_reordered',
+}
 datasetName2ids = {
     'CALCE':0,
     'HNEI':1,
@@ -207,6 +219,34 @@ def my_collate_fn(samples):
 
     return cycle_curve_data, curve_attn_mask, labels, weights, file_names, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids
 
+
+def my_collate_fn_lookup(samples):
+    """Collate function for the lookup-embedding ageing-condition ablation.
+
+    The tuple layout intentionally matches ``my_collate_fn``; the sixth item
+    is the numeric ``lookup_features`` tensor instead of a precomputed LLM
+    embedding, so existing training/evaluation loops can be reused.
+    """
+    cycle_curve_data = torch.vstack([i['cycle_curve_data'].unsqueeze(0) for i in samples])
+    file_names = [i['file_name'] for i in samples]
+    curve_attn_mask = torch.vstack([i['curve_attn_mask'].unsqueeze(0) for i in samples])
+    labels = torch.Tensor([i['labels'] for i in samples])
+    weights = torch.Tensor([i['weight'] for i in samples])
+    lookup_features = torch.vstack([i['lookup_features'].unsqueeze(0) for i in samples])
+    seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
+    domain_ids = torch.Tensor([i['domain_ids'] for i in samples])
+    cathode_masks = torch.vstack([i['cathode_mask'] for i in samples])
+    temperature_masks = torch.vstack([i['temperature_mask'] for i in samples])
+    format_masks = torch.vstack([i['format_mask'] for i in samples])
+    anode_masks = torch.vstack([i['anode_mask'] for i in samples])
+    ion_type_masks = torch.vstack([i['ion_type_mask'] for i in samples])
+    combined_masks = torch.vstack([i['combined_mask'] for i in samples])
+    tmp_curve_attn_mask = curve_attn_mask.unsqueeze(-1).unsqueeze(-1) * torch.ones_like(cycle_curve_data)
+    cycle_curve_data[tmp_curve_attn_mask == 0] = 0
+    return (cycle_curve_data, curve_attn_mask, labels, weights, file_names,
+            lookup_features, seen_unseen_ids, cathode_masks, temperature_masks,
+            format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids)
+
 # BatterLifeLLM dataloader
 class Dataset_PBT(Dataset):
     def __init__(self, args, flag='train', label_scaler=None, eval_cycle_max=None, eval_cycle_min=None, total_prompts=None,
@@ -220,7 +260,35 @@ class Dataset_PBT(Dataset):
         :param scaler:scaler or not
         '''
         
-        self.llm_choice = args.llm_choice
+        # Prompt-ablation models must load the embedding generated from their
+        # corresponding protocol section.  Keep this invariant at the data
+        # boundary so callers cannot accidentally use the full-prompt pkl.
+        prompt_suffix_by_model = {
+            'PBT_OperatingOnly': '_operating',
+            'PBT_SpecificationHard': '_specification',
+        }
+        requested_template = getattr(args, 'prompt_template', 'full')
+        template_suffix = PROMPT_TEMPLATE_SUFFIXES.get(requested_template)
+        if template_suffix is None:
+            raise ValueError(f'Unknown prompt_template={requested_template!r}')
+        base_choices = {'Llama', 'Qwen3_0.6B', 'Qwen3_4B', 'Qwen3_8B'}
+        if args.llm_choice.endswith('_full'):
+            args.llm_choice = args.llm_choice[:-5]
+        if template_suffix and args.llm_choice in base_choices:
+            args.llm_choice = f'{args.llm_choice}{template_suffix}'
+        required_suffix = prompt_suffix_by_model.get(args.model)
+        if required_suffix:
+            if args.llm_choice in base_choices:
+                self.llm_choice = f'{args.llm_choice}{required_suffix}'
+            elif args.llm_choice.endswith(required_suffix):
+                self.llm_choice = args.llm_choice
+            else:
+                raise ValueError(
+                    f'{args.model} requires an LLM embedding choice ending in '
+                    f'{required_suffix!r}; received {args.llm_choice!r}.'
+                )
+        else:
+            self.llm_choice = args.llm_choice
         self.eval_cycle_max = eval_cycle_max
         self.eval_cycle_min = eval_cycle_min
         self.args = args
@@ -269,7 +337,17 @@ class Dataset_PBT(Dataset):
         self.anode2mask = anode2mask
         self.ion2mask = ion2mask
 
-        self.name2domainID = json.load(open(f'./gate_data/name2agingConditionID.json'))
+        # Stable vocabularies are built from the complete metadata JSON files,
+        # making IDs consistent across train/validation/test splits.
+        self.lookup_cathode_vocab = sorted({'_'.join(v) for v in self.cathode_json.values()})
+        self.lookup_anode_vocab = sorted({'graphite' if v[0] in ('artificial graphite', 'carbon') else v[0]
+                                          for v in self.anode_json.values()})
+        self.lookup_format_vocab = sorted({v[0] for v in self.format_json.values()})
+        self.lookup_cathode_to_id = {v: i for i, v in enumerate(self.lookup_cathode_vocab)}
+        self.lookup_anode_to_id = {v: i for i, v in enumerate(self.lookup_anode_vocab)}
+        self.lookup_format_to_id = {v: i for i, v in enumerate(self.lookup_format_vocab)}
+
+        self.name2domainID = json.load(open(AGING_CONDITION_MAP_PATH))
 
         self.label_prompts_vectors = {}
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
@@ -526,10 +604,26 @@ class Dataset_PBT(Dataset):
          
         # # load the prompt embedding
         # # The domain-knowledge prompt embeddings are only affected by the LLM and prompt
-        train_part = pickle.load(open(f'{self.root_path}/training_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
-        val_part = pickle.load(open(f'{self.root_path}/validation_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
-        test_part = pickle.load(open(f'{self.root_path}/testing_DKP_embed_all_{self.llm_choice}.pkl', 'rb'))
-        self.cellName_prompt = train_part | val_part | test_part
+        if args.model == 'PBT_LookupEmbedding':
+            # This ablation must not depend on LLM-generated prompt embeddings.
+            self.cellName_prompt = {}
+        else:
+            embedding_paths = {
+                split: os.path.join(
+                    self.root_path,
+                    f'{split}_DKP_embed_all_{self.llm_choice}.pkl',
+                )
+                for split in ('training', 'validation', 'testing')
+            }
+            missing_embeddings = [path for path in embedding_paths.values() if not os.path.isfile(path)]
+            if missing_embeddings:
+                raise FileNotFoundError(
+                    'Missing required DKP embedding file(s): ' + ', '.join(missing_embeddings)
+                )
+            train_part = pickle.load(open(embedding_paths['training'], 'rb'))
+            val_part = pickle.load(open(embedding_paths['validation'], 'rb'))
+            test_part = pickle.load(open(embedding_paths['testing'], 'rb'))
+            self.cellName_prompt = train_part | val_part | test_part
 
         if flag == 'train':
             self.files = [i for i in self.train_files]
@@ -538,7 +632,10 @@ class Dataset_PBT(Dataset):
         elif flag == 'test':
 
             self.files = [i for i in self.test_files]
-            if self.seed == 2021:
+            if self.dataset in {'NAion', 'NAion42', 'NAion2024'}:
+                # The revised Na-ion split holds out whole aging conditions.
+                self.unseen_seen_record = {file_name: 'unseen' for file_name in self.files}
+            elif self.seed == 2021:
                 self.li_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json')) # this contains the 2021 records for Li, Zn and CALB
                 self.na_ion_unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
                 self.unseen_seen_record = self.li_ion_unseen_seen_record | self.na_ion_unseen_seen_record
@@ -788,7 +885,7 @@ class Dataset_PBT(Dataset):
                 cluster_label = -1 # not used. Should be removed
             else:
                 cluster_label = -1 # The cluster labels of validation or testing samples are unknown
-            DKP_embedding = self.cellName_prompt[cell_name]
+            DKP_embedding = self.cellName_prompt.get(cell_name)
             domain_id = self.name2domainID[file_name]
 
 
@@ -799,7 +896,17 @@ class Dataset_PBT(Dataset):
             total_dataset_ids += [dataset_id for _ in range(len(labels))]
             total_file_names += [file_name for _ in range(len(labels))]
             total_cluster_labels += [cluster_label for _ in range(len(labels))]
+            if DKP_embedding is None:
+                DKP_embedding = np.zeros(self.args.d_llm, dtype=np.float32)
             total_DKP_embeddings += [DKP_embedding for _ in range(len(labels))]
+            cathode_lookup_id = self.lookup_cathode_to_id.get(cathodes, 0)
+            anode_lookup_id = self.lookup_anode_to_id.get(anode, 0)
+            format_lookup_id = self.lookup_format_to_id.get(format, 0)
+            lookup_features = np.array([cathode_lookup_id, anode_lookup_id,
+                                        float(temperatures), format_lookup_id], dtype=np.float32)
+            if not hasattr(self, 'total_lookup_features'):
+                self.total_lookup_features = []
+            self.total_lookup_features += [lookup_features for _ in range(len(labels))]
             total_cathode_expert_masks += [cathode_mask for _ in range(len(labels))]
             total_format_expert_masks += [format_mask for _ in range(len(labels))]
             total_temperature_experts_masks += [temperature_mask for _ in range(len(labels))]
@@ -1274,6 +1381,7 @@ class Dataset_PBT(Dataset):
                 'ion_type_mask': torch.Tensor(self.total_ion_type_masks[index]),
                 'combined_mask': torch.Tensor(self.total_combined_expert_masks[index]),
                 'DKP_embedding': torch.from_numpy(self.total_DKP_embeddings[index]),
+                'lookup_features': torch.from_numpy(self.total_lookup_features[index]),
                 'cluster_label': self.total_cluster_labels[index],
                 'file_name': self.total_file_names[index],
                 'seen_unseen_id': self.total_seen_unseen_IDs[index],
@@ -1353,7 +1461,7 @@ class Dataset_BatteryLife(Dataset):
         self.need_keys = ['current_in_A', 'voltage_in_V', 'charge_capacity_in_Ah', 'discharge_capacity_in_Ah', 'time_in_s']
         self.aug_helper = BatchAugmentation_battery_revised()
 
-        self.name2domainID = json.load(open(f'/data/trf/python_works/BatteryMoE/gate_data/name2agingConditionID.json'))
+        self.name2domainID = json.load(open(AGING_CONDITION_MAP_PATH))
         self.ZN_coin_charge_first_file_names = ['ZN-coin_402-1_20231209225636_01_1.pkl', 'ZN-coin_402-2_20231209225727_01_2.pkl', 'ZN-coin_402-3_20231209225844_01_3.pkl', 'ZN-coin_403-1_20231209225922_01_4.pkl', 'ZN-coin_428-1_20231212185048_01_2.pkl', 'ZN-coin_428-2_20231212185058_01_4.pkl', 'ZN-coin_429-1_20231212185129_01_5.pkl', 'ZN-coin_429-2_20231212185157_01_8.pkl', 'ZN-coin_430-1_20231212185250_02_6.pkl', 'ZN-coin_430-2_20231212185305_02_7.pkl', 'ZN-coin_430-3_20231212185323_03_2.pkl']
         assert flag in ['train', 'test', 'val']
         if self.dataset == 'exp':
@@ -1603,7 +1711,10 @@ class Dataset_BatteryLife(Dataset):
         elif flag == 'test':
             self.files = [i for i in self.test_files]
             self.root_path = self.root_path.replace('Battery-LLM', 'BatteryLife')
-            if self.dataset == 'ZN-coin42':
+            if self.dataset in {'NAion', 'NAion42', 'NAion2024'}:
+                # The revised Na-ion split holds out whole aging conditions.
+                self.unseen_seen_record = {file_name: 'unseen' for file_name in self.files}
+            elif self.dataset == 'ZN-coin42':
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN42.json'))
             elif self.dataset == 'ZN-coin2024':
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_ZN2024.json'))
@@ -1611,12 +1722,6 @@ class Dataset_BatteryLife(Dataset):
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB42.json'))
             elif self.dataset == 'CALB2024':
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_CALB2024.json'))
-            elif self.dataset == 'NAion':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2021.json'))
-            elif self.dataset == 'NAion42':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA42.json'))
-            elif self.dataset == 'NAion2024':
-                self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test_NA2024.json'))
             else:
                 self.unseen_seen_record = json.load(open(f'{self.root_path}/seen_unseen_labels/cal_for_test.json'))
             # self.unseen_seen_record = json.load(open(f'{self.root_path}/cal_for_test.json'))

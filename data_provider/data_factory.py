@@ -1,5 +1,7 @@
 from data_provider.data_loader import Dataset_PBT, DomainBatchSampler, Dataset_BatteryLife
-from data_provider.data_loader import my_collate_fn, my_collate_fn_withId, my_collate_fn_baseline_BL, my_collate_fn_withId_BL
+from data_provider.data_loader import (my_collate_fn, my_collate_fn_withId,
+                                        my_collate_fn_baseline_BL, my_collate_fn_withId_BL,
+                                        my_collate_fn_lookup)
 from torch.utils.data import DataLoader, RandomSampler, Dataset
 
 data_dict = {
@@ -161,12 +163,13 @@ def data_provider_LLMv2(args, flag, label_scaler=None, eval_cycle_min=None, eval
             ion2mask=ion2mask
         )
     
+    collate_fn = my_collate_fn_lookup if args.model == 'PBT_LookupEmbedding' else my_collate_fn
     if use_domainSampler:
         sampler = DomainBatchSampler(domain_ids=data_set.total_domain_ids, batch_size=batch_size, num_domains=args.num_domains, shuffle=True)
         data_loader = DataLoader(
                     data_set,
                     num_workers=args.num_workers,
-                    collate_fn=my_collate_fn, batch_sampler=sampler) # use the sampler
+                    collate_fn=collate_fn, batch_sampler=sampler) # use the sampler
     else:
         data_loader = DataLoader(
                     data_set,
@@ -174,7 +177,7 @@ def data_provider_LLMv2(args, flag, label_scaler=None, eval_cycle_min=None, eval
                     shuffle=shuffle_flag,
                     num_workers=args.num_workers,
                     drop_last=drop_last,
-                    collate_fn=my_collate_fn)
+                    collate_fn=collate_fn)
         
     return data_set, data_loader
 
@@ -212,13 +215,14 @@ def data_provider_LLM_evaluate(args, flag, label_scaler=None, eval_cycle_min=Non
         )
 
 
+    collate_fn = my_collate_fn_lookup if args.model == 'PBT_LookupEmbedding' else my_collate_fn_withId
     data_loader = DataLoader(
                 data_set,
                 batch_size=batch_size,
                 shuffle=shuffle_flag,
                 num_workers=args.num_workers,
                 drop_last=drop_last,
-                collate_fn=my_collate_fn_withId)
+                collate_fn=collate_fn)
     return data_set, data_loader
 
 def data_provider_evaluate_BL(args, flag, label_scaler=None, eval_cycle_min=None, eval_cycle_max=None, total_prompts=None, 

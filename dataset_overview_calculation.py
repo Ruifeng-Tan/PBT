@@ -32,8 +32,8 @@ label_path = '/data/trf/python_works/PBT_BatteryLife/dataset/Life labels'
 label_files_path = os.listdir(label_path)
 label_json_files = [i for i in label_files_path if i.endswith('.json')]
 label_names = []
-recorder_file_names = split_recorder.MIX_all_2024_test_files + split_recorder.MIX_all_2024_train_files + split_recorder.MIX_all_2024_val_files
-print(len(recorder_file_names))
+# The MIX_large train/val/test split follows data_provider/data_loader.py (dataset == 'MIX_large')
+recorder_file_names = split_recorder.MIX_large_train_files + split_recorder.MIX_large_val_files + split_recorder.MIX_large_test_files
 BatLiNet_file_names = split_recorder.CALCE_train_files + split_recorder.CALCE_val_files + split_recorder.CALCE_test_files + split_recorder.MATR_train_files + split_recorder.MATR_val_files + split_recorder.MATR_test_files + split_recorder.HUST_train_files + split_recorder.HUST_val_files + split_recorder.HUST_test_files + split_recorder.HNEI_train_files + split_recorder.HNEI_val_files + split_recorder.HNEI_test_files + split_recorder.RWTH_train_files + split_recorder.RWTH_val_files + split_recorder.RWTH_test_files + split_recorder.SNL_train_files + split_recorder.SNL_val_files + split_recorder.SNL_test_files + split_recorder.UL_PUR_train_files + split_recorder.UL_PUR_val_files + split_recorder.UL_PUR_test_files
 
 with open('./gate_data/name2agingConditionID.json') as file:

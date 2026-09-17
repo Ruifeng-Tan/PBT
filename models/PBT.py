@@ -191,7 +191,7 @@ class BatteryMoEFlattenIntraCycleMoELayer(nn.Module):
 
         guide_loss = 0 # guide the model to give larger weight to the correct cathode expert
         LB_loss = 0
-        if self.training:
+        if self.training and torch.any(mask == 0):
             # Guidance loss
             # masked_raw_logits = raw_logits * mask
             # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
@@ -279,7 +279,7 @@ class BatteryMoEIntraCycleMoELayer(nn.Module):
 
         guide_loss = 0
         LB_loss = 0
-        if self.training:
+        if self.training and torch.any(mask == 0):
             # Guidance loss
             # masked_raw_logits = raw_logits * mask
             # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B
@@ -364,7 +364,7 @@ class BatteryMoEInterCycleMoELayer(nn.Module):
 
         LB_loss = 0
         guide_loss = 0
-        if self.training:
+        if self.training and torch.any(mask == 0):
             # Guidance loss
             # masked_raw_logits = raw_logits * mask
             # sum_masked_raw_logits = torch.sum(masked_raw_logits) / B

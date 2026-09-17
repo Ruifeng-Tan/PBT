@@ -14,14 +14,24 @@ from models import PBT, CPTransformerDeepSeekMoE, CPTransformer, CPMLP
 import wandb
 from data_provider.gate_masker import gate_masker
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
-from data_provider.data_factory import data_provider_LLMv2, data_provider_LLM_evaluate
+from data_provider.data_factory import (
+    data_provider_LLMv2,
+    data_provider_LLM_evaluate,
+    data_provider_evaluate_BL,
+)
 import time
 import random
 import numpy as np
 import os
 import json
 import datetime
-from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter
+from layers.Adapters import (
+    PBTtLayerWithAdapter,
+    PBTCPLayerWithAdapter,
+    CPLayerWithAdapter,
+    tLayerWithAdapter,
+    CPTtLayerWithAdapter,
+)
 # os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # os.environ['CURL_CA_BUNDLE'] = ''
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
@@ -29,6 +39,99 @@ from layers.Adapters import PBTtLayerWithAdapter, PBTCPLayerWithAdapter
 import joblib
 from utils.tools import del_files, EarlyStopping, domain_average, vali_batteryLifeLLM
 parser = argparse.ArgumentParser(description='Time-LLM')
+
+
+def add_adapters_withCP(args, model, adapter_size=64):
+    """Rebuild the CPMLP/CPTransformer adapter topology saved by finetuning."""
+    model.intra_flatten = CPLayerWithAdapter(args, model.intra_flatten, adapter_size=adapter_size)
+    encoder_count = min(args.adapter_layers, model.e_layers)
+    decoder_count = args.adapter_layers - encoder_count
+    for i in range(encoder_count):
+        model.intra_MLP[i] = tLayerWithAdapter(args, model.intra_MLP[i], adapter_size=adapter_size)
+    if args.model == 'CPMLP':
+        for i in range(decoder_count):
+            model.inter_MLP[i] = tLayerWithAdapter(args, model.inter_MLP[i], adapter_size=adapter_size)
+    elif args.model == 'CPTransformer':
+        for i in range(decoder_count):
+            model.inter_TransformerEncoder.attn_layers[i] = CPTtLayerWithAdapter(
+                args, model.inter_TransformerEncoder.attn_layers[i], adapter_size=adapter_size
+            )
+    return model
+
+
+def add_adapters_withoutCP(args, model, adapter_size=64):
+    """Rebuild CP adapter tuning without an adapter on the flatten layer."""
+    encoder_count = min(args.adapter_layers, model.e_layers)
+    decoder_count = args.adapter_layers - encoder_count
+    for i in range(encoder_count):
+        model.intra_MLP[i] = tLayerWithAdapter(args, model.intra_MLP[i], adapter_size=adapter_size)
+    if args.model == 'CPMLP':
+        for i in range(decoder_count):
+            model.inter_MLP[i] = tLayerWithAdapter(args, model.inter_MLP[i], adapter_size=adapter_size)
+    elif args.model == 'CPTransformer':
+        for i in range(decoder_count):
+            model.inter_TransformerEncoder.attn_layers[i] = CPTtLayerWithAdapter(
+                args, model.inter_TransformerEncoder.attn_layers[i], adapter_size=adapter_size
+            )
+    return model
+
+
+def _reverse_adapter_layer_indices(num_encoder_layers, num_decoder_layers, adapter_layers):
+    total_layers = num_encoder_layers + num_decoder_layers
+    if adapter_layers <= 0:
+        adapter_layers = total_layers
+    if adapter_layers > total_layers:
+        raise ValueError('The adapter layers should be less than or equal to the number of hidden layers!')
+    decoder_count = min(adapter_layers, num_decoder_layers)
+    encoder_count = adapter_layers - decoder_count
+    decoder_indices = range(num_decoder_layers - 1, num_decoder_layers - decoder_count - 1, -1)
+    encoder_indices = range(num_encoder_layers - 1, num_encoder_layers - encoder_count - 1, -1)
+    return decoder_indices, encoder_indices
+
+
+def add_adapters_withoutCP_reverse(args, model, adapter_size=64):
+    """Rebuild CP AT_reverse adapters from decoder output backwards."""
+    decoder_indices, encoder_indices = _reverse_adapter_layer_indices(
+        model.e_layers, model.d_layers, args.adapter_layers
+    )
+    for i in decoder_indices:
+        if args.model == 'CPMLP':
+            model.inter_MLP[i] = tLayerWithAdapter(args, model.inter_MLP[i], adapter_size=adapter_size)
+        elif args.model == 'CPTransformer':
+            model.inter_TransformerEncoder.attn_layers[i] = CPTtLayerWithAdapter(
+                args, model.inter_TransformerEncoder.attn_layers[i], adapter_size=adapter_size
+            )
+    for i in encoder_indices:
+        model.intra_MLP[i] = tLayerWithAdapter(args, model.intra_MLP[i], adapter_size=adapter_size)
+    return model
+
+
+def add_adapters_to_PBT_reverse(args, model, adapter_size=64):
+    """Rebuild PBT AT_reverse adapters from decoder output backwards."""
+    num_encoder_layers = len(model.intra_MoE_layers)
+    num_decoder_layers = len(model.inter_MoE_layers)
+    num_hidden_layers = num_encoder_layers + num_decoder_layers
+    adapter_layers = args.adapter_layers
+    if adapter_layers <= 0:
+        adapter_layers = num_hidden_layers + 1
+    if adapter_layers > num_hidden_layers + 1:
+        raise ValueError('The adapter layers should be less than or equal to the number of hidden layers!')
+    decoder_indices, encoder_indices = _reverse_adapter_layer_indices(
+        num_encoder_layers, num_decoder_layers, min(adapter_layers, num_hidden_layers)
+    )
+    for i in decoder_indices:
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args, model.inter_MoE_layers[i], adapter_size=adapter_size
+        )
+    for i in encoder_indices:
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args, model.intra_MoE_layers[i], adapter_size=adapter_size
+        )
+    if adapter_layers > num_hidden_layers:
+        model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
+            args, model.flattenIntraCycleLayer, adapter_size=adapter_size
+        )
+    return model
 
 def add_adapters_to_PBT_withCP_no_bottom(args, model, adapter_size=64):
     original_layer = model.flattenIntraCycleLayer
@@ -182,13 +285,15 @@ def add_adapters_to_PBT_withCP_flex(args, model, adapter_size=64):
 
     return model
 
-def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha1, alpha2, model, dataset, seed, trained_dataset, start=1, end=100):
+def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha1, alpha2, model, dataset, seed, trained_dataset, start=1, end=100, output_path='./output_path/'):
     number_MAPE = {}
     number_alphaAcc1 = {}
     number_alphaAcc2 = {}
     for number in range(start, end+1):
         preds = total_preds[total_seen_number_of_cycles==number]
         references = total_references[total_seen_number_of_cycles==number]
+        if len(references) == 0:
+            continue
 
         mape = mean_absolute_percentage_error(references, preds)
         relative_error = abs(preds - references) / references
@@ -203,13 +308,12 @@ def calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_referenc
         number_alphaAcc1[number] = float(alpha_acc)
         number_alphaAcc2[number] = float(alpha_acc2)
     
-    output_path = './output_path/'
     os.makedirs(output_path, exist_ok=True)
-    with open(f'{output_path}number_MAPE_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
+    with open(os.path.join(output_path, f'number_MAPE_{model}_{dataset}_{trained_dataset}_{seed}.json'), 'w') as f:
         json.dump(number_MAPE, f)
-    with open(f'{output_path}number_alphaAcc1_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
+    with open(os.path.join(output_path, f'number_alphaAcc1_{model}_{dataset}_{trained_dataset}_{seed}.json'), 'w') as f:
         json.dump(number_alphaAcc1, f)
-    with open(f'{output_path}number_alphaAcc2_{model}_{dataset}_{trained_dataset}_{seed}.json', 'w') as f:
+    with open(os.path.join(output_path, f'number_alphaAcc2_{model}_{dataset}_{trained_dataset}_{seed}.json'), 'w') as f:
         json.dump(number_alphaAcc2, f)
 
 def set_seed(seed):
@@ -222,14 +326,43 @@ def set_seed(seed):
     if torch.cuda.is_available() > 0:
         torch.cuda.manual_seed_all(seed)
 
+
+def _condition_id_for_file(name2condition, file_name):
+    """Return the canonical aging-condition ID for a split file name."""
+    for candidate in (file_name, os.path.basename(file_name)):
+        if candidate in name2condition:
+            return name2condition[candidate]
+    return None
+
+
+def condition_level_mape(predictions, references, condition_ids, seen_condition_ids):
+    """Macro-average MAPE over aging conditions, with seen/unseen subsets."""
+    per_condition = {}
+    for condition_id in np.unique(condition_ids):
+        mask = condition_ids == condition_id
+        per_condition[int(condition_id)] = float(
+            mean_absolute_percentage_error(references[mask], predictions[mask])
+        )
+
+    seen_values = [value for key, value in per_condition.items() if key in seen_condition_ids]
+    unseen_values = [value for key, value in per_condition.items() if key not in seen_condition_ids]
+    return {
+        'macro_mape': float(np.mean(list(per_condition.values()))) if per_condition else None,
+        'seen_macro_mape': float(np.mean(seen_values)) if seen_values else None,
+        'unseen_macro_mape': float(np.mean(unseen_values)) if unseen_values else None,
+        'per_condition_mape': per_condition,
+        'seen_condition_count': len(seen_values),
+        'unseen_condition_count': len(unseen_values),
+    }
+
 # basic config
 parser.add_argument('--task_name', type=str, required=False, default='long_term_forecast',
                     help='task name, options:[long_term_forecast, short_term_forecast, imputation, classification, anomaly_detection]')
 parser.add_argument('--is_training', type=int, required=False, default=1, help='status')
 parser.add_argument('--model_id', type=str, required=False, default='test', help='model id')
 parser.add_argument('--model_comment', type=str, required=False, default='none', help='prefix when saving test results')
-parser.add_argument('--model', type=str, required=False, default='Autoformer',
-                    help='model name, options: [Autoformer, DLinear]')
+parser.add_argument('--model', type=str, required=False, default=None,
+                    help='model name, options: [PBT, CPMLP, CPTransformer, CPTransformerDeepSeekMoE]')
 parser.add_argument('--LLM_path', type=str, required=False, default='/home/trf/LLMs/llama2-hf-7b',
                     help='The path to the saved LLM checkpoints')
 parser.add_argument('--center_path', type=str, required=False, default='./Centenr_vectors',
@@ -239,7 +372,7 @@ parser.add_argument('--seed', type=int, default=2021, help='random seed')
 # data loader
 parser.add_argument('--dataset', type=str, default='HUST', help='dataset description')
 parser.add_argument('--data', type=str, required=False, default='BatteryLifeLLM', help='dataset type')
-parser.add_argument('--root_path', type=str, default='./dataset/HUST_dataset/', help='root path of the data file')
+parser.add_argument('--root_path', type=str, default=None, help='root path of the data file')
 parser.add_argument('--data_path', type=str, default='ETTh1.csv', help='data file')
 parser.add_argument('--features', type=str, default='M',
                     help='forecasting task, options:[M, S, MS]; '
@@ -263,6 +396,14 @@ parser.add_argument('--seasonal_patterns', type=str, default='Monthly', help='su
 parser.add_argument('--pt_token_num', type=int, default=10, help='The token number for prompt tuning')
 parser.add_argument('--last_layer', type=int, default=0, help='The layer index for fusion')
 parser.add_argument('--d_llm', type=int, default=4096, help='the features of llm')
+parser.add_argument('--lookup_cathode_vocab_size', type=int, default=32)
+parser.add_argument('--lookup_anode_vocab_size', type=int, default=32)
+parser.add_argument('--lookup_format_vocab_size', type=int, default=32)
+parser.add_argument('--lookup_cathode_dim', type=int, default=32)
+parser.add_argument('--lookup_anode_dim', type=int, default=32)
+parser.add_argument('--lookup_format_dim', type=int, default=16)
+parser.add_argument('--lookup_temperature_dim', type=int, default=16)
+parser.add_argument('--lookup_hidden_dim', type=int, default=128)
 parser.add_argument('--enc_in', type=int, default=1, help='encoder input size')
 parser.add_argument('--dec_in', type=int, default=1, help='decoder input size')
 parser.add_argument('--c_out', type=int, default=1, help='output size')
@@ -343,10 +484,14 @@ parser.add_argument('--args_path', type=str, help='the path to the pretrained mo
 parser.add_argument('--eval_dataset', type=str, help='the target dataset')
 parser.add_argument('--eval_cycle_min', type=int, default=10, help='The lower bound for evaluation')
 parser.add_argument('--eval_cycle_max', type=int, default=10, help='The upper bound for evaluation')
+parser.add_argument('--results_dir', type=str, default='', help='directory for the detailed evaluation JSON')
+parser.add_argument('--metrics_output', type=str, default='', help='path for the concise metrics text file')
 args = parser.parse_args()
 eval_cycle_min = args.eval_cycle_min
 eval_cycle_max = args.eval_cycle_max
 batch_size = args.batch_size
+results_dir = args.results_dir
+metrics_output = args.metrics_output
 if eval_cycle_min < 0 or eval_cycle_max <0:
     eval_cycle_min = None
     eval_cycle_max = None
@@ -363,15 +508,28 @@ accelerator = Accelerator(kwargs_handlers=[ddp_kwargs], gradient_accumulation_st
 # load from the saved path
 args_path = args.args_path
 dataset = args.eval_dataset
+cli_model = args.model
 alpha = args.alpha1
 alpha2 = args.alpha2
+cli_root_path = args.root_path
 args_json = json.load(open(f'{args_path}args.json'))
 trained_dataset = args_json['dataset']
-dataset = dataset if 'finetune_method' not in args_json else args_json['dataset']
+# The command line identifies the dataset being evaluated.  The checkpoint's
+# dataset is retained separately as ``trained_dataset`` for prompt/mask setup.
+if cli_model is not None:
+    args_json['model'] = cli_model
 args_json['dataset'] = dataset 
+cli_num_workers = args.num_workers
 args_json['batch_size'] = batch_size
 
 args.__dict__ = args_json
+# Checkpoint arguments provide defaults, while an explicitly supplied CLI
+# root path must take precedence (for example, scripts/evaluate_model.sh).
+if cli_root_path is not None:
+    args.root_path = cli_root_path
+elif getattr(args, 'root_path', None) is None:
+    args.root_path = './dataset/HUST_dataset/'
+args.num_workers = cli_num_workers
 
 for ii in range(args.itr):
     # setting record of experiments
@@ -394,25 +552,29 @@ for ii in range(args.itr):
     #     args.topK, args.use_domainSampler, args.use_aug, args.aug_w, args.temperature, args.weighted_CLDG, args.down_sample_ratio, args.warm_up_epoches, args.use_dff_scale, args.seed)
 
 
-    data_provider_func = data_provider_LLM_evaluate
+    # CP transfer checkpoints trained with Dataset_original use the baseline
+    # 9-field sample format.  Keep that data path while using this evaluator's
+    # checkpoint loading (which does not require life_class_scaler).
+    use_baseline_data = args.data == 'Dataset_original'
+    data_provider_func = data_provider_evaluate_BL if use_baseline_data else data_provider_LLM_evaluate
     if args.model == 'CPTransformerDeepSeekMoE':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path) if getattr(args, 'LLM_path', None) else None
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = CPTransformerDeepSeekMoE.Model(model_config)
     elif args.model == 'PBT':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path) if getattr(args, 'LLM_path', None) else None
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = PBT.Model(model_config)
     elif args.model == 'CPMLP':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path) if getattr(args, 'LLM_path', None) else None
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = CPMLP.Model(model_config)
     elif args.model == 'CPTransformer':
         model_ec_config = BatteryElectrochemicalConfig(args.__dict__)
-        model_text_config = AutoConfig.from_pretrained(args.LLM_path)
+        model_text_config = AutoConfig.from_pretrained(args.LLM_path) if getattr(args, 'LLM_path', None) else None
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = CPTransformer.Model(model_config)
     else:
@@ -421,7 +583,13 @@ for ii in range(args.itr):
     trained_parameters = []
     trained_parameters_names = []
     finetune_method = args.finetune_method if 'finetune_method' in args_json else None
-    if finetune_method == 'AT':
+    if finetune_method == 'AT' and args.model in ['CPMLP', 'CPTransformer']:
+        model = add_adapters_withCP(args, model, args.adapter_size)
+        for name, p in model.named_parameters():
+            if ('adapter' in name or 'gate' in name or 'regression_head' in name) and p.requires_grad:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
+    elif finetune_method == 'AT':
         # adapter tuning, legacy name: AT_nB
         model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
         for name, p in model.named_parameters():
@@ -429,6 +597,26 @@ for ii in range(args.itr):
                 if p.requires_grad is True:
                     trained_parameters_names.append(name)
                     trained_parameters.append(p)
+    elif finetune_method == 'AT_reverse' and args.model in ['CPMLP', 'CPTransformer']:
+        model = add_adapters_withoutCP_reverse(args, model, args.adapter_size)
+        for name, p in model.named_parameters():
+            if ('adapter' in name or 'gate' in name or 'regression_head' in name) and p.requires_grad:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
+    elif finetune_method == 'AT_reverse':
+        model = add_adapters_to_PBT_reverse(args, model, args.adapter_size)
+        for name, p in model.named_parameters():
+            if 'adapter' in name or 'regression_head' in name:
+                if p.requires_grad:
+                    trained_parameters_names.append(name)
+                    trained_parameters.append(p)
+    elif finetune_method == 'AT_nCP' and args.model in ['CPMLP', 'CPTransformer']:
+        # Adapter tuning without an adapter on the CP flatten layer.
+        model = add_adapters_withoutCP(args, model, args.adapter_size)
+        for name, p in model.named_parameters():
+            if ('adapter' in name or 'gate' in name or 'regression_head' in name) and p.requires_grad:
+                trained_parameters_names.append(name)
+                trained_parameters.append(p)
     elif finetune_method == 'AT_nCP':
         # adapter tuning without adapter before CyclePatch layer
         model = add_adapters_to_PBT_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
@@ -461,9 +649,25 @@ for ii in range(args.itr):
     std, mean_value = np.sqrt(label_scaler.var_[-1]), label_scaler.mean_[-1]
     accelerator.print("Loading training samples......")
     accelerator.print("Loading test samples......")
-    test_data, test_loader = data_provider_func(args, 'test', 
-                                                label_scaler=label_scaler, eval_cycle_min=eval_cycle_min, 
-                                                eval_cycle_max=eval_cycle_max, temperature2mask=temperature2mask, format2mask=format2mask, cathodes2mask=cathodes2mask, anode2mask=anode2mask, ion2mask=ion2mask, trained_dataset=trained_dataset)
+    if use_baseline_data:
+        test_data, test_loader = data_provider_func(
+            args, 'test', label_scaler=label_scaler,
+            eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max,
+        )
+    else:
+        test_data, test_loader = data_provider_func(
+            args, 'test', label_scaler=label_scaler,
+            eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max,
+            temperature2mask=temperature2mask, format2mask=format2mask,
+            cathodes2mask=cathodes2mask, anode2mask=anode2mask,
+            ion2mask=ion2mask, trained_dataset=trained_dataset,
+        )
+    seen_condition_ids = {
+        int(condition_id)
+        for file_name in test_data.train_files + test_data.val_files
+        for condition_id in [_condition_id_for_file(test_data.name2domainID, file_name)]
+        if condition_id is not None
+    }
 
 
     # load LoRA
@@ -476,7 +680,7 @@ for ii in range(args.itr):
     for p in model.parameters():
         if p.requires_grad is True:
             trained_parameters.append(p)
-            
+
     model_optim = optim.Adam(trained_parameters, lr=args.learning_rate)
     
     time_now = time.time()
@@ -502,19 +706,35 @@ for ii in range(args.itr):
     total_seen_number_of_cycles = []
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, weights, dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in tqdm(enumerate(test_loader)):
-
-
+        for i, batch in tqdm(enumerate(test_loader)):
+            if use_baseline_data:
+                (cycle_curve_data, curve_attn_mask, labels, _life_class,
+                 _scaled_life_class, weights, dataset_ids, seen_unseen_ids,
+                 domain_ids) = batch
+                outputs, _, _, _, _, _, _, _ = model(
+                    cycle_curve_data, curve_attn_mask
+                )
+            else:
+                (cycle_curve_data, curve_attn_mask, labels, weights,
+                 dataset_ids, seen_unseen_ids, DKP_embeddings, cathode_masks,
+                 temperature_masks, format_masks, anode_masks, ion_type_masks,
+                 combined_masks, domain_ids) = batch
+                outputs, _, _, _, _, _, _, _ = model(
+                    cycle_curve_data, curve_attn_mask,
+                    DKP_embeddings=DKP_embeddings,
+                    cathode_masks=cathode_masks,
+                    temperature_masks=temperature_masks,
+                    format_masks=format_masks,
+                    anode_masks=anode_masks,
+                    ion_type_masks=ion_type_masks,
+                    combined_masks=combined_masks,
+                )
             seen_number_of_cycles = torch.sum(curve_attn_mask, dim=1) # [B]
-            # encoder - decoder
-            outputs, prompt_scores, llm_out, feature_llm_out, _, alpha_exponent, aug_loss, guide_loss = model(cycle_curve_data, curve_attn_mask, 
-            DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks, temperature_masks=temperature_masks, format_masks=format_masks, 
-            anode_masks=anode_masks, ion_type_masks=ion_type_masks, combined_masks=combined_masks)
             # self.accelerator.wait_for_everyone()
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
             all_predictions, all_targets, dataset_ids, seen_unseen_ids, domain_ids, seen_number_of_cycles = accelerator.gather_for_metrics((transformed_preds, transformed_labels, dataset_ids, seen_unseen_ids, domain_ids, seen_number_of_cycles))
-            
+
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
             total_domain_ids = total_domain_ids + domain_ids.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
@@ -522,7 +742,7 @@ for ii in range(args.itr):
             total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
             total_seen_number_of_cycles = total_seen_number_of_cycles + seen_number_of_cycles.detach().cpu().numpy().reshape(-1).tolist()
 
-    res_path=f'./results/{eval_cycle_min}_{eval_cycle_max}_analysis/'
+    res_path = results_dir or f'./results/{eval_cycle_min}_{eval_cycle_max}_analysis/'
     save_res = {}
     save_res[dataset] = {}
     # accelerator.wait_for_everyone()
@@ -548,23 +768,48 @@ for ii in range(args.itr):
 
         tmp_mapes = np.abs(total_preds-total_references) / total_references
 
-        domain_average_MAPE = np.mean(domain_average(torch.tensor(total_domain_ids), torch.tensor(tmp_mapes)))
+        condition_metrics = condition_level_mape(
+            total_preds, total_references, total_domain_ids.astype(int), seen_condition_ids
+        )
+        mape = float(mean_absolute_percentage_error(total_references, total_preds))
         save_res[dataset]['mapes'] = list(tmp_mapes)
         save_res[dataset]['Useable_cycle_number'] = list(total_seen_number_of_cycles)
         save_res[dataset]['total_references'] = list(total_references)
         save_res[dataset]['total_preds'] = list(total_preds)
         save_res[dataset]['total_seen_unseen_ids'] = list(total_seen_unseen_ids)
         save_res[dataset]['domain_ids'] = list(total_domain_ids)
+        save_res[dataset]['cell_level_mape'] = mape
+        save_res[dataset]['aging_condition_level_metrics'] = condition_metrics
         trained_seed = args_json['seed']
         model_name = args_json['model']
-        with open(f'{res_path}/{model_name}_{dataset}_{trained_seed}.json', 'w') as f:
+        with open(os.path.join(res_path, f'{model_name}_{dataset}_{trained_seed}.json'), 'w') as f:
             json.dump(save_res, f)
-        
 
-        mape = mean_absolute_percentage_error(total_references, total_preds)
+        if metrics_output:
+            metrics_parent = os.path.dirname(metrics_output)
+            if metrics_parent:
+                os.makedirs(metrics_parent, exist_ok=True)
 
-        accelerator.print(f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | MAPE: {mape} | {alpha}-accuracy: {alpha_acc}% | {alpha2}-accuracy: {alpha_acc2}%')
-        accelerator.print(f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Domain average MAPE: {domain_average_MAPE}')
+            def format_metric(value):
+                return 'NA' if value is None else f'{value:.10f}'
+
+            with open(metrics_output, 'w') as f:
+                f.write(f'cell_level_mape: {format_metric(mape)}\n')
+                f.write('aging_condition_level_mape: '
+                        f"{format_metric(condition_metrics['macro_mape'])}\n")
+                f.write('seen_aging_condition_level_mape: '
+                        f"{format_metric(condition_metrics['seen_macro_mape'])}\n")
+                f.write('unseen_aging_condition_level_mape: '
+                        f"{format_metric(condition_metrics['unseen_macro_mape'])}\n")
+                f.write(f"seen_aging_condition_count: {condition_metrics['seen_condition_count']}\n")
+                f.write(f"unseen_aging_condition_count: {condition_metrics['unseen_condition_count']}\n")
+
+        accelerator.print(
+            f'{dataset} | Eval cycle: {eval_cycle_min}-{eval_cycle_max} | '
+            f'Condition-level MAPE: {condition_metrics["macro_mape"]} | '
+            f'Seen condition-level MAPE: {condition_metrics["seen_macro_mape"]} | '
+            f'Unseen condition-level MAPE: {condition_metrics["unseen_macro_mape"]}'
+        )
         # calculate the model performance on the samples from the seen and unseen aging conditions
         seen_references = total_references[total_seen_unseen_ids==1] if np.any(total_seen_unseen_ids==1) else np.array([0])
         unseen_references = total_references[total_seen_unseen_ids==0] if np.any(total_seen_unseen_ids==0) else np.array([0])
@@ -603,18 +848,5 @@ for ii in range(args.itr):
         else:
             unseen_alpha_acc2 = -10000
 
-        if len(unseen_references)==0:
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc1}%')
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen {alpha2}-accuracy: {seen_alpha_acc2}%')
-        else:
-            relative_error = abs(unseen_preds - unseen_references) / unseen_references
-            hit_num = sum(relative_error<=alpha2)
-            unseen_alpha_acc2 = hit_num / len(unseen_references) * 100
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen MAPE: {seen_mape} | Unseen MAPE: {unseen_mape} | Seen {alpha}-accuracy: {seen_alpha_acc1}% | Unseen {alpha}-accuracy: {unseen_alpha_acc1}%')
-            accelerator.print(f'Eval cycle: {eval_cycle_min}-{eval_cycle_max} | Seen {alpha2}-accuracy: {seen_alpha_acc2}% | Unseen {alpha2}-accuracy: {unseen_alpha_acc2}%')
-
-
         if eval_cycle_min is None or eval_cycle_max is None:
-            calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha, alpha2, args.model, dataset, trained_dataset=trained_dataset, start=args.seq_len, end=args.early_cycle_threshold, seed=args.seed)
-
-            
+            calculate_metrics_based_on_seen_number_of_cycles(total_preds, total_references, total_seen_number_of_cycles, alpha, alpha2, args.model, dataset, trained_dataset=trained_dataset, start=args.seq_len, end=args.early_cycle_threshold, seed=args.seed, output_path=res_path)

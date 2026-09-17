@@ -262,9 +262,38 @@ def del_files(dir_path):
     shutil.rmtree(dir_path, ignore_errors=True)
 
 
-def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
+def condition_level_mape(predictions, references, condition_ids):
+    """Return the macro-average MAPE across aging conditions.
+
+    Each condition first receives the mean absolute percentage error of its
+    battery samples.  The returned value is the unweighted mean over the
+    conditions represented in the current split.
+    """
+    predictions = np.asarray(predictions).reshape(-1)
+    references = np.asarray(references).reshape(-1)
+    condition_ids = np.asarray(condition_ids).reshape(-1)
+    if not (len(predictions) == len(references) == len(condition_ids)):
+        raise ValueError(
+            'Predictions, references, and condition IDs must have the same length.'
+        )
+    if len(condition_ids) == 0:
+        raise ValueError('Condition-level MAPE requires at least one sample.')
+
+    per_condition_mapes = [
+        mean_absolute_percentage_error(
+            references[condition_ids == condition_id],
+            predictions[condition_ids == condition_id],
+        )
+        for condition_id in np.unique(condition_ids)
+    ]
+    return float(np.mean(per_condition_mapes))
+
+
+def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion,
+                  compute_seen_unseen=False, compute_condition_level=False):
     total_preds, total_references = [], []
     total_seen_unseen_ids = []
+    total_condition_ids = []
     model.eval()
     with torch.no_grad():
         for i, (cycle_curve_data, curve_attn_mask,  labels, life_class, scaled_life_class, weights, seen_unseen_ids, domain_ids) in tqdm(enumerate(vali_loader)):
@@ -279,13 +308,17 @@ def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, c
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
 
-            all_predictions, all_targets, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids))
+            all_predictions, all_targets, seen_unseen_ids, condition_ids = accelerator.gather_for_metrics(
+                (transformed_preds, transformed_labels, seen_unseen_ids, domain_ids)
+            )
 
          
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
             if compute_seen_unseen:
                 total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
+            if compute_condition_level:
+                total_condition_ids = total_condition_ids + condition_ids.detach().cpu().numpy().reshape(-1).tolist()
 
     total_preds = np.array(total_preds)
     total_references = np.array(total_references)   
@@ -293,6 +326,9 @@ def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, c
     rmse = root_mean_squared_error(total_references, total_preds)
     mae = mean_absolute_error(total_references, total_preds)
     mape = mean_absolute_percentage_error(total_references, total_preds)
+    condition_mape = condition_level_mape(
+        total_preds, total_references, total_condition_ids
+    ) if compute_condition_level else None
 
     relative_error = abs(total_preds - total_references) / total_references
     hit_num = sum(relative_error<=args.alpha1)
@@ -342,16 +378,22 @@ def vali_baseline(args, accelerator, model, vali_data, vali_loader, criterion, c
             unseen_alpha_acc2 = -10000
 
         model.train()
-        return  rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape, seen_mape, unseen_alpha_acc1, seen_alpha_acc1, unseen_alpha_acc2, seen_alpha_acc2
+        result = (rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape,
+                  seen_mape, unseen_alpha_acc1, seen_alpha_acc1,
+                  unseen_alpha_acc2, seen_alpha_acc2)
+        return result + (condition_mape,) if compute_condition_level else result
     
     model.train()
-    return rmse, mae, mape, alpha_acc1, alpha_acc2
+    result = (rmse, mae, mape, alpha_acc1, alpha_acc2)
+    return result + (condition_mape,) if compute_condition_level else result
 
 
-def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion, compute_seen_unseen=False):
+def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion,
+                        compute_seen_unseen=False, compute_condition_level=False):
     model.eval()
     total_preds, total_references = [], []
     total_seen_unseen_ids = []
+    total_condition_ids = []
     std, mean_value = np.sqrt(vali_data.label_scaler.var_[-1]), vali_data.label_scaler.mean_[-1]
     with torch.no_grad():
         for i, (cycle_curve_data, curve_attn_mask, labels, _,  _, DKP_embeddings, seen_unseen_ids, cathode_masks, temperature_masks, format_masks, anode_masks, ion_type_masks, combined_masks, domain_ids) in enumerate(vali_loader):
@@ -369,22 +411,38 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
 
 
             # encoder - decoder
-            outputs, _, _, _, _, _, _, _ = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
-                                                 , temperature_masks=temperature_masks, format_masks=format_masks, anode_masks=anode_masks,
-                                                 combined_masks=combined_masks, ion_type_masks=ion_type_masks)
+            model_kwargs = {
+                'DKP_embeddings': DKP_embeddings,
+                'cathode_masks': cathode_masks,
+                'temperature_masks': temperature_masks,
+                'format_masks': format_masks,
+                'anode_masks': anode_masks,
+                'combined_masks': combined_masks,
+                'ion_type_masks': ion_type_masks,
+            }
+            if args.model == 'PBT_LookupEmbedding':
+                model_kwargs['lookup_features'] = DKP_embeddings
+            outputs, _, _, _, _, _, _, _ = model(
+                cycle_curve_data, curve_attn_mask, **model_kwargs)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value
             transformed_labels = labels * std + mean_value
             if accelerator is None:
-                all_predictions, all_targets, seen_unseen_ids = transformed_preds, transformed_labels, seen_unseen_ids
+                all_predictions, all_targets, seen_unseen_ids, condition_ids = (
+                    transformed_preds, transformed_labels, seen_unseen_ids, domain_ids
+                )
             else:
-                all_predictions, all_targets, seen_unseen_ids = accelerator.gather_for_metrics((transformed_preds, transformed_labels, seen_unseen_ids))
+                all_predictions, all_targets, seen_unseen_ids, condition_ids = accelerator.gather_for_metrics(
+                    (transformed_preds, transformed_labels, seen_unseen_ids, domain_ids)
+                )
             
             total_preds = total_preds + all_predictions.detach().cpu().numpy().reshape(-1).tolist()
             total_references = total_references + all_targets.detach().cpu().numpy().reshape(-1).tolist()
             if compute_seen_unseen:
                 total_seen_unseen_ids = total_seen_unseen_ids + seen_unseen_ids.detach().cpu().numpy().reshape(-1).tolist()
+            if compute_condition_level:
+                total_condition_ids = total_condition_ids + condition_ids.detach().cpu().numpy().reshape(-1).tolist()
                 
     total_preds = np.array(total_preds)
     total_references = np.array(total_references)   
@@ -392,6 +450,9 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
     rmse = root_mean_squared_error(total_references, total_preds)
     mae = mean_absolute_error(total_references, total_preds)
     mape = mean_absolute_percentage_error(total_references, total_preds)
+    condition_mape = condition_level_mape(
+        total_preds, total_references, total_condition_ids
+    ) if compute_condition_level else None
 
     relative_error = abs(total_preds - total_references) / total_references
     hit_num = sum(relative_error<=args.alpha1)
@@ -450,10 +511,14 @@ def vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criter
             unseen_alpha_acc2 = -10000
 
         model.train()
-        return  rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape, seen_mape, unseen_alpha_acc1, seen_alpha_acc1, unseen_alpha_acc2, seen_alpha_acc2
+        result = (rmse, mae, mape, alpha_acc1, alpha_acc2, unseen_mape,
+                  seen_mape, unseen_alpha_acc1, seen_alpha_acc1,
+                  unseen_alpha_acc2, seen_alpha_acc2)
+        return result + (condition_mape,) if compute_condition_level else result
 
     model.train()
-    return rmse, mae, mape, alpha_acc1, alpha_acc2
+    result = (rmse, mae, mape, alpha_acc1, alpha_acc2)
+    return result + (condition_mape,) if compute_condition_level else result
 
 def domain_average(total_domain_ids, MAPEs, return_IDs=False):
     assert total_domain_ids.shape[0] == MAPEs.shape[0], "Inputs must have the same length"
@@ -495,9 +560,20 @@ def domain_average(total_domain_ids, MAPEs, return_IDs=False):
 
 
             # encoder - decoder
-            outputs = model(cycle_curve_data, curve_attn_mask, DKP_embeddings=DKP_embeddings, cathode_masks=cathode_masks
-                                                 , temperature_masks=temperature_masks, format_masks=format_masks, anode_masks=anode_masks,
-                                                 combined_masks=combined_masks, ion_type_masks=ion_type_masks, use_aug=False)
+            model_kwargs = {
+                'DKP_embeddings': DKP_embeddings,
+                'cathode_masks': cathode_masks,
+                'temperature_masks': temperature_masks,
+                'format_masks': format_masks,
+                'anode_masks': anode_masks,
+                'combined_masks': combined_masks,
+                'ion_type_masks': ion_type_masks,
+            }
+            if args.model == 'PBT_LookupEmbedding':
+                model_kwargs['lookup_features'] = DKP_embeddings
+            else:
+                model_kwargs['use_aug'] = False
+            outputs = model(cycle_curve_data, curve_attn_mask, **model_kwargs)
             # self.accelerator.wait_for_everyone()
             
             transformed_preds = outputs * std + mean_value

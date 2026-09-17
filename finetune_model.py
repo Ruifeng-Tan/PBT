@@ -63,6 +63,57 @@ def add_adapters_withoutCP(args, model, adapter_size=64):
             )
     return model
 
+
+def _reverse_adapter_layer_indices(num_encoder_layers, num_decoder_layers, adapter_layers):
+    """Return decoder and encoder indices in the order used by AT_reverse."""
+    total_layers = num_encoder_layers + num_decoder_layers
+    if adapter_layers <= 0:
+        adapter_layers = total_layers
+    if adapter_layers > total_layers:
+        raise ValueError('The adapter layers should be less than or equal to the number of hidden layers!')
+
+    decoder_count = min(adapter_layers, num_decoder_layers)
+    encoder_count = adapter_layers - decoder_count
+    decoder_indices = range(num_decoder_layers - 1, num_decoder_layers - decoder_count - 1, -1)
+    encoder_indices = range(num_encoder_layers - 1, num_encoder_layers - encoder_count - 1, -1)
+    return decoder_indices, encoder_indices
+
+
+def add_adapters_withoutCP_reverse(args, model, adapter_size=64):
+    '''
+    Add adapters to hidden layers from the decoder output backwards.
+    This variant does not add an adapter to the cycle-patch/flatten layer.
+    '''
+    decoder_indices, encoder_indices = _reverse_adapter_layer_indices(
+        model.e_layers, model.d_layers, args.adapter_layers
+    )
+
+    for i in decoder_indices:
+        if args.model == 'CPMLP':
+            original_layer = model.inter_MLP[i]
+            model.inter_MLP[i] = tLayerWithAdapter(
+                args,
+                original_layer,
+                adapter_size=adapter_size
+            )
+        elif args.model == 'CPTransformer':
+            original_layer = model.inter_TransformerEncoder.attn_layers[i]
+            model.inter_TransformerEncoder.attn_layers[i] = CPTtLayerWithAdapter(
+                args,
+                original_layer,
+                adapter_size=adapter_size
+            )
+
+    for i in encoder_indices:
+        original_layer = model.intra_MLP[i]
+        model.intra_MLP[i] = tLayerWithAdapter(
+            args,
+            original_layer,
+            adapter_size=adapter_size
+        )
+
+    return model
+
 def add_adapters_withCP(args, model, adapter_size=64):
     original_layer = model.intra_flatten
     model.intra_flatten = CPLayerWithAdapter(
@@ -124,6 +175,53 @@ def add_adapters_to_PBT(args, model, adapter_size=64):
         model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
             args,
             original_layer, 
+            adapter_size=adapter_size
+        )
+
+    return model
+
+
+def add_adapters_to_PBT_reverse(args, model, adapter_size=64):
+    '''
+    Add adapters to PBT hidden layers from the decoder output backwards.
+    The decoder is represented by inter_MoE_layers and the encoder by
+    intra_MoE_layers.  flattenIntraCycleLayer is the first hidden layer in
+    this ordering and is added when all subsequent hidden layers are selected.
+    '''
+    num_encoder_layers = len(model.intra_MoE_layers)
+    num_decoder_layers = len(model.inter_MoE_layers)
+    num_hidden_layers = num_encoder_layers + num_decoder_layers
+    adapter_layers = args.adapter_layers
+    if adapter_layers <= 0:
+        adapter_layers = num_hidden_layers + 1
+    if adapter_layers > num_hidden_layers + 1:
+        raise ValueError('The adapter layers should be less than or equal to the number of hidden layers!')
+
+    decoder_indices, encoder_indices = _reverse_adapter_layer_indices(
+        num_encoder_layers, num_decoder_layers, min(adapter_layers, num_hidden_layers)
+    )
+
+    for i in decoder_indices:
+        original_layer = model.inter_MoE_layers[i]
+        model.inter_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer,
+            adapter_size=adapter_size
+        )
+
+    for i in encoder_indices:
+        original_layer = model.intra_MoE_layers[i]
+        model.intra_MoE_layers[i] = PBTtLayerWithAdapter(
+            args,
+            original_layer,
+            adapter_size=adapter_size
+        )
+
+    if adapter_layers > num_hidden_layers:
+        original_layer = model.flattenIntraCycleLayer
+        model.flattenIntraCycleLayer = PBTtLayerWithAdapter(
+            args,
+            original_layer,
             adapter_size=adapter_size
         )
 
@@ -391,10 +489,10 @@ parser.add_argument('--alpha1', type=float, default=0.15, help='the alpha for al
 parser.add_argument('--alpha2', type=float, default=0.1, help='the alpha for alpha-accuracy')
 
 # finetune 
-parser.add_argument('--finetune_method', type=str, default='FT', help='the fine-tuning method. [FT, EFT, AT]')
+parser.add_argument('--finetune_method', type=str, default='FT', help='the fine-tuning method. [FT, EFT, AT, AT_reverse]')
 parser.add_argument('--finetune_dataset', type=str, help='the target dataset for model finetuning')
 parser.add_argument('--args_path', type=str, help='the path to the pretrained model parameters')
-parser.add_argument('--adapter_layers', type=int, default=2, help='num of adapter layers. set a number <=0 to insert adapters to all layers')
+parser.add_argument('--adapter_layers', type=int, default=2, help='num of adapter layers. set a number <=0 to insert adapters to all layers (AT_reverse for PBT includes flattenIntraCycleLayer)')
 
 args = parser.parse_args()
 
@@ -422,8 +520,13 @@ trained_dataset = args_json['dataset']
 adapter_layers = args.adapter_layers
 if adapter_layers < 0:
     adapter_layers = args_json['e_layers'] + args_json['d_layers']
+    if finetune_method == 'AT_reverse' and args.model == 'PBT':
+        adapter_layers += 1  # flattenIntraCycleLayer is also a hidden layer for AT_reverse
 
-assert args.adapter_layers <= args_json['e_layers'] + args_json['d_layers'], 'The adapter layers should be less than or equal to the number of encoder and decoder layers in the pretrained model!'
+max_adapter_layers = args_json['e_layers'] + args_json['d_layers']
+if finetune_method == 'AT_reverse' and args.model == 'PBT':
+    max_adapter_layers += 1  # include flattenIntraCycleLayer
+assert args.adapter_layers <= max_adapter_layers, 'The adapter layers should be less than or equal to the number of hidden layers in the pretrained model!'
 args_json['root_path'] = root_path
 args_json['least_epochs'] = args.least_epochs
 args_json['dataset'] = dataset
@@ -437,6 +540,9 @@ args_json['learning_rate'] = learning_rate
 args_json['alpha1'] = args.alpha1
 args_json['alpha2'] = args.alpha2
 args_json['save_path'] = args.checkpoints
+# args.__dict__ is replaced by args_json below.  Preserve the command-line
+# output root instead of silently reverting to the pretrained run's location.
+args_json['checkpoints'] = args.checkpoints
 args_json['model'] = args.model
 args_json['topK'] = args.topK
 args_json['use_aug'] = args.use_aug
@@ -504,8 +610,7 @@ for ii in range(args.itr):
 
     
     
-    path = os.path.join(args.checkpoints,
-                        setting + '-' + args.model_comment)  # unique checkpoint saving path
+    path = os.path.join(args.checkpoints, args.model_comment)
     
     if not 'MIX_all' in args.dataset:
         temperature2mask = gate_masker.MIX_large_temperature2mask
@@ -545,11 +650,11 @@ for ii in range(args.itr):
     if accelerator.is_local_main_process:
         wandb.init(
         # set the wandb project where this run will be logged
-        project="PBT_paper",
+        project="PBT_revision",
         
         # track hyperparameters and run metadata
         config=args.__dict__,
-        name=nowtime
+        name=args.model_comment
         )
 
 
@@ -588,9 +693,18 @@ for ii in range(args.itr):
                         if p.requires_grad is True:
                             trained_parameters_names.append(name)
                             trained_parameters.append(p)
+            elif finetune_method == 'AT_reverse':
+                # adapter tuning from the decoder output backwards
+                model = add_adapters_withoutCP_reverse(args, model, args.adapter_size)
+                for name, p in model.named_parameters():
+                    # only tune the adapters + gate + head
+                    if 'adapter' in name or 'gate' in name or 'regression_head' in name:
+                        if p.requires_grad is True:
+                            trained_parameters_names.append(name)
+                            trained_parameters.append(p)
             elif finetune_method == 'AT_nCP':
                 # adapter tuning
-                model = add_adapters_withoutCP(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+                model = add_adapters_withoutCP(args, model, args.adapter_size) # do not add adapters before and after that flattenIntra
                 for name, p in model.named_parameters():
                     # only tune the adapters + gate + head
                     if 'adapter' in name or 'gate' in name or 'regression_head' in name:
@@ -600,6 +714,14 @@ for ii in range(args.itr):
         elif finetune_method == 'AT':
             # adapter tuning, legacy name: AT_nB
             model = add_adapters_to_PBT_withCP_flex(args, model, args.adapter_size) # add adapters before and after that flattenIntra
+            for name, p in model.named_parameters():
+                if 'adapter' in name or 'regression_head' in name:
+                    if p.requires_grad is True:
+                        trained_parameters_names.append(name)
+                        trained_parameters.append(p)
+        elif finetune_method == 'AT_reverse':
+            # adapter tuning from the decoder output backwards
+            model = add_adapters_to_PBT_reverse(args, model, args.adapter_size)
             for name, p in model.named_parameters():
                 if 'adapter' in name or 'regression_head' in name:
                     if p.requires_grad is True:
@@ -650,6 +772,9 @@ for ii in range(args.itr):
     best_vali_MAPE, best_test_MAPE = 0, 0
     best_seen_vali_MAPE, best_seen_test_MAPE = 0, 0
     best_unseen_vali_MAPE, best_unseen_test_MAPE = 0, 0
+    best_vali_condition_mape, best_test_condition_mape = 0, 0
+    best_epoch = None
+    best_train_loss = None
 
 
     for epoch in range(args.train_epochs):
@@ -739,18 +864,28 @@ for ii in range(args.itr):
         train_mape = mean_absolute_percentage_error(total_references, total_preds)
         accelerator.print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
 
-        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, vali_data, vali_loader, criterion)
-        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2 = vali_batteryLifeLLM(args, accelerator, model, test_data, test_loader, criterion, compute_seen_unseen=True)
-        vali_loss = vali_mape if eval_metric=='MAPE' else vali_rmse
+        vali_rmse, vali_mae_loss, vali_mape, vali_alpha_acc1, vali_alpha_acc2, vali_condition_mape = vali_batteryLifeLLM(
+            args, accelerator, model, vali_data, vali_loader, criterion,
+            compute_condition_level=True,
+        )
+        test_rmse, test_mae_loss, test_mape, test_alpha_acc1, test_alpha_acc2, test_unseen_mape, test_seen_mape, test_unseen_alpha_acc1, test_seen_alpha_acc1, test_unseen_alpha_acc2, test_seen_alpha_acc2, test_condition_mape = vali_batteryLifeLLM(
+            args, accelerator, model, test_data, test_loader, criterion,
+            compute_seen_unseen=True, compute_condition_level=True,
+        )
+        vali_loss = vali_condition_mape
         
         if vali_loss < best_vali_loss:
             best_vali_loss = vali_loss
+            best_epoch = epoch + 1
+            best_train_loss = total_loss / len(train_loader)
             best_vali_MAE = vali_mae_loss
             best_test_MAE = test_mae_loss
             best_vali_RMSE = vali_rmse
             best_test_RMSE = test_rmse
             best_vali_MAPE = vali_mape
             best_test_MAPE = test_mape
+            best_vali_condition_mape = vali_condition_mape
+            best_test_condition_mape = test_condition_mape
 
             # alpha-accuracy
             best_vali_alpha_acc1 = vali_alpha_acc1
@@ -772,11 +907,13 @@ for ii in range(args.itr):
         total_LB_loss = total_LB_loss / len(train_loader)
         total_label_loss = total_label_loss / len(train_loader)
         accelerator.print(
-            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| "
-            f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f}")
+            f"Epoch: {epoch+1} | Train Loss: {train_loss:.5f} | Train label loss: {total_label_loss:.5f} | Train cl loss: {total_guidance_loss:.5f}| Train align loss: {total_alignment_loss:.5f} | Train LB loss {total_LB_loss:.5f} | Train RMSE: {train_rmse:.7f} | Train MAPE: {train_mape:.7f} | Vali R{args.loss}: {vali_rmse:.7f}| Vali MAE: {vali_mae_loss:.7f}| Vali MAPE: {vali_mape:.7f}| Vali Condition-level MAPE: {vali_condition_mape:.7f}| "
+            f"Test RMSE: {test_rmse:.7f}| Test acc1: {test_alpha_acc1:.4f} | Test MAPE: {test_mape:.7f} | Test Condition-level MAPE: {test_condition_mape:.7f}")
         if accelerator.is_local_main_process:
-            wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2, 
-                    "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
+            wandb.log({"epoch": epoch, "train_loss": train_loss, "vali_RMSE": vali_rmse, "vali_MAPE": vali_mape,
+                    "vali_condition_MAPE": vali_condition_mape, "vali_acc1": vali_alpha_acc1, "vali_acc2": vali_alpha_acc2,
+                    "test_RMSE": test_rmse, "test_MAPE": test_mape, "test_condition_MAPE": test_condition_mape,
+                    "test_acc1": test_alpha_acc1, "test_acc2": test_alpha_acc2})
         
         early_stopping(epoch+1, vali_loss, vali_mae_loss, test_mae_loss, model, path)
         if early_stopping.early_stop:
@@ -794,13 +931,37 @@ for ii in range(args.itr):
                     scheduler.step()
                     accelerator.print('CosineAnnealingWarmRestarts| Updating learning rate to {}'.format(scheduler.get_last_lr()[0]))
 
-accelerator.print(f'Best model performance: Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
+accelerator.print(f'Best model performance (epoch {best_epoch}, selected by validation condition-level MAPE): Test MAE: {best_test_MAE:.4f} | Test RMSE: {best_test_RMSE:.4f} | Test MAPE: {best_test_MAPE:.4f} | Test Condition-level MAPE: {best_test_condition_mape:.4f} | Test 15%-accuracy: {best_test_alpha_acc1:.4f} | Test 10%-accuracy: {best_test_alpha_acc2:.4f} | Val MAE: {best_vali_MAE:.4f} | Val RMSE: {best_vali_RMSE:.4f} | Val MAPE: {best_vali_MAPE:.4f} | Val Condition-level MAPE: {best_vali_condition_mape:.4f} | Val 15%-accuracy: {best_vali_alpha_acc1:.4f} | Val 10%-accuracy: {best_vali_alpha_acc2:.4f} ')
 accelerator.print(f'Best model performance: Test Seen MAPE: {best_seen_test_MAPE:.4f} | Test Unseen MAPE: {best_unseen_test_MAPE:.4f}')
 accelerator.print(f'Best model performance: Test Seen 15%-accuracy: {best_seen_test_alpha_acc1:.4f} | Test Unseen 15%-accuracy: {best_unseen_test_alpha_acc1:.4f}')
 accelerator.print(f'Best model performance: Test Seen 10%-accuracy: {best_seen_test_alpha_acc2:.4f} | Test Unseen 10%-accuracy: {best_unseen_test_alpha_acc2:.4f}')
 accelerator.print(path)
 accelerator.set_trigger()
 if accelerator.check_trigger() and accelerator.is_local_main_process:
-    wandb.log({"epoch": epoch+1, "train_loss": train_loss, "vali_RMSE": best_vali_RMSE, "vali_MAPE": best_vali_MAPE, "vali_acc1": best_vali_alpha_acc1, "vali_acc2": best_vali_alpha_acc2, 
-            "test_RMSE": best_test_RMSE, "test_MAPE":best_test_MAPE, "test_acc1": best_test_alpha_acc1, "test_acc2": best_test_alpha_acc2})
+    best_metrics = {
+        "epoch": best_epoch,
+        "selected_epoch": best_epoch,
+        "metric_snapshot": "best_validation_condition_mape",
+        "train_loss": best_train_loss,
+        "vali_MAE": best_vali_MAE,
+        "vali_RMSE": best_vali_RMSE,
+        "vali_MAPE": best_vali_MAPE,
+        "vali_condition_MAPE": best_vali_condition_mape,
+        "vali_acc1": best_vali_alpha_acc1,
+        "vali_acc2": best_vali_alpha_acc2,
+        "test_MAE": best_test_MAE,
+        "test_RMSE": best_test_RMSE,
+        "test_MAPE": best_test_MAPE,
+        "test_condition_MAPE": best_test_condition_mape,
+        "test_acc1": best_test_alpha_acc1,
+        "test_acc2": best_test_alpha_acc2,
+        "test_seen_MAPE": best_seen_test_MAPE,
+        "test_unseen_MAPE": best_unseen_test_MAPE,
+        "test_seen_acc1": best_seen_test_alpha_acc1,
+        "test_unseen_acc1": best_unseen_test_alpha_acc1,
+        "test_seen_acc2": best_seen_test_alpha_acc2,
+        "test_unseen_acc2": best_unseen_test_alpha_acc2,
+    }
+    wandb.log(best_metrics)
+    wandb.run.summary.update({f"best_{key}": value for key, value in best_metrics.items()})
     wandb.finish()

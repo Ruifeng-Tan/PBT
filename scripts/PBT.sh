@@ -16,7 +16,7 @@ num_domains=32
 
 down_sample_ratio=0.75
 llm_choice=Llama # [Llama, Qwen3_8B, Qwen3_0.6B]
-d_llm=4096 # Qwen3_8B: 4096, Qwen3_0.6B: 1024 
+d_llm=4096 # Qwen3_8B: 4096, Qwen3_0.6B: 1024
 pca_path=/data/trf/python_works/BatteryLife/dataset/MIX_large_pca_0.99_$llm_choice.pkl
 
 tune_layers=4
@@ -72,8 +72,8 @@ importance_weight=0.1
 LLM_path=/data/LLMs/models--meta-llama--Llama-3.2-3B-Instruct/snapshots/0cb88a4f764b7a12671c53f0838cd831a0843b95 # /data/LLMs/Meta-Llama-3.1-8B-hf
 checkpoints=/data/tmpf # the save path of checkpoints
 data=Dataset_PBT
-root_path=/data/trf/python_works/PBT_BatteryLife/dataset
-comment='a' 
+root_path=/data/trf/python_works/PBT_BatteryLife/dataset # The path to your 16 datasets
+comment='a'
 
 
 # /data/LLMs/models--meta-llama--Llama-3.1-8B-Instruct/snapshots/0e9e39f249a16976918f6564b8830bc894c89659
@@ -145,4 +145,4 @@ CUDA_VISIBLE_DEVICES=6,7 accelerate launch --mixed_precision bf16 --num_processe
   --cl_epoches $cl_epoches \
   --dk_factor $dk_factor \
   --min_d_ff $min_d_ff \
-  --use_dff_scale 
+  --use_dff_scale
