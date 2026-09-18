@@ -10,7 +10,7 @@ from transformers import AutoTokenizer
 from transformers import AutoConfig, LlamaModel, LlamaTokenizer, LlamaForCausalLM
 from sklearn.metrics import root_mean_squared_error, mean_absolute_percentage_error, mean_absolute_error
 from BatteryLifeLLMUtils.configuration_BatteryLifeLLM import BatteryElectrochemicalConfig, BatteryLifeConfig
-from models import PBT, CPTransformerDeepSeekMoE, CPTransformer, CPMLP
+from models import PBT, CPTransformerDeepSeekMoE, CPTransformer, CPMLP, BatLiNet
 import wandb
 from data_provider.gate_masker import gate_masker
 from peft import LoraConfig, PeftModel, get_peft_model, prepare_model_for_kbit_training
@@ -37,7 +37,7 @@ from layers.Adapters import (
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:64"
 # os.environ["CUDA_VISIBLE_DEVICES"] = '2,3,4,5'
 import joblib
-from utils.tools import del_files, EarlyStopping, domain_average, vali_batteryLifeLLM
+from utils.tools import del_files, EarlyStopping, domain_average, vali_batteryLifeLLM, get_support_set
 parser = argparse.ArgumentParser(description='Time-LLM')
 
 
@@ -518,7 +518,10 @@ trained_dataset = args_json['dataset']
 # dataset is retained separately as ``trained_dataset`` for prompt/mask setup.
 if cli_model is not None:
     args_json['model'] = cli_model
-args_json['dataset'] = dataset 
+args_json['dataset'] = dataset
+if args_json.get('model') == 'BatLiNet':
+    # BatLiNet's data loaders pick the val/test splits via target_dataset.
+    args_json['target_dataset'] = dataset
 cli_num_workers = args.num_workers
 args_json['batch_size'] = batch_size
 
@@ -577,6 +580,10 @@ for ii in range(args.itr):
         model_text_config = AutoConfig.from_pretrained(args.LLM_path) if getattr(args, 'LLM_path', None) else None
         model_config = BatteryLifeConfig(model_ec_config, model_text_config)
         model = CPTransformer.Model(model_config)
+    elif args.model == 'BatLiNet':
+        model = BatLiNet.Model(
+            args.in_channels, args.channels, args.input_height, args.input_width
+        ).float()
     else:
         raise Exception('Not Implemented')
 
@@ -650,9 +657,16 @@ for ii in range(args.itr):
     accelerator.print("Loading training samples......")
     accelerator.print("Loading test samples......")
     if use_baseline_data:
+        # BatLiNet checkpoints are trained with Dataset_original and save both
+        # scalers; the life-class scaler is optional for evaluation.
+        life_class_scaler = None
+        if args.model == 'BatLiNet':
+            life_class_scaler_path = os.path.join(path, 'life_class_scaler')
+            life_class_scaler = joblib.load(life_class_scaler_path) if os.path.exists(life_class_scaler_path) else None
         test_data, test_loader = data_provider_func(
             args, 'test', label_scaler=label_scaler,
             eval_cycle_min=eval_cycle_min, eval_cycle_max=eval_cycle_max,
+            life_class_scaler=life_class_scaler,
         )
     else:
         test_data, test_loader = data_provider_func(
@@ -707,7 +721,29 @@ for ii in range(args.itr):
     model.eval() # set the model to evaluation mode
     with torch.no_grad():
         for i, batch in tqdm(enumerate(test_loader)):
-            if use_baseline_data:
+            if use_baseline_data and args.model == 'BatLiNet':
+                (cycle_curve_data, curve_attn_mask, labels, _life_class,
+                 _scaled_life_class, _weights, seen_unseen_ids, _features,
+                 data_batch, dataset_ids, domain_ids) = batch
+                # Same feature/support-set route as BatLiNet training.
+                x = data_batch.feature.to(accelerator.device)
+                y = data_batch.label.to(accelerator.device)
+                raw_x = data_batch.raw_feature
+                sup_x, sup_y = get_support_set(
+                    raw_x, test_data.total_features, test_data.total_labels,
+                    args, training=False,
+                )
+                sup_x = sup_x.float().to(accelerator.device)
+                sup_y = sup_y.float().to(accelerator.device)
+                labels = labels.float()
+                result = model(x, y, sup_x, sup_y, training=False)
+                # Be compatible with both `outputs` and `(outputs, loss)` returns.
+                outputs = result[0] if isinstance(result, (tuple, list)) else result
+                cut_off = labels.shape[0]
+                outputs = outputs[:cut_off]
+                dataset_ids = dataset_ids.to(accelerator.device).reshape(-1)[:cut_off]
+                domain_ids = domain_ids.to(accelerator.device).reshape(-1)[:cut_off]
+            elif use_baseline_data:
                 (cycle_curve_data, curve_attn_mask, labels, _life_class,
                  _scaled_life_class, weights, dataset_ids, seen_unseen_ids,
                  domain_ids) = batch

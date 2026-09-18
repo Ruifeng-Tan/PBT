@@ -1,6 +1,6 @@
 model_name=BatLiNet
 dataset=HNEI
-target_datase=HNEI
+target_dataset=HNEI
 train_epochs=100
 early_cycle_threshold=100
 learning_rate=0.00005
@@ -62,7 +62,7 @@ CUDA_VISIBLE_DEVICES=0,1 accelerate launch --multi_gpu  --num_processes $num_pro
   --accumulation_steps $accumulation_steps \
   --charge_discharge_length $charge_discharge_length \
   --dataset $dataset \
-  --target_dataset $target_datase \
+  --target_dataset $target_dataset \
   --num_workers 8 \
   --e_layers $e_layers \
   --d_layers $d_layers \

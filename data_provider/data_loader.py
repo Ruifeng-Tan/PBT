@@ -203,10 +203,12 @@ def my_collate_fn_batlinet(samples):
     seen_unseen_ids = torch.Tensor([i['seen_unseen_id'] for i in samples])
     features = torch.Tensor([i['total_features'] for i in samples])
     diff_base = int([i['diff_base'] for i in samples][0])
+    dataset_ids = torch.Tensor([i['dataset_id'] for i in samples])
+    domain_ids = torch.Tensor([i['domain_ids'] for i in samples])
 
     dataset = build_cycle_diff_dataset(features, labels, diff_base)
 
-    return cycle_curve_data, curve_attn_mask,  labels, life_class, scaled_life_class, weights, seen_unseen_ids, features, dataset
+    return cycle_curve_data, curve_attn_mask, labels, life_class, scaled_life_class, weights, seen_unseen_ids, features, dataset, dataset_ids, domain_ids
 
 
 def my_collate_fn(samples):

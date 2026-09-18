@@ -525,7 +525,7 @@ def vali_baseline_with_BLN(args, accelerator, model, vali_data, vali_loader, cri
     total_seen_unseen_ids = []
     model.eval()
     with torch.no_grad():
-        for i, (cycle_curve_data, curve_attn_mask, labels, life_class, scaled_life_class, weights, seen_unseen_ids, features, data_batch) in tqdm(enumerate(vali_loader)):
+        for i, (cycle_curve_data, curve_attn_mask, labels, life_class, scaled_life_class, weights, seen_unseen_ids, features, data_batch, _dataset_ids, _domain_ids) in tqdm(enumerate(vali_loader)):
             x, y, raw_x = data_batch.feature, data_batch.label, data_batch.raw_feature
             sup_x, sup_y = get_support_set(raw_x, vali_data.total_features, vali_data.total_labels, args, training=True)
             x = x.to(accelerator.device)
